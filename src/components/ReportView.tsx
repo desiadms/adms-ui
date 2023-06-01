@@ -1,14 +1,23 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'preact/hooks'
-import { fetchData } from '../reactQuery'
+import { graphql } from '../gql'
+import { useHasuraQuery } from '../helpers'
+
+const allTasksDocument = graphql(/* GraphQL */ `
+  query allTasks {
+    tasks {
+      name
+      id
+    }
+  }
+`)
 
 export function ReportView() {
   const queryClient = useQueryClient()
   const [comment, setComment] = useState<string>()
 
-  const { isLoading, error, data } = useQuery<string[], Error>({
-    queryKey: ['data'],
-    queryFn: fetchData
+  const { data, error, isLoading } = useHasuraQuery({
+    document: allTasksDocument
   })
 
   console.log(error instanceof Error && error.message)
@@ -20,13 +29,14 @@ export function ReportView() {
   >({
     mutationKey: ['mutation'],
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['data'] })
-      const previousData = queryClient.getQueryData<string[]>(['data']) || []
+      await queryClient.cancelQueries({ queryKey: ['allTasks'] })
+      const previousData =
+        queryClient.getQueryData<string[]>(['allTasks']) || []
 
       // remove local state so that server state is taken instead
       setComment(undefined)
 
-      queryClient.setQueryData(['data'], [...previousData, comment])
+      queryClient.setQueryData(['allTasks'], [...previousData, comment])
 
       return previousData
     },
@@ -36,7 +46,7 @@ export function ReportView() {
       // queryClient.setQueryData(['data'], context?.previousData)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['data'] })
+      queryClient.invalidateQueries({ queryKey: ['allTasks'] })
     }
   })
 
@@ -64,8 +74,8 @@ export function ReportView() {
           />
         </label>
       </form>
-      {data.map((item) => (
-        <div key={item}>{item}</div>
+      {data.tasks.map((item) => (
+        <div key={item.id}>{JSON.stringify(item)}</div>
       ))}
     </div>
   )
