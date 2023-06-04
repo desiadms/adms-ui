@@ -1,10 +1,37 @@
+import { useFileUpload } from '@nhost/react'
+import { useEffect, useState } from 'preact/hooks'
+import { useForm } from 'react-hook-form'
 import { useCamera } from '../customHooks'
+import { nhost } from '../helpers'
 
 export function CameraView() {
-  const [capturedImages, handleCapture, deleteImage] = useCamera()
+  const [capturedImages, deleteImage] = useCamera()
+  const { register, handleSubmit } = useForm()
+
+  const { upload } = useFileUpload()
+
+  const handleFormSubmit = async (data) => {
+    const file = data.file[0]
+    await upload({ file })
+  }
+
+  const [url, setUrl] = useState<string>()
+
+  useEffect(() => {
+    const foo = async () => {
+      const { presignedUrl, error } = await nhost.storage.getPresignedUrl({
+        fileId: 'f774136b-bd1b-4f24-b637-caffaf98352e'
+      })
+      console.log(presignedUrl, error)
+      setUrl(presignedUrl?.url)
+    }
+
+    foo()
+  }, [])
 
   return (
-    <div>
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <img src={url} alt='test' />
       {capturedImages.map((image, index) => (
         <div className='flex flex-col gap-2'>
           <img
@@ -34,11 +61,12 @@ export function CameraView() {
               accept='image/*'
               capture='camera'
               className='hidden'
-              onChange={handleCapture}
+              {...register('file')}
             />
           </label>
         </div>
       )}
-    </div>
+      <button type='submit'>Submit</button>
+    </form>
   )
 }

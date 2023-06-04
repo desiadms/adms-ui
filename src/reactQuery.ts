@@ -3,22 +3,27 @@ import {
   PersistedClient,
   Persister
 } from '@tanstack/react-query-persist-client'
-import axios from 'axios'
+import request from 'graphql-request'
 import { del, get, set } from 'idb-keyval'
 import toast from 'react-hot-toast'
+import { graphql } from './gql'
+import { TaskMutation } from './gql/graphql'
+import { nhost } from './helpers'
+
+const cacheTime = 1000 * 60 * 60 * 24 * 7 // 7 days
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+      cacheTime,
       staleTime: 2000,
       retry: false
     }
   },
   mutationCache: new MutationCache({
     onSuccess: (data) => {
-      console.log('mutationCache.onSuccess', data)
-      toast.success(data)
+      console.log('mutation success', data)
+      toast.success(JSON.stringify(data))
     },
     onError: (error) => {
       if (error instanceof Error) toast.error(error.message)
@@ -33,6 +38,7 @@ export const queryClient = new QueryClient({
  */
 export function createIDBPersister(idbValidKey: IDBValidKey = 'tbSpecialist') {
   return {
+    maxAge: cacheTime,
     persistClient: async (client: PersistedClient) => {
       set(idbValidKey, client)
     },
@@ -48,15 +54,29 @@ export function createIDBPersister(idbValidKey: IDBValidKey = 'tbSpecialist') {
 
 export const persister = createIDBPersister()
 
+const createTaskDocument = graphql(/* GraphQL */ `
+  mutation task($name: String!) {
+    insert_tasks_one(object: { name: $name }) {
+      name
+    }
+  }
+`)
+
+const hasuraURL = import.meta.env.VITE_HASURA_ENDPOINT
+
 // we need a default mutation function so that paused mutations can resume after a page reload
 queryClient.setMutationDefaults(['mutation'], {
-  mutationFn: async ({ text }: { text: string }): Promise<string> => {
+  mutationFn: async ({ name }: { name: string }): Promise<TaskMutation> => {
     // to avoid clashes with our optimistic update when an offline mutation continues
-    await queryClient.cancelQueries({ queryKey: ['data'] })
-    return axios.post('/api/data', { text }).then((res) => res.data)
+    await queryClient.cancelQueries({ queryKey: ['allTasks'] })
+
+    return request(
+      hasuraURL,
+      createTaskDocument,
+      { name },
+      {
+        Authorization: `Bearer ${nhost.auth.getAccessToken()}`
+      }
+    )
   }
 })
-
-export function fetchData(): Promise<string[]> {
-  return axios.get('/api/data').then((res) => res.data)
-}

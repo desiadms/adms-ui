@@ -1,5 +1,10 @@
 import { type TypedDocumentNode } from '@graphql-typed-document-node/core'
-import { NhostClient, useAccessToken } from '@nhost/react'
+import {
+  NhostClient,
+  useAccessToken,
+  useAuthenticationStatus,
+  useUserId
+} from '@nhost/react'
 import {
   UseQueryOptions,
   useQuery,
@@ -7,6 +12,7 @@ import {
 } from '@tanstack/react-query'
 import { OperationDefinitionNode } from 'graphql'
 import request from 'graphql-request'
+import { useEffect, useState } from 'preact/hooks'
 
 export const nhost = new NhostClient({
   subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
@@ -74,4 +80,34 @@ export function useHasuraQuery<TResult, TVariables, TData = TResult>(
     enabled: !!accessToken,
     ...opts
   })
+}
+
+export function useAuth() {
+  const [isOnline, setIsOnline] = useState(navigator.onLine)
+  const userId = useUserId()
+  const { isAuthenticated, isLoading } = useAuthenticationStatus()
+
+  useEffect(() => {
+    const handleOfflineStatus = () => {
+      setIsOnline(false)
+    }
+
+    const handleOnlineStatus = () => {
+      setIsOnline(true)
+    }
+
+    window.addEventListener('offline', handleOfflineStatus)
+    window.addEventListener('online', handleOnlineStatus)
+
+    return () => {
+      window.removeEventListener('offline', handleOfflineStatus)
+      window.removeEventListener('online', handleOnlineStatus)
+    }
+  }, [])
+
+  const offlineButHasLoggedIn = !isOnline && userId
+
+  return offlineButHasLoggedIn
+    ? { isAuthenticated: true, isLoading: false }
+    : { isAuthenticated, isLoading }
 }

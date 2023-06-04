@@ -1,7 +1,7 @@
 import { graphql } from '../gql'
 import { useHasuraQuery } from '../helpers'
 
-const allTasksDocument = graphql(/* GraphQL */ `
+export const allTasksDocument = graphql(/* GraphQL */ `
   query allTasks {
     tasks {
       name

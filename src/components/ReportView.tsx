@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'preact/hooks'
+import { AllTasksQuery } from 'src/gql/graphql'
 import { graphql } from '../gql'
 import { useHasuraQuery } from '../helpers'
 
@@ -16,54 +17,53 @@ export function ReportView() {
   const queryClient = useQueryClient()
   const [comment, setComment] = useState<string>()
 
-  const { data, error, isLoading } = useHasuraQuery({
+  const { data } = useHasuraQuery({
     document: allTasksDocument
   })
 
-  console.log(error instanceof Error && error.message)
-
   const updateList = useMutation<
-    Promise<string>,
+    Promise<{ name: string }[]>,
     Promise<Error>,
-    { text: string }
+    { name: string }
   >({
     mutationKey: ['mutation'],
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ['allTasks'] })
-      const previousData =
-        queryClient.getQueryData<string[]>(['allTasks']) || []
-
+      const previousData = queryClient.getQueryData<AllTasksQuery>([
+        'allTasks'
+      ]) || { tasks: [] }
       // remove local state so that server state is taken instead
       setComment(undefined)
 
-      queryClient.setQueryData(['allTasks'], [...previousData, comment])
+      queryClient.setQueryData(['a'], {
+        tasks: [...previousData.tasks, comment]
+      })
 
       return previousData
     },
     onError: (_, __, context) => {
-      console.log('onError', context)
+      console.log('in error', context)
       // TODO: fix the context type. It should be the same as the return type of onMutate
-      // queryClient.setQueryData(['data'], context?.previousData)
+      // queryClient.setQueryData(['allTasks'], context?.previousData)
     },
     onSettled: () => {
+      console.log('in settled')
+
       queryClient.invalidateQueries({ queryKey: ['allTasks'] })
     }
   })
 
   function submitForm(event: Event) {
     event.preventDefault()
-    if (comment) updateList.mutate({ text: comment })
+    if (comment) updateList.mutate({ name: comment })
   }
 
-  if (isLoading) return <>Is Loading</>
-
-  if (error) return <>`An error has occurred: ${error.message}`</>
-
   return (
-    <div className='bg-green-800'>
-      <form onSubmit={submitForm}>
+    <div className='bg-green-400'>
+      <form onSubmit={submitForm} className='flex flex-col items-start'>
         <label htmlFor='comment'>
           Comment
+          <br />
           <input
             name='comment'
             value={comment}
@@ -73,10 +73,10 @@ export function ReportView() {
             }}
           />
         </label>
+        <button type='submit'> submit shit</button>
+        {data &&
+          data?.tasks?.map((el) => <div key={el.id}>{JSON.stringify(el)}</div>)}
       </form>
-      {data.tasks.map((item) => (
-        <div key={item.id}>{JSON.stringify(item)}</div>
-      ))}
     </div>
   )
 }

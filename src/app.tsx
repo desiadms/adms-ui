@@ -1,13 +1,12 @@
 import { NhostProvider } from '@nhost/react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { RouterProvider } from '@tanstack/router'
 import { StrictMode } from 'preact/compat'
 import { Toaster } from 'react-hot-toast'
 import './app.css'
+import { AuthWrapper } from './components/AuthWrapper'
 import { nhost } from './helpers'
 import { persister, queryClient } from './reactQuery'
-import { router } from './router'
 
 export function App() {
   return (
@@ -23,7 +22,7 @@ export function App() {
             })
           }}
         >
-          <RouterProvider router={router} />
+          <AuthWrapper />
           <Toaster />
           <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
         </PersistQueryClientProvider>
