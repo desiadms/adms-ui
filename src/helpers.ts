@@ -2,8 +2,7 @@ import { type TypedDocumentNode } from '@graphql-typed-document-node/core'
 import {
   NhostClient,
   useAccessToken,
-  useAuthenticationStatus,
-  useUserId
+  useAuthenticationStatus
 } from '@nhost/react'
 import {
   UseQueryOptions,
@@ -84,7 +83,6 @@ export function useHasuraQuery<TResult, TVariables, TData = TResult>(
 
 export function useAuth() {
   const [isOnline, setIsOnline] = useState(navigator.onLine)
-  const userId = useUserId()
   const { isAuthenticated, isLoading } = useAuthenticationStatus()
 
   useEffect(() => {
@@ -105,9 +103,7 @@ export function useAuth() {
     }
   }, [])
 
-  const offlineButHasLoggedIn = !isOnline && userId
-
-  return offlineButHasLoggedIn
+  return !isOnline
     ? { isAuthenticated: true, isLoading: false }
     : { isAuthenticated, isLoading }
 }
