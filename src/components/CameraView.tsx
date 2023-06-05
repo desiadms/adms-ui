@@ -1,11 +1,9 @@
 import { useFileUpload } from '@nhost/react'
 import { useEffect, useState } from 'preact/hooks'
 import { useForm } from 'react-hook-form'
-import { useCamera } from '../customHooks'
 import { nhost } from '../helpers'
 
 export function CameraView() {
-  const [capturedImages, deleteImage] = useCamera()
   const { register, handleSubmit } = useForm()
 
   const { upload } = useFileUpload()
@@ -32,40 +30,20 @@ export function CameraView() {
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)}>
       <img src={url} alt='test' />
-      {capturedImages.map((image, index) => (
-        <div className='flex flex-col gap-2'>
-          <img
-            key={image}
-            width={200}
-            height={200}
-            src={image}
-            alt={`Captured ${index}`}
-          />
-          <button
-            type='button'
-            className='bg-red-700 text-white p-2 w-fit rounded-lg'
-            onClick={() => deleteImage(index)}
-          >
-            Delete
-          </button>
-        </div>
-      ))}
 
-      {capturedImages.length < 4 && (
-        <div className='p-2 bg-slate-500 w-fit text-white rounded-lg'>
-          <label htmlFor='camera'>
-            Take Picture
-            <input
-              id='camera'
-              type='file'
-              accept='image/*'
-              capture='camera'
-              className='hidden'
-              {...register('file')}
-            />
-          </label>
-        </div>
-      )}
+      <div className='p-2 bg-slate-500 w-fit text-white rounded-lg'>
+        <label htmlFor='camera'>
+          Take Picture
+          <input
+            id='camera'
+            type='file'
+            accept='image/*'
+            capture='camera'
+            className='hidden'
+            {...register('file')}
+          />
+        </label>
+      </div>
       <button type='submit'>Submit</button>
     </form>
   )
