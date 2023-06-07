@@ -11,14 +11,6 @@ const allTasksDocument = graphql(/* GraphQL */ `
   }
 `)
 
-const createTaskDocument = graphql(/* GraphQL */ `
-  mutation task($name: String!) {
-    insert_tasks_one(object: { name: $name }) {
-      name
-    }
-  }
-`)
-
 export function ReportView() {
   const [comment, setComment] = useState<string>()
 
@@ -29,8 +21,7 @@ export function ReportView() {
 
   const updateList = useHasuraMutation({
     queryKey: ['tasks'],
-    mutationKey: ['createTask'],
-    document: createTaskDocument
+    mutationKey: ['createTask']
   })
 
   function submitForm(event: Event) {

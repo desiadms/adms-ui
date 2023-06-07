@@ -19,6 +19,7 @@ import request from 'graphql-request'
 import { del, get, set } from 'idb-keyval'
 import { useEffect, useState } from 'preact/hooks'
 import toast from 'react-hot-toast'
+import { graphql } from './gql'
 
 export const nhost = new NhostClient({
   subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
@@ -207,21 +208,28 @@ function defaultOnSettled(queryKey: QueryKey) {
     queryClient.invalidateQueries({ queryKey })
   }
 }
+
+const createTaskDocument = graphql(/* GraphQL */ `
+  mutation task($name: String!) {
+    insert_tasks_one(object: { name: $name }) {
+      name
+    }
+  }
+`)
+
+setMutationDefaults({
+  queryKey: ['tasks'],
+  mutationKey: ['createTask'],
+  document: createTaskDocument
+})
+
 export function useHasuraMutation<TResult, TVariables>({
   mutationKey,
-  queryKey,
-  document
+  queryKey
 }: {
   mutationKey: MutationKey
   queryKey: QueryKey
-  document: TypedDocumentNode<TResult, TVariables>
 }) {
-  setMutationDefaults({
-    mutationKey,
-    queryKey,
-    document
-  })
-
   return useMutation<Promise<TResult>, Promise<Error>, TVariables>({
     mutationKey,
     onMutate: defaultOnMutate(queryKey),
