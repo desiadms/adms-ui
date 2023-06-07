@@ -6,6 +6,7 @@ import {
   QueryClient,
   QueryKey,
   UseQueryOptions,
+  useMutation,
   useQuery,
   type UseQueryResult
 } from '@tanstack/react-query'
@@ -18,7 +19,6 @@ import request from 'graphql-request'
 import { del, get, set } from 'idb-keyval'
 import { useEffect, useState } from 'preact/hooks'
 import toast from 'react-hot-toast'
-import { graphql } from './gql'
 
 export const nhost = new NhostClient({
   subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
@@ -58,6 +58,7 @@ type Strict<T> = T extends Record<string, never> ? undefined : NonNullable<T>
 export function useHasuraQuery<TResult, TVariables, TData = TResult>(
   props: {
     document: TypedDocumentNode<TResult, TVariables>
+    queryKey?: QueryKey
     variables?: Strict<TVariables>
   } & Pick<
     UseQueryOptions<TResult, Error, TData>,
@@ -83,7 +84,7 @@ export function useHasuraQuery<TResult, TVariables, TData = TResult>(
     | 'notifyOnChangeProps'
   >
 ): UseQueryResult<TData, Error> {
-  const { document, variables, ...opts } = props
+  const { document, variables, queryKey, ...opts } = props
   // type cast here is ok because it wouldn't make sense to pass a non-operation
   // document
   const operationName = (document.definitions[0] as OperationDefinitionNode)
@@ -91,11 +92,11 @@ export function useHasuraQuery<TResult, TVariables, TData = TResult>(
   if (!operationName) {
     throw new Error(`Could not find operation name for document: ${document}`)
   }
-  const queryKey = variables
+  const queryKeyVar = variables
     ? [operationName, variables]
     : ([operationName] as const)
   return useQuery({
-    queryKey,
+    queryKey: queryKey ?? queryKeyVar,
     queryFn: async () => {
       const accessToken = await getAccessToken()
       if (!accessToken) throw new Error('No access token in useHasuraQuery')
@@ -155,15 +156,7 @@ export function createIDBPersister(idbValidKey: IDBValidKey = 'tbSpecialist') {
 
 export const persister = createIDBPersister()
 
-const createTaskDocument = graphql(/* GraphQL */ `
-  mutation task($name: String!) {
-    insert_tasks_one(object: { name: $name }) {
-      name
-    }
-  }
-`)
-
-export function setMutationDefaults<TResult, TVariables>({
+function setMutationDefaults<TResult, TVariables>({
   mutationKey,
   queryKey,
   document
@@ -185,11 +178,57 @@ export function setMutationDefaults<TResult, TVariables>({
   })
 }
 
-setMutationDefaults({
-  mutationKey: ['mutation'],
-  queryKey: ['allTasks'],
-  document: createTaskDocument
-})
+function defaultOnMutate(queryKey: QueryKey) {
+  return async (variables) => {
+    await queryClient.cancelQueries({ queryKey })
+    const previousData = queryClient.getQueryData(queryKey) as Promise<unknown>
+    const currentKey = Object.keys(previousData)[0] as string
+    const prevColl = previousData[currentKey]
+    prevColl.push(variables)
+
+    queryClient.setQueryData(queryKey, {
+      [currentKey]: prevColl
+    })
+
+    return previousData
+  }
+}
+
+function defaultOnError(queryKey: QueryKey) {
+  return (error, _payload, previousData) => {
+    console.error(error)
+    queryClient.setQueryData(queryKey, previousData)
+  }
+}
+
+function defaultOnSettled(queryKey: QueryKey) {
+  return () => {
+    console.log('in settled')
+    queryClient.invalidateQueries({ queryKey })
+  }
+}
+export function useHasuraMutation<TResult, TVariables>({
+  mutationKey,
+  queryKey,
+  document
+}: {
+  mutationKey: MutationKey
+  queryKey: QueryKey
+  document: TypedDocumentNode<TResult, TVariables>
+}) {
+  setMutationDefaults({
+    mutationKey,
+    queryKey,
+    document
+  })
+
+  return useMutation<Promise<TResult>, Promise<Error>, TVariables>({
+    mutationKey,
+    onMutate: defaultOnMutate(queryKey),
+    onError: defaultOnError(queryKey),
+    onSettled: defaultOnSettled(queryKey)
+  })
+}
 
 export function useAuth() {
   const [isOnline, setIsOnline] = useState(navigator.onLine)

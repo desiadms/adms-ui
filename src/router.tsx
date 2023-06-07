@@ -1,13 +1,10 @@
-import { onlineManager } from '@tanstack/react-query'
 import { RootRoute, Route, Router } from '@tanstack/router'
-import request from 'graphql-request'
 import { CameraView } from './components/CameraView'
 import { Dashboard, Home } from './components/Dashboard'
 import { GeoLocationView } from './components/GeoLocationView'
 import { QRCodeView } from './components/QRCodeView'
 import { ReportView } from './components/ReportView'
-import { Tasks, allTasksDocument } from './components/Tasks'
-import { nhost, queryClient } from './helpers'
+import { Tasks } from './components/Tasks'
 
 const rootRoute = new RootRoute({
   component: () => <Dashboard />
@@ -48,35 +45,12 @@ const qrcodeRoute = new Route({
   errorComponent: () => 'Oh crap!'
 })
 
-const reportRoute = (isRestoring: boolean) =>
-  new Route({
-    getParentRoute: () => rootRoute,
-    path: 'report',
-    component: () => <ReportView />,
-    errorComponent: () => 'Oh crap!',
-    loader: async () => {
-      const token = await nhost.auth.getAccessToken()
-      return (
-        queryClient.getQueryData(['allTasks']) ??
-        // do not load if we are offline or hydrating because it returns a promise that is pending until we go online again
-        // we just let the Detail component handle it
-        (onlineManager.isOnline() && !isRestoring
-          ? queryClient.fetchQuery({
-              queryKey: ['allTasks'],
-              queryFn: () =>
-                request(
-                  import.meta.env.VITE_HASURA_ENDPOINT,
-                  allTasksDocument,
-                  {},
-                  {
-                    Authorization: `Bearer ${token}`
-                  }
-                )
-            })
-          : undefined)
-      )
-    }
-  })
+const reportRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'report',
+  component: () => <ReportView />,
+  errorComponent: () => 'Oh crap!'
+})
 
 declare module '@tanstack/router' {
   interface Register {
@@ -84,18 +58,16 @@ declare module '@tanstack/router' {
   }
 }
 
-const routeTree = (isRestoring: boolean) =>
-  rootRoute.addChildren([
-    homeRoute,
-    reportRoute(isRestoring),
-    tasksRoute,
-    geolocationRoute,
-    cameraRoute,
-    qrcodeRoute
-  ])
+const routeTree = rootRoute.addChildren([
+  homeRoute,
+  reportRoute,
+  tasksRoute,
+  geolocationRoute,
+  cameraRoute,
+  qrcodeRoute
+])
 
-export const router = (isRestoring: boolean) =>
-  new Router({
-    routeTree: routeTree(isRestoring),
-    defaultPreload: 'intent'
-  })
+export const router = new Router({
+  routeTree,
+  defaultPreload: 'intent'
+})

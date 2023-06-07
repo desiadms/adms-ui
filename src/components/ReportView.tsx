@@ -1,8 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'preact/hooks'
-import { AllTasksQuery } from 'src/gql/graphql'
 import { graphql } from '../gql'
-import { useHasuraQuery } from '../helpers'
+import { useHasuraMutation, useHasuraQuery } from '../helpers'
 
 const allTasksDocument = graphql(/* GraphQL */ `
   query allTasks {
@@ -13,53 +11,30 @@ const allTasksDocument = graphql(/* GraphQL */ `
   }
 `)
 
+const createTaskDocument = graphql(/* GraphQL */ `
+  mutation task($name: String!) {
+    insert_tasks_one(object: { name: $name }) {
+      name
+    }
+  }
+`)
+
 export function ReportView() {
-  const queryClient = useQueryClient()
   const [comment, setComment] = useState<string>()
 
   const { data } = useHasuraQuery({
+    queryKey: ['tasks'],
     document: allTasksDocument
   })
 
-  const updateList = useMutation<
-    Promise<{ name: string }[]>,
-    Promise<Error>,
-    { name: string },
-    { tasks: { name: string }[] }
-  >({
-    mutationKey: ['mutation'],
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['allTasks'] })
-      const previousData = queryClient.getQueryData<AllTasksQuery>([
-        'allTasks'
-      ]) || { tasks: [] }
-      // remove local state so that server state is taken instead
-
-      const id = Math.random()
-
-      queryClient.setQueryData(['allTasks'], {
-        tasks: [...previousData.tasks, { name: comment, id }]
-      })
-
-      return previousData
-    },
-    onError: (error, payload, previousData) => {
-      // might try and store the payload somewhere to retry a mutation later
-      console.log(error)
-
-      console.log('in errors', payload)
-      queryClient.setQueryData(['allTasks'], previousData)
-    },
-    onSettled: () => {
-      console.log('in settled')
-
-      queryClient.invalidateQueries({ queryKey: ['allTasks'] })
-    }
+  const updateList = useHasuraMutation({
+    queryKey: ['tasks'],
+    mutationKey: ['createTask'],
+    document: createTaskDocument
   })
 
   function submitForm(event: Event) {
     event.preventDefault()
-    console.log('in hereee!!!!', comment)
     if (comment) updateList.mutate({ name: comment })
   }
 
