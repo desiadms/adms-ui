@@ -7,8 +7,7 @@ import { GeoLocationView } from './components/GeoLocationView'
 import { QRCodeView } from './components/QRCodeView'
 import { ReportView } from './components/ReportView'
 import { Tasks, allTasksDocument } from './components/Tasks'
-import { nhost } from './helpers'
-import { queryClient } from './reactQuery'
+import { nhost, queryClient } from './helpers'
 
 const rootRoute = new RootRoute({
   component: () => <Dashboard />

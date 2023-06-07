@@ -5,8 +5,7 @@ import { StrictMode } from 'preact/compat'
 import { Toaster } from 'react-hot-toast'
 import './app.css'
 import { AuthWrapper } from './components/AuthWrapper'
-import { nhost } from './helpers'
-import { persister, queryClient } from './reactQuery'
+import { nhost, persister, queryClient } from './helpers'
 
 export function App() {
   return (

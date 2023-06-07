@@ -24,7 +24,8 @@ export function ReportView() {
   const updateList = useMutation<
     Promise<{ name: string }[]>,
     Promise<Error>,
-    { name: string }
+    { name: string },
+    { tasks: { name: string }[] }
   >({
     mutationKey: ['mutation'],
     onMutate: async () => {
@@ -33,18 +34,21 @@ export function ReportView() {
         'allTasks'
       ]) || { tasks: [] }
       // remove local state so that server state is taken instead
-      setComment(undefined)
 
-      queryClient.setQueryData(['a'], {
-        tasks: [...previousData.tasks, comment]
+      const id = Math.random()
+
+      queryClient.setQueryData(['allTasks'], {
+        tasks: [...previousData.tasks, { name: comment, id }]
       })
 
       return previousData
     },
-    onError: (_, __, context) => {
-      console.log('in error', context)
-      // TODO: fix the context type. It should be the same as the return type of onMutate
-      // queryClient.setQueryData(['allTasks'], context?.previousData)
+    onError: (error, payload, previousData) => {
+      // might try and store the payload somewhere to retry a mutation later
+      console.log(error)
+
+      console.log('in errors', payload)
+      queryClient.setQueryData(['allTasks'], previousData)
     },
     onSettled: () => {
       console.log('in settled')
@@ -55,6 +59,7 @@ export function ReportView() {
 
   function submitForm(event: Event) {
     event.preventDefault()
+    console.log('in hereee!!!!', comment)
     if (comment) updateList.mutate({ name: comment })
   }
 
