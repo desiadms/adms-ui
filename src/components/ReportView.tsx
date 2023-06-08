@@ -30,7 +30,7 @@ export function ReportView() {
   }
 
   return (
-    <div className='bg-green-400'>
+    <div className='bg-green-300'>
       <form onSubmit={submitForm} className='flex flex-col items-start'>
         <label htmlFor='comment'>
           Comment
