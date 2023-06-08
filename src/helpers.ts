@@ -128,8 +128,9 @@ export const queryClient = new QueryClient({
     onError: (error, variables, context, mutation) => {
       if (error instanceof Error) {
         console.log('mutation error', context, mutation, variables)
-        toast.error(error.message)
       }
+
+      toast.error(JSON.stringify(error))
     }
   })
 })

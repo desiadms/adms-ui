@@ -43,6 +43,7 @@ module.exports = {
     'no-shadow': 'off',
     'consistent-return': 'off',
     'no-console': 'off',
-    'jsx-a11y/media-has-caption': 'off'
+    'jsx-a11y/media-has-caption': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off'
   }
 }

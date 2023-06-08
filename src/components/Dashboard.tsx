@@ -12,6 +12,8 @@ const user = {
 
 const navigation = [
   ['/', 'Home'],
+  ['/logs', 'Logs'],
+
   ['/tasks', 'Tasks'],
   ['/geoLocation', 'GeoLocation'],
   ['/camera', 'Camera'],

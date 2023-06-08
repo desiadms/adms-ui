@@ -84,7 +84,6 @@ const routeTree = (isRestoring: boolean) =>
   rootRoute.addChildren([
     homeRoute,
     reportRoute(isRestoring),
-
     tasksRoute,
     geolocationRoute,
     cameraRoute,
