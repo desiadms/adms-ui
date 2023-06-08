@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'preact/hooks'
 import { graphql } from '../gql'
 import { useHasuraMutation, useHasuraQuery } from '../helpers'
@@ -28,6 +29,10 @@ export function ReportView() {
     event.preventDefault()
     if (comment) updateList.mutate({ name: comment })
   }
+
+  const queryClient = useQueryClient()
+
+  console.log(queryClient.getMutationCache())
 
   return (
     <div className='bg-green-300'>

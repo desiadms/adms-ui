@@ -4,7 +4,6 @@ import { RouterProvider } from '@tanstack/router'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../helpers'
 import { router } from '../router'
-import { LogsContainer } from './Logs'
 import { Spinner } from './icons'
 
 type LoginFormData = {
@@ -121,10 +120,5 @@ export function AuthWrapper() {
     return <Login />
   }
 
-  return (
-    <>
-      <LogsContainer />
-      <RouterProvider router={router(isRestoring)} />
-    </>
-  )
+  return <RouterProvider router={router(isRestoring)} />
 }

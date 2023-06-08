@@ -29,15 +29,15 @@ export const nhost = new NhostClient({
 const hasuraURL = import.meta.env.VITE_HASURA_ENDPOINT
 
 async function getAccessToken() {
-  // casting to unknown because the type JWTClaims is missing the exp field
-  // const decodedAccessToken = nhost.auth.getDecodedAccessToken() as unknown
-  // const exp = (decodedAccessToken as { exp: number })?.exp
-  // const expirationDate = exp && new Date(exp * 1000)
+  // casting to unknown because the  type JWTClaims is missing the exp field
+  const decodedAccessToken = nhost.auth.getDecodedAccessToken() as unknown
+  const exp = (decodedAccessToken as { exp: number })?.exp
+  const expirationDate = exp && new Date(exp * 1000)
 
-  // if (!expirationDate || expirationDate < new Date()) {
-  //   console.log('token expired')
-  //   await nhost.auth.refreshSession()
-  // }
+  if (!expirationDate || expirationDate < new Date()) {
+    console.log('token expired')
+    await nhost.auth.refreshSession()
+  }
 
   const token = nhost.auth.getAccessToken()
 
@@ -164,13 +164,13 @@ function setMutationDefaults<TResult, TVariables>({
   document
 }: {
   mutationKey: MutationKey
-  queryKey?: QueryKey
+  queryKey: QueryKey
   document: TypedDocumentNode<TResult, TVariables>
 }) {
   queryClient.setMutationDefaults(mutationKey, {
     mutationFn: async (variables: Strict<TVariables>): Promise<TResult> => {
       // to avoid clashes with our optimistic update when an offline mutation continues
-      if (queryKey) await queryClient.cancelQueries({ queryKey })
+      await queryClient.cancelQueries({ queryKey })
 
       const token = await getAccessToken()
       return request(hasuraURL, document, variables, {
@@ -198,7 +198,8 @@ function defaultOnMutate(queryKey: QueryKey) {
 
 function defaultOnError(queryKey: QueryKey) {
   return (error, _payload, previousData) => {
-    console.error(error)
+    console.log('in error')
+    console.log(error)
     queryClient.setQueryData(queryKey, previousData)
   }
 }
