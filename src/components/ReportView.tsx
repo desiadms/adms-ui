@@ -31,9 +31,7 @@ export function ReportView() {
   }
 
   const queryClient = useQueryClient()
-
-  console.log(queryClient.getMutationCache())
-
+  const mutationCache = queryClient.getMutationCache().getAll()
   return (
     <div className='bg-green-300'>
       <form onSubmit={submitForm} className='flex flex-col items-start'>
@@ -50,9 +48,15 @@ export function ReportView() {
           />
         </label>
         <button type='submit'> submit shit</button>
-        {data &&
-          data?.tasks?.map((el) => <div key={el.id}>{JSON.stringify(el)}</div>)}
       </form>
+
+      {data &&
+        data?.tasks?.map((el) => <div key={el.id}>{JSON.stringify(el)}</div>)}
+
+      {mutationCache?.map(({ state }) => {
+        const { context, ...rest } = state
+        return <pre>{JSON.stringify(rest, null, 2)}</pre>
+      })}
     </div>
   )
 }
