@@ -1,4 +1,5 @@
 import { useSignInEmailPassword } from '@nhost/react'
+import { useIsRestoring } from '@tanstack/react-query'
 import { RouterProvider } from '@tanstack/router'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../helpers'
@@ -103,6 +104,7 @@ function Login() {
 
 export function AuthWrapper() {
   const { isAuthenticated, isLoading } = useAuth()
+  const isRestoring = useIsRestoring()
 
   if (isLoading) {
     return (
@@ -118,5 +120,5 @@ export function AuthWrapper() {
     return <Login />
   }
 
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router(isRestoring)} />
 }

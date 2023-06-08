@@ -30,14 +30,14 @@ const hasuraURL = import.meta.env.VITE_HASURA_ENDPOINT
 
 async function getAccessToken() {
   // casting to unknown because the type JWTClaims is missing the exp field
-  const decodedAccessToken = nhost.auth.getDecodedAccessToken() as unknown
-  const exp = (decodedAccessToken as { exp: number })?.exp
-  const expirationDate = exp && new Date(exp * 1000)
+  // const decodedAccessToken = nhost.auth.getDecodedAccessToken() as unknown
+  // const exp = (decodedAccessToken as { exp: number })?.exp
+  // const expirationDate = exp && new Date(exp * 1000)
 
-  if (!expirationDate || expirationDate < new Date()) {
-    console.log('token expired')
-    await nhost.auth.refreshSession()
-  }
+  // if (!expirationDate || expirationDate < new Date()) {
+  //   console.log('token expired')
+  //   await nhost.auth.refreshSession()
+  // }
 
   const token = nhost.auth.getAccessToken()
 
