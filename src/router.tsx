@@ -1,7 +1,6 @@
 import { onlineManager } from '@tanstack/react-query'
 import { RootRoute, Route, Router } from '@tanstack/router'
 import request from 'graphql-request'
-import { CameraView } from './components/CameraView'
 import { Dashboard, Home } from './components/Dashboard'
 import { GeoLocationView } from './components/GeoLocationView'
 import { QRCodeView } from './components/QRCodeView'
@@ -31,13 +30,6 @@ const geolocationRoute = new Route({
   getParentRoute: () => rootRoute,
   path: 'geoLocation',
   component: () => <GeoLocationView />,
-  errorComponent: () => 'Oh crap!'
-})
-
-const cameraRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: 'camera',
-  component: () => <CameraView />,
   errorComponent: () => 'Oh crap!'
 })
 
@@ -86,7 +78,6 @@ const routeTree = (isRestoring: boolean) =>
     reportRoute(isRestoring),
     tasksRoute,
     geolocationRoute,
-    cameraRoute,
     qrcodeRoute
   ])
 
