@@ -5,8 +5,8 @@ import { CameraView } from './components/CameraView'
 import { Dashboard, Home } from './components/Dashboard'
 import { GeoLocationView } from './components/GeoLocationView'
 import { QRCodeView } from './components/QRCodeView'
-import { ReportView } from './components/ReportView'
-import { Tasks, allTasksDocument } from './components/Tasks'
+import { ReportView, allTasksDocument } from './components/ReportView'
+import { Tasks } from './components/Tasks'
 import { nhost, queryClient } from './helpers'
 
 const rootRoute = new RootRoute({

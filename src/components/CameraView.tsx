@@ -3,6 +3,8 @@ import { useEffect, useState } from 'preact/hooks'
 import { useForm } from 'react-hook-form'
 import { nhost } from '../helpers'
 
+const uuid = '858112c8-aa07-47ad-afa4-2892088e8339'
+
 export function CameraView() {
   const { register, handleSubmit } = useForm()
 
@@ -10,7 +12,7 @@ export function CameraView() {
 
   const handleFormSubmit = async (data) => {
     const file = data.file[0]
-    await upload({ file })
+    await upload({ file, id: uuid })
   }
 
   const [url, setUrl] = useState<string>()
@@ -18,7 +20,7 @@ export function CameraView() {
   useEffect(() => {
     const foo = async () => {
       const { presignedUrl, error } = await nhost.storage.getPresignedUrl({
-        fileId: 'f774136b-bd1b-4f24-b637-caffaf98352e'
+        fileId: uuid
       })
       console.log(presignedUrl, error)
       setUrl(presignedUrl?.url)

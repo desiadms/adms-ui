@@ -19,7 +19,6 @@ import request from 'graphql-request'
 import { del, get, set } from 'idb-keyval'
 import { useEffect, useState } from 'preact/hooks'
 import toast from 'react-hot-toast'
-import { graphql } from './gql'
 
 export const nhost = new NhostClient({
   subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
@@ -125,10 +124,10 @@ export const queryClient = new QueryClient({
       console.log('mutation success', data)
       toast.success(JSON.stringify(data))
     },
-    onError: (error, variables, context, mutation) => {
-      if (error instanceof Error) {
-        console.log('mutation error', context, mutation, variables)
-      }
+    onError: (error, variables, _context, mutation) => {
+      console.error(error)
+      // handle here failed mutations. Maybe store to local storage and retry later via user interaction
+      console.log('mutation error', mutation, variables)
 
       toast.error(JSON.stringify(error))
     }
@@ -161,19 +160,27 @@ export const persister = createIDBPersister()
 function setMutationDefaults<TResult, TVariables>({
   mutationKey,
   queryKey,
-  document
+  document,
+  callback
 }: {
   mutationKey: MutationKey
   queryKey: QueryKey
   document: TypedDocumentNode<TResult, TVariables>
+  callback?: (
+    variables: { hasura: Strict<TVariables> } & Record<string, unknown>
+  ) => Promise<unknown>
 }) {
   queryClient.setMutationDefaults(mutationKey, {
-    mutationFn: async (variables: Strict<TVariables>): Promise<TResult> => {
+    mutationFn: async (
+      variables: { hasura: Strict<TVariables> } & Record<string, unknown>
+    ): Promise<TResult> => {
       // to avoid clashes with our optimistic update when an offline mutation continues
       await queryClient.cancelQueries({ queryKey })
 
       const token = await getAccessToken()
-      return request(hasuraURL, document, variables, {
+
+      await callback?.(variables)
+      return request(hasuraURL, document, variables.hasura, {
         Authorization: `Bearer ${token}`
       })
     }
@@ -211,33 +218,37 @@ function defaultOnSettled(queryKey: QueryKey) {
   }
 }
 
-const createTaskDocument = graphql(/* GraphQL */ `
-  mutation task($name: String!) {
-    insert_tasks_one(object: { name: $name }) {
-      name
-    }
-  }
-`)
-
-setMutationDefaults({
-  queryKey: ['tasks'],
-  mutationKey: ['createTask'],
-  document: createTaskDocument
-})
-
-export function useHasuraMutation<TResult, TVariables>({
+export function hasuraMutation<TResult, TVariables>({
   mutationKey,
-  queryKey
+  queryKey,
+  document,
+  callback
 }: {
   mutationKey: MutationKey
   queryKey: QueryKey
+  document: TypedDocumentNode<TResult, TVariables>
+  callback?: (
+    variables: { hasura: Strict<TVariables> } & Record<string, unknown>
+  ) => Promise<unknown>
 }) {
-  return useMutation<Promise<TResult>, Promise<Error>, TVariables>({
-    mutationKey,
-    onMutate: defaultOnMutate(queryKey),
-    onError: defaultOnError(queryKey),
-    onSettled: defaultOnSettled(queryKey)
+  setMutationDefaults({
+    queryKey: ['tasks'],
+    mutationKey: ['createTask'],
+    document,
+    callback
   })
+
+  return () =>
+    useMutation<
+      Promise<TResult>,
+      Promise<Error>,
+      { hasura: Strict<TVariables> } & Record<string, unknown>
+    >({
+      mutationKey,
+      onMutate: defaultOnMutate(queryKey),
+      onError: defaultOnError(queryKey),
+      onSettled: defaultOnSettled(queryKey)
+    })
 }
 
 export function useAuth() {

@@ -2696,6 +2696,42 @@ type files {
   bucketId: String!
   createdAt: timestamptz!
   etag: String
+
+  """An array relationship"""
+  files_images(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): [images!]!
+
+  """An aggregate relationship"""
+  files_images_aggregate(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): images_aggregate!
   id: uuid!
   isUploaded: Boolean
   mimeType: String
@@ -2807,6 +2843,8 @@ input files_bool_exp {
   bucketId: String_comparison_exp
   createdAt: timestamptz_comparison_exp
   etag: String_comparison_exp
+  files_images: images_bool_exp
+  files_images_aggregate: images_aggregate_bool_exp
   id: uuid_comparison_exp
   isUploaded: Boolean_comparison_exp
   mimeType: String_comparison_exp
@@ -2841,6 +2879,7 @@ input files_insert_input {
   bucketId: String
   createdAt: timestamptz
   etag: String
+  files_images: images_arr_rel_insert_input
   id: uuid
   isUploaded: Boolean
   mimeType: String
@@ -2918,6 +2957,16 @@ type files_mutation_response {
 }
 
 """
+input type for inserting object relation for remote table "storage.files"
+"""
+input files_obj_rel_insert_input {
+  data: files_insert_input!
+
+  """upsert condition"""
+  on_conflict: files_on_conflict
+}
+
+"""
 on_conflict condition type for table "storage.files"
 """
 input files_on_conflict {
@@ -2932,6 +2981,7 @@ input files_order_by {
   bucketId: order_by
   createdAt: order_by
   etag: order_by
+  files_images_aggregate: images_aggregate_order_by
   id: order_by
   isUploaded: order_by
   mimeType: order_by
@@ -3168,6 +3218,216 @@ input files_variance_order_by {
   size: order_by
 }
 
+"""
+columns and relationships of "images"
+"""
+type images {
+  id: uuid!
+
+  """An object relationship"""
+  images_file: files!
+
+  """An object relationship"""
+  images_task: tasks!
+  taskId: uuid!
+}
+
+"""
+aggregated selection of "images"
+"""
+type images_aggregate {
+  aggregate: images_aggregate_fields
+  nodes: [images!]!
+}
+
+input images_aggregate_bool_exp {
+  count: images_aggregate_bool_exp_count
+}
+
+input images_aggregate_bool_exp_count {
+  arguments: [images_select_column!]
+  distinct: Boolean
+  filter: images_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "images"
+"""
+type images_aggregate_fields {
+  count(columns: [images_select_column!], distinct: Boolean): Int!
+  max: images_max_fields
+  min: images_min_fields
+}
+
+"""
+order by aggregate values of table "images"
+"""
+input images_aggregate_order_by {
+  count: order_by
+  max: images_max_order_by
+  min: images_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "images"
+"""
+input images_arr_rel_insert_input {
+  data: [images_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: images_on_conflict
+}
+
+"""
+Boolean expression to filter rows from the table "images". All fields are combined with a logical 'AND'.
+"""
+input images_bool_exp {
+  _and: [images_bool_exp!]
+  _not: images_bool_exp
+  _or: [images_bool_exp!]
+  id: uuid_comparison_exp
+  images_file: files_bool_exp
+  images_task: tasks_bool_exp
+  taskId: uuid_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "images"
+"""
+enum images_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  images_pkey
+}
+
+"""
+input type for inserting data into table "images"
+"""
+input images_insert_input {
+  id: uuid
+  images_file: files_obj_rel_insert_input
+  images_task: tasks_obj_rel_insert_input
+  taskId: uuid
+}
+
+"""aggregate max on columns"""
+type images_max_fields {
+  id: uuid
+  taskId: uuid
+}
+
+"""
+order by max() on columns of table "images"
+"""
+input images_max_order_by {
+  id: order_by
+  taskId: order_by
+}
+
+"""aggregate min on columns"""
+type images_min_fields {
+  id: uuid
+  taskId: uuid
+}
+
+"""
+order by min() on columns of table "images"
+"""
+input images_min_order_by {
+  id: order_by
+  taskId: order_by
+}
+
+"""
+response of any mutation on the table "images"
+"""
+type images_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [images!]!
+}
+
+"""
+on_conflict condition type for table "images"
+"""
+input images_on_conflict {
+  constraint: images_constraint!
+  update_columns: [images_update_column!]! = []
+  where: images_bool_exp
+}
+
+"""Ordering options when selecting data from "images"."""
+input images_order_by {
+  id: order_by
+  images_file: files_order_by
+  images_task: tasks_order_by
+  taskId: order_by
+}
+
+"""primary key columns input for table: images"""
+input images_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "images"
+"""
+enum images_select_column {
+  """column name"""
+  id
+
+  """column name"""
+  taskId
+}
+
+"""
+input type for updating data in table "images"
+"""
+input images_set_input {
+  id: uuid
+  taskId: uuid
+}
+
+"""
+Streaming cursor of the table "images"
+"""
+input images_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: images_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input images_stream_cursor_value_input {
+  id: uuid
+  taskId: uuid
+}
+
+"""
+update columns of table "images"
+"""
+enum images_update_column {
+  """column name"""
+  id
+
+  """column name"""
+  taskId
+}
+
+input images_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: images_set_input
+
+  """filter the rows which have to be updated"""
+  where: images_bool_exp!
+}
+
 scalar jsonb
 
 input jsonb_cast_exp {
@@ -3351,6 +3611,19 @@ type mutation_root {
   ): users_mutation_response
 
   """
+  delete data from the table: "images"
+  """
+  delete_images(
+    """filter the rows which have to be deleted"""
+    where: images_bool_exp!
+  ): images_mutation_response
+
+  """
+  delete single row from the table: "images"
+  """
+  delete_images_by_pk(id: uuid!): images
+
+  """
   delete data from the table: "tasks"
   """
   delete_tasks(
@@ -3361,7 +3634,7 @@ type mutation_root {
   """
   delete single row from the table: "tasks"
   """
-  delete_tasks_by_pk(id: Int!): tasks
+  delete_tasks_by_pk(id: uuid!): tasks
 
   """
   insert a single row into the table: "auth.providers"
@@ -3604,6 +3877,28 @@ type mutation_root {
     """upsert condition"""
     on_conflict: users_on_conflict
   ): users_mutation_response
+
+  """
+  insert data into the table: "images"
+  """
+  insert_images(
+    """the rows to be inserted"""
+    objects: [images_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: images_on_conflict
+  ): images_mutation_response
+
+  """
+  insert a single row into the table: "images"
+  """
+  insert_images_one(
+    """the row to be inserted"""
+    object: images_insert_input!
+
+    """upsert condition"""
+    on_conflict: images_on_conflict
+  ): images
 
   """
   insert data into the table: "tasks"
@@ -4072,12 +4367,37 @@ type mutation_root {
   ): [files_mutation_response]
 
   """
+  update data of the table: "images"
+  """
+  update_images(
+    """sets the columns of the filtered rows to the given values"""
+    _set: images_set_input
+
+    """filter the rows which have to be updated"""
+    where: images_bool_exp!
+  ): images_mutation_response
+
+  """
+  update single row of the table: "images"
+  """
+  update_images_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: images_set_input
+    pk_columns: images_pk_columns_input!
+  ): images
+
+  """
+  update multiples rows of table: "images"
+  """
+  update_images_many(
+    """updates to execute, in order"""
+    updates: [images_updates!]!
+  ): [images_mutation_response]
+
+  """
   update data of the table: "tasks"
   """
   update_tasks(
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: tasks_inc_input
-
     """sets the columns of the filtered rows to the given values"""
     _set: tasks_set_input
 
@@ -4089,9 +4409,6 @@ type mutation_root {
   update single row of the table: "tasks"
   """
   update_tasks_by_pk(
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: tasks_inc_input
-
     """sets the columns of the filtered rows to the given values"""
     _set: tasks_set_input
     pk_columns: tasks_pk_columns_input!
@@ -4575,6 +4892,49 @@ type query_root {
   ): files_aggregate!
 
   """
+  fetch data from the table: "images"
+  """
+  images(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): [images!]!
+
+  """
+  fetch aggregated fields from the table: "images"
+  """
+  images_aggregate(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): images_aggregate!
+
+  """fetch data from the table: "images" using primary key columns"""
+  images_by_pk(id: uuid!): images
+
+  """
   fetch data from the table: "tasks"
   """
   tasks(
@@ -4615,7 +4975,7 @@ type query_root {
   ): tasks_aggregate!
 
   """fetch data from the table: "tasks" using primary key columns"""
-  tasks_by_pk(id: Int!): tasks
+  tasks_by_pk(id: uuid!): tasks
 
   """fetch data from the table: "auth.users" using primary key columns"""
   user(id: uuid!): users
@@ -5241,6 +5601,63 @@ type subscription_root {
   ): [files!]!
 
   """
+  fetch data from the table: "images"
+  """
+  images(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): [images!]!
+
+  """
+  fetch aggregated fields from the table: "images"
+  """
+  images_aggregate(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): images_aggregate!
+
+  """fetch data from the table: "images" using primary key columns"""
+  images_by_pk(id: uuid!): images
+
+  """
+  fetch data from the table in a streaming manner: "images"
+  """
+  images_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [images_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): [images!]!
+
+  """
   fetch data from the table: "tasks"
   """
   tasks(
@@ -5281,7 +5698,7 @@ type subscription_root {
   ): tasks_aggregate!
 
   """fetch data from the table: "tasks" using primary key columns"""
-  tasks_by_pk(id: Int!): tasks
+  tasks_by_pk(id: uuid!): tasks
 
   """
   fetch data from the table in a streaming manner: "tasks"
@@ -5359,8 +5776,44 @@ type subscription_root {
 columns and relationships of "tasks"
 """
 type tasks {
-  id: Int!
+  id: uuid!
   name: String!
+
+  """An array relationship"""
+  tasks_images(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): [images!]!
+
+  """An aggregate relationship"""
+  tasks_images_aggregate(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): images_aggregate!
 
   """An object relationship"""
   tasks_user: users!
@@ -5379,22 +5832,9 @@ type tasks_aggregate {
 aggregate fields of "tasks"
 """
 type tasks_aggregate_fields {
-  avg: tasks_avg_fields
   count(columns: [tasks_select_column!], distinct: Boolean): Int!
   max: tasks_max_fields
   min: tasks_min_fields
-  stddev: tasks_stddev_fields
-  stddev_pop: tasks_stddev_pop_fields
-  stddev_samp: tasks_stddev_samp_fields
-  sum: tasks_sum_fields
-  var_pop: tasks_var_pop_fields
-  var_samp: tasks_var_samp_fields
-  variance: tasks_variance_fields
-}
-
-"""aggregate avg on columns"""
-type tasks_avg_fields {
-  id: Float
 }
 
 """
@@ -5404,8 +5844,10 @@ input tasks_bool_exp {
   _and: [tasks_bool_exp!]
   _not: tasks_bool_exp
   _or: [tasks_bool_exp!]
-  id: Int_comparison_exp
+  id: uuid_comparison_exp
   name: String_comparison_exp
+  tasks_images: images_bool_exp
+  tasks_images_aggregate: images_aggregate_bool_exp
   tasks_user: users_bool_exp
   user: uuid_comparison_exp
 }
@@ -5421,32 +5863,26 @@ enum tasks_constraint {
 }
 
 """
-input type for incrementing numeric columns in table "tasks"
-"""
-input tasks_inc_input {
-  id: Int
-}
-
-"""
 input type for inserting data into table "tasks"
 """
 input tasks_insert_input {
-  id: Int
+  id: uuid
   name: String
+  tasks_images: images_arr_rel_insert_input
   tasks_user: users_obj_rel_insert_input
   user: uuid
 }
 
 """aggregate max on columns"""
 type tasks_max_fields {
-  id: Int
+  id: uuid
   name: String
   user: uuid
 }
 
 """aggregate min on columns"""
 type tasks_min_fields {
-  id: Int
+  id: uuid
   name: String
   user: uuid
 }
@@ -5463,6 +5899,16 @@ type tasks_mutation_response {
 }
 
 """
+input type for inserting object relation for remote table "tasks"
+"""
+input tasks_obj_rel_insert_input {
+  data: tasks_insert_input!
+
+  """upsert condition"""
+  on_conflict: tasks_on_conflict
+}
+
+"""
 on_conflict condition type for table "tasks"
 """
 input tasks_on_conflict {
@@ -5475,13 +5921,14 @@ input tasks_on_conflict {
 input tasks_order_by {
   id: order_by
   name: order_by
+  tasks_images_aggregate: images_aggregate_order_by
   tasks_user: users_order_by
   user: order_by
 }
 
 """primary key columns input for table: tasks"""
 input tasks_pk_columns_input {
-  id: Int!
+  id: uuid!
 }
 
 """
@@ -5502,24 +5949,9 @@ enum tasks_select_column {
 input type for updating data in table "tasks"
 """
 input tasks_set_input {
-  id: Int
+  id: uuid
   name: String
   user: uuid
-}
-
-"""aggregate stddev on columns"""
-type tasks_stddev_fields {
-  id: Float
-}
-
-"""aggregate stddev_pop on columns"""
-type tasks_stddev_pop_fields {
-  id: Float
-}
-
-"""aggregate stddev_samp on columns"""
-type tasks_stddev_samp_fields {
-  id: Float
 }
 
 """
@@ -5535,14 +5967,9 @@ input tasks_stream_cursor_input {
 
 """Initial value of the column from where the streaming should start"""
 input tasks_stream_cursor_value_input {
-  id: Int
+  id: uuid
   name: String
   user: uuid
-}
-
-"""aggregate sum on columns"""
-type tasks_sum_fields {
-  id: Int
 }
 
 """
@@ -5560,29 +5987,11 @@ enum tasks_update_column {
 }
 
 input tasks_updates {
-  """increments the numeric columns with given value of the filtered values"""
-  _inc: tasks_inc_input
-
   """sets the columns of the filtered rows to the given values"""
   _set: tasks_set_input
 
   """filter the rows which have to be updated"""
   where: tasks_bool_exp!
-}
-
-"""aggregate var_pop on columns"""
-type tasks_var_pop_fields {
-  id: Float
-}
-
-"""aggregate var_samp on columns"""
-type tasks_var_samp_fields {
-  id: Float
-}
-
-"""aggregate variance on columns"""
-type tasks_variance_fields {
-  id: Float
 }
 
 scalar timestamptz
