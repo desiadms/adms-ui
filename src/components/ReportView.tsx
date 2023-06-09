@@ -39,6 +39,20 @@ const createTaskDocument = graphql(/* GraphQL */ `
   }
 `)
 
+function onChangeStoreFile(e, callback) {
+  const fileInput = e.target
+  const file = fileInput.files?.[0]
+
+  const reader = new FileReader()
+
+  reader.onload = (e: ProgressEvent<FileReader>) => {
+    const url = e?.target?.result
+    callback(url)
+  }
+
+  reader.readAsDataURL(file)
+}
+
 function saveMedia(variables) {
   const { files } = variables
   return Promise.all(
@@ -153,6 +167,8 @@ export function ReportView() {
   const queryClient = useQueryClient()
   const mutationCache = queryClient.getMutationCache().getAll()
 
+  const [localImageUrls, setLocalImageUrls] = useState<Record<string, string>>()
+
   return (
     <div>
       <form
@@ -160,7 +176,7 @@ export function ReportView() {
         className='flex flex-col gap-2 items-start'
       >
         {[0, 1, 2].map((index) => (
-          <div key={index} className='p-2 bg-slate-300 w-fit'>
+          <div key={index} className='flex gap-4 p-2 bg-slate-300 w-fit'>
             <label htmlFor={`file-${index}`}>
               Take Picture {index + 1}
               <input
@@ -169,9 +185,20 @@ export function ReportView() {
                 accept='image/*'
                 capture='camera'
                 className='hidden'
-                {...register(`files[${index}]`)}
+                {...register(`files[${index}]`, {
+                  onChange: (e) => {
+                    onChangeStoreFile(e, (url) =>
+                      setLocalImageUrls({ ...localImageUrls, [index]: url })
+                    )
+                  }
+                })}
               />
             </label>
+            {localImageUrls && localImageUrls[index] && (
+              <div>
+                <img className='w-20' src={localImageUrls[index]} alt='' />
+              </div>
+            )}
           </div>
         ))}
 
