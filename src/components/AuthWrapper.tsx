@@ -7,8 +7,12 @@ import { router } from '../router'
 import { Spinner } from './icons'
 
 type LoginFormData = {
-  email: string
+  id: string
   password: string
+}
+
+function convertToEmail(id: string) {
+  return `${id}@desiadms.com`
 }
 
 function Login() {
@@ -18,7 +22,8 @@ function Login() {
   const { register, handleSubmit } = useForm<LoginFormData>()
 
   async function onSubmit(data: LoginFormData) {
-    await signInEmailPassword(data.email, data.password)
+    const email = convertToEmail(data.id)
+    await signInEmailPassword(email, data.password)
   }
 
   return (
@@ -43,7 +48,7 @@ function Login() {
         >
           <div>
             <div
-              htmlFor='email'
+              htmlFor='id'
               className='block text-sm font-medium leading-6 text-gray-900'
             >
               Email address
@@ -51,9 +56,9 @@ function Login() {
             <div className='mt-2'>
               <input
                 className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-700 sm:text-sm sm:leading-6'
-                type='email'
-                autoComplete='email'
-                {...register('email', { required: true })}
+                type='text'
+                autoComplete='id'
+                {...register('id', { required: true })}
               />
             </div>
           </div>
