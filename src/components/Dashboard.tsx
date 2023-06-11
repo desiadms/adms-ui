@@ -1,7 +1,9 @@
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/20/solid'
+import { SignalIcon, SignalSlashIcon } from '@heroicons/react/24/solid'
 import { useSignOut } from '@nhost/react'
 import { Link, Outlet, useMatchRoute } from '@tanstack/router'
+import { useIsOnline } from '../helpers'
 
 const user = {
   name: 'Tom Cook',
@@ -12,17 +14,10 @@ const user = {
 
 const navigation = [
   ['/', 'Home'],
-  ['/logs', 'Logs'],
-
-  ['/tasks', 'Tasks'],
   ['/geoLocation', 'GeoLocation'],
   ['/camera', 'Camera'],
   ['/qrCode', 'QRCode'],
   ['/report', 'Report']
-]
-const userNavigation = [
-  ['/profile', 'Profile'],
-  ['/settings', 'Settings']
 ]
 
 export function Home() {
@@ -39,6 +34,7 @@ export function Home() {
 
 export function Dashboard() {
   const matchRoute = useMatchRoute()
+  const isOnline = useIsOnline()
 
   const currentRoute = navigation.find(([to]) =>
     matchRoute({
@@ -133,15 +129,13 @@ export function Dashboard() {
                         </button>
                       </div>
                       <div className='mt-3 space-y-1 px-2'>
-                        {userNavigation.map(([to, label]) => (
-                          <Link
-                            key={to}
-                            to={to}
-                            className='block rounded-md px-3 py-2 text-base text-gray-400 hover:bg-gray-400 hover:bg-opacity-75 hover:text-white'
-                          >
-                            {label}
-                          </Link>
-                        ))}
+                        <Link
+                          key='Account'
+                          to='/account'
+                          className='block rounded-md px-3 py-2 text-base text-gray-400 hover:bg-gray-400 hover:bg-opacity-75 hover:text-white'
+                        >
+                          Account
+                        </Link>
                         <Link
                           className='block rounded-md px-3 py-2 text-base text-gray-400 hover:bg-gray-400 hover:bg-opacity-75 hover:text-white'
                           onClick={signOut}
@@ -160,16 +154,25 @@ export function Dashboard() {
       </nav>
 
       <header className='bg-white shadow-sm'>
-        {currentRoute?.[0] !== '/' && (
-          <div className='mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8'>
+        <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center'>
+          {currentRoute?.[0] !== '/' && (
             <h1 className='text-lg font-semibold leading-6 text-gray-900'>
               {routeLabel || 'No Route Found'}
             </h1>
-          </div>
-        )}
+          )}
+          {isOnline ? (
+            <SignalIcon className='h-6 w-6 text-green-600' aria-hidden='true' />
+          ) : (
+            <SignalSlashIcon
+              className='h-6 w-6 text-red-600'
+              aria-hidden='true'
+            />
+          )}
+        </div>
       </header>
+
       <main>
-        <div className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8'>
+        <div className='mx-auto max-w-7xl py-6 px-2 sm:px-6 lg:px-8'>
           <Outlet />
         </div>
       </main>

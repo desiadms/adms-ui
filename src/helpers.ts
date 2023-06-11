@@ -251,10 +251,8 @@ export function hasuraMutation<TResult, TVariables>({
     })
 }
 
-export function useAuth() {
+export function useIsOnline() {
   const [isOnline, setIsOnline] = useState(navigator.onLine)
-  const { isAuthenticated, isLoading } = useAuthenticationStatus()
-
   useEffect(() => {
     const handleOfflineStatus = () => {
       setIsOnline(false)
@@ -272,6 +270,12 @@ export function useAuth() {
       window.removeEventListener('online', handleOnlineStatus)
     }
   }, [])
+  return isOnline
+}
+
+export function useAuth() {
+  const isOnline = useIsOnline()
+  const { isAuthenticated, isLoading } = useAuthenticationStatus()
 
   return !isOnline
     ? { isAuthenticated: true, isLoading: false }
