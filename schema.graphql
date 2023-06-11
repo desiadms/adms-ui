@@ -3637,6 +3637,19 @@ type mutation_root {
   delete_tasks_by_pk(id: uuid!): tasks
 
   """
+  delete data from the table: "usersMetadata"
+  """
+  delete_usersMetadata(
+    """filter the rows which have to be deleted"""
+    where: usersMetadata_bool_exp!
+  ): usersMetadata_mutation_response
+
+  """
+  delete single row from the table: "usersMetadata"
+  """
+  delete_usersMetadata_by_pk(id: uuid!): usersMetadata
+
+  """
   insert a single row into the table: "auth.providers"
   """
   insertAuthProvider(
@@ -3921,6 +3934,28 @@ type mutation_root {
     """upsert condition"""
     on_conflict: tasks_on_conflict
   ): tasks
+
+  """
+  insert data into the table: "usersMetadata"
+  """
+  insert_usersMetadata(
+    """the rows to be inserted"""
+    objects: [usersMetadata_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: usersMetadata_on_conflict
+  ): usersMetadata_mutation_response
+
+  """
+  insert a single row into the table: "usersMetadata"
+  """
+  insert_usersMetadata_one(
+    """the row to be inserted"""
+    object: usersMetadata_insert_input!
+
+    """upsert condition"""
+    on_conflict: usersMetadata_on_conflict
+  ): usersMetadata
 
   """
   update single row of the table: "auth.providers"
@@ -4421,6 +4456,34 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [tasks_updates!]!
   ): [tasks_mutation_response]
+
+  """
+  update data of the table: "usersMetadata"
+  """
+  update_usersMetadata(
+    """sets the columns of the filtered rows to the given values"""
+    _set: usersMetadata_set_input
+
+    """filter the rows which have to be updated"""
+    where: usersMetadata_bool_exp!
+  ): usersMetadata_mutation_response
+
+  """
+  update single row of the table: "usersMetadata"
+  """
+  update_usersMetadata_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: usersMetadata_set_input
+    pk_columns: usersMetadata_pk_columns_input!
+  ): usersMetadata
+
+  """
+  update multiples rows of table: "usersMetadata"
+  """
+  update_usersMetadata_many(
+    """updates to execute, in order"""
+    updates: [usersMetadata_updates!]!
+  ): [usersMetadata_mutation_response]
 
   """
   update multiples rows of table: "auth.users"
@@ -5019,6 +5082,49 @@ type query_root {
     """filter the rows returned"""
     where: users_bool_exp
   ): users_aggregate!
+
+  """
+  fetch data from the table: "usersMetadata"
+  """
+  usersMetadata(
+    """distinct select on columns"""
+    distinct_on: [usersMetadata_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [usersMetadata_order_by!]
+
+    """filter the rows returned"""
+    where: usersMetadata_bool_exp
+  ): [usersMetadata!]!
+
+  """
+  fetch aggregated fields from the table: "usersMetadata"
+  """
+  usersMetadata_aggregate(
+    """distinct select on columns"""
+    distinct_on: [usersMetadata_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [usersMetadata_order_by!]
+
+    """filter the rows returned"""
+    where: usersMetadata_bool_exp
+  ): usersMetadata_aggregate!
+
+  """fetch data from the table: "usersMetadata" using primary key columns"""
+  usersMetadata_by_pk(id: uuid!): usersMetadata
 }
 
 type subscription_root {
@@ -5758,6 +5864,63 @@ type subscription_root {
   ): users_aggregate!
 
   """
+  fetch data from the table: "usersMetadata"
+  """
+  usersMetadata(
+    """distinct select on columns"""
+    distinct_on: [usersMetadata_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [usersMetadata_order_by!]
+
+    """filter the rows returned"""
+    where: usersMetadata_bool_exp
+  ): [usersMetadata!]!
+
+  """
+  fetch aggregated fields from the table: "usersMetadata"
+  """
+  usersMetadata_aggregate(
+    """distinct select on columns"""
+    distinct_on: [usersMetadata_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [usersMetadata_order_by!]
+
+    """filter the rows returned"""
+    where: usersMetadata_bool_exp
+  ): usersMetadata_aggregate!
+
+  """fetch data from the table: "usersMetadata" using primary key columns"""
+  usersMetadata_by_pk(id: uuid!): usersMetadata
+
+  """
+  fetch data from the table in a streaming manner: "usersMetadata"
+  """
+  usersMetadata_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [usersMetadata_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: usersMetadata_bool_exp
+  ): [usersMetadata!]!
+
+  """
   fetch data from the table in a streaming manner: "auth.users"
   """
   users_stream(
@@ -6190,6 +6353,178 @@ type users {
     """filter the rows returned"""
     where: authUserProviders_bool_exp
   ): authUserProviders_aggregate!
+}
+
+"""
+columns and relationships of "usersMetadata"
+"""
+type usersMetadata {
+  id: uuid!
+  lastName: String!
+  name: String!
+
+  """An object relationship"""
+  usersMetadata_user: users!
+}
+
+"""
+aggregated selection of "usersMetadata"
+"""
+type usersMetadata_aggregate {
+  aggregate: usersMetadata_aggregate_fields
+  nodes: [usersMetadata!]!
+}
+
+"""
+aggregate fields of "usersMetadata"
+"""
+type usersMetadata_aggregate_fields {
+  count(columns: [usersMetadata_select_column!], distinct: Boolean): Int!
+  max: usersMetadata_max_fields
+  min: usersMetadata_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "usersMetadata". All fields are combined with a logical 'AND'.
+"""
+input usersMetadata_bool_exp {
+  _and: [usersMetadata_bool_exp!]
+  _not: usersMetadata_bool_exp
+  _or: [usersMetadata_bool_exp!]
+  id: uuid_comparison_exp
+  lastName: String_comparison_exp
+  name: String_comparison_exp
+  usersMetadata_user: users_bool_exp
+}
+
+"""
+unique or primary key constraints on table "usersMetadata"
+"""
+enum usersMetadata_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  usersMetadata_pkey
+}
+
+"""
+input type for inserting data into table "usersMetadata"
+"""
+input usersMetadata_insert_input {
+  id: uuid
+  lastName: String
+  name: String
+  usersMetadata_user: users_obj_rel_insert_input
+}
+
+"""aggregate max on columns"""
+type usersMetadata_max_fields {
+  id: uuid
+  lastName: String
+  name: String
+}
+
+"""aggregate min on columns"""
+type usersMetadata_min_fields {
+  id: uuid
+  lastName: String
+  name: String
+}
+
+"""
+response of any mutation on the table "usersMetadata"
+"""
+type usersMetadata_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [usersMetadata!]!
+}
+
+"""
+on_conflict condition type for table "usersMetadata"
+"""
+input usersMetadata_on_conflict {
+  constraint: usersMetadata_constraint!
+  update_columns: [usersMetadata_update_column!]! = []
+  where: usersMetadata_bool_exp
+}
+
+"""Ordering options when selecting data from "usersMetadata"."""
+input usersMetadata_order_by {
+  id: order_by
+  lastName: order_by
+  name: order_by
+  usersMetadata_user: users_order_by
+}
+
+"""primary key columns input for table: usersMetadata"""
+input usersMetadata_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "usersMetadata"
+"""
+enum usersMetadata_select_column {
+  """column name"""
+  id
+
+  """column name"""
+  lastName
+
+  """column name"""
+  name
+}
+
+"""
+input type for updating data in table "usersMetadata"
+"""
+input usersMetadata_set_input {
+  id: uuid
+  lastName: String
+  name: String
+}
+
+"""
+Streaming cursor of the table "usersMetadata"
+"""
+input usersMetadata_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: usersMetadata_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input usersMetadata_stream_cursor_value_input {
+  id: uuid
+  lastName: String
+  name: String
+}
+
+"""
+update columns of table "usersMetadata"
+"""
+enum usersMetadata_update_column {
+  """column name"""
+  id
+
+  """column name"""
+  lastName
+
+  """column name"""
+  name
+}
+
+input usersMetadata_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: usersMetadata_set_input
+
+  """filter the rows which have to be updated"""
+  where: usersMetadata_bool_exp!
 }
 
 """
