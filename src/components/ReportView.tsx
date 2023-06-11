@@ -28,7 +28,7 @@ const createTaskDocument = graphql(/* GraphQL */ `
     insert_tasks_one(object: { name: $name, id: $taskId }) {
       id
       name
-      user
+      userId
     }
     insert_images(objects: $images) {
       returning {

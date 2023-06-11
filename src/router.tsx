@@ -5,7 +5,6 @@ import { Dashboard, Home } from './components/Dashboard'
 import { GeoLocationView } from './components/GeoLocationView'
 import { QRCodeView } from './components/QRCodeView'
 import { ReportView, allTasksDocument } from './components/ReportView'
-import { Tasks } from './components/Tasks'
 import { nhost, queryClient } from './helpers'
 
 const rootRoute = new RootRoute({
@@ -16,13 +15,6 @@ const homeRoute = new Route({
   getParentRoute: () => rootRoute,
   path: 'home',
   component: () => <Home />,
-  errorComponent: () => 'Oh crap!'
-})
-
-const tasksRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: 'tasks',
-  component: () => <Tasks />,
   errorComponent: () => 'Oh crap!'
 })
 
@@ -76,7 +68,6 @@ const routeTree = (isRestoring: boolean) =>
   rootRoute.addChildren([
     homeRoute,
     reportRoute(isRestoring),
-    tasksRoute,
     geolocationRoute,
     qrcodeRoute
   ])
