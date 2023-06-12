@@ -155,11 +155,11 @@ export function Dashboard() {
 
       <header className='bg-white shadow-sm'>
         <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center'>
-          {currentRoute?.[0] !== '/' && (
-            <h1 className='text-lg font-semibold leading-6 text-gray-900'>
-              {routeLabel || 'No Route Found'}
-            </h1>
-          )}
+          <h1 className='text-lg font-semibold leading-6 text-gray-900'>
+            {currentRoute?.[0] !== '/'
+              ? routeLabel || 'No Route Found'
+              : 'Home'}
+          </h1>
           {isOnline ? (
             <SignalIcon className='h-6 w-6 text-green-600' aria-hidden='true' />
           ) : (
