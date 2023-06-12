@@ -44,12 +44,7 @@ function Login() {
       </div>
 
       <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className='space-y-6'
-          action='#'
-          method='POST'
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
           <div>
             <LabelledInput
               label='User ID'
