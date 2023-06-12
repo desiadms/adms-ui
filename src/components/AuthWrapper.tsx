@@ -4,6 +4,7 @@ import { RouterProvider } from '@tanstack/router'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../helpers'
 import { router } from '../router'
+import { Error, LabelledInput } from './Forms'
 import { Spinner } from './icons'
 
 type LoginFormData = {
@@ -16,10 +17,13 @@ function convertToEmail(id: string) {
 }
 
 function Login() {
-  const { signInEmailPassword, isLoading, isError, error } =
-    useSignInEmailPassword()
+  const { signInEmailPassword, isLoading, isError } = useSignInEmailPassword()
 
-  const { register, handleSubmit } = useForm<LoginFormData>()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<LoginFormData>()
 
   async function onSubmit(data: LoginFormData) {
     const email = convertToEmail(data.id)
@@ -47,39 +51,21 @@ function Login() {
           method='POST'
         >
           <div>
-            <div
-              htmlFor='id'
-              className='block text-sm font-medium leading-6 text-gray-900'
-            >
-              Email address
-            </div>
-            <div className='mt-2'>
-              <input
-                className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-700 sm:text-sm sm:leading-6'
-                type='text'
-                autoComplete='id'
-                {...register('id', { required: true })}
-              />
-            </div>
+            <LabelledInput
+              label='User ID'
+              type='text'
+              {...register('id', { required: 'User ID is required' })}
+            />
+            <Error message={errors.id?.message} />
           </div>
 
           <div>
-            <div className='flex items-center justify-between'>
-              <div
-                htmlFor='password'
-                className='block text-sm font-medium leading-6 text-gray-900'
-              >
-                Password
-              </div>
-            </div>
-            <div className='mt-2'>
-              <input
-                className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-700 sm:text-sm sm:leading-6'
-                type='password'
-                autoComplete='current-password'
-                {...register('password', { required: true })}
-              />
-            </div>
+            <LabelledInput
+              label='Password'
+              type='password'
+              {...register('password', { required: 'Password is required' })}
+            />
+            <Error message={errors.password?.message} />
           </div>
           <div>
             <button
@@ -95,11 +81,7 @@ function Login() {
                 />
               )}
             </button>
-            {isError && (
-              <div className='mt-2 text-center text-sm text-red-600'>
-                {error?.message}
-              </div>
-            )}
+            {isError && <Error message='Invalid user ID or password' />}
           </div>
         </form>
       </div>
