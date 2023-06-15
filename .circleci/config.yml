@@ -46,6 +46,7 @@ workflows:
   build-test-deploy:
     jobs:
       - build
+          context: staging-adms-ui
       - deploy-staging:
           requires:
             - build
