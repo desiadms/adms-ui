@@ -27,6 +27,7 @@ jobs:
       - heroku/install
       - heroku/deploy-via-git:
           app-name: staging-adms-ui
+          force: true
 
   deploy-production:
     executor: heroku/default
