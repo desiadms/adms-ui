@@ -3001,6 +3001,10 @@ export type Mutation_Root = {
   delete_tasks?: Maybe<Tasks_Mutation_Response>;
   /** delete single row from the table: "tasks" */
   delete_tasks_by_pk?: Maybe<Tasks>;
+  /** delete data from the table: "usersMetadata" */
+  delete_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
+  /** delete single row from the table: "usersMetadata" */
+  delete_usersMetadata_by_pk?: Maybe<UsersMetadata>;
   /** insert a single row into the table: "auth.providers" */
   insertAuthProvider?: Maybe<AuthProviders>;
   /** insert a single row into the table: "auth.provider_requests" */
@@ -3057,6 +3061,10 @@ export type Mutation_Root = {
   insert_tasks?: Maybe<Tasks_Mutation_Response>;
   /** insert a single row into the table: "tasks" */
   insert_tasks_one?: Maybe<Tasks>;
+  /** insert data into the table: "usersMetadata" */
+  insert_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
+  /** insert a single row into the table: "usersMetadata" */
+  insert_usersMetadata_one?: Maybe<UsersMetadata>;
   /** update single row of the table: "auth.providers" */
   updateAuthProvider?: Maybe<AuthProviders>;
   /** update single row of the table: "auth.provider_requests" */
@@ -3139,6 +3147,12 @@ export type Mutation_Root = {
   update_tasks_by_pk?: Maybe<Tasks>;
   /** update multiples rows of table: "tasks" */
   update_tasks_many?: Maybe<Array<Maybe<Tasks_Mutation_Response>>>;
+  /** update data of the table: "usersMetadata" */
+  update_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
+  /** update single row of the table: "usersMetadata" */
+  update_usersMetadata_by_pk?: Maybe<UsersMetadata>;
+  /** update multiples rows of table: "usersMetadata" */
+  update_usersMetadata_many?: Maybe<Array<Maybe<UsersMetadata_Mutation_Response>>>;
   /** update multiples rows of table: "auth.users" */
   update_users_many?: Maybe<Array<Maybe<Users_Mutation_Response>>>;
 };
@@ -3308,6 +3322,18 @@ export type Mutation_RootDelete_TasksArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Tasks_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_UsersMetadataArgs = {
+  where: UsersMetadata_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_UsersMetadata_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -3505,6 +3531,20 @@ export type Mutation_RootInsert_TasksArgs = {
 export type Mutation_RootInsert_Tasks_OneArgs = {
   object: Tasks_Insert_Input;
   on_conflict?: InputMaybe<Tasks_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_UsersMetadataArgs = {
+  objects: Array<UsersMetadata_Insert_Input>;
+  on_conflict?: InputMaybe<UsersMetadata_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_UsersMetadata_OneArgs = {
+  object: UsersMetadata_Insert_Input;
+  on_conflict?: InputMaybe<UsersMetadata_On_Conflict>;
 };
 
 
@@ -3819,6 +3859,26 @@ export type Mutation_RootUpdate_Tasks_ManyArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_UsersMetadataArgs = {
+  _set?: InputMaybe<UsersMetadata_Set_Input>;
+  where: UsersMetadata_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_UsersMetadata_By_PkArgs = {
+  _set?: InputMaybe<UsersMetadata_Set_Input>;
+  pk_columns: UsersMetadata_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_UsersMetadata_ManyArgs = {
+  updates: Array<UsersMetadata_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Users_ManyArgs = {
   updates: Array<Users_Updates>;
 };
@@ -4094,6 +4154,12 @@ export type Query_Root = {
   users: Array<Users>;
   /** fetch aggregated fields from the table: "auth.users" */
   usersAggregate: Users_Aggregate;
+  /** fetch data from the table: "usersMetadata" */
+  usersMetadata: Array<UsersMetadata>;
+  /** fetch aggregated fields from the table: "usersMetadata" */
+  usersMetadata_aggregate: UsersMetadata_Aggregate;
+  /** fetch data from the table: "usersMetadata" using primary key columns */
+  usersMetadata_by_pk?: Maybe<UsersMetadata>;
 };
 
 
@@ -4418,6 +4484,29 @@ export type Query_RootUsersAggregateArgs = {
   where?: InputMaybe<Users_Bool_Exp>;
 };
 
+
+export type Query_RootUsersMetadataArgs = {
+  distinct_on?: InputMaybe<Array<UsersMetadata_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UsersMetadata_Order_By>>;
+  where?: InputMaybe<UsersMetadata_Bool_Exp>;
+};
+
+
+export type Query_RootUsersMetadata_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<UsersMetadata_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UsersMetadata_Order_By>>;
+  where?: InputMaybe<UsersMetadata_Bool_Exp>;
+};
+
+
+export type Query_RootUsersMetadata_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
 export type Subscription_Root = {
   __typename?: 'subscription_root';
   /** fetch data from the table: "auth.providers" using primary key columns */
@@ -4530,6 +4619,14 @@ export type Subscription_Root = {
   users: Array<Users>;
   /** fetch aggregated fields from the table: "auth.users" */
   usersAggregate: Users_Aggregate;
+  /** fetch data from the table: "usersMetadata" */
+  usersMetadata: Array<UsersMetadata>;
+  /** fetch aggregated fields from the table: "usersMetadata" */
+  usersMetadata_aggregate: UsersMetadata_Aggregate;
+  /** fetch data from the table: "usersMetadata" using primary key columns */
+  usersMetadata_by_pk?: Maybe<UsersMetadata>;
+  /** fetch data from the table in a streaming manner: "usersMetadata" */
+  usersMetadata_stream: Array<UsersMetadata>;
   /** fetch data from the table in a streaming manner: "auth.users" */
   users_stream: Array<Users>;
 };
@@ -4948,6 +5045,36 @@ export type Subscription_RootUsersAggregateArgs = {
 };
 
 
+export type Subscription_RootUsersMetadataArgs = {
+  distinct_on?: InputMaybe<Array<UsersMetadata_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UsersMetadata_Order_By>>;
+  where?: InputMaybe<UsersMetadata_Bool_Exp>;
+};
+
+
+export type Subscription_RootUsersMetadata_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<UsersMetadata_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UsersMetadata_Order_By>>;
+  where?: InputMaybe<UsersMetadata_Bool_Exp>;
+};
+
+
+export type Subscription_RootUsersMetadata_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootUsersMetadata_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<UsersMetadata_Stream_Cursor_Input>>;
+  where?: InputMaybe<UsersMetadata_Bool_Exp>;
+};
+
+
 export type Subscription_RootUsers_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Users_Stream_Cursor_Input>>;
@@ -5343,6 +5470,169 @@ export type UsersUserProviders_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   order_by?: InputMaybe<Array<AuthUserProviders_Order_By>>;
   where?: InputMaybe<AuthUserProviders_Bool_Exp>;
+};
+
+/** columns and relationships of "usersMetadata" */
+export type UsersMetadata = {
+  __typename?: 'usersMetadata';
+  id: Scalars['uuid']['output'];
+  jobPosition: Scalars['String']['output'];
+  lastName: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  /** An object relationship */
+  usersMetadata_user: Users;
+};
+
+/** aggregated selection of "usersMetadata" */
+export type UsersMetadata_Aggregate = {
+  __typename?: 'usersMetadata_aggregate';
+  aggregate?: Maybe<UsersMetadata_Aggregate_Fields>;
+  nodes: Array<UsersMetadata>;
+};
+
+/** aggregate fields of "usersMetadata" */
+export type UsersMetadata_Aggregate_Fields = {
+  __typename?: 'usersMetadata_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<UsersMetadata_Max_Fields>;
+  min?: Maybe<UsersMetadata_Min_Fields>;
+};
+
+
+/** aggregate fields of "usersMetadata" */
+export type UsersMetadata_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<UsersMetadata_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "usersMetadata". All fields are combined with a logical 'AND'. */
+export type UsersMetadata_Bool_Exp = {
+  _and?: InputMaybe<Array<UsersMetadata_Bool_Exp>>;
+  _not?: InputMaybe<UsersMetadata_Bool_Exp>;
+  _or?: InputMaybe<Array<UsersMetadata_Bool_Exp>>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  jobPosition?: InputMaybe<String_Comparison_Exp>;
+  lastName?: InputMaybe<String_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  usersMetadata_user?: InputMaybe<Users_Bool_Exp>;
+};
+
+/** unique or primary key constraints on table "usersMetadata" */
+export enum UsersMetadata_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  UsersMetadataPkey = 'usersMetadata_pkey'
+}
+
+/** input type for inserting data into table "usersMetadata" */
+export type UsersMetadata_Insert_Input = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  jobPosition?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  usersMetadata_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+};
+
+/** aggregate max on columns */
+export type UsersMetadata_Max_Fields = {
+  __typename?: 'usersMetadata_max_fields';
+  id?: Maybe<Scalars['uuid']['output']>;
+  jobPosition?: Maybe<Scalars['String']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type UsersMetadata_Min_Fields = {
+  __typename?: 'usersMetadata_min_fields';
+  id?: Maybe<Scalars['uuid']['output']>;
+  jobPosition?: Maybe<Scalars['String']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "usersMetadata" */
+export type UsersMetadata_Mutation_Response = {
+  __typename?: 'usersMetadata_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<UsersMetadata>;
+};
+
+/** on_conflict condition type for table "usersMetadata" */
+export type UsersMetadata_On_Conflict = {
+  constraint: UsersMetadata_Constraint;
+  update_columns?: Array<UsersMetadata_Update_Column>;
+  where?: InputMaybe<UsersMetadata_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "usersMetadata". */
+export type UsersMetadata_Order_By = {
+  id?: InputMaybe<Order_By>;
+  jobPosition?: InputMaybe<Order_By>;
+  lastName?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  usersMetadata_user?: InputMaybe<Users_Order_By>;
+};
+
+/** primary key columns input for table: usersMetadata */
+export type UsersMetadata_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "usersMetadata" */
+export enum UsersMetadata_Select_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  JobPosition = 'jobPosition',
+  /** column name */
+  LastName = 'lastName',
+  /** column name */
+  Name = 'name'
+}
+
+/** input type for updating data in table "usersMetadata" */
+export type UsersMetadata_Set_Input = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  jobPosition?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "usersMetadata" */
+export type UsersMetadata_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: UsersMetadata_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type UsersMetadata_Stream_Cursor_Value_Input = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  jobPosition?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "usersMetadata" */
+export enum UsersMetadata_Update_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  JobPosition = 'jobPosition',
+  /** column name */
+  LastName = 'lastName',
+  /** column name */
+  Name = 'name'
+}
+
+export type UsersMetadata_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<UsersMetadata_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: UsersMetadata_Bool_Exp;
 };
 
 /** aggregated selection of "auth.users" */
