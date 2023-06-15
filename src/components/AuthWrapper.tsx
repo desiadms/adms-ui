@@ -4,7 +4,7 @@ import { RouterProvider } from '@tanstack/router'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../helpers'
 import { router } from '../router'
-import { Error, LabelledInput } from './Forms'
+import { Button, Error, LabelledInput } from './Forms'
 import { Spinner } from './icons'
 
 type LoginFormData = {
@@ -63,19 +63,15 @@ function Login() {
             <Error message={errors.password?.message} />
           </div>
           <div>
-            <button
-              type='submit'
-              className='flex w-full justify-center items-center rounded-md bg-gray-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-700'
-              disabled={isLoading}
-            >
+            <Button disabled={isLoading} type='submit'>
               Sign in
               {isLoading && (
                 <Spinner
-                  className='ml-2 h-4 w-4 text-white'
+                  className='animate-spin h-4 w-4 text-white'
                   aria-hidden='true'
                 />
               )}
-            </button>
+            </Button>
             {isError && <Error message='Invalid user ID or password' />}
           </div>
         </form>

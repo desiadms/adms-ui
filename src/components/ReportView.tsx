@@ -1,10 +1,20 @@
+import { CameraIcon, XCircleIcon } from '@heroicons/react/24/solid'
 import { useQueryClient } from '@tanstack/react-query'
+import classNames from 'classnames'
 import { useEffect, useState } from 'preact/hooks'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { AllTasksQuery } from 'src/gql/graphql'
 import { v4 } from 'uuid'
 import { graphql } from '../gql'
 import { hasuraMutation, nhost, useHasuraQuery } from '../helpers'
+import {
+  Button,
+  Error,
+  Input,
+  LabelledInput,
+  buttonClasses,
+  useFilesForm
+} from './Forms'
 
 export const allTasksDocument = graphql(/* GraphQL */ `
   query allTasks {
@@ -38,20 +48,6 @@ const createTaskDocument = graphql(/* GraphQL */ `
     }
   }
 `)
-
-function onChangeStoreFile(e, callback) {
-  const fileInput = e.target
-  const file = fileInput.files?.[0]
-
-  const reader = new FileReader()
-
-  reader.onload = (e: ProgressEvent<FileReader>) => {
-    const url = e?.target?.result
-    callback(url)
-  }
-
-  reader.readAsDataURL(file)
-}
 
 function saveMedia(variables) {
   const { files } = variables
@@ -119,44 +115,76 @@ function Task({ data }: { data: AllTasksQuery }) {
   )
 }
 
-export function ReportView() {
-  const {
-    register,
-    handleSubmit,
-    setError,
-    clearErrors,
-    formState: { errors }
-  } = useForm()
+type FileForm = { fileInstance: File | undefined }
+type TaskFormData = {
+  task: string
+  files: FileForm[]
+}
 
+function genFileMetadata(filesData: FileForm[]) {
+  const taskId = v4()
+
+  const fileMetadata = filesData
+    .filter((file) => file?.fileInstance && file.fileInstance[0])
+    .map(({ fileInstance }) => ({
+      id: v4(),
+      taskId,
+      file: fileInstance && fileInstance[0]
+    }))
+  const images = fileMetadata.map(({ id, taskId }) => ({ id, taskId }))
+  const files = fileMetadata.map(({ id, file }) => ({ id, file }))
+
+  return { images, files, taskId }
+}
+
+export function ReportView() {
   const { data } = useHasuraQuery({
     queryKey: ['allTasks'],
     document: allTasksDocument
   })
 
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    control,
+    formState: { errors }
+  } = useForm<TaskFormData>({
+    defaultValues: {
+      task: '',
+      files: [{ fileInstance: undefined }]
+    }
+  })
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'files'
+  })
+
+  const {
+    useFilePreviews: [filePreviews],
+    onChangeSetFilePreview,
+    validateFileSize,
+    removePreview
+  } = useFilesForm()
+
   const submitTask = taskMutation()
 
-  function submitForm(data) {
+  function submitForm(data: TaskFormData) {
     clearErrors()
 
     // to check that at least one file was uploaded
-    const hasFiles = data.files.some((file) => file[0])
+    const hasFiles = data.files.some(
+      (file) => file.fileInstance && file.fileInstance[0]
+    )
 
     if (!hasFiles) {
       setError('files', { message: 'Please take at least one picture' })
       return
     }
 
-    const taskId = v4()
-
-    const fileMetadata = data.files
-      .filter((file) => file[0])
-      .map((file) => ({
-        id: v4(),
-        taskId,
-        file: file[0]
-      }))
-    const images = fileMetadata.map(({ id, taskId }) => ({ id, taskId }))
-    const files = fileMetadata.map(({ id, file }) => ({ id, file }))
+    const { taskId, images, files } = genFileMetadata(data.files)
 
     submitTask.mutate({
       hasura: { name: data.task, taskId, images },
@@ -164,10 +192,21 @@ export function ReportView() {
     })
   }
 
+  const maxSize = 3
+
+  function handleAppend() {
+    if (fields.length < maxSize) {
+      append({ fileInstance: undefined })
+    }
+  }
+
+  function handleRemove(index: number, id: string) {
+    removePreview(id)
+    remove(index)
+  }
+
   const queryClient = useQueryClient()
   const mutationCache = queryClient.getMutationCache().getAll()
-
-  const [localImageUrls, setLocalImageUrls] = useState<Record<string, string>>()
 
   return (
     <div>
@@ -175,49 +214,78 @@ export function ReportView() {
         onSubmit={handleSubmit(submitForm)}
         className='flex flex-col gap-2 items-start'
       >
-        {[0, 1, 2].map((index) => (
-          <div key={index} className='flex gap-4 p-2 bg-slate-300 w-fit'>
-            <label htmlFor={`file-${index}`}>
-              Take Picture {index + 1}
-              <input
-                id={`file-${index}`}
+        {fields.map(({ id }, index) => (
+          <div key={id}>
+            <label
+              className={classNames(buttonClasses, {
+                hidden: filePreviews && filePreviews[id]
+              })}
+            >
+              <CameraIcon className='w-6 h-6 text-white' />
+              Take Picture
+              <Input
                 type='file'
                 accept='image/*'
                 capture='camera'
-                className='hidden'
-                {...register(`files[${index}]`, {
+                hidden
+                {...register(`files.${index}.fileInstance`, {
+                  validate: {
+                    lessThan5MB: (file) =>
+                      validateFileSize(file, 5 * 1024 * 1024)
+                  },
                   onChange: (e) => {
-                    onChangeStoreFile(e, (url) =>
-                      setLocalImageUrls({ ...localImageUrls, [index]: url })
-                    )
+                    onChangeSetFilePreview(e, id)
                   }
                 })}
               />
             </label>
-            {localImageUrls && localImageUrls[index] && (
+            {filePreviews && filePreviews[id] && (
               <div>
-                <img className='w-20' src={localImageUrls[index]} alt='' />
+                <div className='relative w-1/2'>
+                  <img
+                    className='w-full object-cover'
+                    src={filePreviews[id]}
+                    alt=''
+                  />
+                  <button
+                    className='absolute -top-4 -right-4 rounded-full bg-gray-800'
+                    type='button'
+                    onClick={() => handleRemove(index, id)}
+                  >
+                    <XCircleIcon className='w-10 h-10 text-red-400' />
+                  </button>
+                </div>
               </div>
+            )}
+            {errors.files && errors.files[index] && (
+              <Error message={errors.files[index]?.fileInstance?.message} />
             )}
           </div>
         ))}
+        {fields.length < maxSize && (
+          <div>
+            <Button type='button' onClick={handleAppend}>
+              + Add Picture
+            </Button>
+          </div>
+        )}
 
         {errors.files && <p className='text-red-500'>{errors.files.message}</p>}
 
         <div className='p-2 w-fit rounded-lg'>
-          <label htmlFor='task' className='flex flex-col gap-2'>
-            Task Name
-            <input
-              id='task'
-              type='text'
-              {...register('task', { required: true })}
-            />
-          </label>
+          <LabelledInput
+            label='Task Name'
+            type='text'
+            {...register('task', { required: 'Task name is required' })}
+          />
+          <Error message={errors.task?.message} />
         </div>
-        {errors.task && <p className='text-red-500'>Task name is required</p>}
-        <button className='p-2 mt-4 bg-green-300 ' type='submit'>
-          Submit
-        </button>
+
+        <div>
+          <Button type='submit' disabled={submitTask.isLoading}>
+            Submit
+          </Button>
+        </div>
       </form>
 
       {data && <Task data={data} />}

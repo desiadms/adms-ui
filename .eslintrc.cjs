@@ -39,11 +39,24 @@ module.exports = {
     'no-template-curly-in-string': 'off',
     'no-nested-ternary': 'off',
     'prefer-spread': 'off',
-    'no-unused-vars': 'off',
     'no-shadow': 'off',
     'consistent-return': 'off',
     'no-console': 'off',
     'jsx-a11y/media-has-caption': 'off',
-    '@typescript-eslint/ban-ts-comment': 'off'
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/naming-convention': [
+      'error',
+      {
+        selector: 'variable',
+        format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+        leadingUnderscore: 'allow'
+      }
+    ],
+    'jsx-a11y/label-has-associated-control': [
+      2,
+      {
+        controlComponents: ['Input']
+      }
+    ]
   }
 }

@@ -3624,6 +3624,19 @@ type mutation_root {
   delete_images_by_pk(id: uuid!): images
 
   """
+  delete data from the table: "projects"
+  """
+  delete_projects(
+    """filter the rows which have to be deleted"""
+    where: projects_bool_exp!
+  ): projects_mutation_response
+
+  """
+  delete single row from the table: "projects"
+  """
+  delete_projects_by_pk(id: uuid!): projects
+
+  """
   delete data from the table: "tasks"
   """
   delete_tasks(
@@ -3635,19 +3648,6 @@ type mutation_root {
   delete single row from the table: "tasks"
   """
   delete_tasks_by_pk(id: uuid!): tasks
-
-  """
-  delete data from the table: "usersMetadata"
-  """
-  delete_usersMetadata(
-    """filter the rows which have to be deleted"""
-    where: usersMetadata_bool_exp!
-  ): usersMetadata_mutation_response
-
-  """
-  delete single row from the table: "usersMetadata"
-  """
-  delete_usersMetadata_by_pk(id: uuid!): usersMetadata
 
   """
   insert a single row into the table: "auth.providers"
@@ -3914,6 +3914,28 @@ type mutation_root {
   ): images
 
   """
+  insert data into the table: "projects"
+  """
+  insert_projects(
+    """the rows to be inserted"""
+    objects: [projects_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: projects_on_conflict
+  ): projects_mutation_response
+
+  """
+  insert a single row into the table: "projects"
+  """
+  insert_projects_one(
+    """the row to be inserted"""
+    object: projects_insert_input!
+
+    """upsert condition"""
+    on_conflict: projects_on_conflict
+  ): projects
+
+  """
   insert data into the table: "tasks"
   """
   insert_tasks(
@@ -3934,28 +3956,6 @@ type mutation_root {
     """upsert condition"""
     on_conflict: tasks_on_conflict
   ): tasks
-
-  """
-  insert data into the table: "usersMetadata"
-  """
-  insert_usersMetadata(
-    """the rows to be inserted"""
-    objects: [usersMetadata_insert_input!]!
-
-    """upsert condition"""
-    on_conflict: usersMetadata_on_conflict
-  ): usersMetadata_mutation_response
-
-  """
-  insert a single row into the table: "usersMetadata"
-  """
-  insert_usersMetadata_one(
-    """the row to be inserted"""
-    object: usersMetadata_insert_input!
-
-    """upsert condition"""
-    on_conflict: usersMetadata_on_conflict
-  ): usersMetadata
 
   """
   update single row of the table: "auth.providers"
@@ -4430,6 +4430,34 @@ type mutation_root {
   ): [images_mutation_response]
 
   """
+  update data of the table: "projects"
+  """
+  update_projects(
+    """sets the columns of the filtered rows to the given values"""
+    _set: projects_set_input
+
+    """filter the rows which have to be updated"""
+    where: projects_bool_exp!
+  ): projects_mutation_response
+
+  """
+  update single row of the table: "projects"
+  """
+  update_projects_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: projects_set_input
+    pk_columns: projects_pk_columns_input!
+  ): projects
+
+  """
+  update multiples rows of table: "projects"
+  """
+  update_projects_many(
+    """updates to execute, in order"""
+    updates: [projects_updates!]!
+  ): [projects_mutation_response]
+
+  """
   update data of the table: "tasks"
   """
   update_tasks(
@@ -4456,34 +4484,6 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [tasks_updates!]!
   ): [tasks_mutation_response]
-
-  """
-  update data of the table: "usersMetadata"
-  """
-  update_usersMetadata(
-    """sets the columns of the filtered rows to the given values"""
-    _set: usersMetadata_set_input
-
-    """filter the rows which have to be updated"""
-    where: usersMetadata_bool_exp!
-  ): usersMetadata_mutation_response
-
-  """
-  update single row of the table: "usersMetadata"
-  """
-  update_usersMetadata_by_pk(
-    """sets the columns of the filtered rows to the given values"""
-    _set: usersMetadata_set_input
-    pk_columns: usersMetadata_pk_columns_input!
-  ): usersMetadata
-
-  """
-  update multiples rows of table: "usersMetadata"
-  """
-  update_usersMetadata_many(
-    """updates to execute, in order"""
-    updates: [usersMetadata_updates!]!
-  ): [usersMetadata_mutation_response]
 
   """
   update multiples rows of table: "auth.users"
@@ -4513,6 +4513,208 @@ enum order_by {
 
   """in descending order, nulls last"""
   desc_nulls_last
+}
+
+"""
+columns and relationships of "projects"
+"""
+type projects {
+  id: uuid!
+  name: String!
+
+  """An array relationship"""
+  projects_tasks(
+    """distinct select on columns"""
+    distinct_on: [tasks_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_bool_exp
+  ): [tasks!]!
+
+  """An aggregate relationship"""
+  projects_tasks_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_bool_exp
+  ): tasks_aggregate!
+}
+
+"""
+aggregated selection of "projects"
+"""
+type projects_aggregate {
+  aggregate: projects_aggregate_fields
+  nodes: [projects!]!
+}
+
+"""
+aggregate fields of "projects"
+"""
+type projects_aggregate_fields {
+  count(columns: [projects_select_column!], distinct: Boolean): Int!
+  max: projects_max_fields
+  min: projects_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "projects". All fields are combined with a logical 'AND'.
+"""
+input projects_bool_exp {
+  _and: [projects_bool_exp!]
+  _not: projects_bool_exp
+  _or: [projects_bool_exp!]
+  id: uuid_comparison_exp
+  name: String_comparison_exp
+  projects_tasks: tasks_bool_exp
+  projects_tasks_aggregate: tasks_aggregate_bool_exp
+}
+
+"""
+unique or primary key constraints on table "projects"
+"""
+enum projects_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  projects_pkey
+}
+
+"""
+input type for inserting data into table "projects"
+"""
+input projects_insert_input {
+  id: uuid
+  name: String
+  projects_tasks: tasks_arr_rel_insert_input
+}
+
+"""aggregate max on columns"""
+type projects_max_fields {
+  id: uuid
+  name: String
+}
+
+"""aggregate min on columns"""
+type projects_min_fields {
+  id: uuid
+  name: String
+}
+
+"""
+response of any mutation on the table "projects"
+"""
+type projects_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [projects!]!
+}
+
+"""
+input type for inserting object relation for remote table "projects"
+"""
+input projects_obj_rel_insert_input {
+  data: projects_insert_input!
+
+  """upsert condition"""
+  on_conflict: projects_on_conflict
+}
+
+"""
+on_conflict condition type for table "projects"
+"""
+input projects_on_conflict {
+  constraint: projects_constraint!
+  update_columns: [projects_update_column!]! = []
+  where: projects_bool_exp
+}
+
+"""Ordering options when selecting data from "projects"."""
+input projects_order_by {
+  id: order_by
+  name: order_by
+  projects_tasks_aggregate: tasks_aggregate_order_by
+}
+
+"""primary key columns input for table: projects"""
+input projects_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "projects"
+"""
+enum projects_select_column {
+  """column name"""
+  id
+
+  """column name"""
+  name
+}
+
+"""
+input type for updating data in table "projects"
+"""
+input projects_set_input {
+  id: uuid
+  name: String
+}
+
+"""
+Streaming cursor of the table "projects"
+"""
+input projects_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: projects_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input projects_stream_cursor_value_input {
+  id: uuid
+  name: String
+}
+
+"""
+update columns of table "projects"
+"""
+enum projects_update_column {
+  """column name"""
+  id
+
+  """column name"""
+  name
+}
+
+input projects_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: projects_set_input
+
+  """filter the rows which have to be updated"""
+  where: projects_bool_exp!
 }
 
 type query_root {
@@ -4998,6 +5200,49 @@ type query_root {
   images_by_pk(id: uuid!): images
 
   """
+  fetch data from the table: "projects"
+  """
+  projects(
+    """distinct select on columns"""
+    distinct_on: [projects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_order_by!]
+
+    """filter the rows returned"""
+    where: projects_bool_exp
+  ): [projects!]!
+
+  """
+  fetch aggregated fields from the table: "projects"
+  """
+  projects_aggregate(
+    """distinct select on columns"""
+    distinct_on: [projects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_order_by!]
+
+    """filter the rows returned"""
+    where: projects_bool_exp
+  ): projects_aggregate!
+
+  """fetch data from the table: "projects" using primary key columns"""
+  projects_by_pk(id: uuid!): projects
+
+  """
   fetch data from the table: "tasks"
   """
   tasks(
@@ -5082,49 +5327,6 @@ type query_root {
     """filter the rows returned"""
     where: users_bool_exp
   ): users_aggregate!
-
-  """
-  fetch data from the table: "usersMetadata"
-  """
-  usersMetadata(
-    """distinct select on columns"""
-    distinct_on: [usersMetadata_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [usersMetadata_order_by!]
-
-    """filter the rows returned"""
-    where: usersMetadata_bool_exp
-  ): [usersMetadata!]!
-
-  """
-  fetch aggregated fields from the table: "usersMetadata"
-  """
-  usersMetadata_aggregate(
-    """distinct select on columns"""
-    distinct_on: [usersMetadata_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [usersMetadata_order_by!]
-
-    """filter the rows returned"""
-    where: usersMetadata_bool_exp
-  ): usersMetadata_aggregate!
-
-  """fetch data from the table: "usersMetadata" using primary key columns"""
-  usersMetadata_by_pk(id: uuid!): usersMetadata
 }
 
 type subscription_root {
@@ -5764,6 +5966,63 @@ type subscription_root {
   ): [images!]!
 
   """
+  fetch data from the table: "projects"
+  """
+  projects(
+    """distinct select on columns"""
+    distinct_on: [projects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_order_by!]
+
+    """filter the rows returned"""
+    where: projects_bool_exp
+  ): [projects!]!
+
+  """
+  fetch aggregated fields from the table: "projects"
+  """
+  projects_aggregate(
+    """distinct select on columns"""
+    distinct_on: [projects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_order_by!]
+
+    """filter the rows returned"""
+    where: projects_bool_exp
+  ): projects_aggregate!
+
+  """fetch data from the table: "projects" using primary key columns"""
+  projects_by_pk(id: uuid!): projects
+
+  """
+  fetch data from the table in a streaming manner: "projects"
+  """
+  projects_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [projects_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: projects_bool_exp
+  ): [projects!]!
+
+  """
   fetch data from the table: "tasks"
   """
   tasks(
@@ -5864,63 +6123,6 @@ type subscription_root {
   ): users_aggregate!
 
   """
-  fetch data from the table: "usersMetadata"
-  """
-  usersMetadata(
-    """distinct select on columns"""
-    distinct_on: [usersMetadata_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [usersMetadata_order_by!]
-
-    """filter the rows returned"""
-    where: usersMetadata_bool_exp
-  ): [usersMetadata!]!
-
-  """
-  fetch aggregated fields from the table: "usersMetadata"
-  """
-  usersMetadata_aggregate(
-    """distinct select on columns"""
-    distinct_on: [usersMetadata_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [usersMetadata_order_by!]
-
-    """filter the rows returned"""
-    where: usersMetadata_bool_exp
-  ): usersMetadata_aggregate!
-
-  """fetch data from the table: "usersMetadata" using primary key columns"""
-  usersMetadata_by_pk(id: uuid!): usersMetadata
-
-  """
-  fetch data from the table in a streaming manner: "usersMetadata"
-  """
-  usersMetadata_stream(
-    """maximum number of rows returned in a single batch"""
-    batch_size: Int!
-
-    """cursor to stream the results returned by the query"""
-    cursor: [usersMetadata_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: usersMetadata_bool_exp
-  ): [usersMetadata!]!
-
-  """
   fetch data from the table in a streaming manner: "auth.users"
   """
   users_stream(
@@ -5941,6 +6143,7 @@ columns and relationships of "tasks"
 type tasks {
   id: uuid!
   name: String!
+  projectId: uuid!
 
   """An array relationship"""
   tasks_images(
@@ -5979,6 +6182,9 @@ type tasks {
   ): images_aggregate!
 
   """An object relationship"""
+  tasks_project: projects!
+
+  """An object relationship"""
   tasks_user: users!
   userId: uuid!
 }
@@ -5991,6 +6197,17 @@ type tasks_aggregate {
   nodes: [tasks!]!
 }
 
+input tasks_aggregate_bool_exp {
+  count: tasks_aggregate_bool_exp_count
+}
+
+input tasks_aggregate_bool_exp_count {
+  arguments: [tasks_select_column!]
+  distinct: Boolean
+  filter: tasks_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 """
 aggregate fields of "tasks"
 """
@@ -5998,6 +6215,25 @@ type tasks_aggregate_fields {
   count(columns: [tasks_select_column!], distinct: Boolean): Int!
   max: tasks_max_fields
   min: tasks_min_fields
+}
+
+"""
+order by aggregate values of table "tasks"
+"""
+input tasks_aggregate_order_by {
+  count: order_by
+  max: tasks_max_order_by
+  min: tasks_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "tasks"
+"""
+input tasks_arr_rel_insert_input {
+  data: [tasks_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: tasks_on_conflict
 }
 
 """
@@ -6009,8 +6245,10 @@ input tasks_bool_exp {
   _or: [tasks_bool_exp!]
   id: uuid_comparison_exp
   name: String_comparison_exp
+  projectId: uuid_comparison_exp
   tasks_images: images_bool_exp
   tasks_images_aggregate: images_aggregate_bool_exp
+  tasks_project: projects_bool_exp
   tasks_user: users_bool_exp
   userId: uuid_comparison_exp
 }
@@ -6031,7 +6269,9 @@ input type for inserting data into table "tasks"
 input tasks_insert_input {
   id: uuid
   name: String
+  projectId: uuid
   tasks_images: images_arr_rel_insert_input
+  tasks_project: projects_obj_rel_insert_input
   tasks_user: users_obj_rel_insert_input
   userId: uuid
 }
@@ -6040,14 +6280,36 @@ input tasks_insert_input {
 type tasks_max_fields {
   id: uuid
   name: String
+  projectId: uuid
   userId: uuid
+}
+
+"""
+order by max() on columns of table "tasks"
+"""
+input tasks_max_order_by {
+  id: order_by
+  name: order_by
+  projectId: order_by
+  userId: order_by
 }
 
 """aggregate min on columns"""
 type tasks_min_fields {
   id: uuid
   name: String
+  projectId: uuid
   userId: uuid
+}
+
+"""
+order by min() on columns of table "tasks"
+"""
+input tasks_min_order_by {
+  id: order_by
+  name: order_by
+  projectId: order_by
+  userId: order_by
 }
 
 """
@@ -6084,7 +6346,9 @@ input tasks_on_conflict {
 input tasks_order_by {
   id: order_by
   name: order_by
+  projectId: order_by
   tasks_images_aggregate: images_aggregate_order_by
+  tasks_project: projects_order_by
   tasks_user: users_order_by
   userId: order_by
 }
@@ -6105,6 +6369,9 @@ enum tasks_select_column {
   name
 
   """column name"""
+  projectId
+
+  """column name"""
   userId
 }
 
@@ -6114,6 +6381,7 @@ input type for updating data in table "tasks"
 input tasks_set_input {
   id: uuid
   name: String
+  projectId: uuid
   userId: uuid
 }
 
@@ -6132,6 +6400,7 @@ input tasks_stream_cursor_input {
 input tasks_stream_cursor_value_input {
   id: uuid
   name: String
+  projectId: uuid
   userId: uuid
 }
 
@@ -6144,6 +6413,9 @@ enum tasks_update_column {
 
   """column name"""
   name
+
+  """column name"""
+  projectId
 
   """column name"""
   userId
@@ -6353,178 +6625,6 @@ type users {
     """filter the rows returned"""
     where: authUserProviders_bool_exp
   ): authUserProviders_aggregate!
-}
-
-"""
-columns and relationships of "usersMetadata"
-"""
-type usersMetadata {
-  id: uuid!
-  lastName: String!
-  name: String!
-
-  """An object relationship"""
-  usersMetadata_user: users!
-}
-
-"""
-aggregated selection of "usersMetadata"
-"""
-type usersMetadata_aggregate {
-  aggregate: usersMetadata_aggregate_fields
-  nodes: [usersMetadata!]!
-}
-
-"""
-aggregate fields of "usersMetadata"
-"""
-type usersMetadata_aggregate_fields {
-  count(columns: [usersMetadata_select_column!], distinct: Boolean): Int!
-  max: usersMetadata_max_fields
-  min: usersMetadata_min_fields
-}
-
-"""
-Boolean expression to filter rows from the table "usersMetadata". All fields are combined with a logical 'AND'.
-"""
-input usersMetadata_bool_exp {
-  _and: [usersMetadata_bool_exp!]
-  _not: usersMetadata_bool_exp
-  _or: [usersMetadata_bool_exp!]
-  id: uuid_comparison_exp
-  lastName: String_comparison_exp
-  name: String_comparison_exp
-  usersMetadata_user: users_bool_exp
-}
-
-"""
-unique or primary key constraints on table "usersMetadata"
-"""
-enum usersMetadata_constraint {
-  """
-  unique or primary key constraint on columns "id"
-  """
-  usersMetadata_pkey
-}
-
-"""
-input type for inserting data into table "usersMetadata"
-"""
-input usersMetadata_insert_input {
-  id: uuid
-  lastName: String
-  name: String
-  usersMetadata_user: users_obj_rel_insert_input
-}
-
-"""aggregate max on columns"""
-type usersMetadata_max_fields {
-  id: uuid
-  lastName: String
-  name: String
-}
-
-"""aggregate min on columns"""
-type usersMetadata_min_fields {
-  id: uuid
-  lastName: String
-  name: String
-}
-
-"""
-response of any mutation on the table "usersMetadata"
-"""
-type usersMetadata_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [usersMetadata!]!
-}
-
-"""
-on_conflict condition type for table "usersMetadata"
-"""
-input usersMetadata_on_conflict {
-  constraint: usersMetadata_constraint!
-  update_columns: [usersMetadata_update_column!]! = []
-  where: usersMetadata_bool_exp
-}
-
-"""Ordering options when selecting data from "usersMetadata"."""
-input usersMetadata_order_by {
-  id: order_by
-  lastName: order_by
-  name: order_by
-  usersMetadata_user: users_order_by
-}
-
-"""primary key columns input for table: usersMetadata"""
-input usersMetadata_pk_columns_input {
-  id: uuid!
-}
-
-"""
-select columns of table "usersMetadata"
-"""
-enum usersMetadata_select_column {
-  """column name"""
-  id
-
-  """column name"""
-  lastName
-
-  """column name"""
-  name
-}
-
-"""
-input type for updating data in table "usersMetadata"
-"""
-input usersMetadata_set_input {
-  id: uuid
-  lastName: String
-  name: String
-}
-
-"""
-Streaming cursor of the table "usersMetadata"
-"""
-input usersMetadata_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: usersMetadata_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input usersMetadata_stream_cursor_value_input {
-  id: uuid
-  lastName: String
-  name: String
-}
-
-"""
-update columns of table "usersMetadata"
-"""
-enum usersMetadata_update_column {
-  """column name"""
-  id
-
-  """column name"""
-  lastName
-
-  """column name"""
-  name
-}
-
-input usersMetadata_updates {
-  """sets the columns of the filtered rows to the given values"""
-  _set: usersMetadata_set_input
-
-  """filter the rows which have to be updated"""
-  where: usersMetadata_bool_exp!
 }
 
 """
