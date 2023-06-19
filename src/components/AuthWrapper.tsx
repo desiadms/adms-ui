@@ -1,6 +1,7 @@
 import { useSignInEmailPassword } from '@nhost/react'
 import { useIsRestoring } from '@tanstack/react-query'
 import { RouterProvider } from '@tanstack/router'
+import { useMemo } from 'preact/hooks'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../helpers'
 import { router } from '../router'
@@ -84,6 +85,8 @@ export function AuthWrapper() {
   const { isAuthenticated, isLoading } = useAuth()
   const isRestoring = useIsRestoring()
 
+  const memoizedRoutes = useMemo(() => router(isRestoring), [isRestoring])
+
   if (isLoading) {
     return (
       <div className='absolute w-screen h-screen top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
@@ -98,5 +101,5 @@ export function AuthWrapper() {
     return <Login />
   }
 
-  return <RouterProvider router={router(isRestoring)} />
+  return <RouterProvider router={memoizedRoutes} />
 }

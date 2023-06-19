@@ -6788,6 +6788,42 @@ type users {
     """filter the rows returned"""
     where: authUserProviders_bool_exp
   ): authUserProviders_aggregate!
+
+  """An array relationship"""
+  users_usersMetadata(
+    """distinct select on columns"""
+    distinct_on: [usersMetadata_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [usersMetadata_order_by!]
+
+    """filter the rows returned"""
+    where: usersMetadata_bool_exp
+  ): [usersMetadata!]!
+
+  """An aggregate relationship"""
+  users_usersMetadata_aggregate(
+    """distinct select on columns"""
+    distinct_on: [usersMetadata_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [usersMetadata_order_by!]
+
+    """filter the rows returned"""
+    where: usersMetadata_bool_exp
+  ): usersMetadata_aggregate!
 }
 
 """
@@ -6811,6 +6847,17 @@ type usersMetadata_aggregate {
   nodes: [usersMetadata!]!
 }
 
+input usersMetadata_aggregate_bool_exp {
+  count: usersMetadata_aggregate_bool_exp_count
+}
+
+input usersMetadata_aggregate_bool_exp_count {
+  arguments: [usersMetadata_select_column!]
+  distinct: Boolean
+  filter: usersMetadata_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 """
 aggregate fields of "usersMetadata"
 """
@@ -6818,6 +6865,25 @@ type usersMetadata_aggregate_fields {
   count(columns: [usersMetadata_select_column!], distinct: Boolean): Int!
   max: usersMetadata_max_fields
   min: usersMetadata_min_fields
+}
+
+"""
+order by aggregate values of table "usersMetadata"
+"""
+input usersMetadata_aggregate_order_by {
+  count: order_by
+  max: usersMetadata_max_order_by
+  min: usersMetadata_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "usersMetadata"
+"""
+input usersMetadata_arr_rel_insert_input {
+  data: [usersMetadata_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: usersMetadata_on_conflict
 }
 
 """
@@ -6863,12 +6929,32 @@ type usersMetadata_max_fields {
   name: String
 }
 
+"""
+order by max() on columns of table "usersMetadata"
+"""
+input usersMetadata_max_order_by {
+  id: order_by
+  jobPosition: order_by
+  lastName: order_by
+  name: order_by
+}
+
 """aggregate min on columns"""
 type usersMetadata_min_fields {
   id: uuid
   jobPosition: String
   lastName: String
   name: String
+}
+
+"""
+order by min() on columns of table "usersMetadata"
+"""
+input usersMetadata_min_order_by {
+  id: order_by
+  jobPosition: order_by
+  lastName: order_by
+  name: order_by
 }
 
 """
@@ -7085,6 +7171,8 @@ input users_bool_exp {
   updatedAt: timestamptz_comparison_exp
   userProviders: authUserProviders_bool_exp
   userProviders_aggregate: authUserProviders_aggregate_bool_exp
+  users_usersMetadata: usersMetadata_bool_exp
+  users_usersMetadata_aggregate: usersMetadata_aggregate_bool_exp
 }
 
 """
@@ -7162,6 +7250,7 @@ input users_insert_input {
   totpSecret: String
   updatedAt: timestamptz
   userProviders: authUserProviders_arr_rel_insert_input
+  users_usersMetadata: usersMetadata_arr_rel_insert_input
 }
 
 """aggregate max on columns"""
@@ -7326,6 +7415,7 @@ input users_order_by {
   totpSecret: order_by
   updatedAt: order_by
   userProviders_aggregate: authUserProviders_aggregate_order_by
+  users_usersMetadata_aggregate: usersMetadata_aggregate_order_by
 }
 
 """primary key columns input for table: auth.users"""

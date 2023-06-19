@@ -63,7 +63,7 @@ const taskMutation = hasuraMutation({
   callback: saveMedia
 })
 
-function Task({ data }: { data: AllTasksQuery }) {
+function Tasks({ data }: { data: AllTasksQuery }) {
   const [imageUrls, setImageUrls] = useState<Record<string, string[]>>()
 
   useEffect(() => {
@@ -71,7 +71,7 @@ function Task({ data }: { data: AllTasksQuery }) {
       const urls = await Promise.all(
         data.tasks.map(async (task) => {
           const urls = await Promise.all(
-            task.tasks_images.map(async (image) => {
+            task?.tasks_images.map(async (image) => {
               const { presignedUrl } = await nhost.storage.getPresignedUrl({
                 fileId: image.id
               })
@@ -288,7 +288,7 @@ export function ReportView() {
         </div>
       </form>
 
-      {data && <Task data={data} />}
+      {data && <Tasks data={data} />}
 
       {mutationCache?.map(({ state }) => {
         const { context, ...rest } = state
