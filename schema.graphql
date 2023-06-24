@@ -2687,6 +2687,23 @@ enum cursor_ordering {
   DESC
 }
 
+scalar date
+
+"""
+Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'.
+"""
+input date_comparison_exp {
+  _eq: date
+  _gt: date
+  _gte: date
+  _in: [date!]
+  _is_null: Boolean
+  _lt: date
+  _lte: date
+  _neq: date
+  _nin: [date!]
+}
+
 """
 columns and relationships of "storage.files"
 """
@@ -3229,7 +3246,7 @@ type images {
 
   """An object relationship"""
   images_task: tasks!
-  taskId: uuid!
+  task_id: uuid!
 }
 
 """
@@ -3289,7 +3306,7 @@ input images_bool_exp {
   id: uuid_comparison_exp
   images_file: files_bool_exp
   images_task: tasks_bool_exp
-  taskId: uuid_comparison_exp
+  task_id: uuid_comparison_exp
 }
 
 """
@@ -3309,13 +3326,13 @@ input images_insert_input {
   id: uuid
   images_file: files_obj_rel_insert_input
   images_task: tasks_obj_rel_insert_input
-  taskId: uuid
+  task_id: uuid
 }
 
 """aggregate max on columns"""
 type images_max_fields {
   id: uuid
-  taskId: uuid
+  task_id: uuid
 }
 
 """
@@ -3323,13 +3340,13 @@ order by max() on columns of table "images"
 """
 input images_max_order_by {
   id: order_by
-  taskId: order_by
+  task_id: order_by
 }
 
 """aggregate min on columns"""
 type images_min_fields {
   id: uuid
-  taskId: uuid
+  task_id: uuid
 }
 
 """
@@ -3337,7 +3354,7 @@ order by min() on columns of table "images"
 """
 input images_min_order_by {
   id: order_by
-  taskId: order_by
+  task_id: order_by
 }
 
 """
@@ -3365,7 +3382,7 @@ input images_order_by {
   id: order_by
   images_file: files_order_by
   images_task: tasks_order_by
-  taskId: order_by
+  task_id: order_by
 }
 
 """primary key columns input for table: images"""
@@ -3381,7 +3398,7 @@ enum images_select_column {
   id
 
   """column name"""
-  taskId
+  task_id
 }
 
 """
@@ -3389,7 +3406,7 @@ input type for updating data in table "images"
 """
 input images_set_input {
   id: uuid
-  taskId: uuid
+  task_id: uuid
 }
 
 """
@@ -3406,7 +3423,7 @@ input images_stream_cursor_input {
 """Initial value of the column from where the streaming should start"""
 input images_stream_cursor_value_input {
   id: uuid
-  taskId: uuid
+  task_id: uuid
 }
 
 """
@@ -3417,7 +3434,7 @@ enum images_update_column {
   id
 
   """column name"""
-  taskId
+  task_id
 }
 
 input images_updates {
@@ -4582,8 +4599,12 @@ enum order_by {
 columns and relationships of "projects"
 """
 type projects {
+  comment: String
+  contractor: String
   id: uuid!
+  location: String
   name: String!
+  poc: String
 
   """An array relationship"""
   projects_tasks(
@@ -4620,6 +4641,8 @@ type projects {
     """filter the rows returned"""
     where: tasks_bool_exp
   ): tasks_aggregate!
+  status: Boolean
+  sub_contractor: String
 }
 
 """
@@ -4646,10 +4669,16 @@ input projects_bool_exp {
   _and: [projects_bool_exp!]
   _not: projects_bool_exp
   _or: [projects_bool_exp!]
+  comment: String_comparison_exp
+  contractor: String_comparison_exp
   id: uuid_comparison_exp
+  location: String_comparison_exp
   name: String_comparison_exp
+  poc: String_comparison_exp
   projects_tasks: tasks_bool_exp
   projects_tasks_aggregate: tasks_aggregate_bool_exp
+  status: Boolean_comparison_exp
+  sub_contractor: String_comparison_exp
 }
 
 """
@@ -4666,21 +4695,37 @@ enum projects_constraint {
 input type for inserting data into table "projects"
 """
 input projects_insert_input {
+  comment: String
+  contractor: String
   id: uuid
+  location: String
   name: String
+  poc: String
   projects_tasks: tasks_arr_rel_insert_input
+  status: Boolean
+  sub_contractor: String
 }
 
 """aggregate max on columns"""
 type projects_max_fields {
+  comment: String
+  contractor: String
   id: uuid
+  location: String
   name: String
+  poc: String
+  sub_contractor: String
 }
 
 """aggregate min on columns"""
 type projects_min_fields {
+  comment: String
+  contractor: String
   id: uuid
+  location: String
   name: String
+  poc: String
+  sub_contractor: String
 }
 
 """
@@ -4715,9 +4760,15 @@ input projects_on_conflict {
 
 """Ordering options when selecting data from "projects"."""
 input projects_order_by {
+  comment: order_by
+  contractor: order_by
   id: order_by
+  location: order_by
   name: order_by
+  poc: order_by
   projects_tasks_aggregate: tasks_aggregate_order_by
+  status: order_by
+  sub_contractor: order_by
 }
 
 """primary key columns input for table: projects"""
@@ -4730,18 +4781,42 @@ select columns of table "projects"
 """
 enum projects_select_column {
   """column name"""
+  comment
+
+  """column name"""
+  contractor
+
+  """column name"""
   id
 
   """column name"""
+  location
+
+  """column name"""
   name
+
+  """column name"""
+  poc
+
+  """column name"""
+  status
+
+  """column name"""
+  sub_contractor
 }
 
 """
 input type for updating data in table "projects"
 """
 input projects_set_input {
+  comment: String
+  contractor: String
   id: uuid
+  location: String
   name: String
+  poc: String
+  status: Boolean
+  sub_contractor: String
 }
 
 """
@@ -4757,8 +4832,14 @@ input projects_stream_cursor_input {
 
 """Initial value of the column from where the streaming should start"""
 input projects_stream_cursor_value_input {
+  comment: String
+  contractor: String
   id: uuid
+  location: String
   name: String
+  poc: String
+  status: Boolean
+  sub_contractor: String
 }
 
 """
@@ -4766,10 +4847,28 @@ update columns of table "projects"
 """
 enum projects_update_column {
   """column name"""
+  comment
+
+  """column name"""
+  contractor
+
+  """column name"""
   id
 
   """column name"""
+  location
+
+  """column name"""
   name
+
+  """column name"""
+  poc
+
+  """column name"""
+  status
+
+  """column name"""
+  sub_contractor
 }
 
 input projects_updates {
@@ -6306,7 +6405,7 @@ columns and relationships of "tasks"
 type tasks {
   id: uuid!
   name: String!
-  projectId: uuid!
+  project_id: uuid!
 
   """An array relationship"""
   tasks_images(
@@ -6349,7 +6448,7 @@ type tasks {
 
   """An object relationship"""
   tasks_user: users!
-  userId: uuid!
+  user_id: uuid!
 }
 
 """
@@ -6408,12 +6507,12 @@ input tasks_bool_exp {
   _or: [tasks_bool_exp!]
   id: uuid_comparison_exp
   name: String_comparison_exp
-  projectId: uuid_comparison_exp
+  project_id: uuid_comparison_exp
   tasks_images: images_bool_exp
   tasks_images_aggregate: images_aggregate_bool_exp
   tasks_project: projects_bool_exp
   tasks_user: users_bool_exp
-  userId: uuid_comparison_exp
+  user_id: uuid_comparison_exp
 }
 
 """
@@ -6432,19 +6531,19 @@ input type for inserting data into table "tasks"
 input tasks_insert_input {
   id: uuid
   name: String
-  projectId: uuid
+  project_id: uuid
   tasks_images: images_arr_rel_insert_input
   tasks_project: projects_obj_rel_insert_input
   tasks_user: users_obj_rel_insert_input
-  userId: uuid
+  user_id: uuid
 }
 
 """aggregate max on columns"""
 type tasks_max_fields {
   id: uuid
   name: String
-  projectId: uuid
-  userId: uuid
+  project_id: uuid
+  user_id: uuid
 }
 
 """
@@ -6453,16 +6552,16 @@ order by max() on columns of table "tasks"
 input tasks_max_order_by {
   id: order_by
   name: order_by
-  projectId: order_by
-  userId: order_by
+  project_id: order_by
+  user_id: order_by
 }
 
 """aggregate min on columns"""
 type tasks_min_fields {
   id: uuid
   name: String
-  projectId: uuid
-  userId: uuid
+  project_id: uuid
+  user_id: uuid
 }
 
 """
@@ -6471,8 +6570,8 @@ order by min() on columns of table "tasks"
 input tasks_min_order_by {
   id: order_by
   name: order_by
-  projectId: order_by
-  userId: order_by
+  project_id: order_by
+  user_id: order_by
 }
 
 """
@@ -6509,11 +6608,11 @@ input tasks_on_conflict {
 input tasks_order_by {
   id: order_by
   name: order_by
-  projectId: order_by
+  project_id: order_by
   tasks_images_aggregate: images_aggregate_order_by
   tasks_project: projects_order_by
   tasks_user: users_order_by
-  userId: order_by
+  user_id: order_by
 }
 
 """primary key columns input for table: tasks"""
@@ -6532,10 +6631,10 @@ enum tasks_select_column {
   name
 
   """column name"""
-  projectId
+  project_id
 
   """column name"""
-  userId
+  user_id
 }
 
 """
@@ -6544,8 +6643,8 @@ input type for updating data in table "tasks"
 input tasks_set_input {
   id: uuid
   name: String
-  projectId: uuid
-  userId: uuid
+  project_id: uuid
+  user_id: uuid
 }
 
 """
@@ -6563,8 +6662,8 @@ input tasks_stream_cursor_input {
 input tasks_stream_cursor_value_input {
   id: uuid
   name: String
-  projectId: uuid
-  userId: uuid
+  project_id: uuid
+  user_id: uuid
 }
 
 """
@@ -6578,10 +6677,10 @@ enum tasks_update_column {
   name
 
   """column name"""
-  projectId
+  project_id
 
   """column name"""
-  userId
+  user_id
 }
 
 input tasks_updates {
@@ -6830,10 +6929,16 @@ type users {
 columns and relationships of "usersMetadata"
 """
 type usersMetadata {
+  first_name: String!
+  hire_date: date
   id: uuid!
-  jobPosition: String!
-  lastName: String!
-  name: String!
+  last_name: String!
+  role_data_manager: Boolean!
+  role_field_supervisor: Boolean!
+  role_filed_monitor: Boolean!
+  role_operations_manager: Boolean!
+  role_pc_admin: Boolean!
+  role_project_manager: Boolean!
 
   """An object relationship"""
   usersMetadata_user: users!
@@ -6848,7 +6953,23 @@ type usersMetadata_aggregate {
 }
 
 input usersMetadata_aggregate_bool_exp {
+  bool_and: usersMetadata_aggregate_bool_exp_bool_and
+  bool_or: usersMetadata_aggregate_bool_exp_bool_or
   count: usersMetadata_aggregate_bool_exp_count
+}
+
+input usersMetadata_aggregate_bool_exp_bool_and {
+  arguments: usersMetadata_select_column_usersMetadata_aggregate_bool_exp_bool_and_arguments_columns!
+  distinct: Boolean
+  filter: usersMetadata_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input usersMetadata_aggregate_bool_exp_bool_or {
+  arguments: usersMetadata_select_column_usersMetadata_aggregate_bool_exp_bool_or_arguments_columns!
+  distinct: Boolean
+  filter: usersMetadata_bool_exp
+  predicate: Boolean_comparison_exp!
 }
 
 input usersMetadata_aggregate_bool_exp_count {
@@ -6893,10 +7014,16 @@ input usersMetadata_bool_exp {
   _and: [usersMetadata_bool_exp!]
   _not: usersMetadata_bool_exp
   _or: [usersMetadata_bool_exp!]
+  first_name: String_comparison_exp
+  hire_date: date_comparison_exp
   id: uuid_comparison_exp
-  jobPosition: String_comparison_exp
-  lastName: String_comparison_exp
-  name: String_comparison_exp
+  last_name: String_comparison_exp
+  role_data_manager: Boolean_comparison_exp
+  role_field_supervisor: Boolean_comparison_exp
+  role_filed_monitor: Boolean_comparison_exp
+  role_operations_manager: Boolean_comparison_exp
+  role_pc_admin: Boolean_comparison_exp
+  role_project_manager: Boolean_comparison_exp
   usersMetadata_user: users_bool_exp
 }
 
@@ -6914,47 +7041,53 @@ enum usersMetadata_constraint {
 input type for inserting data into table "usersMetadata"
 """
 input usersMetadata_insert_input {
+  first_name: String
+  hire_date: date
   id: uuid
-  jobPosition: String
-  lastName: String
-  name: String
+  last_name: String
+  role_data_manager: Boolean
+  role_field_supervisor: Boolean
+  role_filed_monitor: Boolean
+  role_operations_manager: Boolean
+  role_pc_admin: Boolean
+  role_project_manager: Boolean
   usersMetadata_user: users_obj_rel_insert_input
 }
 
 """aggregate max on columns"""
 type usersMetadata_max_fields {
+  first_name: String
+  hire_date: date
   id: uuid
-  jobPosition: String
-  lastName: String
-  name: String
+  last_name: String
 }
 
 """
 order by max() on columns of table "usersMetadata"
 """
 input usersMetadata_max_order_by {
+  first_name: order_by
+  hire_date: order_by
   id: order_by
-  jobPosition: order_by
-  lastName: order_by
-  name: order_by
+  last_name: order_by
 }
 
 """aggregate min on columns"""
 type usersMetadata_min_fields {
+  first_name: String
+  hire_date: date
   id: uuid
-  jobPosition: String
-  lastName: String
-  name: String
+  last_name: String
 }
 
 """
 order by min() on columns of table "usersMetadata"
 """
 input usersMetadata_min_order_by {
+  first_name: order_by
+  hire_date: order_by
   id: order_by
-  jobPosition: order_by
-  lastName: order_by
-  name: order_by
+  last_name: order_by
 }
 
 """
@@ -6979,10 +7112,16 @@ input usersMetadata_on_conflict {
 
 """Ordering options when selecting data from "usersMetadata"."""
 input usersMetadata_order_by {
+  first_name: order_by
+  hire_date: order_by
   id: order_by
-  jobPosition: order_by
-  lastName: order_by
-  name: order_by
+  last_name: order_by
+  role_data_manager: order_by
+  role_field_supervisor: order_by
+  role_filed_monitor: order_by
+  role_operations_manager: order_by
+  role_pc_admin: order_by
+  role_project_manager: order_by
   usersMetadata_user: users_order_by
 }
 
@@ -6996,26 +7135,96 @@ select columns of table "usersMetadata"
 """
 enum usersMetadata_select_column {
   """column name"""
+  first_name
+
+  """column name"""
+  hire_date
+
+  """column name"""
   id
 
   """column name"""
-  jobPosition
+  last_name
 
   """column name"""
-  lastName
+  role_data_manager
 
   """column name"""
-  name
+  role_field_supervisor
+
+  """column name"""
+  role_filed_monitor
+
+  """column name"""
+  role_operations_manager
+
+  """column name"""
+  role_pc_admin
+
+  """column name"""
+  role_project_manager
+}
+
+"""
+select "usersMetadata_aggregate_bool_exp_bool_and_arguments_columns" columns of table "usersMetadata"
+"""
+enum usersMetadata_select_column_usersMetadata_aggregate_bool_exp_bool_and_arguments_columns {
+  """column name"""
+  role_data_manager
+
+  """column name"""
+  role_field_supervisor
+
+  """column name"""
+  role_filed_monitor
+
+  """column name"""
+  role_operations_manager
+
+  """column name"""
+  role_pc_admin
+
+  """column name"""
+  role_project_manager
+}
+
+"""
+select "usersMetadata_aggregate_bool_exp_bool_or_arguments_columns" columns of table "usersMetadata"
+"""
+enum usersMetadata_select_column_usersMetadata_aggregate_bool_exp_bool_or_arguments_columns {
+  """column name"""
+  role_data_manager
+
+  """column name"""
+  role_field_supervisor
+
+  """column name"""
+  role_filed_monitor
+
+  """column name"""
+  role_operations_manager
+
+  """column name"""
+  role_pc_admin
+
+  """column name"""
+  role_project_manager
 }
 
 """
 input type for updating data in table "usersMetadata"
 """
 input usersMetadata_set_input {
+  first_name: String
+  hire_date: date
   id: uuid
-  jobPosition: String
-  lastName: String
-  name: String
+  last_name: String
+  role_data_manager: Boolean
+  role_field_supervisor: Boolean
+  role_filed_monitor: Boolean
+  role_operations_manager: Boolean
+  role_pc_admin: Boolean
+  role_project_manager: Boolean
 }
 
 """
@@ -7031,10 +7240,16 @@ input usersMetadata_stream_cursor_input {
 
 """Initial value of the column from where the streaming should start"""
 input usersMetadata_stream_cursor_value_input {
+  first_name: String
+  hire_date: date
   id: uuid
-  jobPosition: String
-  lastName: String
-  name: String
+  last_name: String
+  role_data_manager: Boolean
+  role_field_supervisor: Boolean
+  role_filed_monitor: Boolean
+  role_operations_manager: Boolean
+  role_pc_admin: Boolean
+  role_project_manager: Boolean
 }
 
 """
@@ -7042,16 +7257,34 @@ update columns of table "usersMetadata"
 """
 enum usersMetadata_update_column {
   """column name"""
+  first_name
+
+  """column name"""
+  hire_date
+
+  """column name"""
   id
 
   """column name"""
-  jobPosition
+  last_name
 
   """column name"""
-  lastName
+  role_data_manager
 
   """column name"""
-  name
+  role_field_supervisor
+
+  """column name"""
+  role_filed_monitor
+
+  """column name"""
+  role_operations_manager
+
+  """column name"""
+  role_pc_admin
+
+  """column name"""
+  role_project_manager
 }
 
 input usersMetadata_updates {

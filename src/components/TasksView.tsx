@@ -23,7 +23,7 @@ export const allTasksDocument = graphql(/* GraphQL */ `
       name
       tasks_images {
         id
-        taskId
+        task_id
       }
     }
   }
@@ -32,18 +32,18 @@ export const allTasksDocument = graphql(/* GraphQL */ `
 const createTaskDocument = graphql(/* GraphQL */ `
   mutation task(
     $name: String
-    $taskId: uuid
+    $task_id: uuid
     $images: [images_insert_input!]!
   ) {
-    insert_tasks_one(object: { name: $name, id: $taskId }) {
+    insert_tasks_one(object: { name: $name, id: $task_id }) {
       id
       name
-      userId
+      user_id
     }
     insert_images(objects: $images) {
       returning {
         id
-        taskId
+        task_id
       }
     }
   }
@@ -78,11 +78,11 @@ function Tasks({ data }: { data: AllTasksQuery }) {
               return presignedUrl?.url
             })
           )
-          return { taskId: task.id, urls }
+          return { task_id: task.id, urls }
         })
       )
-      const urlsByTaskId = urls.reduce((acc, { taskId, urls }) => {
-        acc[taskId] = urls
+      const urlsByTaskId = urls.reduce((acc, { task_id, urls }) => {
+        acc[task_id] = urls
         return acc
       }, {})
 
@@ -128,16 +128,16 @@ function genFileMetadata(filesData: FileForm[]) {
     .filter((file) => file?.fileInstance && file.fileInstance[0])
     .map(({ fileInstance }) => ({
       id: v4(),
-      taskId,
+      task_id: taskId,
       file: fileInstance && fileInstance[0]
     }))
-  const images = fileMetadata.map(({ id, taskId }) => ({ id, taskId }))
+  const images = fileMetadata.map(({ id, task_id }) => ({ id, task_id }))
   const files = fileMetadata.map(({ id, file }) => ({ id, file }))
 
-  return { images, files, taskId }
+  return { images, files, task_id: taskId }
 }
 
-export function ReportView() {
+export function TasksView() {
   const { data } = useHasuraQuery({
     queryKey: ['allTasks'],
     document: allTasksDocument
@@ -184,10 +184,10 @@ export function ReportView() {
       return
     }
 
-    const { taskId, images, files } = genFileMetadata(data.files)
+    const { task_id, images, files } = genFileMetadata(data.files)
 
     submitTask.mutate({
-      hasura: { name: data.task, taskId, images },
+      hasura: { name: data.task, task_id, images },
       files
     })
   }

@@ -3,8 +3,9 @@ import { RootRoute, Route, Router } from '@tanstack/router'
 import request from 'graphql-request'
 import { Dashboard, Home } from './components/Dashboard'
 import { GeoLocationView } from './components/GeoLocationView'
+import { ProjectsView } from './components/Projects'
 import { QRCodeView } from './components/QRCodeView'
-import { ReportView, allTasksDocument } from './components/ReportView'
+import { TasksView, allTasksDocument } from './components/TasksView'
 import { nhost, queryClient } from './helpers'
 
 const rootRoute = new RootRoute({
@@ -13,8 +14,15 @@ const rootRoute = new RootRoute({
 
 const homeRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: 'home',
+  path: '/',
   component: () => <Home />,
+  errorComponent: () => 'Oh crap!'
+})
+
+const projectsRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'projects',
+  component: () => <ProjectsView />,
   errorComponent: () => 'Oh crap!'
 })
 
@@ -32,16 +40,16 @@ const qrcodeRoute = new Route({
   errorComponent: () => 'Oh crap!'
 })
 
-const reportRoute = (isRestoring: boolean) =>
+const tasksRoute = (isRestoring: boolean) =>
   new Route({
     getParentRoute: () => rootRoute,
-    path: 'report',
-    component: () => <ReportView />,
+    path: 'tasks',
+    component: () => <TasksView />,
     errorComponent: () => 'Oh crap!',
     loader: async () =>
-      queryClient.getQueryData(['tasks']) ??
+      queryClient.getQueryData(['allTasks']) ??
       // do not load if we are offline or hydrating because it returns a promise that is pending until we go online again
-      // we just let the Detail component handle it
+      // we just let the TasksView component handle it
       (onlineManager.isOnline() && !isRestoring
         ? queryClient.fetchQuery({
             queryKey: ['tasks'],
@@ -67,7 +75,8 @@ declare module '@tanstack/router' {
 const routeTree = (isRestoring: boolean) =>
   rootRoute.addChildren([
     homeRoute,
-    reportRoute(isRestoring),
+    projectsRoute,
+    tasksRoute(isRestoring),
     geolocationRoute,
     qrcodeRoute
   ])

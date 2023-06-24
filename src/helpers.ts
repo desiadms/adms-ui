@@ -103,6 +103,10 @@ export function useHasuraQuery<TResult, TVariables, TData = TResult>(
 
       return request(hasuraURL, document, variables ?? {}, {
         Authorization: `Bearer ${accessToken}`
+      }).then((data) => {
+        console.log(data)
+
+        return data
       })
     },
     ...opts
@@ -126,7 +130,9 @@ export const queryClient = new QueryClient({
     },
     onError: (error, variables, _context, mutation) => {
       console.error(error)
+
       // handle here failed mutations. Maybe store to local storage and retry later via user interaction
+
       console.log('mutation error', mutation, variables)
 
       toast.error(JSON.stringify(error))
@@ -205,8 +211,7 @@ function defaultOnMutate(queryKey: QueryKey) {
 
 function defaultOnError(queryKey: QueryKey) {
   return (error, _payload, previousData) => {
-    console.log('in error')
-    console.log(error)
+    console.log('in error', _payload)
     queryClient.setQueryData(queryKey, previousData)
   }
 }

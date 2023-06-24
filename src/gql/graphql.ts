@@ -9,7 +9,7 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string | number; output: string; }
+  ID: { input: string; output: string; }
   String: { input: string; output: string; }
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
@@ -17,6 +17,7 @@ export type Scalars = {
   bigint: { input: any; output: any; }
   bytea: { input: any; output: any; }
   citext: { input: any; output: any; }
+  date: { input: any; output: any; }
   jsonb: { input: any; output: any; }
   timestamptz: { input: any; output: any; }
   uuid: { input: any; output: any; }
@@ -2275,6 +2276,19 @@ export enum Cursor_Ordering {
   Desc = 'DESC'
 }
 
+/** Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'. */
+export type Date_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['date']['input']>;
+  _gt?: InputMaybe<Scalars['date']['input']>;
+  _gte?: InputMaybe<Scalars['date']['input']>;
+  _in?: InputMaybe<Array<Scalars['date']['input']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['date']['input']>;
+  _lte?: InputMaybe<Scalars['date']['input']>;
+  _neq?: InputMaybe<Scalars['date']['input']>;
+  _nin?: InputMaybe<Array<Scalars['date']['input']>>;
+};
+
 /** columns and relationships of "storage.files" */
 export type Files = {
   __typename?: 'files';
@@ -2741,7 +2755,7 @@ export type Images = {
   images_file: Files;
   /** An object relationship */
   images_task: Tasks;
-  taskId: Scalars['uuid']['output'];
+  task_id: Scalars['uuid']['output'];
 };
 
 /** aggregated selection of "images" */
@@ -2799,7 +2813,7 @@ export type Images_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   images_file?: InputMaybe<Files_Bool_Exp>;
   images_task?: InputMaybe<Tasks_Bool_Exp>;
-  taskId?: InputMaybe<Uuid_Comparison_Exp>;
+  task_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "images" */
@@ -2813,33 +2827,33 @@ export type Images_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   images_file?: InputMaybe<Files_Obj_Rel_Insert_Input>;
   images_task?: InputMaybe<Tasks_Obj_Rel_Insert_Input>;
-  taskId?: InputMaybe<Scalars['uuid']['input']>;
+  task_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** aggregate max on columns */
 export type Images_Max_Fields = {
   __typename?: 'images_max_fields';
   id?: Maybe<Scalars['uuid']['output']>;
-  taskId?: Maybe<Scalars['uuid']['output']>;
+  task_id?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by max() on columns of table "images" */
 export type Images_Max_Order_By = {
   id?: InputMaybe<Order_By>;
-  taskId?: InputMaybe<Order_By>;
+  task_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
 export type Images_Min_Fields = {
   __typename?: 'images_min_fields';
   id?: Maybe<Scalars['uuid']['output']>;
-  taskId?: Maybe<Scalars['uuid']['output']>;
+  task_id?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by min() on columns of table "images" */
 export type Images_Min_Order_By = {
   id?: InputMaybe<Order_By>;
-  taskId?: InputMaybe<Order_By>;
+  task_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "images" */
@@ -2863,7 +2877,7 @@ export type Images_Order_By = {
   id?: InputMaybe<Order_By>;
   images_file?: InputMaybe<Files_Order_By>;
   images_task?: InputMaybe<Tasks_Order_By>;
-  taskId?: InputMaybe<Order_By>;
+  task_id?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: images */
@@ -2876,13 +2890,13 @@ export enum Images_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
-  TaskId = 'taskId'
+  TaskId = 'task_id'
 }
 
 /** input type for updating data in table "images" */
 export type Images_Set_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
-  taskId?: InputMaybe<Scalars['uuid']['input']>;
+  task_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** Streaming cursor of the table "images" */
@@ -2896,7 +2910,7 @@ export type Images_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Images_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
-  taskId?: InputMaybe<Scalars['uuid']['input']>;
+  task_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** update columns of table "images" */
@@ -2904,7 +2918,7 @@ export enum Images_Update_Column {
   /** column name */
   Id = 'id',
   /** column name */
-  TaskId = 'taskId'
+  TaskId = 'task_id'
 }
 
 export type Images_Updates = {
@@ -3902,12 +3916,18 @@ export enum Order_By {
 /** columns and relationships of "projects" */
 export type Projects = {
   __typename?: 'projects';
+  comment?: Maybe<Scalars['String']['output']>;
+  contractor?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
+  location?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  poc?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   projects_tasks: Array<Tasks>;
   /** An aggregate relationship */
   projects_tasks_aggregate: Tasks_Aggregate;
+  status?: Maybe<Scalars['Boolean']['output']>;
+  sub_contractor?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -3957,10 +3977,16 @@ export type Projects_Bool_Exp = {
   _and?: InputMaybe<Array<Projects_Bool_Exp>>;
   _not?: InputMaybe<Projects_Bool_Exp>;
   _or?: InputMaybe<Array<Projects_Bool_Exp>>;
+  comment?: InputMaybe<String_Comparison_Exp>;
+  contractor?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  location?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
+  poc?: InputMaybe<String_Comparison_Exp>;
   projects_tasks?: InputMaybe<Tasks_Bool_Exp>;
   projects_tasks_aggregate?: InputMaybe<Tasks_Aggregate_Bool_Exp>;
+  status?: InputMaybe<Boolean_Comparison_Exp>;
+  sub_contractor?: InputMaybe<String_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "projects" */
@@ -3971,23 +3997,39 @@ export enum Projects_Constraint {
 
 /** input type for inserting data into table "projects" */
 export type Projects_Insert_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  contractor?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  poc?: InputMaybe<Scalars['String']['input']>;
   projects_tasks?: InputMaybe<Tasks_Arr_Rel_Insert_Input>;
+  status?: InputMaybe<Scalars['Boolean']['input']>;
+  sub_contractor?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate max on columns */
 export type Projects_Max_Fields = {
   __typename?: 'projects_max_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  contractor?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  location?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  poc?: Maybe<Scalars['String']['output']>;
+  sub_contractor?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregate min on columns */
 export type Projects_Min_Fields = {
   __typename?: 'projects_min_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  contractor?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  location?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  poc?: Maybe<Scalars['String']['output']>;
+  sub_contractor?: Maybe<Scalars['String']['output']>;
 };
 
 /** response of any mutation on the table "projects" */
@@ -4015,9 +4057,15 @@ export type Projects_On_Conflict = {
 
 /** Ordering options when selecting data from "projects". */
 export type Projects_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  contractor?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  location?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  poc?: InputMaybe<Order_By>;
   projects_tasks_aggregate?: InputMaybe<Tasks_Aggregate_Order_By>;
+  status?: InputMaybe<Order_By>;
+  sub_contractor?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: projects */
@@ -4028,15 +4076,33 @@ export type Projects_Pk_Columns_Input = {
 /** select columns of table "projects" */
 export enum Projects_Select_Column {
   /** column name */
+  Comment = 'comment',
+  /** column name */
+  Contractor = 'contractor',
+  /** column name */
   Id = 'id',
   /** column name */
-  Name = 'name'
+  Location = 'location',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  Poc = 'poc',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  SubContractor = 'sub_contractor'
 }
 
 /** input type for updating data in table "projects" */
 export type Projects_Set_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  contractor?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  poc?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['Boolean']['input']>;
+  sub_contractor?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Streaming cursor of the table "projects" */
@@ -4049,16 +4115,34 @@ export type Projects_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Projects_Stream_Cursor_Value_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  contractor?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  poc?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['Boolean']['input']>;
+  sub_contractor?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** update columns of table "projects" */
 export enum Projects_Update_Column {
   /** column name */
+  Comment = 'comment',
+  /** column name */
+  Contractor = 'contractor',
+  /** column name */
   Id = 'id',
   /** column name */
-  Name = 'name'
+  Location = 'location',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  Poc = 'poc',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  SubContractor = 'sub_contractor'
 }
 
 export type Projects_Updates = {
@@ -5086,7 +5170,7 @@ export type Tasks = {
   __typename?: 'tasks';
   id: Scalars['uuid']['output'];
   name: Scalars['String']['output'];
-  projectId: Scalars['uuid']['output'];
+  project_id: Scalars['uuid']['output'];
   /** An array relationship */
   tasks_images: Array<Images>;
   /** An aggregate relationship */
@@ -5095,7 +5179,7 @@ export type Tasks = {
   tasks_project: Projects;
   /** An object relationship */
   tasks_user: Users;
-  userId: Scalars['uuid']['output'];
+  user_id: Scalars['uuid']['output'];
 };
 
 
@@ -5172,12 +5256,12 @@ export type Tasks_Bool_Exp = {
   _or?: InputMaybe<Array<Tasks_Bool_Exp>>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
-  projectId?: InputMaybe<Uuid_Comparison_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
   tasks_images?: InputMaybe<Images_Bool_Exp>;
   tasks_images_aggregate?: InputMaybe<Images_Aggregate_Bool_Exp>;
   tasks_project?: InputMaybe<Projects_Bool_Exp>;
   tasks_user?: InputMaybe<Users_Bool_Exp>;
-  userId?: InputMaybe<Uuid_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "tasks" */
@@ -5190,11 +5274,11 @@ export enum Tasks_Constraint {
 export type Tasks_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  projectId?: InputMaybe<Scalars['uuid']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
   tasks_images?: InputMaybe<Images_Arr_Rel_Insert_Input>;
   tasks_project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
   tasks_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-  userId?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** aggregate max on columns */
@@ -5202,16 +5286,16 @@ export type Tasks_Max_Fields = {
   __typename?: 'tasks_max_fields';
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  projectId?: Maybe<Scalars['uuid']['output']>;
-  userId?: Maybe<Scalars['uuid']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by max() on columns of table "tasks" */
 export type Tasks_Max_Order_By = {
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
-  projectId?: InputMaybe<Order_By>;
-  userId?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -5219,16 +5303,16 @@ export type Tasks_Min_Fields = {
   __typename?: 'tasks_min_fields';
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  projectId?: Maybe<Scalars['uuid']['output']>;
-  userId?: Maybe<Scalars['uuid']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by min() on columns of table "tasks" */
 export type Tasks_Min_Order_By = {
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
-  projectId?: InputMaybe<Order_By>;
-  userId?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "tasks" */
@@ -5258,11 +5342,11 @@ export type Tasks_On_Conflict = {
 export type Tasks_Order_By = {
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
-  projectId?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
   tasks_images_aggregate?: InputMaybe<Images_Aggregate_Order_By>;
   tasks_project?: InputMaybe<Projects_Order_By>;
   tasks_user?: InputMaybe<Users_Order_By>;
-  userId?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: tasks */
@@ -5277,17 +5361,17 @@ export enum Tasks_Select_Column {
   /** column name */
   Name = 'name',
   /** column name */
-  ProjectId = 'projectId',
+  ProjectId = 'project_id',
   /** column name */
-  UserId = 'userId'
+  UserId = 'user_id'
 }
 
 /** input type for updating data in table "tasks" */
 export type Tasks_Set_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  projectId?: InputMaybe<Scalars['uuid']['input']>;
-  userId?: InputMaybe<Scalars['uuid']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** Streaming cursor of the table "tasks" */
@@ -5302,8 +5386,8 @@ export type Tasks_Stream_Cursor_Input = {
 export type Tasks_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  projectId?: InputMaybe<Scalars['uuid']['input']>;
-  userId?: InputMaybe<Scalars['uuid']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** update columns of table "tasks" */
@@ -5313,9 +5397,9 @@ export enum Tasks_Update_Column {
   /** column name */
   Name = 'name',
   /** column name */
-  ProjectId = 'projectId',
+  ProjectId = 'project_id',
   /** column name */
-  UserId = 'userId'
+  UserId = 'user_id'
 }
 
 export type Tasks_Updates = {
@@ -5499,10 +5583,16 @@ export type UsersUsers_UsersMetadata_AggregateArgs = {
 /** columns and relationships of "usersMetadata" */
 export type UsersMetadata = {
   __typename?: 'usersMetadata';
+  first_name: Scalars['String']['output'];
+  hire_date?: Maybe<Scalars['date']['output']>;
   id: Scalars['uuid']['output'];
-  jobPosition: Scalars['String']['output'];
-  lastName: Scalars['String']['output'];
-  name: Scalars['String']['output'];
+  last_name: Scalars['String']['output'];
+  role_data_manager: Scalars['Boolean']['output'];
+  role_field_supervisor: Scalars['Boolean']['output'];
+  role_filed_monitor: Scalars['Boolean']['output'];
+  role_operations_manager: Scalars['Boolean']['output'];
+  role_pc_admin: Scalars['Boolean']['output'];
+  role_project_manager: Scalars['Boolean']['output'];
   /** An object relationship */
   usersMetadata_user: Users;
 };
@@ -5515,7 +5605,23 @@ export type UsersMetadata_Aggregate = {
 };
 
 export type UsersMetadata_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<UsersMetadata_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<UsersMetadata_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<UsersMetadata_Aggregate_Bool_Exp_Count>;
+};
+
+export type UsersMetadata_Aggregate_Bool_Exp_Bool_And = {
+  arguments: UsersMetadata_Select_Column_UsersMetadata_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<UsersMetadata_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type UsersMetadata_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: UsersMetadata_Select_Column_UsersMetadata_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<UsersMetadata_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
 };
 
 export type UsersMetadata_Aggregate_Bool_Exp_Count = {
@@ -5559,10 +5665,16 @@ export type UsersMetadata_Bool_Exp = {
   _and?: InputMaybe<Array<UsersMetadata_Bool_Exp>>;
   _not?: InputMaybe<UsersMetadata_Bool_Exp>;
   _or?: InputMaybe<Array<UsersMetadata_Bool_Exp>>;
+  first_name?: InputMaybe<String_Comparison_Exp>;
+  hire_date?: InputMaybe<Date_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
-  jobPosition?: InputMaybe<String_Comparison_Exp>;
-  lastName?: InputMaybe<String_Comparison_Exp>;
-  name?: InputMaybe<String_Comparison_Exp>;
+  last_name?: InputMaybe<String_Comparison_Exp>;
+  role_data_manager?: InputMaybe<Boolean_Comparison_Exp>;
+  role_field_supervisor?: InputMaybe<Boolean_Comparison_Exp>;
+  role_filed_monitor?: InputMaybe<Boolean_Comparison_Exp>;
+  role_operations_manager?: InputMaybe<Boolean_Comparison_Exp>;
+  role_pc_admin?: InputMaybe<Boolean_Comparison_Exp>;
+  role_project_manager?: InputMaybe<Boolean_Comparison_Exp>;
   usersMetadata_user?: InputMaybe<Users_Bool_Exp>;
 };
 
@@ -5574,45 +5686,51 @@ export enum UsersMetadata_Constraint {
 
 /** input type for inserting data into table "usersMetadata" */
 export type UsersMetadata_Insert_Input = {
+  first_name?: InputMaybe<Scalars['String']['input']>;
+  hire_date?: InputMaybe<Scalars['date']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  jobPosition?: InputMaybe<Scalars['String']['input']>;
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
+  last_name?: InputMaybe<Scalars['String']['input']>;
+  role_data_manager?: InputMaybe<Scalars['Boolean']['input']>;
+  role_field_supervisor?: InputMaybe<Scalars['Boolean']['input']>;
+  role_filed_monitor?: InputMaybe<Scalars['Boolean']['input']>;
+  role_operations_manager?: InputMaybe<Scalars['Boolean']['input']>;
+  role_pc_admin?: InputMaybe<Scalars['Boolean']['input']>;
+  role_project_manager?: InputMaybe<Scalars['Boolean']['input']>;
   usersMetadata_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
 export type UsersMetadata_Max_Fields = {
   __typename?: 'usersMetadata_max_fields';
+  first_name?: Maybe<Scalars['String']['output']>;
+  hire_date?: Maybe<Scalars['date']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  jobPosition?: Maybe<Scalars['String']['output']>;
-  lastName?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
+  last_name?: Maybe<Scalars['String']['output']>;
 };
 
 /** order by max() on columns of table "usersMetadata" */
 export type UsersMetadata_Max_Order_By = {
+  first_name?: InputMaybe<Order_By>;
+  hire_date?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  jobPosition?: InputMaybe<Order_By>;
-  lastName?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
+  last_name?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
 export type UsersMetadata_Min_Fields = {
   __typename?: 'usersMetadata_min_fields';
+  first_name?: Maybe<Scalars['String']['output']>;
+  hire_date?: Maybe<Scalars['date']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  jobPosition?: Maybe<Scalars['String']['output']>;
-  lastName?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
+  last_name?: Maybe<Scalars['String']['output']>;
 };
 
 /** order by min() on columns of table "usersMetadata" */
 export type UsersMetadata_Min_Order_By = {
+  first_name?: InputMaybe<Order_By>;
+  hire_date?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  jobPosition?: InputMaybe<Order_By>;
-  lastName?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
+  last_name?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "usersMetadata" */
@@ -5633,10 +5751,16 @@ export type UsersMetadata_On_Conflict = {
 
 /** Ordering options when selecting data from "usersMetadata". */
 export type UsersMetadata_Order_By = {
+  first_name?: InputMaybe<Order_By>;
+  hire_date?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  jobPosition?: InputMaybe<Order_By>;
-  lastName?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
+  last_name?: InputMaybe<Order_By>;
+  role_data_manager?: InputMaybe<Order_By>;
+  role_field_supervisor?: InputMaybe<Order_By>;
+  role_filed_monitor?: InputMaybe<Order_By>;
+  role_operations_manager?: InputMaybe<Order_By>;
+  role_pc_admin?: InputMaybe<Order_By>;
+  role_project_manager?: InputMaybe<Order_By>;
   usersMetadata_user?: InputMaybe<Users_Order_By>;
 };
 
@@ -5648,21 +5772,71 @@ export type UsersMetadata_Pk_Columns_Input = {
 /** select columns of table "usersMetadata" */
 export enum UsersMetadata_Select_Column {
   /** column name */
+  FirstName = 'first_name',
+  /** column name */
+  HireDate = 'hire_date',
+  /** column name */
   Id = 'id',
   /** column name */
-  JobPosition = 'jobPosition',
+  LastName = 'last_name',
   /** column name */
-  LastName = 'lastName',
+  RoleDataManager = 'role_data_manager',
   /** column name */
-  Name = 'name'
+  RoleFieldSupervisor = 'role_field_supervisor',
+  /** column name */
+  RoleFiledMonitor = 'role_filed_monitor',
+  /** column name */
+  RoleOperationsManager = 'role_operations_manager',
+  /** column name */
+  RolePcAdmin = 'role_pc_admin',
+  /** column name */
+  RoleProjectManager = 'role_project_manager'
+}
+
+/** select "usersMetadata_aggregate_bool_exp_bool_and_arguments_columns" columns of table "usersMetadata" */
+export enum UsersMetadata_Select_Column_UsersMetadata_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  RoleDataManager = 'role_data_manager',
+  /** column name */
+  RoleFieldSupervisor = 'role_field_supervisor',
+  /** column name */
+  RoleFiledMonitor = 'role_filed_monitor',
+  /** column name */
+  RoleOperationsManager = 'role_operations_manager',
+  /** column name */
+  RolePcAdmin = 'role_pc_admin',
+  /** column name */
+  RoleProjectManager = 'role_project_manager'
+}
+
+/** select "usersMetadata_aggregate_bool_exp_bool_or_arguments_columns" columns of table "usersMetadata" */
+export enum UsersMetadata_Select_Column_UsersMetadata_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  RoleDataManager = 'role_data_manager',
+  /** column name */
+  RoleFieldSupervisor = 'role_field_supervisor',
+  /** column name */
+  RoleFiledMonitor = 'role_filed_monitor',
+  /** column name */
+  RoleOperationsManager = 'role_operations_manager',
+  /** column name */
+  RolePcAdmin = 'role_pc_admin',
+  /** column name */
+  RoleProjectManager = 'role_project_manager'
 }
 
 /** input type for updating data in table "usersMetadata" */
 export type UsersMetadata_Set_Input = {
+  first_name?: InputMaybe<Scalars['String']['input']>;
+  hire_date?: InputMaybe<Scalars['date']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  jobPosition?: InputMaybe<Scalars['String']['input']>;
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
+  last_name?: InputMaybe<Scalars['String']['input']>;
+  role_data_manager?: InputMaybe<Scalars['Boolean']['input']>;
+  role_field_supervisor?: InputMaybe<Scalars['Boolean']['input']>;
+  role_filed_monitor?: InputMaybe<Scalars['Boolean']['input']>;
+  role_operations_manager?: InputMaybe<Scalars['Boolean']['input']>;
+  role_pc_admin?: InputMaybe<Scalars['Boolean']['input']>;
+  role_project_manager?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Streaming cursor of the table "usersMetadata" */
@@ -5675,22 +5849,40 @@ export type UsersMetadata_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type UsersMetadata_Stream_Cursor_Value_Input = {
+  first_name?: InputMaybe<Scalars['String']['input']>;
+  hire_date?: InputMaybe<Scalars['date']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  jobPosition?: InputMaybe<Scalars['String']['input']>;
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
+  last_name?: InputMaybe<Scalars['String']['input']>;
+  role_data_manager?: InputMaybe<Scalars['Boolean']['input']>;
+  role_field_supervisor?: InputMaybe<Scalars['Boolean']['input']>;
+  role_filed_monitor?: InputMaybe<Scalars['Boolean']['input']>;
+  role_operations_manager?: InputMaybe<Scalars['Boolean']['input']>;
+  role_pc_admin?: InputMaybe<Scalars['Boolean']['input']>;
+  role_project_manager?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** update columns of table "usersMetadata" */
 export enum UsersMetadata_Update_Column {
   /** column name */
+  FirstName = 'first_name',
+  /** column name */
+  HireDate = 'hire_date',
+  /** column name */
   Id = 'id',
   /** column name */
-  JobPosition = 'jobPosition',
+  LastName = 'last_name',
   /** column name */
-  LastName = 'lastName',
+  RoleDataManager = 'role_data_manager',
   /** column name */
-  Name = 'name'
+  RoleFieldSupervisor = 'role_field_supervisor',
+  /** column name */
+  RoleFiledMonitor = 'role_filed_monitor',
+  /** column name */
+  RoleOperationsManager = 'role_operations_manager',
+  /** column name */
+  RolePcAdmin = 'role_pc_admin',
+  /** column name */
+  RoleProjectManager = 'role_project_manager'
 }
 
 export type UsersMetadata_Updates = {
@@ -6265,20 +6457,26 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']['input']>>;
 };
 
+export type ProjectsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProjectsQuery = { __typename?: 'query_root', projects: Array<{ __typename?: 'projects', name: string, comment?: string | null, contractor?: string | null, sub_contractor?: string | null, location?: string | null, poc?: string | null }> };
+
 export type AllTasksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllTasksQuery = { __typename?: 'query_root', tasks: Array<{ __typename?: 'tasks', id: any, name: string, tasks_images: Array<{ __typename?: 'images', id: any, taskId: any }> }> };
+export type AllTasksQuery = { __typename?: 'query_root', tasks: Array<{ __typename?: 'tasks', id: any, name: string, tasks_images: Array<{ __typename?: 'images', id: any, task_id: any }> }> };
 
 export type TaskMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']['input']>;
-  taskId?: InputMaybe<Scalars['uuid']['input']>;
+  task_id?: InputMaybe<Scalars['uuid']['input']>;
   images: Array<Images_Insert_Input> | Images_Insert_Input;
 }>;
 
 
-export type TaskMutation = { __typename?: 'mutation_root', insert_tasks_one?: { __typename?: 'tasks', id: any, name: string, userId: any } | null, insert_images?: { __typename?: 'images_mutation_response', returning: Array<{ __typename?: 'images', id: any, taskId: any }> } | null };
+export type TaskMutation = { __typename?: 'mutation_root', insert_tasks_one?: { __typename?: 'tasks', id: any, name: string, user_id: any } | null, insert_images?: { __typename?: 'images_mutation_response', returning: Array<{ __typename?: 'images', id: any, task_id: any }> } | null };
 
 
-export const AllTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tasks_images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"taskId"}}]}}]}}]}}]} as unknown as DocumentNode<AllTasksQuery, AllTasksQueryVariables>;
-export const TaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"task"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"taskId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"images"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"images_insert_input"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tasks_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"taskId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"images"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"taskId"}}]}}]}}]}}]} as unknown as DocumentNode<TaskMutation, TaskMutationVariables>;
+export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"sub_contractor"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"poc"}}]}}]}}]} as unknown as DocumentNode<ProjectsQuery, ProjectsQueryVariables>;
+export const AllTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tasks_images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"task_id"}}]}}]}}]}}]} as unknown as DocumentNode<AllTasksQuery, AllTasksQueryVariables>;
+export const TaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"task"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"task_id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"images"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"images_insert_input"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tasks_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"task_id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"images"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"task_id"}}]}}]}}]}}]} as unknown as DocumentNode<TaskMutation, TaskMutationVariables>;

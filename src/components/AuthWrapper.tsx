@@ -67,10 +67,7 @@ function Login() {
             <Button disabled={isLoading} type='submit'>
               Sign in
               {isLoading && (
-                <Spinner
-                  className='animate-spin h-4 w-4 text-white'
-                  aria-hidden='true'
-                />
+                <Spinner className='h-4 w-4 text-white' aria-hidden='true' />
               )}
             </Button>
             {isError && <Error message='Invalid user ID or password' />}

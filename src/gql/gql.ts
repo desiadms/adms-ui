@@ -13,8 +13,9 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query allTasks {\n    tasks {\n      id\n      name\n      tasks_images {\n        id\n        taskId\n      }\n    }\n  }\n": types.AllTasksDocument,
-    "\n  mutation task(\n    $name: String\n    $taskId: uuid\n    $images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $taskId }) {\n      id\n      name\n      userId\n    }\n    insert_images(objects: $images) {\n      returning {\n        id\n        taskId\n      }\n    }\n  }\n": types.TaskDocument,
+    "\n  query projects {\n    projects {\n      name\n      comment\n      contractor\n      sub_contractor\n      location\n      poc\n    }\n  }\n": types.ProjectsDocument,
+    "\n  query allTasks {\n    tasks {\n      id\n      name\n      tasks_images {\n        id\n        task_id\n      }\n    }\n  }\n": types.AllTasksDocument,
+    "\n  mutation task(\n    $name: String\n    $task_id: uuid\n    $images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $task_id }) {\n      id\n      name\n      user_id\n    }\n    insert_images(objects: $images) {\n      returning {\n        id\n        task_id\n      }\n    }\n  }\n": types.TaskDocument,
 };
 
 /**
@@ -34,11 +35,15 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query allTasks {\n    tasks {\n      id\n      name\n      tasks_images {\n        id\n        taskId\n      }\n    }\n  }\n"): (typeof documents)["\n  query allTasks {\n    tasks {\n      id\n      name\n      tasks_images {\n        id\n        taskId\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query projects {\n    projects {\n      name\n      comment\n      contractor\n      sub_contractor\n      location\n      poc\n    }\n  }\n"): (typeof documents)["\n  query projects {\n    projects {\n      name\n      comment\n      contractor\n      sub_contractor\n      location\n      poc\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation task(\n    $name: String\n    $taskId: uuid\n    $images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $taskId }) {\n      id\n      name\n      userId\n    }\n    insert_images(objects: $images) {\n      returning {\n        id\n        taskId\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation task(\n    $name: String\n    $taskId: uuid\n    $images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $taskId }) {\n      id\n      name\n      userId\n    }\n    insert_images(objects: $images) {\n      returning {\n        id\n        taskId\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query allTasks {\n    tasks {\n      id\n      name\n      tasks_images {\n        id\n        task_id\n      }\n    }\n  }\n"): (typeof documents)["\n  query allTasks {\n    tasks {\n      id\n      name\n      tasks_images {\n        id\n        task_id\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation task(\n    $name: String\n    $task_id: uuid\n    $images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $task_id }) {\n      id\n      name\n      user_id\n    }\n    insert_images(objects: $images) {\n      returning {\n        id\n        task_id\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation task(\n    $name: String\n    $task_id: uuid\n    $images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $task_id }) {\n      id\n      name\n      user_id\n    }\n    insert_images(objects: $images) {\n      returning {\n        id\n        task_id\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

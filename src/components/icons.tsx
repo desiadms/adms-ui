@@ -3,7 +3,10 @@ import classNames from 'classnames'
 export function Spinner({ className }: { className?: string }) {
   return (
     <svg
-      className={classNames(className ?? 'animate-spin h-10 w-10 text-black')}
+      className={classNames(
+        className ?? 'h-10 w-10 text-black',
+        'animate-spin'
+      )}
       xmlns='http://www.w3.org/2000/svg'
       fill='none'
       viewBox='0 0 24 24'
