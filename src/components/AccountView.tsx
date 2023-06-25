@@ -19,7 +19,6 @@ const userMutation = hasuraMutation({
 type UserFormData = {
   first_name: string
   last_name: string
-  address: string
 }
 
 export function AccountView() {

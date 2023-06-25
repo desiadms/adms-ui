@@ -5583,7 +5583,6 @@ export type UsersUsers_UsersMetadata_AggregateArgs = {
 /** columns and relationships of "usersMetadata" */
 export type UsersMetadata = {
   __typename?: 'usersMetadata';
-  address: Scalars['String']['output'];
   first_name: Scalars['String']['output'];
   hire_date: Scalars['date']['output'];
   id: Scalars['uuid']['output'];
@@ -5666,7 +5665,6 @@ export type UsersMetadata_Bool_Exp = {
   _and?: InputMaybe<Array<UsersMetadata_Bool_Exp>>;
   _not?: InputMaybe<UsersMetadata_Bool_Exp>;
   _or?: InputMaybe<Array<UsersMetadata_Bool_Exp>>;
-  address?: InputMaybe<String_Comparison_Exp>;
   first_name?: InputMaybe<String_Comparison_Exp>;
   hire_date?: InputMaybe<Date_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -5688,7 +5686,6 @@ export enum UsersMetadata_Constraint {
 
 /** input type for inserting data into table "usersMetadata" */
 export type UsersMetadata_Insert_Input = {
-  address?: InputMaybe<Scalars['String']['input']>;
   first_name?: InputMaybe<Scalars['String']['input']>;
   hire_date?: InputMaybe<Scalars['date']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -5705,7 +5702,6 @@ export type UsersMetadata_Insert_Input = {
 /** aggregate max on columns */
 export type UsersMetadata_Max_Fields = {
   __typename?: 'usersMetadata_max_fields';
-  address?: Maybe<Scalars['String']['output']>;
   first_name?: Maybe<Scalars['String']['output']>;
   hire_date?: Maybe<Scalars['date']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
@@ -5714,7 +5710,6 @@ export type UsersMetadata_Max_Fields = {
 
 /** order by max() on columns of table "usersMetadata" */
 export type UsersMetadata_Max_Order_By = {
-  address?: InputMaybe<Order_By>;
   first_name?: InputMaybe<Order_By>;
   hire_date?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -5724,7 +5719,6 @@ export type UsersMetadata_Max_Order_By = {
 /** aggregate min on columns */
 export type UsersMetadata_Min_Fields = {
   __typename?: 'usersMetadata_min_fields';
-  address?: Maybe<Scalars['String']['output']>;
   first_name?: Maybe<Scalars['String']['output']>;
   hire_date?: Maybe<Scalars['date']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
@@ -5733,7 +5727,6 @@ export type UsersMetadata_Min_Fields = {
 
 /** order by min() on columns of table "usersMetadata" */
 export type UsersMetadata_Min_Order_By = {
-  address?: InputMaybe<Order_By>;
   first_name?: InputMaybe<Order_By>;
   hire_date?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -5758,7 +5751,6 @@ export type UsersMetadata_On_Conflict = {
 
 /** Ordering options when selecting data from "usersMetadata". */
 export type UsersMetadata_Order_By = {
-  address?: InputMaybe<Order_By>;
   first_name?: InputMaybe<Order_By>;
   hire_date?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -5779,8 +5771,6 @@ export type UsersMetadata_Pk_Columns_Input = {
 
 /** select columns of table "usersMetadata" */
 export enum UsersMetadata_Select_Column {
-  /** column name */
-  Address = 'address',
   /** column name */
   FirstName = 'first_name',
   /** column name */
@@ -5837,7 +5827,6 @@ export enum UsersMetadata_Select_Column_UsersMetadata_Aggregate_Bool_Exp_Bool_Or
 
 /** input type for updating data in table "usersMetadata" */
 export type UsersMetadata_Set_Input = {
-  address?: InputMaybe<Scalars['String']['input']>;
   first_name?: InputMaybe<Scalars['String']['input']>;
   hire_date?: InputMaybe<Scalars['date']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -5860,7 +5849,6 @@ export type UsersMetadata_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type UsersMetadata_Stream_Cursor_Value_Input = {
-  address?: InputMaybe<Scalars['String']['input']>;
   first_name?: InputMaybe<Scalars['String']['input']>;
   hire_date?: InputMaybe<Scalars['date']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -5875,8 +5863,6 @@ export type UsersMetadata_Stream_Cursor_Value_Input = {
 
 /** update columns of table "usersMetadata" */
 export enum UsersMetadata_Update_Column {
-  /** column name */
-  Address = 'address',
   /** column name */
   FirstName = 'first_name',
   /** column name */
@@ -6478,7 +6464,6 @@ export type UserQuery = { __typename?: 'query_root', usersMetadata: Array<{ __ty
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
-  address: Scalars['String']['input'];
   first_name: Scalars['String']['input'];
   last_name: Scalars['String']['input'];
 }>;
@@ -6507,7 +6492,7 @@ export type TaskMutation = { __typename?: 'mutation_root', insert_tasks_one?: { 
 
 
 export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersMetadata"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"hire_date"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"role_data_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_field_supervisor"}},{"kind":"Field","name":{"kind":"Name","value":"role_filed_monitor"}},{"kind":"Field","name":{"kind":"Name","value":"role_operations_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_pc_admin"}},{"kind":"Field","name":{"kind":"Name","value":"role_project_manager"}},{"kind":"Field","name":{"kind":"Name","value":"usersMetadata_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
-export const UpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"address"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_usersMetadata_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"address"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"first_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"last_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_usersMetadata_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"first_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"last_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
 export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"sub_contractor"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"poc"}}]}}]}}]} as unknown as DocumentNode<ProjectsQuery, ProjectsQueryVariables>;
 export const AllTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tasks_images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"task_id"}}]}}]}}]}}]} as unknown as DocumentNode<AllTasksQuery, AllTasksQueryVariables>;
 export const TaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"task"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"task_id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"images"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"images_insert_input"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tasks_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"task_id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"images"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"task_id"}}]}}]}}]}}]} as unknown as DocumentNode<TaskMutation, TaskMutationVariables>;

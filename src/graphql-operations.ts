@@ -21,19 +21,10 @@ export const userDocument = graphql(/* GraphQL */ `
 `)
 
 export const updateUserDocument = graphql(/* GraphQL */ `
-  mutation updateUser(
-    $id: uuid!
-    $address: String!
-    $first_name: String!
-    $last_name: String!
-  ) {
+  mutation updateUser($id: uuid!, $first_name: String!, $last_name: String!) {
     update_usersMetadata_by_pk(
       pk_columns: { id: $id }
-      _set: {
-        address: $address
-        first_name: $first_name
-        last_name: $last_name
-      }
+      _set: { first_name: $first_name, last_name: $last_name }
     ) {
       id
     }
