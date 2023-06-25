@@ -9,3 +9,7 @@ export function QueryStates<T>({ isLoading, error }: UseQueryResult<T, Error>) {
     </div>
   )
 }
+
+export function Dot() {
+  return <div className='h-1 w-1 bg-neutral-400 rounded-full' />
+}

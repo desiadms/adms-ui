@@ -1,11 +1,13 @@
 import { onlineManager } from '@tanstack/react-query'
 import { RootRoute, Route, Router } from '@tanstack/router'
 import request from 'graphql-request'
+import { AccountView } from './components/AccountView'
 import { Dashboard, Home } from './components/Dashboard'
 import { GeoLocationView } from './components/GeoLocationView'
 import { ProjectsView } from './components/Projects'
 import { QRCodeView } from './components/QRCodeView'
-import { TasksView, allTasksDocument } from './components/TasksView'
+import { TasksView } from './components/TasksView'
+import { allTasksDocument } from './graphql-operations'
 import { nhost, queryClient } from './helpers'
 
 const rootRoute = new RootRoute({
@@ -16,6 +18,13 @@ const homeRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/',
   component: () => <Home />,
+  errorComponent: () => 'Oh crap!'
+})
+
+const accountRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/account',
+  component: () => <AccountView />,
   errorComponent: () => 'Oh crap!'
 })
 
@@ -52,7 +61,7 @@ const tasksRoute = (isRestoring: boolean) =>
       // we just let the TasksView component handle it
       (onlineManager.isOnline() && !isRestoring
         ? queryClient.fetchQuery({
-            queryKey: ['tasks'],
+            queryKey: ['allTasks'],
             queryFn: () =>
               request(
                 import.meta.env.VITE_HASURA_ENDPOINT,
@@ -76,6 +85,7 @@ const routeTree = (isRestoring: boolean) =>
   rootRoute.addChildren([
     homeRoute,
     projectsRoute,
+    accountRoute,
     tasksRoute(isRestoring),
     geolocationRoute,
     qrcodeRoute

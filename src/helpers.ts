@@ -237,8 +237,8 @@ export function hasuraMutation<TResult, TVariables>({
   ) => Promise<unknown>
 }) {
   setMutationDefaults({
-    queryKey: ['tasks'],
-    mutationKey: ['createTask'],
+    queryKey,
+    mutationKey,
     document,
     callback
   })
@@ -316,30 +316,4 @@ export function useGeoLocation() {
   }, [])
 
   return { coordinates, isLoading, error, getGeoLocation }
-}
-
-export function useCamera(): [
-  string[],
-  (event: React.ChangeEvent<HTMLInputElement>) => void,
-  (index: number) => void
-] {
-  const [capturedImages, setCapturedImages] = useState<string[]>([])
-
-  const handleCapture = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = (event.target as HTMLInputElement).files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = () => {
-        const imageSrc = reader.result as string
-        setCapturedImages((images) => [...images, imageSrc])
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const deleteImage = (index: number) => {
-    setCapturedImages((images) => images.filter((_, i) => i !== index))
-  }
-
-  return [capturedImages, handleCapture, deleteImage]
 }

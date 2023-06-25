@@ -5,7 +5,7 @@ import { useMemo } from 'preact/hooks'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../helpers'
 import { router } from '../router'
-import { Button, Error, LabelledInput } from './Forms'
+import { Button, ErrorMessage, LabelledInput } from './Forms'
 import { Spinner } from './icons'
 
 type LoginFormData = {
@@ -52,7 +52,7 @@ function Login() {
               type='text'
               {...register('id', { required: 'User ID is required' })}
             />
-            <Error message={errors.id?.message} />
+            <ErrorMessage message={errors.id?.message} />
           </div>
 
           <div>
@@ -61,7 +61,7 @@ function Login() {
               type='password'
               {...register('password', { required: 'Password is required' })}
             />
-            <Error message={errors.password?.message} />
+            <ErrorMessage message={errors.password?.message} />
           </div>
           <div>
             <Button disabled={isLoading} type='submit'>
@@ -70,7 +70,7 @@ function Login() {
                 <Spinner className='h-4 w-4 text-white' aria-hidden='true' />
               )}
             </Button>
-            {isError && <Error message='Invalid user ID or password' />}
+            {isError && <ErrorMessage message='Invalid user ID or password' />}
           </div>
         </form>
       </div>

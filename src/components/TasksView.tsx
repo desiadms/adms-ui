@@ -3,51 +3,18 @@ import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { useEffect, useState } from 'preact/hooks'
 import { useFieldArray, useForm } from 'react-hook-form'
-import { AllTasksQuery } from 'src/gql/graphql'
 import { v4 } from 'uuid'
-import { graphql } from '../gql'
+import { AllTasksQuery } from '../gql/graphql'
+import { allTasksDocument, createTaskDocument } from '../graphql-operations'
 import { hasuraMutation, nhost, useHasuraQuery } from '../helpers'
 import {
   Button,
-  Error,
+  ErrorMessage,
   Input,
   LabelledInput,
   buttonClasses,
   useFilesForm
 } from './Forms'
-
-export const allTasksDocument = graphql(/* GraphQL */ `
-  query allTasks {
-    tasks {
-      id
-      name
-      tasks_images {
-        id
-        task_id
-      }
-    }
-  }
-`)
-
-const createTaskDocument = graphql(/* GraphQL */ `
-  mutation task(
-    $name: String
-    $task_id: uuid
-    $images: [images_insert_input!]!
-  ) {
-    insert_tasks_one(object: { name: $name, id: $task_id }) {
-      id
-      name
-      user_id
-    }
-    insert_images(objects: $images) {
-      returning {
-        id
-        task_id
-      }
-    }
-  }
-`)
 
 function saveMedia(variables) {
   const { files } = variables
@@ -258,7 +225,9 @@ export function TasksView() {
               </div>
             )}
             {errors.files && errors.files[index] && (
-              <Error message={errors.files[index]?.fileInstance?.message} />
+              <ErrorMessage
+                message={errors.files[index]?.fileInstance?.message}
+              />
             )}
           </div>
         ))}
@@ -278,7 +247,7 @@ export function TasksView() {
             type='text'
             {...register('task', { required: 'Task name is required' })}
           />
-          <Error message={errors.task?.message} />
+          <ErrorMessage message={errors.task?.message} />
         </div>
 
         <div>

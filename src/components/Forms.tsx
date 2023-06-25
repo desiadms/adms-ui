@@ -16,7 +16,7 @@ export const Input = forwardRef<
   />
 ))
 
-export function Error({ message }: { message: string | undefined }) {
+export function ErrorMessage({ message }: { message: string | undefined }) {
   return (
     <div>
       {message && <div className='mt-2 text-sm text-red-600'>{message}</div>}

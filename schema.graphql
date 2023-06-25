@@ -6929,8 +6929,9 @@ type users {
 columns and relationships of "usersMetadata"
 """
 type usersMetadata {
+  address: String!
   first_name: String!
-  hire_date: date
+  hire_date: date!
   id: uuid!
   last_name: String!
   role_data_manager: Boolean!
@@ -7014,6 +7015,7 @@ input usersMetadata_bool_exp {
   _and: [usersMetadata_bool_exp!]
   _not: usersMetadata_bool_exp
   _or: [usersMetadata_bool_exp!]
+  address: String_comparison_exp
   first_name: String_comparison_exp
   hire_date: date_comparison_exp
   id: uuid_comparison_exp
@@ -7041,6 +7043,7 @@ enum usersMetadata_constraint {
 input type for inserting data into table "usersMetadata"
 """
 input usersMetadata_insert_input {
+  address: String
   first_name: String
   hire_date: date
   id: uuid
@@ -7056,6 +7059,7 @@ input usersMetadata_insert_input {
 
 """aggregate max on columns"""
 type usersMetadata_max_fields {
+  address: String
   first_name: String
   hire_date: date
   id: uuid
@@ -7066,6 +7070,7 @@ type usersMetadata_max_fields {
 order by max() on columns of table "usersMetadata"
 """
 input usersMetadata_max_order_by {
+  address: order_by
   first_name: order_by
   hire_date: order_by
   id: order_by
@@ -7074,6 +7079,7 @@ input usersMetadata_max_order_by {
 
 """aggregate min on columns"""
 type usersMetadata_min_fields {
+  address: String
   first_name: String
   hire_date: date
   id: uuid
@@ -7084,6 +7090,7 @@ type usersMetadata_min_fields {
 order by min() on columns of table "usersMetadata"
 """
 input usersMetadata_min_order_by {
+  address: order_by
   first_name: order_by
   hire_date: order_by
   id: order_by
@@ -7112,6 +7119,7 @@ input usersMetadata_on_conflict {
 
 """Ordering options when selecting data from "usersMetadata"."""
 input usersMetadata_order_by {
+  address: order_by
   first_name: order_by
   hire_date: order_by
   id: order_by
@@ -7134,6 +7142,9 @@ input usersMetadata_pk_columns_input {
 select columns of table "usersMetadata"
 """
 enum usersMetadata_select_column {
+  """column name"""
+  address
+
   """column name"""
   first_name
 
@@ -7215,6 +7226,7 @@ enum usersMetadata_select_column_usersMetadata_aggregate_bool_exp_bool_or_argume
 input type for updating data in table "usersMetadata"
 """
 input usersMetadata_set_input {
+  address: String
   first_name: String
   hire_date: date
   id: uuid
@@ -7240,6 +7252,7 @@ input usersMetadata_stream_cursor_input {
 
 """Initial value of the column from where the streaming should start"""
 input usersMetadata_stream_cursor_value_input {
+  address: String
   first_name: String
   hire_date: date
   id: uuid
@@ -7256,6 +7269,9 @@ input usersMetadata_stream_cursor_value_input {
 update columns of table "usersMetadata"
 """
 enum usersMetadata_update_column {
+  """column name"""
+  address
+
   """column name"""
   first_name
 

@@ -1,16 +1,12 @@
 import { Disclosure } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/20/solid'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid'
+import { UserCircleIcon } from '@heroicons/react/24/outline'
 import { SignalIcon, SignalSlashIcon } from '@heroicons/react/24/solid'
 import { useSignOut } from '@nhost/react'
 import { Link, Navigate, Outlet, useMatchRoute } from '@tanstack/router'
-import { useIsOnline } from '../helpers'
-
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-}
+import { userDocument } from '../graphql-operations'
+import { useHasuraQuery, useIsOnline } from '../helpers'
+import { emailToId, fullName } from '../utils'
 
 const navigation = [
   ['/projects', 'Projects'],
@@ -27,6 +23,13 @@ export function Home() {
 export function Dashboard() {
   const matchRoute = useMatchRoute()
   const isOnline = useIsOnline()
+
+  const { data } = useHasuraQuery({
+    queryKey: ['user'],
+    document: userDocument
+  })
+
+  const user = data?.usersMetadata[0]
 
   const currentRoute = navigation.find(([to]) =>
     matchRoute({
@@ -99,38 +102,39 @@ export function Dashboard() {
                       <div className='border-t border-gray-700 pb-3 pt-4'>
                         <div className='flex items-center px-5'>
                           <div className='flex-shrink-0'>
-                            <img
-                              className='h-10 w-10 rounded-full'
-                              src={user.imageUrl}
-                              alt=''
-                            />
+                            <UserCircleIcon className='h-10 w-10 text-gray-400' />
                           </div>
                           <div className='ml-3 flex flex-col gap-1'>
-                            <div className='text-base font-medium leading-none text-white'>
-                              {user.name}
+                            <div className='text-base capitalize font-medium leading-none text-white'>
+                              {fullName(user?.first_name, user?.last_name)}
                             </div>
                             <div className='text-sm font-light leading-none text-gray-400'>
-                              {user.email}
+                              {emailToId(user?.usersMetadata_user.email)}
                             </div>
                           </div>
-                          <button
-                            type='button'
-                            className='ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'
-                          >
-                            <span className='sr-only'>View notifications</span>
-                            <BellIcon className='h-6 w-6' aria-hidden='true' />
-                          </button>
                         </div>
                         <div className='mt-3 space-y-1 px-2'>
                           <Link
-                            key='Account'
                             to='/account'
-                            className='block rounded-md px-3 py-2 text-base text-gray-400 hover:bg-gray-400 hover:bg-opacity-75 hover:text-white'
+                            className='block rounded-md px-3 py-2 text-base'
+                            activeProps={{
+                              className: `bg-gray-900 text-white`
+                            }}
+                            onClick={close}
+                            inactiveProps={{
+                              className: `text-gray-300 hover:bg-gray-700 hover:text-white`
+                            }}
                           >
                             Account
                           </Link>
                           <Link
-                            className='block rounded-md px-3 py-2 text-base text-gray-400 hover:bg-gray-400 hover:bg-opacity-75 hover:text-white'
+                            className='block rounded-md px-3 py-2 text-base'
+                            activeProps={{
+                              className: `bg-gray-900 text-white`
+                            }}
+                            inactiveProps={{
+                              className: `text-gray-300 hover:bg-gray-700 hover:text-white`
+                            }}
                             onClick={signOut}
                             to='/'
                           >
@@ -146,24 +150,26 @@ export function Dashboard() {
           </Disclosure>
         </nav>
 
-        <header className='bg-white shadow-sm'>
-          <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center'>
-            <h1 className='text-lg font-semibold leading-6 text-gray-900'>
-              {routeLabel || 'No Route Found'}
-            </h1>
-            {isOnline ? (
-              <SignalIcon
-                className='h-6 w-6 text-green-600'
-                aria-hidden='true'
-              />
-            ) : (
-              <SignalSlashIcon
-                className='h-6 w-6 text-red-600'
-                aria-hidden='true'
-              />
-            )}
-          </div>
-        </header>
+        {routeLabel && (
+          <header className='bg-white shadow-sm'>
+            <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center'>
+              <h1 className='text-lg font-semibold leading-6 text-gray-900'>
+                {routeLabel}
+              </h1>
+              {isOnline ? (
+                <SignalIcon
+                  className='h-6 w-6 text-green-600'
+                  aria-hidden='true'
+                />
+              ) : (
+                <SignalSlashIcon
+                  className='h-6 w-6 text-red-600'
+                  aria-hidden='true'
+                />
+              )}
+            </div>
+          </header>
+        )}
       </div>
 
       <main>

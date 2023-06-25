@@ -1,20 +1,7 @@
 import { GlobeAmericasIcon } from '@heroicons/react/24/solid'
-import { graphql } from '../gql'
+import { projectsDocument } from '../graphql-operations'
 import { useHasuraQuery } from '../helpers'
 import { QueryStates } from './common'
-
-const projectsDocument = graphql(/* GraphQL */ `
-  query projects {
-    projects {
-      name
-      comment
-      contractor
-      sub_contractor
-      location
-      poc
-    }
-  }
-`)
 
 export function ProjectsView() {
   const res = useHasuraQuery({
@@ -30,7 +17,7 @@ export function ProjectsView() {
       {(activeProject && (
         <div>
           <h2 className='font-medium pb-2'> Active Projects </h2>
-          <div className=' flex flex-col gap-6 from-stone-600 to-emerald-700 text-white rounded-xl p-4 bg-gradient-to-t from-80%'>
+          <div className='flex flex-col gap-6 from-stone-600 to-emerald-700 text-white rounded-xl p-4 bg-gradient-to-t from-80%'>
             <div className='flex gap-4 items-center'>
               <div className='p-1 rounded-xl w-fit bg-stone-800'>
                 <GlobeAmericasIcon className='h-10 w-10 text-stone-100' />
