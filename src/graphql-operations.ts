@@ -6,7 +6,6 @@ export const userDocument = graphql(/* GraphQL */ `
       id
       first_name
       hire_date
-      address
       last_name
       role_data_manager
       role_field_supervisor
