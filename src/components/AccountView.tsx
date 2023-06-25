@@ -1,7 +1,6 @@
 import {
   BriefcaseIcon,
   CalendarDaysIcon,
-  HomeIcon,
   IdentificationIcon
 } from '@heroicons/react/20/solid'
 import { UserCircleIcon } from '@heroicons/react/24/outline'
@@ -76,10 +75,6 @@ export function AccountView() {
           </div>
 
           <div className='flex flex-col gap-1 pb-5'>
-            <div className='flex items-center gap-1'>
-              <HomeIcon className='h-4 w-4' />
-              <p className='text-sm font-light'> {user?.address}</p>
-            </div>
             <div className='flex gap-1 items-center'>
               <BriefcaseIcon className='h-4 w-4' />
               <p className='text-sm font-light capitalize'>{userRoles(user)}</p>
