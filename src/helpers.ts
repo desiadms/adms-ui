@@ -210,7 +210,7 @@ function defaultOnMutate(queryKey: QueryKey) {
 }
 
 function defaultOnError(queryKey: QueryKey) {
-  return (error, _payload, previousData) => {
+  return (_error, _payload, previousData) => {
     console.log('in error', _payload)
     queryClient.setQueryData(queryKey, previousData)
   }
