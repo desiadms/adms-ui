@@ -39,8 +39,7 @@ export function AccountView() {
   } = useForm<UserFormData>({
     defaultValues: {
       first_name: user?.first_name,
-      last_name: user?.last_name,
-      address: user?.address
+      last_name: user?.last_name
     }
   })
 
@@ -49,8 +48,7 @@ export function AccountView() {
       hasura: {
         id: user?.id,
         first_name: data.first_name,
-        last_name: data.last_name,
-        address: data.address
+        last_name: data.last_name
       }
     })
   }
@@ -118,16 +116,7 @@ export function AccountView() {
             />
             <ErrorMessage message={errors.last_name?.message} />
           </div>
-          <div className='rounded-lg'>
-            <LabelledInput
-              label='Address'
-              type='text'
-              {...register('address', {
-                required: 'Address is required'
-              })}
-            />
-            <ErrorMessage message={errors.address?.message} />
-          </div>
+
           <div className='w-fit'>
             <Button type='submit' disabled={udpateUser.isLoading}>
               Update
