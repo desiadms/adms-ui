@@ -17,7 +17,7 @@ const documents = {
     "\n  mutation updateUser($id: uuid!, $first_name: String!, $last_name: String!) {\n    update_usersMetadata_by_pk(\n      pk_columns: { id: $id }\n      _set: { first_name: $first_name, last_name: $last_name }\n    ) {\n      id\n    }\n  }\n": types.UpdateUserDocument,
     "\n  query projects {\n    projects {\n      name\n      comment\n      contractor\n      sub_contractor\n      location\n      poc\n    }\n  }\n": types.ProjectsDocument,
     "\n  query allTasks {\n    tasks {\n      id\n      name\n      tasks_images {\n        id\n        task_id\n      }\n    }\n  }\n": types.AllTasksDocument,
-    "\n  mutation task(\n    $name: String\n    $task_id: uuid\n    $images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $task_id }) {\n      id\n      name\n      user_id\n    }\n    insert_images(objects: $images) {\n      returning {\n        id\n        task_id\n      }\n    }\n  }\n": types.TaskDocument,
+    "\n  mutation task(\n    $name: String\n    $id: uuid\n    $tasks_images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $id }) {\n      id\n      name\n      user_id\n    }\n    insert_images(objects: $tasks_images) {\n      returning {\n        id\n        task_id\n      }\n    }\n  }\n": types.TaskDocument,
 };
 
 /**
@@ -53,7 +53,7 @@ export function graphql(source: "\n  query allTasks {\n    tasks {\n      id\n  
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation task(\n    $name: String\n    $task_id: uuid\n    $images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $task_id }) {\n      id\n      name\n      user_id\n    }\n    insert_images(objects: $images) {\n      returning {\n        id\n        task_id\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation task(\n    $name: String\n    $task_id: uuid\n    $images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $task_id }) {\n      id\n      name\n      user_id\n    }\n    insert_images(objects: $images) {\n      returning {\n        id\n        task_id\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation task(\n    $name: String\n    $id: uuid\n    $tasks_images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $id }) {\n      id\n      name\n      user_id\n    }\n    insert_images(objects: $tasks_images) {\n      returning {\n        id\n        task_id\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation task(\n    $name: String\n    $id: uuid\n    $tasks_images: [images_insert_input!]!\n  ) {\n    insert_tasks_one(object: { name: $name, id: $id }) {\n      id\n      name\n      user_id\n    }\n    insert_images(objects: $tasks_images) {\n      returning {\n        id\n        task_id\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

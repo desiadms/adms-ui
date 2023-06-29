@@ -35,20 +35,22 @@ function Tasks({ data }: { data: AllTasksQuery }) {
 
   useEffect(() => {
     const fetchData = async () => {
+      const flattenedImages = data?.tasks?.flatMap((task) =>
+        task?.tasks_images?.map((image) => image)
+      )
+
       const urls = await Promise.all(
-        data.tasks.map(async (task) => {
-          const urls = await Promise.all(
-            task?.tasks_images.map(async (image) => {
-              const { presignedUrl } = await nhost.storage.getPresignedUrl({
-                fileId: image.id
-              })
-              return presignedUrl?.url
-            })
-          )
-          return { task_id: task.id, urls }
+        flattenedImages.map(async (image) => {
+          const { presignedUrl } = await nhost.storage.getPresignedUrl({
+            fileId: image.id
+          })
+          return { task_id: image.task_id, url: presignedUrl?.url }
         })
       )
-      const urlsByTaskId = urls.reduce((acc, { task_id, urls }) => {
+
+      const urlsByTaskId = urls.reduce((acc, { task_id, url }) => {
+        const urls = acc[task_id] || []
+        urls.push(url)
         acc[task_id] = urls
         return acc
       }, {})
@@ -101,7 +103,7 @@ function genFileMetadata(filesData: FileForm[]) {
   const images = fileMetadata.map(({ id, task_id }) => ({ id, task_id }))
   const files = fileMetadata.map(({ id, file }) => ({ id, file }))
 
-  return { images, files, task_id: taskId }
+  return { images, files, taskId }
 }
 
 export function TasksView() {
@@ -109,6 +111,8 @@ export function TasksView() {
     queryKey: ['allTasks'],
     document: allTasksDocument
   })
+
+  console.log(data)
 
   const {
     register,
@@ -139,22 +143,21 @@ export function TasksView() {
   const submitTask = taskMutation()
 
   function submitForm(data: TaskFormData) {
-    clearErrors()
+    // clearErrors()
+    // // to check that at least one file was uploaded
+    // const hasFiles = data.files.some(
+    //   (file) => file.fileInstance && file.fileInstance[0]
+    // )
 
-    // to check that at least one file was uploaded
-    const hasFiles = data.files.some(
-      (file) => file.fileInstance && file.fileInstance[0]
-    )
+    // if (!hasFiles) {
+    //   setError('files', { message: 'Please take at least one picture' })
+    //   return
+    // }
 
-    if (!hasFiles) {
-      setError('files', { message: 'Please take at least one picture' })
-      return
-    }
-
-    const { task_id, images, files } = genFileMetadata(data.files)
+    const { taskId, images, files } = genFileMetadata(data.files)
 
     submitTask.mutate({
-      hasura: { name: data.task, task_id, images },
+      hasura: { name: data.task, id: taskId, tasks_images: images },
       files
     })
   }

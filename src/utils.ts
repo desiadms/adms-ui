@@ -23,3 +23,27 @@ export function userRoles(user: UserQuery['usersMetadata'][0] | undefined) {
       .join(', ')
   )
 }
+
+export function throwCustomError({
+  status
+}: {
+  status: number
+  message: string
+}) {
+  const error = new Error('Custom error')
+  ;(error as Error & { status: number }).status = status
+  throw error
+}
+
+export function arraysAreEqual(
+  array1: readonly unknown[] | undefined,
+  array2: readonly unknown[] | undefined
+): boolean {
+  if (!array1 || !array2) return false
+
+  if (array1.length !== array2.length) {
+    return false
+  }
+
+  return array1.every((element, index) => element === array2[index])
+}

@@ -6,6 +6,7 @@ import {
   QueryClient,
   QueryKey,
   UseQueryOptions,
+  dehydrate,
   useMutation,
   useQuery,
   type UseQueryResult
@@ -19,6 +20,13 @@ import request from 'graphql-request'
 import { del, get, set } from 'idb-keyval'
 import { useEffect, useState } from 'preact/hooks'
 import toast from 'react-hot-toast'
+import { openDatabase } from './indexedDb'
+import { arraysAreEqual, throwCustomError } from './utils'
+
+interface Error {
+  status?: number
+  code?: number
+}
 
 export const nhost = new NhostClient({
   subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
@@ -28,19 +36,21 @@ export const nhost = new NhostClient({
 const hasuraURL = import.meta.env.VITE_HASURA_ENDPOINT
 
 async function getAccessToken() {
-  // casting to unknown because the  type JWTClaims is missing the exp field
-  const decodedAccessToken = nhost.auth.getDecodedAccessToken() as unknown
-  const exp = (decodedAccessToken as { exp: number })?.exp
+  const decodedAccessToken = nhost.auth.getDecodedAccessToken()
+  const exp = decodedAccessToken?.exp
   const expirationDate = exp && new Date(exp * 1000)
 
   if (!expirationDate || expirationDate < new Date()) {
-    console.log('token expired')
-    await nhost.auth.refreshSession()
+    const res = await nhost.auth.refreshSession()
+
+    if (!res.session) {
+      throwCustomError({ status: 401, message: 'Refresh Token Expired' })
+    } else {
+      return res.session.accessToken
+    }
   }
 
-  const token = nhost.auth.getAccessToken()
-
-  return token
+  return nhost.auth.getAccessToken()
 }
 
 // inspired by GraphQL Code Generator’s recommendations:
@@ -103,17 +113,13 @@ export function useHasuraQuery<TResult, TVariables, TData = TResult>(
 
       return request(hasuraURL, document, variables ?? {}, {
         Authorization: `Bearer ${accessToken}`
-      }).then((data) => {
-        console.log(data)
-
-        return data
-      })
+      }).then((data) => data)
     },
     ...opts
   })
 }
 
-const cacheTime = 1000 * 60 * 60 * 24 * 7 // 7 days
+const cacheTime = Infinity
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -124,21 +130,59 @@ export const queryClient = new QueryClient({
     }
   },
   mutationCache: new MutationCache({
-    onSuccess: (data) => {
-      console.log('mutation success', data)
-      toast.success(JSON.stringify(data))
+    onSuccess: (_data, _variables, _context, mutation) => {
+      const mutationKey = mutation.options.mutationKey
+
+      // we can safely remove the mutation from adms indexedDB because it was successful
+      openDatabase('adms', ({ query, store }) => {
+        query(({ result }) => {
+          if (result) {
+            const mutations = (result.mutations as any[]) || []
+
+            const mutationIndex = mutations.findIndex((m) =>
+              arraysAreEqual(m.mutationKey, mutationKey)
+            )
+
+            if (mutationIndex > -1) {
+              mutations.splice(mutationIndex, 1)
+            } else {
+              throw new Error(
+                "Couldn't find mutation in indexedDB. It implies that the mutation was not persisted onMutate, or that the find function is not working correctly."
+              )
+            }
+
+            store({ mutations })
+          }
+        })
+      })
+
+      toast.success(mutationKey)
     },
     onError: (error, variables, _context, mutation) => {
-      console.error(error)
+      const mutationKey = mutation.options.mutationKey
+      console.log('mutation error', mutation.options.mutationKey)
 
-      // handle here failed mutations. Maybe store to local storage and retry later via user interaction
-
-      console.log('mutation error', mutation, variables)
+      // add the mutation to react-query indexedDB so that it can be retried
+      openDatabase('react-query', ({ query, store }) => {
+        query(({ result }) => {
+          if (result) {
+            const mutations = (result?.clientState?.mutations as any[]) || []
+            mutations.push(mutation)
+            store({ mutations })
+          }
+        })
+      })
 
       toast.error(JSON.stringify(error))
     }
   })
 })
+
+// const callback = (event) => {
+//   console.log('mutation cache update')
+// }
+
+// queryClient.getMutationCache().subscribe(callback)
 
 /**
  * Creates an Indexed DB persister
@@ -163,6 +207,16 @@ export function createIDBPersister(idbValidKey: IDBValidKey = 'tbSpecialist') {
 
 export const persister = createIDBPersister()
 
+const retryOptions = {
+  retryDelay: 2000,
+  retry: (failureCount, error) => {
+    const status = error?.status
+    return Boolean(
+      status && (status === 401 || status >= 500) && failureCount < 3
+    )
+  }
+}
+
 function setMutationDefaults<TResult, TVariables>({
   mutationKey,
   queryKey,
@@ -177,6 +231,7 @@ function setMutationDefaults<TResult, TVariables>({
   ) => Promise<unknown>
 }) {
   queryClient.setMutationDefaults(mutationKey, {
+    ...retryOptions,
     mutationFn: async (
       variables: { hasura: Strict<TVariables> } & Record<string, unknown>
     ): Promise<TResult> => {
@@ -193,13 +248,36 @@ function setMutationDefaults<TResult, TVariables>({
   })
 }
 
-function defaultOnMutate(queryKey: QueryKey) {
+function defaultOnMutate(queryKey: QueryKey, mutationKey: MutationKey) {
   return async (variables) => {
+    const { mutations } = dehydrate(queryClient, {
+      shouldDehydrateMutation: (mutation) =>
+        mutation.options.mutationKey === mutationKey,
+      shouldDehydrateQuery: () => false
+    })
+
+    const mutation = mutations && mutations[0]
+
+    if (mutation) {
+      openDatabase('adms', ({ query, store }) => {
+        query(({ result }) => {
+          if (result) {
+            const mutations = (result.mutations as unknown[]) || []
+            mutations.push(mutation)
+
+            store({ mutations })
+          } else {
+            store({ mutations: [mutation] })
+          }
+        })
+      })
+    }
+
     await queryClient.cancelQueries({ queryKey })
     const previousData = queryClient.getQueryData(queryKey) as Promise<unknown>
     const currentKey = Object.keys(previousData)[0] as string
     const prevColl = previousData[currentKey]
-    prevColl.push(variables)
+    prevColl.push(variables.hasura)
 
     queryClient.setQueryData(queryKey, {
       [currentKey]: prevColl
@@ -246,13 +324,14 @@ export function hasuraMutation<TResult, TVariables>({
   return () =>
     useMutation<
       Promise<TResult>,
-      Promise<Error>,
+      Error,
       { hasura: Strict<TVariables> } & Record<string, unknown>
     >({
       mutationKey,
-      onMutate: defaultOnMutate(queryKey),
+      onMutate: defaultOnMutate(queryKey, mutationKey),
       onError: defaultOnError(queryKey),
-      onSettled: defaultOnSettled(queryKey)
+      onSettled: defaultOnSettled(queryKey),
+      ...retryOptions
     })
 }
 
