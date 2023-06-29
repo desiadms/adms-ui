@@ -131,13 +131,13 @@ export const queryClient = new QueryClient({
   },
   mutationCache: new MutationCache({
     onSuccess: (_data, _variables, _context, mutation) => {
-      const mutationKey = mutation.options.mutationKey
+      const { mutationKey } = mutation.options
 
       // we can safely remove the mutation from adms indexedDB because it was successful
       openDatabase('adms', ({ query, store }) => {
         query(({ result }) => {
           if (result) {
-            const mutations = (result.mutations as any[]) || []
+            const mutations = result.mutations || []
 
             const mutationIndex = mutations.findIndex((m) =>
               arraysAreEqual(m.mutationKey, mutationKey)
@@ -158,22 +158,8 @@ export const queryClient = new QueryClient({
 
       toast.success(mutationKey)
     },
-    onError: (error, variables, _context, mutation) => {
-      const mutationKey = mutation.options.mutationKey
-      console.log('mutation error', mutation.options.mutationKey)
-
-      // add the mutation to react-query indexedDB so that it can be retried
-      openDatabase('react-query', ({ query, store }) => {
-        query(({ result }) => {
-          if (result) {
-            const mutations = (result?.clientState?.mutations as any[]) || []
-            mutations.push(mutation)
-            store({ mutations })
-          }
-        })
-      })
-
-      toast.error(JSON.stringify(error))
+    onError: async (_error, _variables, _context, mutation) => {
+      toast.error(JSON.stringify(mutation.options.mutationKey))
     }
   })
 })
@@ -262,7 +248,7 @@ function defaultOnMutate(queryKey: QueryKey, mutationKey: MutationKey) {
       openDatabase('adms', ({ query, store }) => {
         query(({ result }) => {
           if (result) {
-            const mutations = (result.mutations as unknown[]) || []
+            const mutations = result.mutations || []
             mutations.push(mutation)
 
             store({ mutations })

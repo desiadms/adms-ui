@@ -1,3 +1,7 @@
+import { DehydratedState } from '@tanstack/react-query'
+
+export type Mutation = DehydratedState['mutations'][0]
+
 const DBs = {
   adms: {
     dbName: 'adms',
@@ -11,62 +15,71 @@ const DBs = {
   }
 }
 
-type Result = Record<string, unknown> | undefined
+type DocumentTypes = {
+  adms: {
+    mutations: Mutation[]
+  }
+  'react-query': {
+    clientState: DehydratedState
+  }
+}
 
-type StoreObjectInDatabaseType = {
+type Result<T extends keyof DocumentTypes> = DocumentTypes[T] | undefined
+
+type StoreObjectInDatabaseType<T extends keyof DocumentTypes> = {
   db: IDBDatabase
   dbObjectStoreName: string
   objectStoreKey: string
-  data: Result
+  data: Result<T>
 }
 
-export function storeObjectInDatabase({
+export function storeObjectInDatabase<T extends keyof DocumentTypes>({
   db,
   dbObjectStoreName,
   objectStoreKey,
   data
-}: StoreObjectInDatabaseType) {
-  const transaction = db.transaction([dbObjectStoreName], 'readwrite')
-  const objectStore = transaction.objectStore(dbObjectStoreName)
+}: StoreObjectInDatabaseType<T>) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([dbObjectStoreName], 'readwrite')
+    const objectStore = transaction.objectStore(dbObjectStoreName)
 
-  const addObjectRequest = objectStore.put(data, objectStoreKey)
+    const addObjectRequest = objectStore.put(data, objectStoreKey)
 
-  addObjectRequest.onsuccess = (_errorevent) => {
-    console.log('Object updated in IndexedDB')
-  }
+    addObjectRequest.onsuccess = (_errorevent) => {
+      console.log('Object updated in IndexedDB')
+    }
 
-  transaction.oncomplete = (_event) => {
-    console.log('Transaction completed')
-  }
+    transaction.oncomplete = (_event) => {
+      console.log('Transaction completed')
+      resolve('Transaction completed')
+    }
 
-  transaction.onerror = (event) => {
-    console.error('Transaction error:', (event.target as IDBRequest).error)
-  }
+    transaction.onerror = (event) => {
+      console.error('Transaction error:', (event.target as IDBRequest).error)
+      reject(new Error('Transaction error'))
+    }
+  })
 }
 
-type QueryCallback = ({
-  result,
-  error,
-  message
-}: {
-  result: Result
+type QueryCallback<T extends keyof DocumentTypes> = {
+  result: Result<T>
   error?: boolean
   message?: DOMException | null
-}) => void
+}
 
-type QueryObjectFromDatabaseType = {
+type QueryObjectFromDatabaseType<T extends keyof DocumentTypes> = {
   db: IDBDatabase
   dbObjectStoreName: string
   objectStoreKey: string
-  callback: QueryCallback
+  callback: (callback: QueryCallback<T>) => void
 }
 
-export function queryObjectFromDatabase({
+export function queryObjectFromDatabase<T extends keyof DocumentTypes>({
   db,
   dbObjectStoreName,
   objectStoreKey,
   callback
-}: QueryObjectFromDatabaseType): void {
+}: QueryObjectFromDatabaseType<T>): void {
   const transaction: IDBTransaction = db.transaction(
     [dbObjectStoreName],
     'readonly'
@@ -87,15 +100,15 @@ export function queryObjectFromDatabase({
   }
 }
 
-type OpenDatabaseType = {
+type OpenDatabaseType<T extends keyof DocumentTypes> = {
   db: IDBDatabase
-  store: (data: Result) => void
-  query: (callback: QueryCallback) => void
+  store: (data: Result<T>) => void
+  query: (callback: (callback: QueryCallback<T>) => void) => void
 }
 
-export function openDatabase(
-  db: 'adms' | 'react-query',
-  callback: ({ db, store, query }: OpenDatabaseType) => void
+export function openDatabase<T extends keyof DocumentTypes>(
+  db: T,
+  callback: ({ db, store, query }: OpenDatabaseType<T>) => void
 ) {
   const { dbName, dbObjectStoreName, objectStoreKey } = DBs[db]
   const request = indexedDB.open(dbName, 1)
@@ -110,13 +123,18 @@ export function openDatabase(
     callback({
       db,
       store: (data) =>
-        storeObjectInDatabase({ db, dbObjectStoreName, objectStoreKey, data }),
-      query: (callback) =>
-        queryObjectFromDatabase({
+        storeObjectInDatabase<T>({
           db,
           dbObjectStoreName,
           objectStoreKey,
-          callback
+          data
+        }),
+      query: (queryCallback) =>
+        queryObjectFromDatabase<T>({
+          db,
+          dbObjectStoreName,
+          objectStoreKey,
+          callback: queryCallback
         })
     })
   }
