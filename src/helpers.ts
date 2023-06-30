@@ -33,7 +33,7 @@ export const nhost = new NhostClient({
   region: import.meta.env.VITE_NHOST_REGION
 })
 
-const hasuraURL = import.meta.env.VITE_HASURA_ENDPOINT
+export const hasuraURL = import.meta.env.VITE_HASURA_ENDPOINT
 
 async function getAccessToken() {
   const decodedAccessToken = nhost.auth.getDecodedAccessToken()
