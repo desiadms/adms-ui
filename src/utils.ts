@@ -1,5 +1,7 @@
 import { UserQuery } from './gql/graphql'
 
+export const devMode = import.meta.env.MODE === 'development'
+
 export function emailToId(email: string | undefined) {
   return email && email.split('@')[0]
 }

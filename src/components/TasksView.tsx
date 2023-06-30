@@ -3,6 +3,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { useEffect, useState } from 'preact/hooks'
 import { useFieldArray, useForm } from 'react-hook-form'
+import { RxDocument } from 'rxdb'
+import { useRxData } from 'rxdb-hooks'
 import { v4 } from 'uuid'
 import { AllTasksQuery } from '../gql/graphql'
 import { allTasksDocument, createTaskDocument } from '../graphql-operations'
@@ -30,14 +32,15 @@ const taskMutation = hasuraMutation({
   callback: saveMedia
 })
 
-function Tasks({ data }: { data: AllTasksQuery }) {
+function Tasks({ data }: { data: RxDocument<AllTasksQuery['tasks']> }) {
   const [imageUrls, setImageUrls] = useState<Record<string, string[]>>()
 
   useEffect(() => {
     const fetchData = async () => {
-      const flattenedImages = data?.tasks?.flatMap((task) =>
-        task?.tasks_images?.map((image) => image)
-      )
+      const flattenedImages = data?.flatMap((task) => {
+        console.log('task', task)
+        return task?.tasks_images?.map((image) => image)
+      })
 
       const urls = await Promise.all(
         flattenedImages.map(async (image) => {
@@ -63,7 +66,7 @@ function Tasks({ data }: { data: AllTasksQuery }) {
 
   return (
     <div>
-      {data.tasks.map((task) => (
+      {data.map((task) => (
         <div key={task.id}>
           <h2>{task.name}</h2>
           <div className='flex gap-4'>
@@ -112,7 +115,12 @@ export function TasksView() {
     document: allTasksDocument
   })
 
-  console.log(data)
+  const { result: tasks, isFetching } = useRxData<AllTasksQuery['tasks']>(
+    // the collection to be queried
+    'tasks',
+    // a function returning the query to be applied
+    (collection) => collection.find()
+  )
 
   const {
     register,
@@ -260,7 +268,7 @@ export function TasksView() {
         </div>
       </form>
 
-      {data && <Tasks data={data} />}
+      {data && <Tasks data={tasks} />}
 
       {mutationCache?.map(({ state }) => {
         const { context, ...rest } = state

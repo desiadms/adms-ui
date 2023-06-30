@@ -1,10 +1,13 @@
-import { useSignInEmailPassword } from '@nhost/react'
+import { useAccessToken, useSignInEmailPassword } from '@nhost/react'
 import { useIsRestoring } from '@tanstack/react-query'
 import { RouterProvider } from '@tanstack/router'
-import { useMemo } from 'preact/hooks'
+import { useEffect, useMemo, useState } from 'preact/hooks'
 import { useForm } from 'react-hook-form'
+import { RxDatabase } from 'rxdb'
+import { Provider } from 'rxdb-hooks'
 import { useAuth } from '../helpers'
 import { router } from '../router'
+import { initialize } from '../rxdb'
 import { Button, ErrorMessage, LabelledInput } from './Forms'
 import { Spinner } from './icons'
 
@@ -80,7 +83,14 @@ function Login() {
 
 export function AuthWrapper() {
   const { isAuthenticated, isLoading } = useAuth()
+  const accessToken = useAccessToken()
   const isRestoring = useIsRestoring()
+
+  const [db, setDb] = useState<RxDatabase>()
+
+  useEffect(() => {
+    if (accessToken) initialize(accessToken).then(setDb)
+  }, [accessToken])
 
   const memoizedRoutes = useMemo(() => router(isRestoring), [isRestoring])
 
@@ -98,5 +108,9 @@ export function AuthWrapper() {
     return <Login />
   }
 
-  return <RouterProvider router={memoizedRoutes} />
+  return (
+    <Provider db={db}>
+      <RouterProvider router={memoizedRoutes} />
+    </Provider>
+  )
 }

@@ -7747,6 +7747,11 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
+rxdb-hooks@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/rxdb-hooks/-/rxdb-hooks-5.0.2.tgz#aef646a2b3215497e697257e4e5e9412a87ed686"
+  integrity sha512-ID+moqoAYCc7u0zQwPLRZKeaKK3G+WVhRMTHddbvOBWSTuIA+7q22Xma40TPi5asrPyJiiwd2TZ8qxwdlHXNmw==
+
 rxdb@^14.14.1:
   version "14.14.1"
   resolved "https://registry.yarnpkg.com/rxdb/-/rxdb-14.14.1.tgz#7bc4820c5977dd6d8a682278b5664d882bd7a4cb"

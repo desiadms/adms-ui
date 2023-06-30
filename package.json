@@ -43,6 +43,7 @@
     "react-hook-form": "^7.44.1",
     "react-hot-toast": "^2.4.1",
     "rxdb": "^14.14.1",
+    "rxdb-hooks": "^5.0.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

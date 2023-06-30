@@ -6,9 +6,6 @@ import { Toaster } from 'react-hot-toast'
 import './app.css'
 import { AuthWrapper } from './components/AuthWrapper'
 import { nhost, persister, queryClient } from './helpers'
-import { db } from './rxdb'
-
-console.log(db)
 
 export function App() {
   return (
