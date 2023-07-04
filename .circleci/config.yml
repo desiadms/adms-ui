@@ -7,15 +7,20 @@ jobs:
 
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - 'v1-dependencies-{{ checksum "yarn.lock" }}'
+            - v1-dependencies-
 
       - run: yarn install
+      - run: yarn build
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "yarn.lock" }}
 
-      - run: pwd && yarn build
+      - run: yarn test:e2e
 
   deploy-staging:
     executor: heroku/default
