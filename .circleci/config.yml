@@ -14,13 +14,12 @@ jobs:
 
       - run: yarn install
       - run: yarn build
+      - run: yarn test:e2e:ci
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "yarn.lock" }}
-
-      - run: yarn test:e2e:ci
 
   deploy-staging:
     executor: heroku/default
