@@ -14,7 +14,7 @@ test('Login Page opens', async ({ page }) => {
   await expect(signInButton).toBeVisible()
 })
 
-test.only('Test user can login', async ({ page }) => {
+test('Test user can login', async ({ page }) => {
   await page.goto('http://localhost:5173')
 
   const userIdField = await page.locator('input[name="id"]')

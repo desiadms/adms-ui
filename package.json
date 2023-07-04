@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "yarn run fetch-graphql-schema && concurrently \"vite\" \"yarn generate --watch\"",
+    "dev:ci": "yarn run hasura-introspect && concurrently \"vite\" \"yarn generate --watch\"",
     "hasura-introspect": "gq $VITE_HASURA_ENDPOINT -H \"X-Hasura-Admin-Secret: $HASURA_ADMIN_SECRET\" --introspect > schema.graphql",
     "fetch-graphql-schema": "dotenv-run-script .env -- hasura-introspect",
     "generate": "graphql-codegen",
