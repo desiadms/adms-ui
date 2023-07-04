@@ -51,7 +51,8 @@ orbs:
 workflows:
   build-test-deploy:
     jobs:
-      - build
+      - build:
+          context: staging-adms-ui
       - deploy-staging:
           requires:
             - build
