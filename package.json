@@ -17,6 +17,7 @@
     "playwright:test": "yarn playwright test",
     "playwright:test:ui": "yarn playwright test --ui",
     "test:e2e": "dotenv-run-script playwright:test",
+    "test:e2e:ci": "yarn playwright:test",
     "test:e2e:ui": "dotenv-run-script playwright:test:ui",
     "coverage": "vitest run --coverage"
   },
