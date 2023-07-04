@@ -5179,6 +5179,7 @@ export type Tasks = {
   tasks_project: Projects;
   /** An object relationship */
   tasks_user: Users;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id: Scalars['uuid']['output'];
 };
 
@@ -5261,6 +5262,7 @@ export type Tasks_Bool_Exp = {
   tasks_images_aggregate?: InputMaybe<Images_Aggregate_Bool_Exp>;
   tasks_project?: InputMaybe<Projects_Bool_Exp>;
   tasks_user?: InputMaybe<Users_Bool_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
@@ -5278,6 +5280,7 @@ export type Tasks_Insert_Input = {
   tasks_images?: InputMaybe<Images_Arr_Rel_Insert_Input>;
   tasks_project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
   tasks_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -5287,6 +5290,7 @@ export type Tasks_Max_Fields = {
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
@@ -5295,6 +5299,7 @@ export type Tasks_Max_Order_By = {
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
 
@@ -5304,6 +5309,7 @@ export type Tasks_Min_Fields = {
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
@@ -5312,6 +5318,7 @@ export type Tasks_Min_Order_By = {
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
 
@@ -5346,6 +5353,7 @@ export type Tasks_Order_By = {
   tasks_images_aggregate?: InputMaybe<Images_Aggregate_Order_By>;
   tasks_project?: InputMaybe<Projects_Order_By>;
   tasks_user?: InputMaybe<Users_Order_By>;
+  updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
 
@@ -5363,6 +5371,8 @@ export enum Tasks_Select_Column {
   /** column name */
   ProjectId = 'project_id',
   /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
   UserId = 'user_id'
 }
 
@@ -5371,6 +5381,7 @@ export type Tasks_Set_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -5387,6 +5398,7 @@ export type Tasks_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -5398,6 +5410,8 @@ export enum Tasks_Update_Column {
   Name = 'name',
   /** column name */
   ProjectId = 'project_id',
+  /** column name */
+  UpdatedAt = 'updated_at',
   /** column name */
   UserId = 'user_id'
 }

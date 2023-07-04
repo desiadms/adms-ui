@@ -14,6 +14,10 @@
     "format": "prettier \"src/**/*.{ts,tsx,js,jsx,css,scss}\" --write",
     "prepare": "husky install",
     "test": "vitest",
+    "playwright:test": "yarn playwright test",
+    "playwright:test:ui": "yarn playwright test --ui",
+    "test:e2e": "dotenv-run-script playwright:test",
+    "test:e2e:ui": "dotenv-run-script playwright:test:ui",
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
@@ -41,6 +45,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^4.0.0",
     "@graphql-codegen/client-preset": "^4.0.0",
+    "@playwright/test": "^1.35.1",
     "@preact/preset-vite": "^2.5.0",
     "@tanstack/react-query-devtools": "^4.29.6",
     "@types/uuid": "^9.0.1",
