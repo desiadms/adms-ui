@@ -70,7 +70,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: process.env.NODE_ENV === 'development' ? 'yarn dev' : 'yarn dev:ci',
+    command: process.env.CI ? 'yarn dev:ci' : 'yarn dev',
     url: 'http://127.0.0.1:5173',
     reuseExistingServer: !process.env.CI,
   },
