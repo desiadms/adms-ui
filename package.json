@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "yarn run fetch-graphql-schema && concurrently \"vite\" \"yarn generate --watch\"",
+    "dev:ci": "yarn run hasura-introspect && concurrently \"vite\" \"yarn generate --watch\"",
     "hasura-introspect": "gq $VITE_HASURA_ENDPOINT -H \"X-Hasura-Admin-Secret: $HASURA_ADMIN_SECRET\" --introspect > schema.graphql",
     "fetch-graphql-schema": "dotenv-run-script .env -- hasura-introspect",
     "generate": "graphql-codegen",
@@ -14,6 +15,11 @@
     "format": "prettier \"src/**/*.{ts,tsx,js,jsx,css,scss}\" --write",
     "prepare": "husky install",
     "test": "vitest",
+    "playwright:test": "yarn playwright test",
+    "playwright:test:ui": "yarn playwright test --ui",
+    "test:e2e": "dotenv-run-script playwright:test",
+    "test:e2e:ci": "yarn playwright install && yarn playwright install-deps && yarn playwright:test",
+    "test:e2e:ui": "dotenv-run-script playwright:test:ui",
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
@@ -41,6 +47,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^4.0.0",
     "@graphql-codegen/client-preset": "^4.0.0",
+    "@playwright/test": "latest",
     "@preact/preset-vite": "^2.5.0",
     "@tanstack/react-query-devtools": "^4.29.6",
     "@types/uuid": "^9.0.1",
