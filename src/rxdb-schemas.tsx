@@ -4,6 +4,7 @@ export const taskSchema = {
   version: 0,
   type: 'object',
   primaryKey: 'id',
+  attachments: {},
   properties: {
     id: {
       type: 'string',

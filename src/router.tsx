@@ -7,6 +7,7 @@ import { GeoLocationView } from './components/GeoLocationView'
 import { ProjectsView } from './components/Projects'
 import { QRCodeView } from './components/QRCodeView'
 import { TasksView } from './components/TasksView'
+import { Test } from './components/Test'
 import { allTasksDocument } from './graphql-operations'
 import { nhost, queryClient } from './helpers'
 
@@ -81,9 +82,17 @@ declare module '@tanstack/router' {
   }
 }
 
+const testRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'test',
+  component: () => <Test />,
+  errorComponent: () => 'Oh crap!'
+})
+
 const routeTree = (isRestoring: boolean) =>
   rootRoute.addChildren([
     homeRoute,
+    testRoute,
     projectsRoute,
     accountRoute,
     tasksRoute(isRestoring),

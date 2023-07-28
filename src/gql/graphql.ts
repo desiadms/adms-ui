@@ -5168,6 +5168,7 @@ export type Subscription_RootUsers_StreamArgs = {
 /** columns and relationships of "tasks" */
 export type Tasks = {
   __typename?: 'tasks';
+  _deleted?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['uuid']['output'];
   name: Scalars['String']['output'];
   project_id: Scalars['uuid']['output'];
@@ -5211,7 +5212,23 @@ export type Tasks_Aggregate = {
 };
 
 export type Tasks_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Tasks_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Tasks_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<Tasks_Aggregate_Bool_Exp_Count>;
+};
+
+export type Tasks_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Tasks_Select_Column_Tasks_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Tasks_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Tasks_Select_Column_Tasks_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
 };
 
 export type Tasks_Aggregate_Bool_Exp_Count = {
@@ -5253,6 +5270,7 @@ export type Tasks_Arr_Rel_Insert_Input = {
 /** Boolean expression to filter rows from the table "tasks". All fields are combined with a logical 'AND'. */
 export type Tasks_Bool_Exp = {
   _and?: InputMaybe<Array<Tasks_Bool_Exp>>;
+  _deleted?: InputMaybe<Boolean_Comparison_Exp>;
   _not?: InputMaybe<Tasks_Bool_Exp>;
   _or?: InputMaybe<Array<Tasks_Bool_Exp>>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -5274,6 +5292,7 @@ export enum Tasks_Constraint {
 
 /** input type for inserting data into table "tasks" */
 export type Tasks_Insert_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -5347,6 +5366,7 @@ export type Tasks_On_Conflict = {
 
 /** Ordering options when selecting data from "tasks". */
 export type Tasks_Order_By = {
+  _deleted?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
@@ -5365,6 +5385,8 @@ export type Tasks_Pk_Columns_Input = {
 /** select columns of table "tasks" */
 export enum Tasks_Select_Column {
   /** column name */
+  Deleted = '_deleted',
+  /** column name */
   Id = 'id',
   /** column name */
   Name = 'name',
@@ -5376,8 +5398,21 @@ export enum Tasks_Select_Column {
   UserId = 'user_id'
 }
 
+/** select "tasks_aggregate_bool_exp_bool_and_arguments_columns" columns of table "tasks" */
+export enum Tasks_Select_Column_Tasks_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Deleted = '_deleted'
+}
+
+/** select "tasks_aggregate_bool_exp_bool_or_arguments_columns" columns of table "tasks" */
+export enum Tasks_Select_Column_Tasks_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Deleted = '_deleted'
+}
+
 /** input type for updating data in table "tasks" */
 export type Tasks_Set_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -5395,6 +5430,7 @@ export type Tasks_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Tasks_Stream_Cursor_Value_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -5404,6 +5440,8 @@ export type Tasks_Stream_Cursor_Value_Input = {
 
 /** update columns of table "tasks" */
 export enum Tasks_Update_Column {
+  /** column name */
+  Deleted = '_deleted',
   /** column name */
   Id = 'id',
   /** column name */

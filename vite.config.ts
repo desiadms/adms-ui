@@ -7,7 +7,18 @@ import ViteRestart from 'vite-plugin-restart'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    VitePWA({ registerType: 'autoUpdate' }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern:
+              'https://cgjgnshvokexivmuttxh.storage.eu-central-1.nhost.run/*',
+            handler: 'NetworkFirst'
+          }
+        ]
+      }
+    }),
     preact(),
     ViteRestart({
       restart: ['.eslintrc*', '.prettierrc*', 'tsconfig.json']

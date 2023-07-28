@@ -16,9 +16,9 @@ export function App() {
           persistOptions={{ persister }}
           onSuccess={() => {
             // resume mutations after initial restore from IDB was successful
-            queryClient.resumePausedMutations().then(() => {
-              queryClient.invalidateQueries()
-            })
+            // queryClient.resumePausedMutations().then(() => {
+            //   queryClient.invalidateQueries()
+            // })
           }}
         >
           <AuthWrapper />

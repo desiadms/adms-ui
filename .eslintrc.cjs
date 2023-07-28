@@ -43,6 +43,7 @@ module.exports = {
     'consistent-return': 'off',
     'no-console': 'off',
     'jsx-a11y/media-has-caption': 'off',
+    'no-plusplus': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/naming-convention': [
       'error',

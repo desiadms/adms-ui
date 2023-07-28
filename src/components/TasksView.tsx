@@ -1,14 +1,12 @@
 import { CameraIcon, XCircleIcon } from '@heroicons/react/24/solid'
-import { useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { useEffect, useState } from 'preact/hooks'
+import { useCallback, useEffect, useState } from 'preact/hooks'
 import { useFieldArray, useForm } from 'react-hook-form'
-import { RxDocument } from 'rxdb'
-import { useRxData } from 'rxdb-hooks'
+import { useRxCollection, useRxData } from 'rxdb-hooks'
 import { v4 } from 'uuid'
-import { AllTasksQuery } from '../gql/graphql'
-import { allTasksDocument, createTaskDocument } from '../graphql-operations'
-import { hasuraMutation, nhost, useHasuraQuery } from '../helpers'
+import { nhost } from '../helpers'
+import { Task } from '../types'
+import { blobToBase64, keep } from '../utils'
 import {
   Button,
   ErrorMessage,
@@ -18,27 +16,12 @@ import {
   useFilesForm
 } from './Forms'
 
-function saveMedia(variables) {
-  const { files } = variables
-  return Promise.all(
-    files.map(({ id, file }) => nhost.storage.upload({ file, id }))
-  )
-}
-
-const taskMutation = hasuraMutation({
-  queryKey: ['allTasks'],
-  mutationKey: ['createTask'],
-  document: createTaskDocument,
-  callback: saveMedia
-})
-
-function Tasks({ data }: { data: RxDocument<AllTasksQuery['tasks']> }) {
+function Tasks({ data }: { data: Task[] }) {
   const [imageUrls, setImageUrls] = useState<Record<string, string[]>>()
 
   useEffect(() => {
     const fetchData = async () => {
       const flattenedImages = data?.flatMap((task) => {
-        console.log('task', task)
         return task?.tasks_images?.map((image) => image)
       })
 
@@ -93,34 +76,30 @@ type TaskFormData = {
   files: FileForm[]
 }
 
-function genFileMetadata(filesData: FileForm[]) {
+async function genTaskImagesMetadata(filesData: FileForm[]) {
   const taskId = v4()
-
-  const fileMetadata = filesData
-    .filter((file) => file?.fileInstance && file.fileInstance[0])
-    .map(({ fileInstance }) => ({
+  const fileMetadata = await Promise.all(
+    keep(
+      filesData,
+      (file) => file?.fileInstance && (file.fileInstance[0] as File)
+    ).map(async (file) => ({
       id: v4(),
       task_id: taskId,
-      file: fileInstance && fileInstance[0]
+      base64: await blobToBase64(file, 'removePrefix')
     }))
+  )
+
   const images = fileMetadata.map(({ id, task_id }) => ({ id, task_id }))
-  const files = fileMetadata.map(({ id, file }) => ({ id, file }))
+  const files = fileMetadata.map(({ id, base64 }) => ({ id, base64 }))
 
   return { images, files, taskId }
 }
 
 export function TasksView() {
-  const { data } = useHasuraQuery({
-    queryKey: ['allTasks'],
-    document: allTasksDocument
-  })
+  const query = useCallback((collection) => collection.find(), [])
 
-  const { result: tasks, isFetching } = useRxData<AllTasksQuery['tasks']>(
-    // the collection to be queried
-    'tasks',
-    // a function returning the query to be applied
-    (collection) => collection.find()
-  )
+  const { result: tasks } = useRxData<Task>('tasks', query)
+  const tasksCollection = useRxCollection('tasks')
 
   const {
     register,
@@ -148,9 +127,7 @@ export function TasksView() {
     removePreview
   } = useFilesForm()
 
-  const submitTask = taskMutation()
-
-  function submitForm(data: TaskFormData) {
+  async function submitForm(data: TaskFormData) {
     // clearErrors()
     // // to check that at least one file was uploaded
     // const hasFiles = data.files.some(
@@ -162,11 +139,14 @@ export function TasksView() {
     //   return
     // }
 
-    const { taskId, images, files } = genFileMetadata(data.files)
+    const { taskId, images, files } = await genTaskImagesMetadata(data.files)
 
-    submitTask.mutate({
-      hasura: { name: data.task, id: taskId, tasks_images: images },
-      files
+    await tasksCollection?.insertLocal(taskId, { files })
+
+    tasksCollection?.insert({
+      name: data.task,
+      id: taskId,
+      tasks_images: images
     })
   }
 
@@ -182,9 +162,6 @@ export function TasksView() {
     removePreview(id)
     remove(index)
   }
-
-  const queryClient = useQueryClient()
-  const mutationCache = queryClient.getMutationCache().getAll()
 
   return (
     <div>
@@ -262,18 +239,10 @@ export function TasksView() {
         </div>
 
         <div>
-          <Button type='submit' disabled={submitTask.isLoading}>
-            Submit
-          </Button>
+          <Button type='submit'>Submit</Button>
         </div>
       </form>
-
-      {data && <Tasks data={tasks} />}
-
-      {mutationCache?.map(({ state }) => {
-        const { context, ...rest } = state
-        return <pre>{JSON.stringify(rest, null, 2)}</pre>
-      })}
+      {tasks && <Tasks data={tasks} />}
     </div>
   )
 }
