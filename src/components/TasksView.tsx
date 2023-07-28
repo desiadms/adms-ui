@@ -21,9 +21,7 @@ function Tasks({ data }: { data: Task[] }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const flattenedImages = data?.flatMap((task) => {
-        return task?.tasks_images?.map((image) => image)
-      })
+      const flattenedImages = data?.flatMap((task) => task?.tasks_images?.map((image) => image))
 
       const urls = await Promise.all(
         flattenedImages.map(async (image) => {

@@ -13,7 +13,7 @@ const tasksColl = await db.addCollections({
 })
 
 const pullQueryBuilder = (checkpoint, limit) => ({
-    query: `query allTasks {
+  query: `query allTasks {
     tasks {
       id
       name
@@ -23,8 +23,8 @@ const pullQueryBuilder = (checkpoint, limit) => ({
       }
     }
   }`,
-    variables: {}
-  })
+  variables: {}
+})
 
 const pushQueryBuilder = (rows) => {
   const query = `

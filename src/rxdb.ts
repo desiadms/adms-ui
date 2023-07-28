@@ -132,12 +132,10 @@ export async function initialize(accessToken: string) {
     pull: {
       queryBuilder: pullQueryBuilder,
 
-      responseModifier: (response, _source, _requestCheckpoint) => {
-        return {
-          checkpoint: null, //getCheckpoint(response, requestCheckpoint),
+      responseModifier: (response, _source, _requestCheckpoint) => ({
+          checkpoint: null, // getCheckpoint(response, requestCheckpoint),
           documents: response
-        }
-      }
+        })
     },
     push: {
       queryBuilder: (doc) => pushQueryBuilder(db, doc),
