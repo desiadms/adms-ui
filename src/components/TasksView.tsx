@@ -146,7 +146,7 @@ async function genTaskImagesMetadata(filesData: FileForm[]) {
       id: v4(),
       task_id: taskId,
       // add back remove prefix
-      //await blobToBase64(file, 'removePrefix')
+      // await blobToBase64(file, 'removePrefix')
       base64: await blobToBase64(file)
     }))
   )

@@ -51,7 +51,7 @@ export function Test() {
   const tasksCollection = useRxCollection('tasks')
 
   async function submitForm(data) {
-    const {file} = data
+    const { file } = data
     console.log('original', file)
 
     // blobToBase64(file[0]).then((base64) => {
@@ -75,11 +75,7 @@ export function Test() {
         className='flex flex-col gap-2 items-start'
       >
         {filePreviews && (
-          <img
-            className='w-full object-cover'
-            src={filePreviews.file}
-            alt=''
-          />
+          <img className='w-full object-cover' src={filePreviews.file} alt='' />
         )}
         <label>
           mammete
