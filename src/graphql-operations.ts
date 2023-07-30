@@ -49,6 +49,9 @@ export const allTasksDocument = graphql(/* GraphQL */ `
     tasks {
       id
       name
+      updated_at
+      created_at
+      _deleted
       tasks_images {
         id
         task_id
@@ -57,16 +60,15 @@ export const allTasksDocument = graphql(/* GraphQL */ `
   }
 `)
 
-export const createTaskDocument = graphql(/* GraphQL */ `
-  mutation task(
-    $name: String
-    $id: uuid
+export const createTasksDocument = graphql(/* GraphQL */ `
+  mutation tasks(
     $tasks_images: [images_insert_input!]!
+    $tasks: [tasks_insert_input!]!
   ) {
-    insert_tasks_one(object: { name: $name, id: $id }) {
-      id
-      name
-      user_id
+    insert_tasks(objects: $tasks) {
+      returning {
+        id
+      }
     }
     insert_images(objects: $tasks_images) {
       returning {

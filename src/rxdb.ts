@@ -1,38 +1,36 @@
-import { addRxPlugin, createRxDatabase, lastOfArray } from 'rxdb'
+import { resolveRequestDocument } from 'graphql-request'
+import {
+  RxReplicationWriteToMasterRow,
+  addRxPlugin,
+  createRxDatabase,
+  lastOfArray
+} from 'rxdb'
 import { RxDBLocalDocumentsPlugin } from 'rxdb/plugins/local-documents'
 import { RxDBMigrationPlugin } from 'rxdb/plugins/migration'
 import { replicateGraphQL } from 'rxdb/plugins/replication-graphql'
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie'
 import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv'
+import { allTasksDocument, createTasksDocument } from './graphql-operations'
 import { hasuraURL } from './helpers'
-import { taskSchema } from './rxdb-schemas'
-import { Task } from './types'
+import { TaskDocType, taskSchema } from './rxdb-schemas'
 import { base64toFile, devMode, saveFilesToNhost } from './utils'
 
 addRxPlugin(RxDBMigrationPlugin)
 addRxPlugin(RxDBLocalDocumentsPlugin)
 
 const pullQueryBuilder = (_checkpoint, _limit) => ({
-  query: `query allTasks {
-    tasks {
-      id
-      name
-      updated_at
-      _deleted
-      tasks_images {
-        id
-        task_id
-      }
-    }
-  }`,
+  query: resolveRequestDocument(allTasksDocument).query,
   variables: {}
 })
 
-const pushQueryBuilder = async (db, rows) => {
+const pushQueryBuilder = async (
+  db,
+  rows: RxReplicationWriteToMasterRow<TaskDocType>[]
+) => {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState)
   const taskIds = extractedData.map(({ id }) => id)
 
-  const taskImages = Promise.all<{ id: string; file: File }[][]>(
+  const taskImages = Promise.all<{ id: string; file: File }[]>(
     taskIds.map(async (taskId) => {
       const rxLocalDoc = await db.collections.tasks.getLocal(taskId)
       const b64Files = rxLocalDoc?.get('files')
@@ -54,27 +52,11 @@ const pushQueryBuilder = async (db, rows) => {
     .map(({ tasks_images }) => tasks_images)
     .flat()
   const extractedTasks = extractedData.map(
-    ({ tasks_images, _deleted, ...rest }) => rest
+    ({ tasks_images, _deleted, updated_at, created_at, ...rest }) => rest
   )
 
-  const query = `
-  mutation task($tasks_images: [images_insert_input!]!, $tasks: [tasks_insert_input!]!) {
-    insert_tasks(objects: $tasks) {
-      returning {
-        id
-      }
-    }
-    insert_images(objects: $tasks_images) {
-      returning {
-        id
-        task_id
-      }
-    }
-  }
-`
-
   return {
-    query,
+    query: resolveRequestDocument(createTasksDocument).query,
     variables: { tasks: extractedTasks, tasks_images: extractedImages }
   }
 }
@@ -122,7 +104,7 @@ export async function initialize(accessToken: string) {
     }
   })
 
-  const replicationState = replicateGraphQL<Task, null>({
+  const replicationState = replicateGraphQL<TaskDocType, null>({
     collection: db.tasks,
 
     // urls to the GraphQL endpoints
@@ -133,13 +115,14 @@ export async function initialize(accessToken: string) {
       queryBuilder: pullQueryBuilder,
 
       responseModifier: (response, _source, _requestCheckpoint) => ({
-          checkpoint: null, // getCheckpoint(response, requestCheckpoint),
-          documents: response
-        })
+        checkpoint: null, // getCheckpoint(response, requestCheckpoint),
+        documents: response
+      })
     },
     push: {
       queryBuilder: (doc) => pushQueryBuilder(db, doc),
-      responseModifier: () => []
+      responseModifier: () => [],
+      batchSize: 10
     },
     // headers which will be used in http requests against the server.
     headers: {
@@ -147,7 +130,6 @@ export async function initialize(accessToken: string) {
     },
     live: true,
     retryTime: 1000 * 5,
-    waitForLeadership: true,
     autoStart: true
   })
 

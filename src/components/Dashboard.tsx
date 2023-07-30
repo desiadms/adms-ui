@@ -45,7 +45,7 @@ export function Dashboard() {
 
   return (
     <div className='min-h-full'>
-      <div className='sticky top-0'>
+      <div className='sticky top-0 z-50'>
         <nav>
           <Disclosure>
             {({ open }: { open: boolean }) => (

@@ -1,16 +1,28 @@
-export const taskSchema = {
+import { RxJsonSchema } from 'rxdb'
+
+export type TaskDocType = {
+  id: string
+  name: string
+  tasks_images?: { id: string; task_id: string }[]
+  updated_at: string
+  created_at: string
+}
+
+export const task: RxJsonSchema<TaskDocType> = {
   title: 'task schema',
   description: 'task schema',
   version: 0,
   type: 'object',
   primaryKey: 'id',
-  attachments: {},
   properties: {
     id: {
       type: 'string',
       maxLength: 100
     },
     name: {
+      type: 'string'
+    },
+    created_at: {
       type: 'string'
     },
     updated_at: {
@@ -29,4 +41,7 @@ export const taskSchema = {
     }
   },
   required: ['id', 'name']
-}
+} as const
+
+// create the typed RxJsonSchema from the literal typed object.
+export const taskSchema = task

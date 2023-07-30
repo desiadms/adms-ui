@@ -6404,6 +6404,7 @@ columns and relationships of "tasks"
 """
 type tasks {
   _deleted: Boolean
+  created_at: timestamptz
   id: uuid!
   name: String!
   project_id: uuid!
@@ -6524,6 +6525,7 @@ input tasks_bool_exp {
   _deleted: Boolean_comparison_exp
   _not: tasks_bool_exp
   _or: [tasks_bool_exp!]
+  created_at: timestamptz_comparison_exp
   id: uuid_comparison_exp
   name: String_comparison_exp
   project_id: uuid_comparison_exp
@@ -6550,6 +6552,7 @@ input type for inserting data into table "tasks"
 """
 input tasks_insert_input {
   _deleted: Boolean
+  created_at: timestamptz
   id: uuid
   name: String
   project_id: uuid
@@ -6562,6 +6565,7 @@ input tasks_insert_input {
 
 """aggregate max on columns"""
 type tasks_max_fields {
+  created_at: timestamptz
   id: uuid
   name: String
   project_id: uuid
@@ -6573,6 +6577,7 @@ type tasks_max_fields {
 order by max() on columns of table "tasks"
 """
 input tasks_max_order_by {
+  created_at: order_by
   id: order_by
   name: order_by
   project_id: order_by
@@ -6582,6 +6587,7 @@ input tasks_max_order_by {
 
 """aggregate min on columns"""
 type tasks_min_fields {
+  created_at: timestamptz
   id: uuid
   name: String
   project_id: uuid
@@ -6593,6 +6599,7 @@ type tasks_min_fields {
 order by min() on columns of table "tasks"
 """
 input tasks_min_order_by {
+  created_at: order_by
   id: order_by
   name: order_by
   project_id: order_by
@@ -6633,6 +6640,7 @@ input tasks_on_conflict {
 """Ordering options when selecting data from "tasks"."""
 input tasks_order_by {
   _deleted: order_by
+  created_at: order_by
   id: order_by
   name: order_by
   project_id: order_by
@@ -6654,6 +6662,9 @@ select columns of table "tasks"
 enum tasks_select_column {
   """column name"""
   _deleted
+
+  """column name"""
+  created_at
 
   """column name"""
   id
@@ -6692,6 +6703,7 @@ input type for updating data in table "tasks"
 """
 input tasks_set_input {
   _deleted: Boolean
+  created_at: timestamptz
   id: uuid
   name: String
   project_id: uuid
@@ -6713,6 +6725,7 @@ input tasks_stream_cursor_input {
 """Initial value of the column from where the streaming should start"""
 input tasks_stream_cursor_value_input {
   _deleted: Boolean
+  created_at: timestamptz
   id: uuid
   name: String
   project_id: uuid
@@ -6726,6 +6739,9 @@ update columns of table "tasks"
 enum tasks_update_column {
   """column name"""
   _deleted
+
+  """column name"""
+  created_at
 
   """column name"""
   id

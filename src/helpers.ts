@@ -95,6 +95,7 @@ export function useHasuraQuery<TResult, TVariables, TData = TResult>(
   >
 ): UseQueryResult<TData, Error> {
   const { document, variables, queryKey, ...opts } = props
+
   // type cast here is ok because it wouldn't make sense to pass a non-operation
   // document
   const operationName = (document.definitions[0] as OperationDefinitionNode)
