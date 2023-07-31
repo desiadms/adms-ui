@@ -6,9 +6,9 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { QRCodeCanvas } from 'qrcode.react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useRxCollection, useRxData } from 'rxdb-hooks'
-import { TaskDocType } from 'src/rxdb-schemas'
 import { v4 } from 'uuid'
 import { nhost, useGeoLocation } from '../helpers'
+import { TaskDocType } from '../rxdb/rxdb-schemas'
 import { blobToBase64, keep } from '../utils'
 import {
   Button,

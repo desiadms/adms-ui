@@ -8,7 +8,7 @@ export type TaskDocType = {
   created_at: string
 }
 
-export const task: RxJsonSchema<TaskDocType> = {
+export const taskSchema: RxJsonSchema<TaskDocType> = {
   title: 'task schema',
   description: 'task schema',
   version: 0,
@@ -42,6 +42,3 @@ export const task: RxJsonSchema<TaskDocType> = {
   },
   required: ['id', 'name']
 } as const
-
-// create the typed RxJsonSchema from the literal typed object.
-export const taskSchema = task
