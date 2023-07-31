@@ -2751,6 +2751,7 @@ export type Files_Variance_Order_By = {
 export type Images = {
   __typename?: 'images';
   id: Scalars['uuid']['output'];
+  image_taken?: Maybe<Scalars['String']['output']>;
   /** An object relationship */
   images_file: Files;
   /** An object relationship */
@@ -2811,6 +2812,7 @@ export type Images_Bool_Exp = {
   _not?: InputMaybe<Images_Bool_Exp>;
   _or?: InputMaybe<Array<Images_Bool_Exp>>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  image_taken?: InputMaybe<String_Comparison_Exp>;
   images_file?: InputMaybe<Files_Bool_Exp>;
   images_task?: InputMaybe<Tasks_Bool_Exp>;
   task_id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -2825,6 +2827,7 @@ export enum Images_Constraint {
 /** input type for inserting data into table "images" */
 export type Images_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
+  image_taken?: InputMaybe<Scalars['String']['input']>;
   images_file?: InputMaybe<Files_Obj_Rel_Insert_Input>;
   images_task?: InputMaybe<Tasks_Obj_Rel_Insert_Input>;
   task_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -2834,12 +2837,14 @@ export type Images_Insert_Input = {
 export type Images_Max_Fields = {
   __typename?: 'images_max_fields';
   id?: Maybe<Scalars['uuid']['output']>;
+  image_taken?: Maybe<Scalars['String']['output']>;
   task_id?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by max() on columns of table "images" */
 export type Images_Max_Order_By = {
   id?: InputMaybe<Order_By>;
+  image_taken?: InputMaybe<Order_By>;
   task_id?: InputMaybe<Order_By>;
 };
 
@@ -2847,12 +2852,14 @@ export type Images_Max_Order_By = {
 export type Images_Min_Fields = {
   __typename?: 'images_min_fields';
   id?: Maybe<Scalars['uuid']['output']>;
+  image_taken?: Maybe<Scalars['String']['output']>;
   task_id?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by min() on columns of table "images" */
 export type Images_Min_Order_By = {
   id?: InputMaybe<Order_By>;
+  image_taken?: InputMaybe<Order_By>;
   task_id?: InputMaybe<Order_By>;
 };
 
@@ -2875,6 +2882,7 @@ export type Images_On_Conflict = {
 /** Ordering options when selecting data from "images". */
 export type Images_Order_By = {
   id?: InputMaybe<Order_By>;
+  image_taken?: InputMaybe<Order_By>;
   images_file?: InputMaybe<Files_Order_By>;
   images_task?: InputMaybe<Tasks_Order_By>;
   task_id?: InputMaybe<Order_By>;
@@ -2890,12 +2898,15 @@ export enum Images_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
+  ImageTaken = 'image_taken',
+  /** column name */
   TaskId = 'task_id'
 }
 
 /** input type for updating data in table "images" */
 export type Images_Set_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
+  image_taken?: InputMaybe<Scalars['String']['input']>;
   task_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -2910,6 +2921,7 @@ export type Images_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Images_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
+  image_taken?: InputMaybe<Scalars['String']['input']>;
   task_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -2917,6 +2929,8 @@ export type Images_Stream_Cursor_Value_Input = {
 export enum Images_Update_Column {
   /** column name */
   Id = 'id',
+  /** column name */
+  ImageTaken = 'image_taken',
   /** column name */
   TaskId = 'task_id'
 }
@@ -3015,6 +3029,10 @@ export type Mutation_Root = {
   delete_tasks?: Maybe<Tasks_Mutation_Response>;
   /** delete single row from the table: "tasks" */
   delete_tasks_by_pk?: Maybe<Tasks>;
+  /** delete data from the table: "ticketing" */
+  delete_ticketing?: Maybe<Ticketing_Mutation_Response>;
+  /** delete single row from the table: "ticketing" */
+  delete_ticketing_by_pk?: Maybe<Ticketing>;
   /** delete data from the table: "usersMetadata" */
   delete_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
   /** delete single row from the table: "usersMetadata" */
@@ -3075,6 +3093,10 @@ export type Mutation_Root = {
   insert_tasks?: Maybe<Tasks_Mutation_Response>;
   /** insert a single row into the table: "tasks" */
   insert_tasks_one?: Maybe<Tasks>;
+  /** insert data into the table: "ticketing" */
+  insert_ticketing?: Maybe<Ticketing_Mutation_Response>;
+  /** insert a single row into the table: "ticketing" */
+  insert_ticketing_one?: Maybe<Ticketing>;
   /** insert data into the table: "usersMetadata" */
   insert_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
   /** insert a single row into the table: "usersMetadata" */
@@ -3161,6 +3183,12 @@ export type Mutation_Root = {
   update_tasks_by_pk?: Maybe<Tasks>;
   /** update multiples rows of table: "tasks" */
   update_tasks_many?: Maybe<Array<Maybe<Tasks_Mutation_Response>>>;
+  /** update data of the table: "ticketing" */
+  update_ticketing?: Maybe<Ticketing_Mutation_Response>;
+  /** update single row of the table: "ticketing" */
+  update_ticketing_by_pk?: Maybe<Ticketing>;
+  /** update multiples rows of table: "ticketing" */
+  update_ticketing_many?: Maybe<Array<Maybe<Ticketing_Mutation_Response>>>;
   /** update data of the table: "usersMetadata" */
   update_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
   /** update single row of the table: "usersMetadata" */
@@ -3336,6 +3364,18 @@ export type Mutation_RootDelete_TasksArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Tasks_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_TicketingArgs = {
+  where: Ticketing_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Ticketing_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -3545,6 +3585,20 @@ export type Mutation_RootInsert_TasksArgs = {
 export type Mutation_RootInsert_Tasks_OneArgs = {
   object: Tasks_Insert_Input;
   on_conflict?: InputMaybe<Tasks_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_TicketingArgs = {
+  objects: Array<Ticketing_Insert_Input>;
+  on_conflict?: InputMaybe<Ticketing_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Ticketing_OneArgs = {
+  object: Ticketing_Insert_Input;
+  on_conflict?: InputMaybe<Ticketing_On_Conflict>;
 };
 
 
@@ -3854,6 +3908,11 @@ export type Mutation_RootUpdate_Projects_ManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_TasksArgs = {
+  _append?: InputMaybe<Tasks_Append_Input>;
+  _delete_at_path?: InputMaybe<Tasks_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Tasks_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Tasks_Delete_Key_Input>;
+  _prepend?: InputMaybe<Tasks_Prepend_Input>;
   _set?: InputMaybe<Tasks_Set_Input>;
   where: Tasks_Bool_Exp;
 };
@@ -3861,6 +3920,11 @@ export type Mutation_RootUpdate_TasksArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Tasks_By_PkArgs = {
+  _append?: InputMaybe<Tasks_Append_Input>;
+  _delete_at_path?: InputMaybe<Tasks_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Tasks_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Tasks_Delete_Key_Input>;
+  _prepend?: InputMaybe<Tasks_Prepend_Input>;
   _set?: InputMaybe<Tasks_Set_Input>;
   pk_columns: Tasks_Pk_Columns_Input;
 };
@@ -3869,6 +3933,36 @@ export type Mutation_RootUpdate_Tasks_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Tasks_ManyArgs = {
   updates: Array<Tasks_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_TicketingArgs = {
+  _append?: InputMaybe<Ticketing_Append_Input>;
+  _delete_at_path?: InputMaybe<Ticketing_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Ticketing_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Ticketing_Delete_Key_Input>;
+  _prepend?: InputMaybe<Ticketing_Prepend_Input>;
+  _set?: InputMaybe<Ticketing_Set_Input>;
+  where: Ticketing_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Ticketing_By_PkArgs = {
+  _append?: InputMaybe<Ticketing_Append_Input>;
+  _delete_at_path?: InputMaybe<Ticketing_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Ticketing_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Ticketing_Delete_Key_Input>;
+  _prepend?: InputMaybe<Ticketing_Prepend_Input>;
+  _set?: InputMaybe<Ticketing_Set_Input>;
+  pk_columns: Ticketing_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Ticketing_ManyArgs = {
+  updates: Array<Ticketing_Updates>;
 };
 
 
@@ -4232,6 +4326,12 @@ export type Query_Root = {
   tasks_aggregate: Tasks_Aggregate;
   /** fetch data from the table: "tasks" using primary key columns */
   tasks_by_pk?: Maybe<Tasks>;
+  /** fetch data from the table: "ticketing" */
+  ticketing: Array<Ticketing>;
+  /** fetch aggregated fields from the table: "ticketing" */
+  ticketing_aggregate: Ticketing_Aggregate;
+  /** fetch data from the table: "ticketing" using primary key columns */
+  ticketing_by_pk?: Maybe<Ticketing>;
   /** fetch data from the table: "auth.users" using primary key columns */
   user?: Maybe<Users>;
   /** fetch data from the table: "auth.users" */
@@ -4546,6 +4646,29 @@ export type Query_RootTasks_By_PkArgs = {
 };
 
 
+export type Query_RootTicketingArgs = {
+  distinct_on?: InputMaybe<Array<Ticketing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Ticketing_Order_By>>;
+  where?: InputMaybe<Ticketing_Bool_Exp>;
+};
+
+
+export type Query_RootTicketing_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Ticketing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Ticketing_Order_By>>;
+  where?: InputMaybe<Ticketing_Bool_Exp>;
+};
+
+
+export type Query_RootTicketing_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
 export type Query_RootUserArgs = {
   id: Scalars['uuid']['input'];
 };
@@ -4697,6 +4820,14 @@ export type Subscription_Root = {
   tasks_by_pk?: Maybe<Tasks>;
   /** fetch data from the table in a streaming manner: "tasks" */
   tasks_stream: Array<Tasks>;
+  /** fetch data from the table: "ticketing" */
+  ticketing: Array<Ticketing>;
+  /** fetch aggregated fields from the table: "ticketing" */
+  ticketing_aggregate: Ticketing_Aggregate;
+  /** fetch data from the table: "ticketing" using primary key columns */
+  ticketing_by_pk?: Maybe<Ticketing>;
+  /** fetch data from the table in a streaming manner: "ticketing" */
+  ticketing_stream: Array<Ticketing>;
   /** fetch data from the table: "auth.users" using primary key columns */
   user?: Maybe<Users>;
   /** fetch data from the table: "auth.users" */
@@ -5106,6 +5237,36 @@ export type Subscription_RootTasks_StreamArgs = {
 };
 
 
+export type Subscription_RootTicketingArgs = {
+  distinct_on?: InputMaybe<Array<Ticketing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Ticketing_Order_By>>;
+  where?: InputMaybe<Ticketing_Bool_Exp>;
+};
+
+
+export type Subscription_RootTicketing_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Ticketing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Ticketing_Order_By>>;
+  where?: InputMaybe<Ticketing_Bool_Exp>;
+};
+
+
+export type Subscription_RootTicketing_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootTicketing_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Ticketing_Stream_Cursor_Input>>;
+  where?: InputMaybe<Ticketing_Bool_Exp>;
+};
+
+
 export type Subscription_RootUserArgs = {
   id: Scalars['uuid']['input'];
 };
@@ -5171,6 +5332,9 @@ export type Tasks = {
   _deleted?: Maybe<Scalars['Boolean']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id: Scalars['uuid']['output'];
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  metadata?: Maybe<Scalars['jsonb']['output']>;
   name: Scalars['String']['output'];
   project_id: Scalars['uuid']['output'];
   /** An array relationship */
@@ -5181,8 +5345,15 @@ export type Tasks = {
   tasks_project: Projects;
   /** An object relationship */
   tasks_user: Users;
+  type?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id: Scalars['uuid']['output'];
+};
+
+
+/** columns and relationships of "tasks" */
+export type TasksMetadataArgs = {
+  path?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -5261,6 +5432,11 @@ export type Tasks_Aggregate_Order_By = {
   min?: InputMaybe<Tasks_Min_Order_By>;
 };
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Tasks_Append_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']['input']>;
+};
+
 /** input type for inserting array relation for remote table "tasks" */
 export type Tasks_Arr_Rel_Insert_Input = {
   data: Array<Tasks_Insert_Input>;
@@ -5276,12 +5452,16 @@ export type Tasks_Bool_Exp = {
   _or?: InputMaybe<Array<Tasks_Bool_Exp>>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  latitude?: InputMaybe<String_Comparison_Exp>;
+  longitude?: InputMaybe<String_Comparison_Exp>;
+  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
   tasks_images?: InputMaybe<Images_Bool_Exp>;
   tasks_images_aggregate?: InputMaybe<Images_Aggregate_Bool_Exp>;
   tasks_project?: InputMaybe<Projects_Bool_Exp>;
   tasks_user?: InputMaybe<Users_Bool_Exp>;
+  type?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
@@ -5292,16 +5472,35 @@ export enum Tasks_Constraint {
   TasksPkey = 'tasks_pkey'
 }
 
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Tasks_Delete_At_Path_Input = {
+  metadata?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Tasks_Delete_Elem_Input = {
+  metadata?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Tasks_Delete_Key_Input = {
+  metadata?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** input type for inserting data into table "tasks" */
 export type Tasks_Insert_Input = {
   _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  metadata?: InputMaybe<Scalars['jsonb']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
   tasks_images?: InputMaybe<Images_Arr_Rel_Insert_Input>;
   tasks_project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
   tasks_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  type?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -5311,8 +5510,11 @@ export type Tasks_Max_Fields = {
   __typename?: 'tasks_max_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
@@ -5321,8 +5523,11 @@ export type Tasks_Max_Fields = {
 export type Tasks_Max_Order_By = {
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
@@ -5332,8 +5537,11 @@ export type Tasks_Min_Fields = {
   __typename?: 'tasks_min_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
@@ -5342,8 +5550,11 @@ export type Tasks_Min_Fields = {
 export type Tasks_Min_Order_By = {
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
@@ -5376,11 +5587,15 @@ export type Tasks_Order_By = {
   _deleted?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  metadata?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
   tasks_images_aggregate?: InputMaybe<Images_Aggregate_Order_By>;
   tasks_project?: InputMaybe<Projects_Order_By>;
   tasks_user?: InputMaybe<Users_Order_By>;
+  type?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
@@ -5388,6 +5603,11 @@ export type Tasks_Order_By = {
 /** primary key columns input for table: tasks */
 export type Tasks_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Tasks_Prepend_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']['input']>;
 };
 
 /** select columns of table "tasks" */
@@ -5399,9 +5619,17 @@ export enum Tasks_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
   Name = 'name',
   /** column name */
   ProjectId = 'project_id',
+  /** column name */
+  Type = 'type',
   /** column name */
   UpdatedAt = 'updated_at',
   /** column name */
@@ -5425,8 +5653,12 @@ export type Tasks_Set_Input = {
   _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  metadata?: InputMaybe<Scalars['jsonb']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -5444,8 +5676,12 @@ export type Tasks_Stream_Cursor_Value_Input = {
   _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  metadata?: InputMaybe<Scalars['jsonb']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -5459,9 +5695,17 @@ export enum Tasks_Update_Column {
   /** column name */
   Id = 'id',
   /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
   Name = 'name',
   /** column name */
   ProjectId = 'project_id',
+  /** column name */
+  Type = 'type',
   /** column name */
   UpdatedAt = 'updated_at',
   /** column name */
@@ -5469,10 +5713,205 @@ export enum Tasks_Update_Column {
 }
 
 export type Tasks_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Tasks_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Tasks_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Tasks_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Tasks_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Tasks_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Tasks_Set_Input>;
   /** filter the rows which have to be updated */
   where: Tasks_Bool_Exp;
+};
+
+/** columns and relationships of "ticketing" */
+export type Ticketing = {
+  __typename?: 'ticketing';
+  id: Scalars['uuid']['output'];
+  metadata?: Maybe<Scalars['jsonb']['output']>;
+  project_id: Scalars['uuid']['output'];
+};
+
+
+/** columns and relationships of "ticketing" */
+export type TicketingMetadataArgs = {
+  path?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregated selection of "ticketing" */
+export type Ticketing_Aggregate = {
+  __typename?: 'ticketing_aggregate';
+  aggregate?: Maybe<Ticketing_Aggregate_Fields>;
+  nodes: Array<Ticketing>;
+};
+
+/** aggregate fields of "ticketing" */
+export type Ticketing_Aggregate_Fields = {
+  __typename?: 'ticketing_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Ticketing_Max_Fields>;
+  min?: Maybe<Ticketing_Min_Fields>;
+};
+
+
+/** aggregate fields of "ticketing" */
+export type Ticketing_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Ticketing_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Ticketing_Append_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "ticketing". All fields are combined with a logical 'AND'. */
+export type Ticketing_Bool_Exp = {
+  _and?: InputMaybe<Array<Ticketing_Bool_Exp>>;
+  _not?: InputMaybe<Ticketing_Bool_Exp>;
+  _or?: InputMaybe<Array<Ticketing_Bool_Exp>>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "ticketing" */
+export enum Ticketing_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  TaskAdminPkey = 'task_admin_pkey'
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Ticketing_Delete_At_Path_Input = {
+  metadata?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Ticketing_Delete_Elem_Input = {
+  metadata?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Ticketing_Delete_Key_Input = {
+  metadata?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** input type for inserting data into table "ticketing" */
+export type Ticketing_Insert_Input = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  metadata?: InputMaybe<Scalars['jsonb']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type Ticketing_Max_Fields = {
+  __typename?: 'ticketing_max_fields';
+  id?: Maybe<Scalars['uuid']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** aggregate min on columns */
+export type Ticketing_Min_Fields = {
+  __typename?: 'ticketing_min_fields';
+  id?: Maybe<Scalars['uuid']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** response of any mutation on the table "ticketing" */
+export type Ticketing_Mutation_Response = {
+  __typename?: 'ticketing_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Ticketing>;
+};
+
+/** on_conflict condition type for table "ticketing" */
+export type Ticketing_On_Conflict = {
+  constraint: Ticketing_Constraint;
+  update_columns?: Array<Ticketing_Update_Column>;
+  where?: InputMaybe<Ticketing_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "ticketing". */
+export type Ticketing_Order_By = {
+  id?: InputMaybe<Order_By>;
+  metadata?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: ticketing */
+export type Ticketing_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Ticketing_Prepend_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']['input']>;
+};
+
+/** select columns of table "ticketing" */
+export enum Ticketing_Select_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  ProjectId = 'project_id'
+}
+
+/** input type for updating data in table "ticketing" */
+export type Ticketing_Set_Input = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  metadata?: InputMaybe<Scalars['jsonb']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** Streaming cursor of the table "ticketing" */
+export type Ticketing_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Ticketing_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Ticketing_Stream_Cursor_Value_Input = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  metadata?: InputMaybe<Scalars['jsonb']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** update columns of table "ticketing" */
+export enum Ticketing_Update_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  ProjectId = 'project_id'
+}
+
+export type Ticketing_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Ticketing_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Ticketing_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Ticketing_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Ticketing_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Ticketing_Prepend_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Ticketing_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Ticketing_Bool_Exp;
 };
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
