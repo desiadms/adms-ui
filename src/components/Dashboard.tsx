@@ -4,8 +4,7 @@ import { UserCircleIcon } from '@heroicons/react/24/outline'
 import { SignalIcon, SignalSlashIcon } from '@heroicons/react/24/solid'
 import { useSignOut } from '@nhost/react'
 import { Link, Navigate, Outlet, useMatchRoute } from '@tanstack/router'
-import { userDocument } from '../graphql-operations'
-import { useHasuraQuery, useIsOnline } from '../helpers'
+import { useIsOnline } from '../helpers'
 import { emailToId, fullName } from '../utils'
 
 const navigation = [
@@ -24,12 +23,12 @@ export function Dashboard() {
   const matchRoute = useMatchRoute()
   const isOnline = useIsOnline()
 
-  const { data } = useHasuraQuery({
-    queryKey: ['user'],
-    document: userDocument
-  })
+  // const { data } = useHasuraQuery({
+  //   queryKey: ['user'],
+  //   document: userDocument
+  // })
 
-  const user = data?.usersMetadata[0]
+  const user = {}
 
   const currentRoute = navigation.find(([to]) =>
     matchRoute({
@@ -109,7 +108,8 @@ export function Dashboard() {
                               {fullName(user?.first_name, user?.last_name)}
                             </div>
                             <div className='text-sm font-light leading-none text-gray-400'>
-                              {emailToId(user?.usersMetadata_user.email)}
+                              {user?.usersMetadata_user?.email &&
+                                emailToId(user?.usersMetadata_user.email)}
                             </div>
                           </div>
                         </div>

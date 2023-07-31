@@ -1,13 +1,10 @@
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { CameraIcon, XCircleIcon } from '@heroicons/react/24/solid'
 import classNames from 'classnames'
-import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
-import { QRCodeCanvas } from 'qrcode.react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useRxCollection, useRxData } from 'rxdb-hooks'
 import { v4 } from 'uuid'
-import { nhost, useGeoLocation } from '../helpers'
+import { nhost } from '../helpers'
 import { TaskDocType } from '../rxdb/rxdb-schemas'
 import { blobToBase64, keep } from '../utils'
 import {
@@ -18,62 +15,6 @@ import {
   LabelledTextArea,
   useFilesForm
 } from './Forms'
-
-const tempTasks = atom<unknown[]>([])
-
-function TempTasks() {
-  const [tasks] = useAtom(tempTasks)
-  const [showMedia, setShowMedia] = useState({})
-
-  return (
-    <div className='flex flex-col gap-4 py-4'>
-      {tasks?.map((task) => (
-        <div className='rounded-md bg-neutral-300 p-4' key={task.id}>
-          <div className='flex gap-4'>
-            <div className='text-xs font-medium pb-2'>{task.date}</div>
-            <div className='text-xs pb-2'>
-              latitude:{' '}
-              <span className='font-medium'>{task.coordinates.lat}</span>
-            </div>
-            <div className='text-xs pb-2'>
-              longitude:{' '}
-              <span className='font-medium'>{task.coordinates.lon}</span>
-            </div>
-          </div>
-          <div className='flex gap-4 items-center'>
-            <div className='p-2'>
-              <QRCodeCanvas value={task.id} includeMargin />
-            </div>
-            <div className='text-sm'>{task.comment}</div>
-          </div>
-          <div
-            className='flex gap-0.5 items-center'
-            onClick={() => {
-              const newMedia = { ...showMedia, [task.id]: !showMedia[task.id] }
-              setShowMedia(newMedia)
-            }}
-          >
-            <Label label='Show Media' />
-            <ChevronDownIcon className='w-4 h-4 text-gray-900' />
-          </div>
-          {showMedia[task.id] && (
-            <div className='flex gap-4 p-2'>
-              {task?.tasks_images?.map((image) => (
-                <div className='w-1/3' key={image.id}>
-                  <img
-                    className='w-full h-full object-cover'
-                    src={image.base64}
-                    alt=''
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  )
-}
 
 function Tasks({ data }: { data: TaskDocType[] }) {
   const [imageUrls, setImageUrls] = useState<Record<string, string[]>>()
@@ -163,6 +104,7 @@ export function TasksView() {
   const { result: tasks } = useRxData<TaskDocType>('tasks', query)
   const tasksCollection = useRxCollection<TaskDocType>('tasks')
 
+  console.log('tasks in render:', tasks)
   const {
     register,
     handleSubmit,
@@ -189,11 +131,6 @@ export function TasksView() {
     removePreview
   } = useFilesForm()
 
-  const [_foo, setTasks] = useAtom(tempTasks)
-  const { coordinates, isLoading, error } = useGeoLocation()
-
-  const date = new Date()
-
   const currentDateTime = useMemo(
     () =>
       new Intl.DateTimeFormat('en-US', {
@@ -202,7 +139,7 @@ export function TasksView() {
         year: 'numeric',
         minute: 'numeric',
         hour: 'numeric'
-      }).format(date),
+      }).format(new Date()),
     []
   )
 
@@ -218,30 +155,16 @@ export function TasksView() {
     // }
     const { taskId, images, files } = await genTaskImagesMetadata(data.files)
 
-    setTasks((tasks) => [
-      ...tasks,
-      {
-        ...data,
-        id: taskId,
-        tasks_images: files,
-        coordinates: {
-          lat: coordinates?.latitude,
-          lon: coordinates?.longitude
-        },
-        date: currentDateTime
-      }
-    ])
-
-    // await tasksCollection?.insertLocal(taskId, { files })
-    // const date = new Date().toISOString()
-    // console.log('date', date)
-    // tasksCollection?.insert({
-    //   name: data.task,
-    //   id: taskId,
-    //   created_at: date,
-    //   updated_at: date,
-    //   tasks_images: images
-    // })
+    await tasksCollection?.insertLocal(taskId, { files })
+    const date = new Date().toISOString()
+    console.log('date', date)
+    tasksCollection?.insert({
+      name: data.task,
+      id: taskId,
+      created_at: date,
+      updated_at: date,
+      tasks_images: images
+    })
   }
 
   const maxSize = 3
@@ -257,8 +180,6 @@ export function TasksView() {
     remove(index)
   }
 
-  const [showGeo, setShowGeo] = useState(false)
-
   return (
     <div>
       <form
@@ -266,37 +187,9 @@ export function TasksView() {
         className='flex flex-col gap-2 items-start bg-zinc-200 rounded-md p-4'
       >
         <div className='p-2 w-fit rounded-lg'>
-          <label className='block text-sm font-medium leading-6 text-gray-900'>
-            Date & Time
-          </label>
           <div className='text-sm'>{currentDateTime}</div>
         </div>
-        <div className='p-2 w-fit rounded-lg'>
-          <label className='block text-sm font-medium leading-6 text-gray-900'>
-            Geo Location
-          </label>
-          <div className='flex flex-col gap-2'>
-            <button
-              type='button'
-              className='rounded bg-slate-500 w-fit text-white px-2 py-1 text-xs'
-              onClick={() => setShowGeo(true)}
-            >
-              Retrieve
-            </button>
-            {showGeo && (
-              <div className='text-sm flex flex-col gap-1'>
-                <div>
-                  <span className='font-medium'>latitude:</span>
-                  <span>{coordinates?.latitude}</span>
-                </div>
-                <div>
-                  <span className='font-medium'>longitude:</span>
-                  <span>{coordinates?.longitude}</span>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+
         <div className='p-2'>
           <Label label='Photos (max 3)' />
           <div className='flex flex-col gap-1'>
@@ -379,8 +272,7 @@ export function TasksView() {
           <Button type='submit'>Save</Button>
         </div>
       </form>
-      <TempTasks />
-      {/* {tasks && <Tasks data={tasks} />} */}
+      {tasks && <Tasks data={tasks} />}
     </div>
   )
 }

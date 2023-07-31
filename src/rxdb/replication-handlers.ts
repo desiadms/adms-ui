@@ -1,10 +1,17 @@
 import { resolveRequestDocument } from 'graphql-request'
 import { RxReplicationWriteToMasterRow } from 'rxdb'
 import { base64toFile, saveFilesToNhost } from '../utils'
-import { allTasksDocument, createTasksDocument } from './graphql-operations'
+import {
+  allTasksDocument,
+  createTasksDocument,
+  updateUserDocument,
+  userDocument
+} from './graphql-operations'
 import { TaskDocType } from './rxdb-schemas'
 
-export function tasksRead(_checkpoint, _limit) {
+export function tasksRead(a, b) {
+  console.log('in task read oooo!!!!')
+
   return {
     query: resolveRequestDocument(allTasksDocument).query,
     variables: {}
@@ -45,5 +52,25 @@ export async function tasksWrite(
   return {
     query: resolveRequestDocument(createTasksDocument).query,
     variables: { tasks: extractedTasks, tasks_images: extractedImages }
+  }
+}
+
+export function userRead() {
+  console.log('in user read ooooh')
+
+  return {
+    query: resolveRequestDocument(userDocument).query,
+    variables: {}
+  }
+}
+
+export function userWrite(
+  db,
+  rows: RxReplicationWriteToMasterRow<TaskDocType>[]
+) {
+  console.log('in user write', rows)
+  return {
+    query: resolveRequestDocument(updateUserDocument).query,
+    variables: {}
   }
 }

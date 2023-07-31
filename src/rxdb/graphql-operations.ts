@@ -34,3 +34,34 @@ export const createTasksDocument = graphql(/* GraphQL */ `
     }
   }
 `)
+
+export const userDocument = graphql(/* GraphQL */ `
+  query user {
+    usersMetadata(limit: 1) {
+      id
+      first_name
+      hire_date
+      last_name
+      role_data_manager
+      role_field_supervisor
+      role_filed_monitor
+      role_operations_manager
+      role_pc_admin
+      role_project_manager
+      usersMetadata_user {
+        email
+      }
+    }
+  }
+`)
+
+export const updateUserDocument = graphql(/* GraphQL */ `
+  mutation updateUser($id: uuid!, $first_name: String!, $last_name: String!) {
+    update_usersMetadata_by_pk(
+      pk_columns: { id: $id }
+      _set: { first_name: $first_name, last_name: $last_name }
+    ) {
+      id
+    }
+  }
+`)

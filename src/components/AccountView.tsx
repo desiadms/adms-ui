@@ -4,9 +4,12 @@ import {
   IdentificationIcon
 } from '@heroicons/react/20/solid'
 import { UserCircleIcon } from '@heroicons/react/24/outline'
+import { useCallback } from 'preact/hooks'
 import { useForm } from 'react-hook-form'
-import { updateUserDocument, userDocument } from '../graphql-operations'
-import { hasuraMutation, useHasuraQuery } from '../helpers'
+import { useRxCollection, useRxData } from 'rxdb-hooks'
+import { UserDocType } from 'src/rxdb/rxdb-schemas'
+import { updateUserDocument } from '../graphql-operations'
+import { hasuraMutation } from '../helpers'
 import { emailToId, fullName, userRoles } from '../utils'
 import { Button, ErrorMessage, LabelledInput } from './Forms'
 
@@ -22,12 +25,13 @@ type UserFormData = {
 }
 
 export function AccountView() {
-  const { data } = useHasuraQuery({
-    queryKey: ['user'],
-    document: userDocument
-  })
+  const query = useCallback((collection) => collection.find(), [])
 
-  const user = data?.usersMetadata[0]
+  const { result: user } = useRxData<UserDocType>('user', query)
+
+  const userCollection = useRxCollection<UserDocType>('tasks')
+  console.log('here', user[0]?.first_name)
+
   const udpateUser = userMutation()
 
   const {
@@ -68,7 +72,8 @@ export function AccountView() {
             <div className='flex gap-1 items-center'>
               <IdentificationIcon className='h-4 w-4' />
               <p className='font-medium'>
-                {emailToId(user?.usersMetadata_user.email)}
+                {user?.usersMetadata_user?.email &&
+                  emailToId(user?.usersMetadata_user.email)}
               </p>
             </div>
           </div>

@@ -1,9 +1,9 @@
+import { RxGraphQLReplicationQueryBuilderResponse } from 'node_modules/rxdb/dist/types/types'
 import {
   RxCollection,
   RxCollectionCreator,
   RxDatabase,
-  RxJsonSchema,
-  RxReplicationWriteToMasterRow
+  RxJsonSchema
 } from 'rxdb'
 import { replicateGraphQL } from 'rxdb/plugins/replication-graphql'
 import { hasuraURL } from '../helpers'
@@ -16,8 +16,12 @@ type ExtractRxJsonSchemaType<T> = T extends RxJsonSchema<infer U> ? U : never
 
 type ReplicationBase = {
   accessToken: string
-  pullQueryBuilder: (db: DB, checkpoint: null, limit: number) => any
-  pushQueryBuilder: (db: DB, rows: RxReplicationWriteToMasterRow<any>[]) => any
+  pullQueryBuilder: (
+    db: DB,
+    checkpoint: null,
+    limit: number
+  ) => RxGraphQLReplicationQueryBuilderResponse
+  pushQueryBuilder: (db: DB, rows) => RxGraphQLReplicationQueryBuilderResponse
 }
 
 type ReplicationType = ReplicationBase & {
@@ -43,10 +47,13 @@ export function replication<TDocType>({
       queryBuilder: (checkpoint, limit) =>
         pullQueryBuilder(db, checkpoint, limit),
 
-      responseModifier: (response, _source, _requestCheckpoint) => ({
-        checkpoint: null, // getCheckpoint(response, requestCheckpoint),
-        documents: response
-      })
+      responseModifier: (response) => {
+        console.log(response, 'in response')
+        return {
+          checkpoint: null, // getCheckpoint(response, requestCheckpoint),
+          documents: response
+        }
+      }
     },
     push: {
       queryBuilder: (rows) => pushQueryBuilder(db, rows),
@@ -86,10 +93,10 @@ export async function addCollections(
 
   await db.addCollections(collectionCreators)
 
-  collections.map((collection) => {
+  collections.forEach((collection) => {
     replication<ExtractRxJsonSchemaType<typeof collection.schema>>({
       accessToken: collection.accessToken,
-      collection: db[collection.name],
+      collection: db[collection.name] as RxCollection,
       db,
       pullQueryBuilder: collection.pullQueryBuilder,
       pushQueryBuilder: collection.pushQueryBuilder
