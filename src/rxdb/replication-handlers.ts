@@ -7,11 +7,9 @@ import {
   updateUserDocument,
   userDocument
 } from './graphql-operations'
-import { TaskDocType } from './rxdb-schemas'
+import { TaskDocType, UserDocType } from './rxdb-schemas'
 
-export function tasksRead(a, b) {
-  console.log('in task read oooo!!!!')
-
+export function tasksRead() {
   return {
     query: resolveRequestDocument(allTasksDocument).query,
     variables: {}
@@ -56,8 +54,6 @@ export async function tasksWrite(
 }
 
 export function userRead() {
-  console.log('in user read ooooh')
-
   return {
     query: resolveRequestDocument(userDocument).query,
     variables: {}
@@ -65,12 +61,19 @@ export function userRead() {
 }
 
 export function userWrite(
-  db,
-  rows: RxReplicationWriteToMasterRow<TaskDocType>[]
+  _db,
+  rows: RxReplicationWriteToMasterRow<UserDocType>[]
 ) {
-  console.log('in user write', rows)
+  const extractedData = rows.map(({ newDocumentState }) => newDocumentState)
+  const user = extractedData[0]
+  console.log('in user write', user)
+
   return {
     query: resolveRequestDocument(updateUserDocument).query,
-    variables: {}
+    variables: {
+      id: user?.id,
+      first_name: user?.first_name,
+      last_name: user?.last_name
+    }
   }
 }

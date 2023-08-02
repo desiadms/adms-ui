@@ -46,7 +46,6 @@ export async function initialize(accessToken: string) {
   const db = await createRxDatabase({
     name: 'adms',
     storage,
-    multiInstance: true,
     eventReduce: true,
     cleanupPolicy: {}
   })

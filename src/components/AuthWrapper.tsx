@@ -81,6 +81,16 @@ function Login() {
   )
 }
 
+function FullPageSpinner() {
+  return (
+    <div className='absolute w-screen h-screen top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+      <div className='flex justify-center items-center h-full'>
+        <Spinner />
+      </div>
+    </div>
+  )
+}
+
 export function AuthWrapper() {
   const { isAuthenticated, isLoading } = useAuth()
   const accessToken = useAccessToken()
@@ -94,14 +104,8 @@ export function AuthWrapper() {
 
   const memoizedRoutes = useMemo(() => router(isRestoring), [isRestoring])
 
-  if (isLoading) {
-    return (
-      <div className='absolute w-screen h-screen top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-        <div className='flex justify-center items-center h-full'>
-          <Spinner />
-        </div>
-      </div>
-    )
+  if (isLoading || (isAuthenticated && !db)) {
+    return <FullPageSpinner />
   }
 
   if (!isAuthenticated) {

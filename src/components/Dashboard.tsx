@@ -4,6 +4,9 @@ import { UserCircleIcon } from '@heroicons/react/24/outline'
 import { SignalIcon, SignalSlashIcon } from '@heroicons/react/24/solid'
 import { useSignOut } from '@nhost/react'
 import { Link, Navigate, Outlet, useMatchRoute } from '@tanstack/router'
+import { useCallback } from 'preact/hooks'
+import { useRxData } from 'rxdb-hooks'
+import { UserDocType } from 'src/rxdb/rxdb-schemas'
 import { useIsOnline } from '../helpers'
 import { emailToId, fullName } from '../utils'
 
@@ -23,12 +26,10 @@ export function Dashboard() {
   const matchRoute = useMatchRoute()
   const isOnline = useIsOnline()
 
-  // const { data } = useHasuraQuery({
-  //   queryKey: ['user'],
-  //   document: userDocument
-  // })
-
-  const user = {}
+  const query = useCallback((collection) => collection.find(), [])
+  const { result } = useRxData<UserDocType>('user', query)
+  const user = result[0]
+  const { first_name, last_name, usersMetadata_user } = user || {}
 
   const currentRoute = navigation.find(([to]) =>
     matchRoute({
@@ -105,11 +106,10 @@ export function Dashboard() {
                           </div>
                           <div className='ml-3 flex flex-col gap-1'>
                             <div className='text-base capitalize font-medium leading-none text-white'>
-                              {fullName(user?.first_name, user?.last_name)}
+                              {fullName(first_name, last_name)}
                             </div>
                             <div className='text-sm font-light leading-none text-gray-400'>
-                              {user?.usersMetadata_user?.email &&
-                                emailToId(user?.usersMetadata_user.email)}
+                              {emailToId(usersMetadata_user?.email)}
                             </div>
                           </div>
                         </div>

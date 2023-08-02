@@ -1,5 +1,6 @@
-import { UserQuery } from './gql/graphql'
+import { RxDocument } from 'rxdb'
 import { nhost } from './helpers'
+import { UserDocType } from './rxdb/rxdb-schemas'
 
 export const devMode = import.meta.env.MODE === 'development'
 
@@ -14,10 +15,10 @@ export function fullName(
   return `${firstName} ${lastName}`
 }
 
-export function userRoles(user: UserQuery['usersMetadata'][0] | undefined) {
+export function userRoles(user: RxDocument<UserDocType> | undefined) {
   return (
     user &&
-    Object.entries(user)
+    Object.entries(user._data)
       .filter(([k, v]) => k.startsWith('role_') && v)
       .map(([k]) => {
         const splitted = k.split('role_')[1]
