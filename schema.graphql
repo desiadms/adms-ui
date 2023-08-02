@@ -3678,22 +3678,74 @@ type mutation_root {
   ): tasks_mutation_response
 
   """
+  delete data from the table: "tasks_branch_removal"
+  """
+  delete_tasks_branch_removal(
+    """filter the rows which have to be deleted"""
+    where: tasks_branch_removal_bool_exp!
+  ): tasks_branch_removal_mutation_response
+
+  """
+  delete single row from the table: "tasks_branch_removal"
+  """
+  delete_tasks_branch_removal_by_pk(id: uuid!): tasks_branch_removal
+
+  """
   delete single row from the table: "tasks"
   """
   delete_tasks_by_pk(id: uuid!): tasks
 
   """
-  delete data from the table: "ticketing"
+  delete data from the table: "tasks_collection"
   """
-  delete_ticketing(
+  delete_tasks_collection(
     """filter the rows which have to be deleted"""
-    where: ticketing_bool_exp!
-  ): ticketing_mutation_response
+    where: tasks_collection_bool_exp!
+  ): tasks_collection_mutation_response
 
   """
-  delete single row from the table: "ticketing"
+  delete single row from the table: "tasks_collection"
   """
-  delete_ticketing_by_pk(id: uuid!): ticketing
+  delete_tasks_collection_by_pk(id: uuid!, project_id: uuid!): tasks_collection
+
+  """
+  delete data from the table: "tasks_disposal"
+  """
+  delete_tasks_disposal(
+    """filter the rows which have to be deleted"""
+    where: tasks_disposal_bool_exp!
+  ): tasks_disposal_mutation_response
+
+  """
+  delete single row from the table: "tasks_disposal"
+  """
+  delete_tasks_disposal_by_pk(id: uuid!, project_id: uuid!): tasks_disposal
+
+  """
+  delete data from the table: "tasks_ticketing"
+  """
+  delete_tasks_ticketing(
+    """filter the rows which have to be deleted"""
+    where: tasks_ticketing_bool_exp!
+  ): tasks_ticketing_mutation_response
+
+  """
+  delete single row from the table: "tasks_ticketing"
+  """
+  delete_tasks_ticketing_by_pk(id: uuid!): tasks_ticketing
+
+  """
+  delete data from the table: "tasks_tree_removal"
+  """
+  delete_tasks_tree_removal(
+    """filter the rows which have to be deleted"""
+    where: tasks_tree_removal_bool_exp!
+  ): tasks_tree_removal_mutation_response
+
+  """
+  delete single row from the table: "tasks_tree_removal"
+  """
+  delete_tasks_tree_removal_by_pk(id: uuid!): tasks_tree_removal
 
   """
   delete data from the table: "usersMetadata"
@@ -4006,6 +4058,72 @@ type mutation_root {
   ): tasks_mutation_response
 
   """
+  insert data into the table: "tasks_branch_removal"
+  """
+  insert_tasks_branch_removal(
+    """the rows to be inserted"""
+    objects: [tasks_branch_removal_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: tasks_branch_removal_on_conflict
+  ): tasks_branch_removal_mutation_response
+
+  """
+  insert a single row into the table: "tasks_branch_removal"
+  """
+  insert_tasks_branch_removal_one(
+    """the row to be inserted"""
+    object: tasks_branch_removal_insert_input!
+
+    """upsert condition"""
+    on_conflict: tasks_branch_removal_on_conflict
+  ): tasks_branch_removal
+
+  """
+  insert data into the table: "tasks_collection"
+  """
+  insert_tasks_collection(
+    """the rows to be inserted"""
+    objects: [tasks_collection_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: tasks_collection_on_conflict
+  ): tasks_collection_mutation_response
+
+  """
+  insert a single row into the table: "tasks_collection"
+  """
+  insert_tasks_collection_one(
+    """the row to be inserted"""
+    object: tasks_collection_insert_input!
+
+    """upsert condition"""
+    on_conflict: tasks_collection_on_conflict
+  ): tasks_collection
+
+  """
+  insert data into the table: "tasks_disposal"
+  """
+  insert_tasks_disposal(
+    """the rows to be inserted"""
+    objects: [tasks_disposal_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: tasks_disposal_on_conflict
+  ): tasks_disposal_mutation_response
+
+  """
+  insert a single row into the table: "tasks_disposal"
+  """
+  insert_tasks_disposal_one(
+    """the row to be inserted"""
+    object: tasks_disposal_insert_input!
+
+    """upsert condition"""
+    on_conflict: tasks_disposal_on_conflict
+  ): tasks_disposal
+
+  """
   insert a single row into the table: "tasks"
   """
   insert_tasks_one(
@@ -4017,26 +4135,48 @@ type mutation_root {
   ): tasks
 
   """
-  insert data into the table: "ticketing"
+  insert data into the table: "tasks_ticketing"
   """
-  insert_ticketing(
+  insert_tasks_ticketing(
     """the rows to be inserted"""
-    objects: [ticketing_insert_input!]!
+    objects: [tasks_ticketing_insert_input!]!
 
     """upsert condition"""
-    on_conflict: ticketing_on_conflict
-  ): ticketing_mutation_response
+    on_conflict: tasks_ticketing_on_conflict
+  ): tasks_ticketing_mutation_response
 
   """
-  insert a single row into the table: "ticketing"
+  insert a single row into the table: "tasks_ticketing"
   """
-  insert_ticketing_one(
+  insert_tasks_ticketing_one(
     """the row to be inserted"""
-    object: ticketing_insert_input!
+    object: tasks_ticketing_insert_input!
 
     """upsert condition"""
-    on_conflict: ticketing_on_conflict
-  ): ticketing
+    on_conflict: tasks_ticketing_on_conflict
+  ): tasks_ticketing
+
+  """
+  insert data into the table: "tasks_tree_removal"
+  """
+  insert_tasks_tree_removal(
+    """the rows to be inserted"""
+    objects: [tasks_tree_removal_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: tasks_tree_removal_on_conflict
+  ): tasks_tree_removal_mutation_response
+
+  """
+  insert a single row into the table: "tasks_tree_removal"
+  """
+  insert_tasks_tree_removal_one(
+    """the row to be inserted"""
+    object: tasks_tree_removal_insert_input!
+
+    """upsert condition"""
+    on_conflict: tasks_tree_removal_on_conflict
+  ): tasks_tree_removal
 
   """
   insert data into the table: "usersMetadata"
@@ -4593,6 +4733,34 @@ type mutation_root {
   ): tasks_mutation_response
 
   """
+  update data of the table: "tasks_branch_removal"
+  """
+  update_tasks_branch_removal(
+    """sets the columns of the filtered rows to the given values"""
+    _set: tasks_branch_removal_set_input
+
+    """filter the rows which have to be updated"""
+    where: tasks_branch_removal_bool_exp!
+  ): tasks_branch_removal_mutation_response
+
+  """
+  update single row of the table: "tasks_branch_removal"
+  """
+  update_tasks_branch_removal_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: tasks_branch_removal_set_input
+    pk_columns: tasks_branch_removal_pk_columns_input!
+  ): tasks_branch_removal
+
+  """
+  update multiples rows of table: "tasks_branch_removal"
+  """
+  update_tasks_branch_removal_many(
+    """updates to execute, in order"""
+    updates: [tasks_branch_removal_updates!]!
+  ): [tasks_branch_removal_mutation_response]
+
+  """
   update single row of the table: "tasks"
   """
   update_tasks_by_pk(
@@ -4623,6 +4791,62 @@ type mutation_root {
   ): tasks
 
   """
+  update data of the table: "tasks_collection"
+  """
+  update_tasks_collection(
+    """sets the columns of the filtered rows to the given values"""
+    _set: tasks_collection_set_input
+
+    """filter the rows which have to be updated"""
+    where: tasks_collection_bool_exp!
+  ): tasks_collection_mutation_response
+
+  """
+  update single row of the table: "tasks_collection"
+  """
+  update_tasks_collection_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: tasks_collection_set_input
+    pk_columns: tasks_collection_pk_columns_input!
+  ): tasks_collection
+
+  """
+  update multiples rows of table: "tasks_collection"
+  """
+  update_tasks_collection_many(
+    """updates to execute, in order"""
+    updates: [tasks_collection_updates!]!
+  ): [tasks_collection_mutation_response]
+
+  """
+  update data of the table: "tasks_disposal"
+  """
+  update_tasks_disposal(
+    """sets the columns of the filtered rows to the given values"""
+    _set: tasks_disposal_set_input
+
+    """filter the rows which have to be updated"""
+    where: tasks_disposal_bool_exp!
+  ): tasks_disposal_mutation_response
+
+  """
+  update single row of the table: "tasks_disposal"
+  """
+  update_tasks_disposal_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: tasks_disposal_set_input
+    pk_columns: tasks_disposal_pk_columns_input!
+  ): tasks_disposal
+
+  """
+  update multiples rows of table: "tasks_disposal"
+  """
+  update_tasks_disposal_many(
+    """updates to execute, in order"""
+    updates: [tasks_disposal_updates!]!
+  ): [tasks_disposal_mutation_response]
+
+  """
   update multiples rows of table: "tasks"
   """
   update_tasks_many(
@@ -4631,74 +4855,60 @@ type mutation_root {
   ): [tasks_mutation_response]
 
   """
-  update data of the table: "ticketing"
+  update data of the table: "tasks_ticketing"
   """
-  update_ticketing(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: ticketing_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: ticketing_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-    """
-    _delete_elem: ticketing_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: ticketing_delete_key_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: ticketing_prepend_input
-
+  update_tasks_ticketing(
     """sets the columns of the filtered rows to the given values"""
-    _set: ticketing_set_input
+    _set: tasks_ticketing_set_input
 
     """filter the rows which have to be updated"""
-    where: ticketing_bool_exp!
-  ): ticketing_mutation_response
+    where: tasks_ticketing_bool_exp!
+  ): tasks_ticketing_mutation_response
 
   """
-  update single row of the table: "ticketing"
+  update single row of the table: "tasks_ticketing"
   """
-  update_ticketing_by_pk(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: ticketing_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: ticketing_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-    """
-    _delete_elem: ticketing_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: ticketing_delete_key_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: ticketing_prepend_input
-
+  update_tasks_ticketing_by_pk(
     """sets the columns of the filtered rows to the given values"""
-    _set: ticketing_set_input
-    pk_columns: ticketing_pk_columns_input!
-  ): ticketing
+    _set: tasks_ticketing_set_input
+    pk_columns: tasks_ticketing_pk_columns_input!
+  ): tasks_ticketing
 
   """
-  update multiples rows of table: "ticketing"
+  update multiples rows of table: "tasks_ticketing"
   """
-  update_ticketing_many(
+  update_tasks_ticketing_many(
     """updates to execute, in order"""
-    updates: [ticketing_updates!]!
-  ): [ticketing_mutation_response]
+    updates: [tasks_ticketing_updates!]!
+  ): [tasks_ticketing_mutation_response]
+
+  """
+  update data of the table: "tasks_tree_removal"
+  """
+  update_tasks_tree_removal(
+    """sets the columns of the filtered rows to the given values"""
+    _set: tasks_tree_removal_set_input
+
+    """filter the rows which have to be updated"""
+    where: tasks_tree_removal_bool_exp!
+  ): tasks_tree_removal_mutation_response
+
+  """
+  update single row of the table: "tasks_tree_removal"
+  """
+  update_tasks_tree_removal_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: tasks_tree_removal_set_input
+    pk_columns: tasks_tree_removal_pk_columns_input!
+  ): tasks_tree_removal
+
+  """
+  update multiples rows of table: "tasks_tree_removal"
+  """
+  update_tasks_tree_removal_many(
+    """updates to execute, in order"""
+    updates: [tasks_tree_removal_updates!]!
+  ): [tasks_tree_removal_mutation_response]
 
   """
   update data of the table: "usersMetadata"
@@ -5607,15 +5817,60 @@ type query_root {
     where: tasks_bool_exp
   ): tasks_aggregate!
 
+  """
+  fetch data from the table: "tasks_branch_removal"
+  """
+  tasks_branch_removal(
+    """distinct select on columns"""
+    distinct_on: [tasks_branch_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_branch_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_branch_removal_bool_exp
+  ): [tasks_branch_removal!]!
+
+  """
+  fetch aggregated fields from the table: "tasks_branch_removal"
+  """
+  tasks_branch_removal_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_branch_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_branch_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_branch_removal_bool_exp
+  ): tasks_branch_removal_aggregate!
+
+  """
+  fetch data from the table: "tasks_branch_removal" using primary key columns
+  """
+  tasks_branch_removal_by_pk(id: uuid!): tasks_branch_removal
+
   """fetch data from the table: "tasks" using primary key columns"""
   tasks_by_pk(id: uuid!): tasks
 
   """
-  fetch data from the table: "ticketing"
+  fetch data from the table: "tasks_collection"
   """
-  ticketing(
+  tasks_collection(
     """distinct select on columns"""
-    distinct_on: [ticketing_select_column!]
+    distinct_on: [tasks_collection_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -5624,18 +5879,18 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [ticketing_order_by!]
+    order_by: [tasks_collection_order_by!]
 
     """filter the rows returned"""
-    where: ticketing_bool_exp
-  ): [ticketing!]!
+    where: tasks_collection_bool_exp
+  ): [tasks_collection!]!
 
   """
-  fetch aggregated fields from the table: "ticketing"
+  fetch aggregated fields from the table: "tasks_collection"
   """
-  ticketing_aggregate(
+  tasks_collection_aggregate(
     """distinct select on columns"""
-    distinct_on: [ticketing_select_column!]
+    distinct_on: [tasks_collection_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -5644,14 +5899,147 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [ticketing_order_by!]
+    order_by: [tasks_collection_order_by!]
 
     """filter the rows returned"""
-    where: ticketing_bool_exp
-  ): ticketing_aggregate!
+    where: tasks_collection_bool_exp
+  ): tasks_collection_aggregate!
 
-  """fetch data from the table: "ticketing" using primary key columns"""
-  ticketing_by_pk(id: uuid!): ticketing
+  """
+  fetch data from the table: "tasks_collection" using primary key columns
+  """
+  tasks_collection_by_pk(id: uuid!, project_id: uuid!): tasks_collection
+
+  """
+  fetch data from the table: "tasks_disposal"
+  """
+  tasks_disposal(
+    """distinct select on columns"""
+    distinct_on: [tasks_disposal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_disposal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_disposal_bool_exp
+  ): [tasks_disposal!]!
+
+  """
+  fetch aggregated fields from the table: "tasks_disposal"
+  """
+  tasks_disposal_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_disposal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_disposal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_disposal_bool_exp
+  ): tasks_disposal_aggregate!
+
+  """fetch data from the table: "tasks_disposal" using primary key columns"""
+  tasks_disposal_by_pk(id: uuid!, project_id: uuid!): tasks_disposal
+
+  """
+  fetch data from the table: "tasks_ticketing"
+  """
+  tasks_ticketing(
+    """distinct select on columns"""
+    distinct_on: [tasks_ticketing_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_ticketing_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_ticketing_bool_exp
+  ): [tasks_ticketing!]!
+
+  """
+  fetch aggregated fields from the table: "tasks_ticketing"
+  """
+  tasks_ticketing_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_ticketing_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_ticketing_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_ticketing_bool_exp
+  ): tasks_ticketing_aggregate!
+
+  """fetch data from the table: "tasks_ticketing" using primary key columns"""
+  tasks_ticketing_by_pk(id: uuid!): tasks_ticketing
+
+  """
+  fetch data from the table: "tasks_tree_removal"
+  """
+  tasks_tree_removal(
+    """distinct select on columns"""
+    distinct_on: [tasks_tree_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_tree_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_tree_removal_bool_exp
+  ): [tasks_tree_removal!]!
+
+  """
+  fetch aggregated fields from the table: "tasks_tree_removal"
+  """
+  tasks_tree_removal_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_tree_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_tree_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_tree_removal_bool_exp
+  ): tasks_tree_removal_aggregate!
+
+  """
+  fetch data from the table: "tasks_tree_removal" using primary key columns
+  """
+  tasks_tree_removal_by_pk(id: uuid!): tasks_tree_removal
 
   """fetch data from the table: "auth.users" using primary key columns"""
   user(id: uuid!): users
@@ -6473,8 +6861,183 @@ type subscription_root {
     where: tasks_bool_exp
   ): tasks_aggregate!
 
+  """
+  fetch data from the table: "tasks_branch_removal"
+  """
+  tasks_branch_removal(
+    """distinct select on columns"""
+    distinct_on: [tasks_branch_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_branch_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_branch_removal_bool_exp
+  ): [tasks_branch_removal!]!
+
+  """
+  fetch aggregated fields from the table: "tasks_branch_removal"
+  """
+  tasks_branch_removal_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_branch_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_branch_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_branch_removal_bool_exp
+  ): tasks_branch_removal_aggregate!
+
+  """
+  fetch data from the table: "tasks_branch_removal" using primary key columns
+  """
+  tasks_branch_removal_by_pk(id: uuid!): tasks_branch_removal
+
+  """
+  fetch data from the table in a streaming manner: "tasks_branch_removal"
+  """
+  tasks_branch_removal_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [tasks_branch_removal_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: tasks_branch_removal_bool_exp
+  ): [tasks_branch_removal!]!
+
   """fetch data from the table: "tasks" using primary key columns"""
   tasks_by_pk(id: uuid!): tasks
+
+  """
+  fetch data from the table: "tasks_collection"
+  """
+  tasks_collection(
+    """distinct select on columns"""
+    distinct_on: [tasks_collection_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_collection_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_collection_bool_exp
+  ): [tasks_collection!]!
+
+  """
+  fetch aggregated fields from the table: "tasks_collection"
+  """
+  tasks_collection_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_collection_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_collection_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_collection_bool_exp
+  ): tasks_collection_aggregate!
+
+  """
+  fetch data from the table: "tasks_collection" using primary key columns
+  """
+  tasks_collection_by_pk(id: uuid!, project_id: uuid!): tasks_collection
+
+  """
+  fetch data from the table in a streaming manner: "tasks_collection"
+  """
+  tasks_collection_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [tasks_collection_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: tasks_collection_bool_exp
+  ): [tasks_collection!]!
+
+  """
+  fetch data from the table: "tasks_disposal"
+  """
+  tasks_disposal(
+    """distinct select on columns"""
+    distinct_on: [tasks_disposal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_disposal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_disposal_bool_exp
+  ): [tasks_disposal!]!
+
+  """
+  fetch aggregated fields from the table: "tasks_disposal"
+  """
+  tasks_disposal_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_disposal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_disposal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_disposal_bool_exp
+  ): tasks_disposal_aggregate!
+
+  """fetch data from the table: "tasks_disposal" using primary key columns"""
+  tasks_disposal_by_pk(id: uuid!, project_id: uuid!): tasks_disposal
+
+  """
+  fetch data from the table in a streaming manner: "tasks_disposal"
+  """
+  tasks_disposal_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [tasks_disposal_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: tasks_disposal_bool_exp
+  ): [tasks_disposal!]!
 
   """
   fetch data from the table in a streaming manner: "tasks"
@@ -6491,11 +7054,11 @@ type subscription_root {
   ): [tasks!]!
 
   """
-  fetch data from the table: "ticketing"
+  fetch data from the table: "tasks_ticketing"
   """
-  ticketing(
+  tasks_ticketing(
     """distinct select on columns"""
-    distinct_on: [ticketing_select_column!]
+    distinct_on: [tasks_ticketing_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -6504,18 +7067,18 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [ticketing_order_by!]
+    order_by: [tasks_ticketing_order_by!]
 
     """filter the rows returned"""
-    where: ticketing_bool_exp
-  ): [ticketing!]!
+    where: tasks_ticketing_bool_exp
+  ): [tasks_ticketing!]!
 
   """
-  fetch aggregated fields from the table: "ticketing"
+  fetch aggregated fields from the table: "tasks_ticketing"
   """
-  ticketing_aggregate(
+  tasks_ticketing_aggregate(
     """distinct select on columns"""
-    distinct_on: [ticketing_select_column!]
+    distinct_on: [tasks_ticketing_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -6524,28 +7087,87 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [ticketing_order_by!]
+    order_by: [tasks_ticketing_order_by!]
 
     """filter the rows returned"""
-    where: ticketing_bool_exp
-  ): ticketing_aggregate!
+    where: tasks_ticketing_bool_exp
+  ): tasks_ticketing_aggregate!
 
-  """fetch data from the table: "ticketing" using primary key columns"""
-  ticketing_by_pk(id: uuid!): ticketing
+  """fetch data from the table: "tasks_ticketing" using primary key columns"""
+  tasks_ticketing_by_pk(id: uuid!): tasks_ticketing
 
   """
-  fetch data from the table in a streaming manner: "ticketing"
+  fetch data from the table in a streaming manner: "tasks_ticketing"
   """
-  ticketing_stream(
+  tasks_ticketing_stream(
     """maximum number of rows returned in a single batch"""
     batch_size: Int!
 
     """cursor to stream the results returned by the query"""
-    cursor: [ticketing_stream_cursor_input]!
+    cursor: [tasks_ticketing_stream_cursor_input]!
 
     """filter the rows returned"""
-    where: ticketing_bool_exp
-  ): [ticketing!]!
+    where: tasks_ticketing_bool_exp
+  ): [tasks_ticketing!]!
+
+  """
+  fetch data from the table: "tasks_tree_removal"
+  """
+  tasks_tree_removal(
+    """distinct select on columns"""
+    distinct_on: [tasks_tree_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_tree_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_tree_removal_bool_exp
+  ): [tasks_tree_removal!]!
+
+  """
+  fetch aggregated fields from the table: "tasks_tree_removal"
+  """
+  tasks_tree_removal_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_tree_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_tree_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_tree_removal_bool_exp
+  ): tasks_tree_removal_aggregate!
+
+  """
+  fetch data from the table: "tasks_tree_removal" using primary key columns
+  """
+  tasks_tree_removal_by_pk(id: uuid!): tasks_tree_removal
+
+  """
+  fetch data from the table in a streaming manner: "tasks_tree_removal"
+  """
+  tasks_tree_removal_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [tasks_tree_removal_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: tasks_tree_removal_bool_exp
+  ): [tasks_tree_removal!]!
 
   """fetch data from the table: "auth.users" using primary key columns"""
   user(id: uuid!): users
@@ -6816,6 +7438,519 @@ input tasks_bool_exp {
   user_id: uuid_comparison_exp
 }
 
+"""branch/stump removal"""
+type tasks_branch_removal {
+  comment: String!
+  created_at: timestamp!
+  id: uuid!
+  latitude: String!
+  longitude: String!
+  project_id: uuid!
+  updated_at: timestamptz!
+}
+
+"""
+aggregated selection of "tasks_branch_removal"
+"""
+type tasks_branch_removal_aggregate {
+  aggregate: tasks_branch_removal_aggregate_fields
+  nodes: [tasks_branch_removal!]!
+}
+
+"""
+aggregate fields of "tasks_branch_removal"
+"""
+type tasks_branch_removal_aggregate_fields {
+  count(columns: [tasks_branch_removal_select_column!], distinct: Boolean): Int!
+  max: tasks_branch_removal_max_fields
+  min: tasks_branch_removal_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "tasks_branch_removal". All fields are combined with a logical 'AND'.
+"""
+input tasks_branch_removal_bool_exp {
+  _and: [tasks_branch_removal_bool_exp!]
+  _not: tasks_branch_removal_bool_exp
+  _or: [tasks_branch_removal_bool_exp!]
+  comment: String_comparison_exp
+  created_at: timestamp_comparison_exp
+  id: uuid_comparison_exp
+  latitude: String_comparison_exp
+  longitude: String_comparison_exp
+  project_id: uuid_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "tasks_branch_removal"
+"""
+enum tasks_branch_removal_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  branch_removal_tasks_pkey
+}
+
+"""
+input type for inserting data into table "tasks_branch_removal"
+"""
+input tasks_branch_removal_insert_input {
+  comment: String
+  created_at: timestamp
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  updated_at: timestamptz
+}
+
+"""aggregate max on columns"""
+type tasks_branch_removal_max_fields {
+  comment: String
+  created_at: timestamp
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type tasks_branch_removal_min_fields {
+  comment: String
+  created_at: timestamp
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  updated_at: timestamptz
+}
+
+"""
+response of any mutation on the table "tasks_branch_removal"
+"""
+type tasks_branch_removal_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [tasks_branch_removal!]!
+}
+
+"""
+on_conflict condition type for table "tasks_branch_removal"
+"""
+input tasks_branch_removal_on_conflict {
+  constraint: tasks_branch_removal_constraint!
+  update_columns: [tasks_branch_removal_update_column!]! = []
+  where: tasks_branch_removal_bool_exp
+}
+
+"""Ordering options when selecting data from "tasks_branch_removal"."""
+input tasks_branch_removal_order_by {
+  comment: order_by
+  created_at: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  project_id: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: tasks_branch_removal"""
+input tasks_branch_removal_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "tasks_branch_removal"
+"""
+enum tasks_branch_removal_select_column {
+  """column name"""
+  comment
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  latitude
+
+  """column name"""
+  longitude
+
+  """column name"""
+  project_id
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "tasks_branch_removal"
+"""
+input tasks_branch_removal_set_input {
+  comment: String
+  created_at: timestamp
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  updated_at: timestamptz
+}
+
+"""
+Streaming cursor of the table "tasks_branch_removal"
+"""
+input tasks_branch_removal_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: tasks_branch_removal_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input tasks_branch_removal_stream_cursor_value_input {
+  comment: String
+  created_at: timestamp
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  updated_at: timestamptz
+}
+
+"""
+update columns of table "tasks_branch_removal"
+"""
+enum tasks_branch_removal_update_column {
+  """column name"""
+  comment
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  latitude
+
+  """column name"""
+  longitude
+
+  """column name"""
+  project_id
+
+  """column name"""
+  updated_at
+}
+
+input tasks_branch_removal_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: tasks_branch_removal_set_input
+
+  """filter the rows which have to be updated"""
+  where: tasks_branch_removal_bool_exp!
+}
+
+"""
+columns and relationships of "tasks_collection"
+"""
+type tasks_collection {
+  capactiy: String!
+  contractor: String!
+  created_at: timestamptz!
+  debris_type: String!
+  disposal_site: String!
+  id: uuid!
+  latitude: String!
+  longitude: String!
+  project_id: uuid!
+  truck_number: String!
+  updated_at: timestamptz!
+  weigh_points: String!
+}
+
+"""
+aggregated selection of "tasks_collection"
+"""
+type tasks_collection_aggregate {
+  aggregate: tasks_collection_aggregate_fields
+  nodes: [tasks_collection!]!
+}
+
+"""
+aggregate fields of "tasks_collection"
+"""
+type tasks_collection_aggregate_fields {
+  count(columns: [tasks_collection_select_column!], distinct: Boolean): Int!
+  max: tasks_collection_max_fields
+  min: tasks_collection_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "tasks_collection". All fields are combined with a logical 'AND'.
+"""
+input tasks_collection_bool_exp {
+  _and: [tasks_collection_bool_exp!]
+  _not: tasks_collection_bool_exp
+  _or: [tasks_collection_bool_exp!]
+  capactiy: String_comparison_exp
+  contractor: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  debris_type: String_comparison_exp
+  disposal_site: String_comparison_exp
+  id: uuid_comparison_exp
+  latitude: String_comparison_exp
+  longitude: String_comparison_exp
+  project_id: uuid_comparison_exp
+  truck_number: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  weigh_points: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "tasks_collection"
+"""
+enum tasks_collection_constraint {
+  """
+  unique or primary key constraint on columns "project_id", "id"
+  """
+  tasks_collection_pkey
+}
+
+"""
+input type for inserting data into table "tasks_collection"
+"""
+input tasks_collection_insert_input {
+  capactiy: String
+  contractor: String
+  created_at: timestamptz
+  debris_type: String
+  disposal_site: String
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  truck_number: String
+  updated_at: timestamptz
+  weigh_points: String
+}
+
+"""aggregate max on columns"""
+type tasks_collection_max_fields {
+  capactiy: String
+  contractor: String
+  created_at: timestamptz
+  debris_type: String
+  disposal_site: String
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  truck_number: String
+  updated_at: timestamptz
+  weigh_points: String
+}
+
+"""aggregate min on columns"""
+type tasks_collection_min_fields {
+  capactiy: String
+  contractor: String
+  created_at: timestamptz
+  debris_type: String
+  disposal_site: String
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  truck_number: String
+  updated_at: timestamptz
+  weigh_points: String
+}
+
+"""
+response of any mutation on the table "tasks_collection"
+"""
+type tasks_collection_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [tasks_collection!]!
+}
+
+"""
+on_conflict condition type for table "tasks_collection"
+"""
+input tasks_collection_on_conflict {
+  constraint: tasks_collection_constraint!
+  update_columns: [tasks_collection_update_column!]! = []
+  where: tasks_collection_bool_exp
+}
+
+"""Ordering options when selecting data from "tasks_collection"."""
+input tasks_collection_order_by {
+  capactiy: order_by
+  contractor: order_by
+  created_at: order_by
+  debris_type: order_by
+  disposal_site: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  project_id: order_by
+  truck_number: order_by
+  updated_at: order_by
+  weigh_points: order_by
+}
+
+"""primary key columns input for table: tasks_collection"""
+input tasks_collection_pk_columns_input {
+  id: uuid!
+  project_id: uuid!
+}
+
+"""
+select columns of table "tasks_collection"
+"""
+enum tasks_collection_select_column {
+  """column name"""
+  capactiy
+
+  """column name"""
+  contractor
+
+  """column name"""
+  created_at
+
+  """column name"""
+  debris_type
+
+  """column name"""
+  disposal_site
+
+  """column name"""
+  id
+
+  """column name"""
+  latitude
+
+  """column name"""
+  longitude
+
+  """column name"""
+  project_id
+
+  """column name"""
+  truck_number
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  weigh_points
+}
+
+"""
+input type for updating data in table "tasks_collection"
+"""
+input tasks_collection_set_input {
+  capactiy: String
+  contractor: String
+  created_at: timestamptz
+  debris_type: String
+  disposal_site: String
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  truck_number: String
+  updated_at: timestamptz
+  weigh_points: String
+}
+
+"""
+Streaming cursor of the table "tasks_collection"
+"""
+input tasks_collection_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: tasks_collection_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input tasks_collection_stream_cursor_value_input {
+  capactiy: String
+  contractor: String
+  created_at: timestamptz
+  debris_type: String
+  disposal_site: String
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  truck_number: String
+  updated_at: timestamptz
+  weigh_points: String
+}
+
+"""
+update columns of table "tasks_collection"
+"""
+enum tasks_collection_update_column {
+  """column name"""
+  capactiy
+
+  """column name"""
+  contractor
+
+  """column name"""
+  created_at
+
+  """column name"""
+  debris_type
+
+  """column name"""
+  disposal_site
+
+  """column name"""
+  id
+
+  """column name"""
+  latitude
+
+  """column name"""
+  longitude
+
+  """column name"""
+  project_id
+
+  """column name"""
+  truck_number
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  weigh_points
+}
+
+input tasks_collection_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: tasks_collection_set_input
+
+  """filter the rows which have to be updated"""
+  where: tasks_collection_bool_exp!
+}
+
 """
 unique or primary key constraints on table "tasks"
 """
@@ -6845,6 +7980,285 @@ delete key/value pair or string element. key/value pairs are matched based on th
 """
 input tasks_delete_key_input {
   metadata: String
+}
+
+"""
+columns and relationships of "tasks_disposal"
+"""
+type tasks_disposal {
+  capacity: String!
+  contractor: String!
+  created_at: timestamptz!
+  disposal_site: String!
+  id: uuid!
+  latitude: String!
+  load_call: String!
+  longitude: String!
+  project_id: uuid!
+  truck_number: String!
+  updated_at: timestamptz!
+}
+
+"""
+aggregated selection of "tasks_disposal"
+"""
+type tasks_disposal_aggregate {
+  aggregate: tasks_disposal_aggregate_fields
+  nodes: [tasks_disposal!]!
+}
+
+"""
+aggregate fields of "tasks_disposal"
+"""
+type tasks_disposal_aggregate_fields {
+  count(columns: [tasks_disposal_select_column!], distinct: Boolean): Int!
+  max: tasks_disposal_max_fields
+  min: tasks_disposal_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "tasks_disposal". All fields are combined with a logical 'AND'.
+"""
+input tasks_disposal_bool_exp {
+  _and: [tasks_disposal_bool_exp!]
+  _not: tasks_disposal_bool_exp
+  _or: [tasks_disposal_bool_exp!]
+  capacity: String_comparison_exp
+  contractor: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  disposal_site: String_comparison_exp
+  id: uuid_comparison_exp
+  latitude: String_comparison_exp
+  load_call: String_comparison_exp
+  longitude: String_comparison_exp
+  project_id: uuid_comparison_exp
+  truck_number: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "tasks_disposal"
+"""
+enum tasks_disposal_constraint {
+  """
+  unique or primary key constraint on columns "project_id", "id"
+  """
+  tasks_disposal_pkey
+}
+
+"""
+input type for inserting data into table "tasks_disposal"
+"""
+input tasks_disposal_insert_input {
+  capacity: String
+  contractor: String
+  created_at: timestamptz
+  disposal_site: String
+  id: uuid
+  latitude: String
+  load_call: String
+  longitude: String
+  project_id: uuid
+  truck_number: String
+  updated_at: timestamptz
+}
+
+"""aggregate max on columns"""
+type tasks_disposal_max_fields {
+  capacity: String
+  contractor: String
+  created_at: timestamptz
+  disposal_site: String
+  id: uuid
+  latitude: String
+  load_call: String
+  longitude: String
+  project_id: uuid
+  truck_number: String
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type tasks_disposal_min_fields {
+  capacity: String
+  contractor: String
+  created_at: timestamptz
+  disposal_site: String
+  id: uuid
+  latitude: String
+  load_call: String
+  longitude: String
+  project_id: uuid
+  truck_number: String
+  updated_at: timestamptz
+}
+
+"""
+response of any mutation on the table "tasks_disposal"
+"""
+type tasks_disposal_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [tasks_disposal!]!
+}
+
+"""
+on_conflict condition type for table "tasks_disposal"
+"""
+input tasks_disposal_on_conflict {
+  constraint: tasks_disposal_constraint!
+  update_columns: [tasks_disposal_update_column!]! = []
+  where: tasks_disposal_bool_exp
+}
+
+"""Ordering options when selecting data from "tasks_disposal"."""
+input tasks_disposal_order_by {
+  capacity: order_by
+  contractor: order_by
+  created_at: order_by
+  disposal_site: order_by
+  id: order_by
+  latitude: order_by
+  load_call: order_by
+  longitude: order_by
+  project_id: order_by
+  truck_number: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: tasks_disposal"""
+input tasks_disposal_pk_columns_input {
+  id: uuid!
+  project_id: uuid!
+}
+
+"""
+select columns of table "tasks_disposal"
+"""
+enum tasks_disposal_select_column {
+  """column name"""
+  capacity
+
+  """column name"""
+  contractor
+
+  """column name"""
+  created_at
+
+  """column name"""
+  disposal_site
+
+  """column name"""
+  id
+
+  """column name"""
+  latitude
+
+  """column name"""
+  load_call
+
+  """column name"""
+  longitude
+
+  """column name"""
+  project_id
+
+  """column name"""
+  truck_number
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "tasks_disposal"
+"""
+input tasks_disposal_set_input {
+  capacity: String
+  contractor: String
+  created_at: timestamptz
+  disposal_site: String
+  id: uuid
+  latitude: String
+  load_call: String
+  longitude: String
+  project_id: uuid
+  truck_number: String
+  updated_at: timestamptz
+}
+
+"""
+Streaming cursor of the table "tasks_disposal"
+"""
+input tasks_disposal_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: tasks_disposal_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input tasks_disposal_stream_cursor_value_input {
+  capacity: String
+  contractor: String
+  created_at: timestamptz
+  disposal_site: String
+  id: uuid
+  latitude: String
+  load_call: String
+  longitude: String
+  project_id: uuid
+  truck_number: String
+  updated_at: timestamptz
+}
+
+"""
+update columns of table "tasks_disposal"
+"""
+enum tasks_disposal_update_column {
+  """column name"""
+  capacity
+
+  """column name"""
+  contractor
+
+  """column name"""
+  created_at
+
+  """column name"""
+  disposal_site
+
+  """column name"""
+  id
+
+  """column name"""
+  latitude
+
+  """column name"""
+  load_call
+
+  """column name"""
+  longitude
+
+  """column name"""
+  project_id
+
+  """column name"""
+  truck_number
+
+  """column name"""
+  updated_at
+}
+
+input tasks_disposal_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: tasks_disposal_set_input
+
+  """filter the rows which have to be updated"""
+  where: tasks_disposal_bool_exp!
 }
 
 """
@@ -7079,6 +8493,502 @@ input tasks_stream_cursor_value_input {
 }
 
 """
+columns and relationships of "tasks_ticketing"
+"""
+type tasks_ticketing {
+  add_photos: Boolean!
+  comment: String
+  created_at: timestamptz!
+  id: uuid!
+  latitude: String!
+  longitude: String!
+  print_ticket: Boolean!
+  project_id: uuid!
+  title: String!
+  updated_at: timestamptz!
+}
+
+"""
+aggregated selection of "tasks_ticketing"
+"""
+type tasks_ticketing_aggregate {
+  aggregate: tasks_ticketing_aggregate_fields
+  nodes: [tasks_ticketing!]!
+}
+
+"""
+aggregate fields of "tasks_ticketing"
+"""
+type tasks_ticketing_aggregate_fields {
+  count(columns: [tasks_ticketing_select_column!], distinct: Boolean): Int!
+  max: tasks_ticketing_max_fields
+  min: tasks_ticketing_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "tasks_ticketing". All fields are combined with a logical 'AND'.
+"""
+input tasks_ticketing_bool_exp {
+  _and: [tasks_ticketing_bool_exp!]
+  _not: tasks_ticketing_bool_exp
+  _or: [tasks_ticketing_bool_exp!]
+  add_photos: Boolean_comparison_exp
+  comment: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  latitude: String_comparison_exp
+  longitude: String_comparison_exp
+  print_ticket: Boolean_comparison_exp
+  project_id: uuid_comparison_exp
+  title: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "tasks_ticketing"
+"""
+enum tasks_ticketing_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  task_admin_pkey
+}
+
+"""
+input type for inserting data into table "tasks_ticketing"
+"""
+input tasks_ticketing_insert_input {
+  add_photos: Boolean
+  comment: String
+  created_at: timestamptz
+  id: uuid
+  latitude: String
+  longitude: String
+  print_ticket: Boolean
+  project_id: uuid
+  title: String
+  updated_at: timestamptz
+}
+
+"""aggregate max on columns"""
+type tasks_ticketing_max_fields {
+  comment: String
+  created_at: timestamptz
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  title: String
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type tasks_ticketing_min_fields {
+  comment: String
+  created_at: timestamptz
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  title: String
+  updated_at: timestamptz
+}
+
+"""
+response of any mutation on the table "tasks_ticketing"
+"""
+type tasks_ticketing_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [tasks_ticketing!]!
+}
+
+"""
+on_conflict condition type for table "tasks_ticketing"
+"""
+input tasks_ticketing_on_conflict {
+  constraint: tasks_ticketing_constraint!
+  update_columns: [tasks_ticketing_update_column!]! = []
+  where: tasks_ticketing_bool_exp
+}
+
+"""Ordering options when selecting data from "tasks_ticketing"."""
+input tasks_ticketing_order_by {
+  add_photos: order_by
+  comment: order_by
+  created_at: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  print_ticket: order_by
+  project_id: order_by
+  title: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: tasks_ticketing"""
+input tasks_ticketing_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "tasks_ticketing"
+"""
+enum tasks_ticketing_select_column {
+  """column name"""
+  add_photos
+
+  """column name"""
+  comment
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  latitude
+
+  """column name"""
+  longitude
+
+  """column name"""
+  print_ticket
+
+  """column name"""
+  project_id
+
+  """column name"""
+  title
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "tasks_ticketing"
+"""
+input tasks_ticketing_set_input {
+  add_photos: Boolean
+  comment: String
+  created_at: timestamptz
+  id: uuid
+  latitude: String
+  longitude: String
+  print_ticket: Boolean
+  project_id: uuid
+  title: String
+  updated_at: timestamptz
+}
+
+"""
+Streaming cursor of the table "tasks_ticketing"
+"""
+input tasks_ticketing_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: tasks_ticketing_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input tasks_ticketing_stream_cursor_value_input {
+  add_photos: Boolean
+  comment: String
+  created_at: timestamptz
+  id: uuid
+  latitude: String
+  longitude: String
+  print_ticket: Boolean
+  project_id: uuid
+  title: String
+  updated_at: timestamptz
+}
+
+"""
+update columns of table "tasks_ticketing"
+"""
+enum tasks_ticketing_update_column {
+  """column name"""
+  add_photos
+
+  """column name"""
+  comment
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  latitude
+
+  """column name"""
+  longitude
+
+  """column name"""
+  print_ticket
+
+  """column name"""
+  project_id
+
+  """column name"""
+  title
+
+  """column name"""
+  updated_at
+}
+
+input tasks_ticketing_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: tasks_ticketing_set_input
+
+  """filter the rows which have to be updated"""
+  where: tasks_ticketing_bool_exp!
+}
+
+"""
+columns and relationships of "tasks_tree_removal"
+"""
+type tasks_tree_removal {
+  comment: String
+  created_at: date!
+  id: uuid!
+  latitude: String!
+  longitude: String!
+  project_id: uuid!
+  ranges: String!
+  updated_at: date!
+}
+
+"""
+aggregated selection of "tasks_tree_removal"
+"""
+type tasks_tree_removal_aggregate {
+  aggregate: tasks_tree_removal_aggregate_fields
+  nodes: [tasks_tree_removal!]!
+}
+
+"""
+aggregate fields of "tasks_tree_removal"
+"""
+type tasks_tree_removal_aggregate_fields {
+  count(columns: [tasks_tree_removal_select_column!], distinct: Boolean): Int!
+  max: tasks_tree_removal_max_fields
+  min: tasks_tree_removal_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "tasks_tree_removal". All fields are combined with a logical 'AND'.
+"""
+input tasks_tree_removal_bool_exp {
+  _and: [tasks_tree_removal_bool_exp!]
+  _not: tasks_tree_removal_bool_exp
+  _or: [tasks_tree_removal_bool_exp!]
+  comment: String_comparison_exp
+  created_at: date_comparison_exp
+  id: uuid_comparison_exp
+  latitude: String_comparison_exp
+  longitude: String_comparison_exp
+  project_id: uuid_comparison_exp
+  ranges: String_comparison_exp
+  updated_at: date_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "tasks_tree_removal"
+"""
+enum tasks_tree_removal_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  tree_removal_tasks_pkey
+}
+
+"""
+input type for inserting data into table "tasks_tree_removal"
+"""
+input tasks_tree_removal_insert_input {
+  comment: String
+  created_at: date
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  ranges: String
+  updated_at: date
+}
+
+"""aggregate max on columns"""
+type tasks_tree_removal_max_fields {
+  comment: String
+  created_at: date
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  ranges: String
+  updated_at: date
+}
+
+"""aggregate min on columns"""
+type tasks_tree_removal_min_fields {
+  comment: String
+  created_at: date
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  ranges: String
+  updated_at: date
+}
+
+"""
+response of any mutation on the table "tasks_tree_removal"
+"""
+type tasks_tree_removal_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [tasks_tree_removal!]!
+}
+
+"""
+on_conflict condition type for table "tasks_tree_removal"
+"""
+input tasks_tree_removal_on_conflict {
+  constraint: tasks_tree_removal_constraint!
+  update_columns: [tasks_tree_removal_update_column!]! = []
+  where: tasks_tree_removal_bool_exp
+}
+
+"""Ordering options when selecting data from "tasks_tree_removal"."""
+input tasks_tree_removal_order_by {
+  comment: order_by
+  created_at: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  project_id: order_by
+  ranges: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: tasks_tree_removal"""
+input tasks_tree_removal_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "tasks_tree_removal"
+"""
+enum tasks_tree_removal_select_column {
+  """column name"""
+  comment
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  latitude
+
+  """column name"""
+  longitude
+
+  """column name"""
+  project_id
+
+  """column name"""
+  ranges
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "tasks_tree_removal"
+"""
+input tasks_tree_removal_set_input {
+  comment: String
+  created_at: date
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  ranges: String
+  updated_at: date
+}
+
+"""
+Streaming cursor of the table "tasks_tree_removal"
+"""
+input tasks_tree_removal_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: tasks_tree_removal_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input tasks_tree_removal_stream_cursor_value_input {
+  comment: String
+  created_at: date
+  id: uuid
+  latitude: String
+  longitude: String
+  project_id: uuid
+  ranges: String
+  updated_at: date
+}
+
+"""
+update columns of table "tasks_tree_removal"
+"""
+enum tasks_tree_removal_update_column {
+  """column name"""
+  comment
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  latitude
+
+  """column name"""
+  longitude
+
+  """column name"""
+  project_id
+
+  """column name"""
+  ranges
+
+  """column name"""
+  updated_at
+}
+
+input tasks_tree_removal_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: tasks_tree_removal_set_input
+
+  """filter the rows which have to be updated"""
+  where: tasks_tree_removal_bool_exp!
+}
+
+"""
 update columns of table "tasks"
 """
 enum tasks_update_column {
@@ -7145,223 +9055,21 @@ input tasks_updates {
   where: tasks_bool_exp!
 }
 
-"""
-columns and relationships of "ticketing"
-"""
-type ticketing {
-  id: uuid!
-  metadata(
-    """JSON select path"""
-    path: String
-  ): jsonb
-  project_id: uuid!
-}
+scalar timestamp
 
 """
-aggregated selection of "ticketing"
+Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'.
 """
-type ticketing_aggregate {
-  aggregate: ticketing_aggregate_fields
-  nodes: [ticketing!]!
-}
-
-"""
-aggregate fields of "ticketing"
-"""
-type ticketing_aggregate_fields {
-  count(columns: [ticketing_select_column!], distinct: Boolean): Int!
-  max: ticketing_max_fields
-  min: ticketing_min_fields
-}
-
-"""append existing jsonb value of filtered columns with new jsonb value"""
-input ticketing_append_input {
-  metadata: jsonb
-}
-
-"""
-Boolean expression to filter rows from the table "ticketing". All fields are combined with a logical 'AND'.
-"""
-input ticketing_bool_exp {
-  _and: [ticketing_bool_exp!]
-  _not: ticketing_bool_exp
-  _or: [ticketing_bool_exp!]
-  id: uuid_comparison_exp
-  metadata: jsonb_comparison_exp
-  project_id: uuid_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "ticketing"
-"""
-enum ticketing_constraint {
-  """
-  unique or primary key constraint on columns "id"
-  """
-  task_admin_pkey
-}
-
-"""
-delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-"""
-input ticketing_delete_at_path_input {
-  metadata: [String!]
-}
-
-"""
-delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-"""
-input ticketing_delete_elem_input {
-  metadata: Int
-}
-
-"""
-delete key/value pair or string element. key/value pairs are matched based on their key value
-"""
-input ticketing_delete_key_input {
-  metadata: String
-}
-
-"""
-input type for inserting data into table "ticketing"
-"""
-input ticketing_insert_input {
-  id: uuid
-  metadata: jsonb
-  project_id: uuid
-}
-
-"""aggregate max on columns"""
-type ticketing_max_fields {
-  id: uuid
-  project_id: uuid
-}
-
-"""aggregate min on columns"""
-type ticketing_min_fields {
-  id: uuid
-  project_id: uuid
-}
-
-"""
-response of any mutation on the table "ticketing"
-"""
-type ticketing_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [ticketing!]!
-}
-
-"""
-on_conflict condition type for table "ticketing"
-"""
-input ticketing_on_conflict {
-  constraint: ticketing_constraint!
-  update_columns: [ticketing_update_column!]! = []
-  where: ticketing_bool_exp
-}
-
-"""Ordering options when selecting data from "ticketing"."""
-input ticketing_order_by {
-  id: order_by
-  metadata: order_by
-  project_id: order_by
-}
-
-"""primary key columns input for table: ticketing"""
-input ticketing_pk_columns_input {
-  id: uuid!
-}
-
-"""prepend existing jsonb value of filtered columns with new jsonb value"""
-input ticketing_prepend_input {
-  metadata: jsonb
-}
-
-"""
-select columns of table "ticketing"
-"""
-enum ticketing_select_column {
-  """column name"""
-  id
-
-  """column name"""
-  metadata
-
-  """column name"""
-  project_id
-}
-
-"""
-input type for updating data in table "ticketing"
-"""
-input ticketing_set_input {
-  id: uuid
-  metadata: jsonb
-  project_id: uuid
-}
-
-"""
-Streaming cursor of the table "ticketing"
-"""
-input ticketing_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: ticketing_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input ticketing_stream_cursor_value_input {
-  id: uuid
-  metadata: jsonb
-  project_id: uuid
-}
-
-"""
-update columns of table "ticketing"
-"""
-enum ticketing_update_column {
-  """column name"""
-  id
-
-  """column name"""
-  metadata
-
-  """column name"""
-  project_id
-}
-
-input ticketing_updates {
-  """append existing jsonb value of filtered columns with new jsonb value"""
-  _append: ticketing_append_input
-
-  """
-  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-  """
-  _delete_at_path: ticketing_delete_at_path_input
-
-  """
-  delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-  """
-  _delete_elem: ticketing_delete_elem_input
-
-  """
-  delete key/value pair or string element. key/value pairs are matched based on their key value
-  """
-  _delete_key: ticketing_delete_key_input
-
-  """prepend existing jsonb value of filtered columns with new jsonb value"""
-  _prepend: ticketing_prepend_input
-
-  """sets the columns of the filtered rows to the given values"""
-  _set: ticketing_set_input
-
-  """filter the rows which have to be updated"""
-  where: ticketing_bool_exp!
+input timestamp_comparison_exp {
+  _eq: timestamp
+  _gt: timestamp
+  _gte: timestamp
+  _in: [timestamp!]
+  _is_null: Boolean
+  _lt: timestamp
+  _lte: timestamp
+  _neq: timestamp
+  _nin: [timestamp!]
 }
 
 scalar timestamptz

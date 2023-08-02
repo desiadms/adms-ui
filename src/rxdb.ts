@@ -52,7 +52,7 @@ export async function initialize(accessToken: string) {
 
   console.log('creating collections')
 
-  addCollections(db, [
+  await addCollections(db, [
     {
       name: 'tasks',
       schema: taskSchema,

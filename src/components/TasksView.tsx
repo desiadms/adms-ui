@@ -1,4 +1,6 @@
+import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import { CameraIcon, XCircleIcon } from '@heroicons/react/24/solid'
+import { Link } from '@tanstack/router'
 import classNames from 'classnames'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { useFieldArray, useForm } from 'react-hook-form'
@@ -98,13 +100,34 @@ async function genTaskImagesMetadata(filesData: FileForm[]) {
   return { images, files, taskId }
 }
 
-export function TasksView() {
-  const query = useCallback((collection) => collection.find(), [])
+function TaskType({ name, href }: { name: string; href: string }) {
+  return (
+    <div className='w-full bg-slate-300 px-2 py-3 capitalize font-medium flex items-center rounded-md'>
+      <div className='flex gap-2 items-center'>
+        <PlusCircleIcon className='text-gray-700 w-10 flex-shrink-0' />
+        <Link key={href} to={href} className='flex-shrink-0'>
+          {name}
+        </Link>
+      </div>
+    </div>
+  )
+}
 
+export function TasksView() {
+  return (
+    <div className='flex flex-col gap-2'>
+      <TaskType name='field monitor' href='/tasks/field-monitor' />
+      <TaskType name='field collections' href='/tasks/field-collections' />
+      <TaskType name='field disposal' href='/tasks/field-disposal' />
+    </div>
+  )
+}
+
+export function TaskExample() {
+  const query = useCallback((collection) => collection.find(), [])
   const { result: tasks } = useRxData<TaskDocType>('tasks', query)
   const tasksCollection = useRxCollection<TaskDocType>('tasks')
 
-  console.log('tasks in render:', tasks)
   const {
     register,
     handleSubmit,

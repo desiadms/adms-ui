@@ -19,6 +19,7 @@ export type Scalars = {
   citext: { input: any; output: any; }
   date: { input: any; output: any; }
   jsonb: { input: any; output: any; }
+  timestamp: { input: any; output: any; }
   timestamptz: { input: any; output: any; }
   uuid: { input: any; output: any; }
 };
@@ -3027,12 +3028,28 @@ export type Mutation_Root = {
   delete_projects_by_pk?: Maybe<Projects>;
   /** delete data from the table: "tasks" */
   delete_tasks?: Maybe<Tasks_Mutation_Response>;
+  /** delete data from the table: "tasks_branch_removal" */
+  delete_tasks_branch_removal?: Maybe<Tasks_Branch_Removal_Mutation_Response>;
+  /** delete single row from the table: "tasks_branch_removal" */
+  delete_tasks_branch_removal_by_pk?: Maybe<Tasks_Branch_Removal>;
   /** delete single row from the table: "tasks" */
   delete_tasks_by_pk?: Maybe<Tasks>;
-  /** delete data from the table: "ticketing" */
-  delete_ticketing?: Maybe<Ticketing_Mutation_Response>;
-  /** delete single row from the table: "ticketing" */
-  delete_ticketing_by_pk?: Maybe<Ticketing>;
+  /** delete data from the table: "tasks_collection" */
+  delete_tasks_collection?: Maybe<Tasks_Collection_Mutation_Response>;
+  /** delete single row from the table: "tasks_collection" */
+  delete_tasks_collection_by_pk?: Maybe<Tasks_Collection>;
+  /** delete data from the table: "tasks_disposal" */
+  delete_tasks_disposal?: Maybe<Tasks_Disposal_Mutation_Response>;
+  /** delete single row from the table: "tasks_disposal" */
+  delete_tasks_disposal_by_pk?: Maybe<Tasks_Disposal>;
+  /** delete data from the table: "tasks_ticketing" */
+  delete_tasks_ticketing?: Maybe<Tasks_Ticketing_Mutation_Response>;
+  /** delete single row from the table: "tasks_ticketing" */
+  delete_tasks_ticketing_by_pk?: Maybe<Tasks_Ticketing>;
+  /** delete data from the table: "tasks_tree_removal" */
+  delete_tasks_tree_removal?: Maybe<Tasks_Tree_Removal_Mutation_Response>;
+  /** delete single row from the table: "tasks_tree_removal" */
+  delete_tasks_tree_removal_by_pk?: Maybe<Tasks_Tree_Removal>;
   /** delete data from the table: "usersMetadata" */
   delete_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
   /** delete single row from the table: "usersMetadata" */
@@ -3091,12 +3108,28 @@ export type Mutation_Root = {
   insert_projects_one?: Maybe<Projects>;
   /** insert data into the table: "tasks" */
   insert_tasks?: Maybe<Tasks_Mutation_Response>;
+  /** insert data into the table: "tasks_branch_removal" */
+  insert_tasks_branch_removal?: Maybe<Tasks_Branch_Removal_Mutation_Response>;
+  /** insert a single row into the table: "tasks_branch_removal" */
+  insert_tasks_branch_removal_one?: Maybe<Tasks_Branch_Removal>;
+  /** insert data into the table: "tasks_collection" */
+  insert_tasks_collection?: Maybe<Tasks_Collection_Mutation_Response>;
+  /** insert a single row into the table: "tasks_collection" */
+  insert_tasks_collection_one?: Maybe<Tasks_Collection>;
+  /** insert data into the table: "tasks_disposal" */
+  insert_tasks_disposal?: Maybe<Tasks_Disposal_Mutation_Response>;
+  /** insert a single row into the table: "tasks_disposal" */
+  insert_tasks_disposal_one?: Maybe<Tasks_Disposal>;
   /** insert a single row into the table: "tasks" */
   insert_tasks_one?: Maybe<Tasks>;
-  /** insert data into the table: "ticketing" */
-  insert_ticketing?: Maybe<Ticketing_Mutation_Response>;
-  /** insert a single row into the table: "ticketing" */
-  insert_ticketing_one?: Maybe<Ticketing>;
+  /** insert data into the table: "tasks_ticketing" */
+  insert_tasks_ticketing?: Maybe<Tasks_Ticketing_Mutation_Response>;
+  /** insert a single row into the table: "tasks_ticketing" */
+  insert_tasks_ticketing_one?: Maybe<Tasks_Ticketing>;
+  /** insert data into the table: "tasks_tree_removal" */
+  insert_tasks_tree_removal?: Maybe<Tasks_Tree_Removal_Mutation_Response>;
+  /** insert a single row into the table: "tasks_tree_removal" */
+  insert_tasks_tree_removal_one?: Maybe<Tasks_Tree_Removal>;
   /** insert data into the table: "usersMetadata" */
   insert_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
   /** insert a single row into the table: "usersMetadata" */
@@ -3179,16 +3212,40 @@ export type Mutation_Root = {
   update_projects_many?: Maybe<Array<Maybe<Projects_Mutation_Response>>>;
   /** update data of the table: "tasks" */
   update_tasks?: Maybe<Tasks_Mutation_Response>;
+  /** update data of the table: "tasks_branch_removal" */
+  update_tasks_branch_removal?: Maybe<Tasks_Branch_Removal_Mutation_Response>;
+  /** update single row of the table: "tasks_branch_removal" */
+  update_tasks_branch_removal_by_pk?: Maybe<Tasks_Branch_Removal>;
+  /** update multiples rows of table: "tasks_branch_removal" */
+  update_tasks_branch_removal_many?: Maybe<Array<Maybe<Tasks_Branch_Removal_Mutation_Response>>>;
   /** update single row of the table: "tasks" */
   update_tasks_by_pk?: Maybe<Tasks>;
+  /** update data of the table: "tasks_collection" */
+  update_tasks_collection?: Maybe<Tasks_Collection_Mutation_Response>;
+  /** update single row of the table: "tasks_collection" */
+  update_tasks_collection_by_pk?: Maybe<Tasks_Collection>;
+  /** update multiples rows of table: "tasks_collection" */
+  update_tasks_collection_many?: Maybe<Array<Maybe<Tasks_Collection_Mutation_Response>>>;
+  /** update data of the table: "tasks_disposal" */
+  update_tasks_disposal?: Maybe<Tasks_Disposal_Mutation_Response>;
+  /** update single row of the table: "tasks_disposal" */
+  update_tasks_disposal_by_pk?: Maybe<Tasks_Disposal>;
+  /** update multiples rows of table: "tasks_disposal" */
+  update_tasks_disposal_many?: Maybe<Array<Maybe<Tasks_Disposal_Mutation_Response>>>;
   /** update multiples rows of table: "tasks" */
   update_tasks_many?: Maybe<Array<Maybe<Tasks_Mutation_Response>>>;
-  /** update data of the table: "ticketing" */
-  update_ticketing?: Maybe<Ticketing_Mutation_Response>;
-  /** update single row of the table: "ticketing" */
-  update_ticketing_by_pk?: Maybe<Ticketing>;
-  /** update multiples rows of table: "ticketing" */
-  update_ticketing_many?: Maybe<Array<Maybe<Ticketing_Mutation_Response>>>;
+  /** update data of the table: "tasks_ticketing" */
+  update_tasks_ticketing?: Maybe<Tasks_Ticketing_Mutation_Response>;
+  /** update single row of the table: "tasks_ticketing" */
+  update_tasks_ticketing_by_pk?: Maybe<Tasks_Ticketing>;
+  /** update multiples rows of table: "tasks_ticketing" */
+  update_tasks_ticketing_many?: Maybe<Array<Maybe<Tasks_Ticketing_Mutation_Response>>>;
+  /** update data of the table: "tasks_tree_removal" */
+  update_tasks_tree_removal?: Maybe<Tasks_Tree_Removal_Mutation_Response>;
+  /** update single row of the table: "tasks_tree_removal" */
+  update_tasks_tree_removal_by_pk?: Maybe<Tasks_Tree_Removal>;
+  /** update multiples rows of table: "tasks_tree_removal" */
+  update_tasks_tree_removal_many?: Maybe<Array<Maybe<Tasks_Tree_Removal_Mutation_Response>>>;
   /** update data of the table: "usersMetadata" */
   update_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
   /** update single row of the table: "usersMetadata" */
@@ -3363,19 +3420,69 @@ export type Mutation_RootDelete_TasksArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_Tasks_Branch_RemovalArgs = {
+  where: Tasks_Branch_Removal_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Tasks_Branch_Removal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_Tasks_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_TicketingArgs = {
-  where: Ticketing_Bool_Exp;
+export type Mutation_RootDelete_Tasks_CollectionArgs = {
+  where: Tasks_Collection_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_Ticketing_By_PkArgs = {
+export type Mutation_RootDelete_Tasks_Collection_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+  project_id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Tasks_DisposalArgs = {
+  where: Tasks_Disposal_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Tasks_Disposal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+  project_id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Tasks_TicketingArgs = {
+  where: Tasks_Ticketing_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Tasks_Ticketing_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Tasks_Tree_RemovalArgs = {
+  where: Tasks_Tree_Removal_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Tasks_Tree_Removal_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -3582,6 +3689,48 @@ export type Mutation_RootInsert_TasksArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_Tasks_Branch_RemovalArgs = {
+  objects: Array<Tasks_Branch_Removal_Insert_Input>;
+  on_conflict?: InputMaybe<Tasks_Branch_Removal_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Tasks_Branch_Removal_OneArgs = {
+  object: Tasks_Branch_Removal_Insert_Input;
+  on_conflict?: InputMaybe<Tasks_Branch_Removal_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Tasks_CollectionArgs = {
+  objects: Array<Tasks_Collection_Insert_Input>;
+  on_conflict?: InputMaybe<Tasks_Collection_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Tasks_Collection_OneArgs = {
+  object: Tasks_Collection_Insert_Input;
+  on_conflict?: InputMaybe<Tasks_Collection_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Tasks_DisposalArgs = {
+  objects: Array<Tasks_Disposal_Insert_Input>;
+  on_conflict?: InputMaybe<Tasks_Disposal_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Tasks_Disposal_OneArgs = {
+  object: Tasks_Disposal_Insert_Input;
+  on_conflict?: InputMaybe<Tasks_Disposal_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_Tasks_OneArgs = {
   object: Tasks_Insert_Input;
   on_conflict?: InputMaybe<Tasks_On_Conflict>;
@@ -3589,16 +3738,30 @@ export type Mutation_RootInsert_Tasks_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_TicketingArgs = {
-  objects: Array<Ticketing_Insert_Input>;
-  on_conflict?: InputMaybe<Ticketing_On_Conflict>;
+export type Mutation_RootInsert_Tasks_TicketingArgs = {
+  objects: Array<Tasks_Ticketing_Insert_Input>;
+  on_conflict?: InputMaybe<Tasks_Ticketing_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_Ticketing_OneArgs = {
-  object: Ticketing_Insert_Input;
-  on_conflict?: InputMaybe<Ticketing_On_Conflict>;
+export type Mutation_RootInsert_Tasks_Ticketing_OneArgs = {
+  object: Tasks_Ticketing_Insert_Input;
+  on_conflict?: InputMaybe<Tasks_Ticketing_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Tasks_Tree_RemovalArgs = {
+  objects: Array<Tasks_Tree_Removal_Insert_Input>;
+  on_conflict?: InputMaybe<Tasks_Tree_Removal_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Tasks_Tree_Removal_OneArgs = {
+  object: Tasks_Tree_Removal_Insert_Input;
+  on_conflict?: InputMaybe<Tasks_Tree_Removal_On_Conflict>;
 };
 
 
@@ -3919,6 +4082,26 @@ export type Mutation_RootUpdate_TasksArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Tasks_Branch_RemovalArgs = {
+  _set?: InputMaybe<Tasks_Branch_Removal_Set_Input>;
+  where: Tasks_Branch_Removal_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Branch_Removal_By_PkArgs = {
+  _set?: InputMaybe<Tasks_Branch_Removal_Set_Input>;
+  pk_columns: Tasks_Branch_Removal_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Branch_Removal_ManyArgs = {
+  updates: Array<Tasks_Branch_Removal_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Tasks_By_PkArgs = {
   _append?: InputMaybe<Tasks_Append_Input>;
   _delete_at_path?: InputMaybe<Tasks_Delete_At_Path_Input>;
@@ -3931,38 +4114,88 @@ export type Mutation_RootUpdate_Tasks_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Tasks_CollectionArgs = {
+  _set?: InputMaybe<Tasks_Collection_Set_Input>;
+  where: Tasks_Collection_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Collection_By_PkArgs = {
+  _set?: InputMaybe<Tasks_Collection_Set_Input>;
+  pk_columns: Tasks_Collection_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Collection_ManyArgs = {
+  updates: Array<Tasks_Collection_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_DisposalArgs = {
+  _set?: InputMaybe<Tasks_Disposal_Set_Input>;
+  where: Tasks_Disposal_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Disposal_By_PkArgs = {
+  _set?: InputMaybe<Tasks_Disposal_Set_Input>;
+  pk_columns: Tasks_Disposal_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Disposal_ManyArgs = {
+  updates: Array<Tasks_Disposal_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Tasks_ManyArgs = {
   updates: Array<Tasks_Updates>;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_TicketingArgs = {
-  _append?: InputMaybe<Ticketing_Append_Input>;
-  _delete_at_path?: InputMaybe<Ticketing_Delete_At_Path_Input>;
-  _delete_elem?: InputMaybe<Ticketing_Delete_Elem_Input>;
-  _delete_key?: InputMaybe<Ticketing_Delete_Key_Input>;
-  _prepend?: InputMaybe<Ticketing_Prepend_Input>;
-  _set?: InputMaybe<Ticketing_Set_Input>;
-  where: Ticketing_Bool_Exp;
+export type Mutation_RootUpdate_Tasks_TicketingArgs = {
+  _set?: InputMaybe<Tasks_Ticketing_Set_Input>;
+  where: Tasks_Ticketing_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Ticketing_By_PkArgs = {
-  _append?: InputMaybe<Ticketing_Append_Input>;
-  _delete_at_path?: InputMaybe<Ticketing_Delete_At_Path_Input>;
-  _delete_elem?: InputMaybe<Ticketing_Delete_Elem_Input>;
-  _delete_key?: InputMaybe<Ticketing_Delete_Key_Input>;
-  _prepend?: InputMaybe<Ticketing_Prepend_Input>;
-  _set?: InputMaybe<Ticketing_Set_Input>;
-  pk_columns: Ticketing_Pk_Columns_Input;
+export type Mutation_RootUpdate_Tasks_Ticketing_By_PkArgs = {
+  _set?: InputMaybe<Tasks_Ticketing_Set_Input>;
+  pk_columns: Tasks_Ticketing_Pk_Columns_Input;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Ticketing_ManyArgs = {
-  updates: Array<Ticketing_Updates>;
+export type Mutation_RootUpdate_Tasks_Ticketing_ManyArgs = {
+  updates: Array<Tasks_Ticketing_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Tree_RemovalArgs = {
+  _set?: InputMaybe<Tasks_Tree_Removal_Set_Input>;
+  where: Tasks_Tree_Removal_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Tree_Removal_By_PkArgs = {
+  _set?: InputMaybe<Tasks_Tree_Removal_Set_Input>;
+  pk_columns: Tasks_Tree_Removal_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Tree_Removal_ManyArgs = {
+  updates: Array<Tasks_Tree_Removal_Updates>;
 };
 
 
@@ -4324,14 +4557,38 @@ export type Query_Root = {
   tasks: Array<Tasks>;
   /** fetch aggregated fields from the table: "tasks" */
   tasks_aggregate: Tasks_Aggregate;
+  /** fetch data from the table: "tasks_branch_removal" */
+  tasks_branch_removal: Array<Tasks_Branch_Removal>;
+  /** fetch aggregated fields from the table: "tasks_branch_removal" */
+  tasks_branch_removal_aggregate: Tasks_Branch_Removal_Aggregate;
+  /** fetch data from the table: "tasks_branch_removal" using primary key columns */
+  tasks_branch_removal_by_pk?: Maybe<Tasks_Branch_Removal>;
   /** fetch data from the table: "tasks" using primary key columns */
   tasks_by_pk?: Maybe<Tasks>;
-  /** fetch data from the table: "ticketing" */
-  ticketing: Array<Ticketing>;
-  /** fetch aggregated fields from the table: "ticketing" */
-  ticketing_aggregate: Ticketing_Aggregate;
-  /** fetch data from the table: "ticketing" using primary key columns */
-  ticketing_by_pk?: Maybe<Ticketing>;
+  /** fetch data from the table: "tasks_collection" */
+  tasks_collection: Array<Tasks_Collection>;
+  /** fetch aggregated fields from the table: "tasks_collection" */
+  tasks_collection_aggregate: Tasks_Collection_Aggregate;
+  /** fetch data from the table: "tasks_collection" using primary key columns */
+  tasks_collection_by_pk?: Maybe<Tasks_Collection>;
+  /** fetch data from the table: "tasks_disposal" */
+  tasks_disposal: Array<Tasks_Disposal>;
+  /** fetch aggregated fields from the table: "tasks_disposal" */
+  tasks_disposal_aggregate: Tasks_Disposal_Aggregate;
+  /** fetch data from the table: "tasks_disposal" using primary key columns */
+  tasks_disposal_by_pk?: Maybe<Tasks_Disposal>;
+  /** fetch data from the table: "tasks_ticketing" */
+  tasks_ticketing: Array<Tasks_Ticketing>;
+  /** fetch aggregated fields from the table: "tasks_ticketing" */
+  tasks_ticketing_aggregate: Tasks_Ticketing_Aggregate;
+  /** fetch data from the table: "tasks_ticketing" using primary key columns */
+  tasks_ticketing_by_pk?: Maybe<Tasks_Ticketing>;
+  /** fetch data from the table: "tasks_tree_removal" */
+  tasks_tree_removal: Array<Tasks_Tree_Removal>;
+  /** fetch aggregated fields from the table: "tasks_tree_removal" */
+  tasks_tree_removal_aggregate: Tasks_Tree_Removal_Aggregate;
+  /** fetch data from the table: "tasks_tree_removal" using primary key columns */
+  tasks_tree_removal_by_pk?: Maybe<Tasks_Tree_Removal>;
   /** fetch data from the table: "auth.users" using primary key columns */
   user?: Maybe<Users>;
   /** fetch data from the table: "auth.users" */
@@ -4641,30 +4898,124 @@ export type Query_RootTasks_AggregateArgs = {
 };
 
 
+export type Query_RootTasks_Branch_RemovalArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+};
+
+
+export type Query_RootTasks_Branch_Removal_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+};
+
+
+export type Query_RootTasks_Branch_Removal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
 export type Query_RootTasks_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
 
-export type Query_RootTicketingArgs = {
-  distinct_on?: InputMaybe<Array<Ticketing_Select_Column>>;
+export type Query_RootTasks_CollectionArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Collection_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Ticketing_Order_By>>;
-  where?: InputMaybe<Ticketing_Bool_Exp>;
+  order_by?: InputMaybe<Array<Tasks_Collection_Order_By>>;
+  where?: InputMaybe<Tasks_Collection_Bool_Exp>;
 };
 
 
-export type Query_RootTicketing_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Ticketing_Select_Column>>;
+export type Query_RootTasks_Collection_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Collection_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Ticketing_Order_By>>;
-  where?: InputMaybe<Ticketing_Bool_Exp>;
+  order_by?: InputMaybe<Array<Tasks_Collection_Order_By>>;
+  where?: InputMaybe<Tasks_Collection_Bool_Exp>;
 };
 
 
-export type Query_RootTicketing_By_PkArgs = {
+export type Query_RootTasks_Collection_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+  project_id: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootTasks_DisposalArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Disposal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Disposal_Order_By>>;
+  where?: InputMaybe<Tasks_Disposal_Bool_Exp>;
+};
+
+
+export type Query_RootTasks_Disposal_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Disposal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Disposal_Order_By>>;
+  where?: InputMaybe<Tasks_Disposal_Bool_Exp>;
+};
+
+
+export type Query_RootTasks_Disposal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+  project_id: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootTasks_TicketingArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Ticketing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Ticketing_Order_By>>;
+  where?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
+};
+
+
+export type Query_RootTasks_Ticketing_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Ticketing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Ticketing_Order_By>>;
+  where?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
+};
+
+
+export type Query_RootTasks_Ticketing_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootTasks_Tree_RemovalArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Tree_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Tree_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+};
+
+
+export type Query_RootTasks_Tree_Removal_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Tree_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Tree_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+};
+
+
+export type Query_RootTasks_Tree_Removal_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -4816,18 +5167,50 @@ export type Subscription_Root = {
   tasks: Array<Tasks>;
   /** fetch aggregated fields from the table: "tasks" */
   tasks_aggregate: Tasks_Aggregate;
+  /** fetch data from the table: "tasks_branch_removal" */
+  tasks_branch_removal: Array<Tasks_Branch_Removal>;
+  /** fetch aggregated fields from the table: "tasks_branch_removal" */
+  tasks_branch_removal_aggregate: Tasks_Branch_Removal_Aggregate;
+  /** fetch data from the table: "tasks_branch_removal" using primary key columns */
+  tasks_branch_removal_by_pk?: Maybe<Tasks_Branch_Removal>;
+  /** fetch data from the table in a streaming manner: "tasks_branch_removal" */
+  tasks_branch_removal_stream: Array<Tasks_Branch_Removal>;
   /** fetch data from the table: "tasks" using primary key columns */
   tasks_by_pk?: Maybe<Tasks>;
+  /** fetch data from the table: "tasks_collection" */
+  tasks_collection: Array<Tasks_Collection>;
+  /** fetch aggregated fields from the table: "tasks_collection" */
+  tasks_collection_aggregate: Tasks_Collection_Aggregate;
+  /** fetch data from the table: "tasks_collection" using primary key columns */
+  tasks_collection_by_pk?: Maybe<Tasks_Collection>;
+  /** fetch data from the table in a streaming manner: "tasks_collection" */
+  tasks_collection_stream: Array<Tasks_Collection>;
+  /** fetch data from the table: "tasks_disposal" */
+  tasks_disposal: Array<Tasks_Disposal>;
+  /** fetch aggregated fields from the table: "tasks_disposal" */
+  tasks_disposal_aggregate: Tasks_Disposal_Aggregate;
+  /** fetch data from the table: "tasks_disposal" using primary key columns */
+  tasks_disposal_by_pk?: Maybe<Tasks_Disposal>;
+  /** fetch data from the table in a streaming manner: "tasks_disposal" */
+  tasks_disposal_stream: Array<Tasks_Disposal>;
   /** fetch data from the table in a streaming manner: "tasks" */
   tasks_stream: Array<Tasks>;
-  /** fetch data from the table: "ticketing" */
-  ticketing: Array<Ticketing>;
-  /** fetch aggregated fields from the table: "ticketing" */
-  ticketing_aggregate: Ticketing_Aggregate;
-  /** fetch data from the table: "ticketing" using primary key columns */
-  ticketing_by_pk?: Maybe<Ticketing>;
-  /** fetch data from the table in a streaming manner: "ticketing" */
-  ticketing_stream: Array<Ticketing>;
+  /** fetch data from the table: "tasks_ticketing" */
+  tasks_ticketing: Array<Tasks_Ticketing>;
+  /** fetch aggregated fields from the table: "tasks_ticketing" */
+  tasks_ticketing_aggregate: Tasks_Ticketing_Aggregate;
+  /** fetch data from the table: "tasks_ticketing" using primary key columns */
+  tasks_ticketing_by_pk?: Maybe<Tasks_Ticketing>;
+  /** fetch data from the table in a streaming manner: "tasks_ticketing" */
+  tasks_ticketing_stream: Array<Tasks_Ticketing>;
+  /** fetch data from the table: "tasks_tree_removal" */
+  tasks_tree_removal: Array<Tasks_Tree_Removal>;
+  /** fetch aggregated fields from the table: "tasks_tree_removal" */
+  tasks_tree_removal_aggregate: Tasks_Tree_Removal_Aggregate;
+  /** fetch data from the table: "tasks_tree_removal" using primary key columns */
+  tasks_tree_removal_by_pk?: Maybe<Tasks_Tree_Removal>;
+  /** fetch data from the table in a streaming manner: "tasks_tree_removal" */
+  tasks_tree_removal_stream: Array<Tasks_Tree_Removal>;
   /** fetch data from the table: "auth.users" using primary key columns */
   user?: Maybe<Users>;
   /** fetch data from the table: "auth.users" */
@@ -5225,8 +5608,100 @@ export type Subscription_RootTasks_AggregateArgs = {
 };
 
 
+export type Subscription_RootTasks_Branch_RemovalArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Branch_Removal_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Branch_Removal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootTasks_Branch_Removal_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Tasks_Branch_Removal_Stream_Cursor_Input>>;
+  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+};
+
+
 export type Subscription_RootTasks_By_PkArgs = {
   id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootTasks_CollectionArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Collection_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Collection_Order_By>>;
+  where?: InputMaybe<Tasks_Collection_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Collection_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Collection_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Collection_Order_By>>;
+  where?: InputMaybe<Tasks_Collection_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Collection_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+  project_id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootTasks_Collection_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Tasks_Collection_Stream_Cursor_Input>>;
+  where?: InputMaybe<Tasks_Collection_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_DisposalArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Disposal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Disposal_Order_By>>;
+  where?: InputMaybe<Tasks_Disposal_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Disposal_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Disposal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Disposal_Order_By>>;
+  where?: InputMaybe<Tasks_Disposal_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Disposal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+  project_id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootTasks_Disposal_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Tasks_Disposal_Stream_Cursor_Input>>;
+  where?: InputMaybe<Tasks_Disposal_Bool_Exp>;
 };
 
 
@@ -5237,33 +5712,63 @@ export type Subscription_RootTasks_StreamArgs = {
 };
 
 
-export type Subscription_RootTicketingArgs = {
-  distinct_on?: InputMaybe<Array<Ticketing_Select_Column>>;
+export type Subscription_RootTasks_TicketingArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Ticketing_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Ticketing_Order_By>>;
-  where?: InputMaybe<Ticketing_Bool_Exp>;
+  order_by?: InputMaybe<Array<Tasks_Ticketing_Order_By>>;
+  where?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
 };
 
 
-export type Subscription_RootTicketing_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Ticketing_Select_Column>>;
+export type Subscription_RootTasks_Ticketing_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Ticketing_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Ticketing_Order_By>>;
-  where?: InputMaybe<Ticketing_Bool_Exp>;
+  order_by?: InputMaybe<Array<Tasks_Ticketing_Order_By>>;
+  where?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
 };
 
 
-export type Subscription_RootTicketing_By_PkArgs = {
+export type Subscription_RootTasks_Ticketing_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
 
-export type Subscription_RootTicketing_StreamArgs = {
+export type Subscription_RootTasks_Ticketing_StreamArgs = {
   batch_size: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<Ticketing_Stream_Cursor_Input>>;
-  where?: InputMaybe<Ticketing_Bool_Exp>;
+  cursor: Array<InputMaybe<Tasks_Ticketing_Stream_Cursor_Input>>;
+  where?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Tree_RemovalArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Tree_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Tree_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Tree_Removal_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Tree_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Tree_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Tree_Removal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootTasks_Tree_Removal_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Tasks_Tree_Removal_Stream_Cursor_Input>>;
+  where?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
 };
 
 
@@ -5466,6 +5971,455 @@ export type Tasks_Bool_Exp = {
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
+/** branch/stump removal */
+export type Tasks_Branch_Removal = {
+  __typename?: 'tasks_branch_removal';
+  comment: Scalars['String']['output'];
+  created_at: Scalars['timestamp']['output'];
+  id: Scalars['uuid']['output'];
+  latitude: Scalars['String']['output'];
+  longitude: Scalars['String']['output'];
+  project_id: Scalars['uuid']['output'];
+  updated_at: Scalars['timestamptz']['output'];
+};
+
+/** aggregated selection of "tasks_branch_removal" */
+export type Tasks_Branch_Removal_Aggregate = {
+  __typename?: 'tasks_branch_removal_aggregate';
+  aggregate?: Maybe<Tasks_Branch_Removal_Aggregate_Fields>;
+  nodes: Array<Tasks_Branch_Removal>;
+};
+
+/** aggregate fields of "tasks_branch_removal" */
+export type Tasks_Branch_Removal_Aggregate_Fields = {
+  __typename?: 'tasks_branch_removal_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Tasks_Branch_Removal_Max_Fields>;
+  min?: Maybe<Tasks_Branch_Removal_Min_Fields>;
+};
+
+
+/** aggregate fields of "tasks_branch_removal" */
+export type Tasks_Branch_Removal_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "tasks_branch_removal". All fields are combined with a logical 'AND'. */
+export type Tasks_Branch_Removal_Bool_Exp = {
+  _and?: InputMaybe<Array<Tasks_Branch_Removal_Bool_Exp>>;
+  _not?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+  _or?: InputMaybe<Array<Tasks_Branch_Removal_Bool_Exp>>;
+  comment?: InputMaybe<String_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  latitude?: InputMaybe<String_Comparison_Exp>;
+  longitude?: InputMaybe<String_Comparison_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "tasks_branch_removal" */
+export enum Tasks_Branch_Removal_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  BranchRemovalTasksPkey = 'branch_removal_tasks_pkey'
+}
+
+/** input type for inserting data into table "tasks_branch_removal" */
+export type Tasks_Branch_Removal_Insert_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamp']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** aggregate max on columns */
+export type Tasks_Branch_Removal_Max_Fields = {
+  __typename?: 'tasks_branch_removal_max_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamp']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** aggregate min on columns */
+export type Tasks_Branch_Removal_Min_Fields = {
+  __typename?: 'tasks_branch_removal_min_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamp']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** response of any mutation on the table "tasks_branch_removal" */
+export type Tasks_Branch_Removal_Mutation_Response = {
+  __typename?: 'tasks_branch_removal_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Tasks_Branch_Removal>;
+};
+
+/** on_conflict condition type for table "tasks_branch_removal" */
+export type Tasks_Branch_Removal_On_Conflict = {
+  constraint: Tasks_Branch_Removal_Constraint;
+  update_columns?: Array<Tasks_Branch_Removal_Update_Column>;
+  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "tasks_branch_removal". */
+export type Tasks_Branch_Removal_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: tasks_branch_removal */
+export type Tasks_Branch_Removal_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "tasks_branch_removal" */
+export enum Tasks_Branch_Removal_Select_Column {
+  /** column name */
+  Comment = 'comment',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "tasks_branch_removal" */
+export type Tasks_Branch_Removal_Set_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamp']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** Streaming cursor of the table "tasks_branch_removal" */
+export type Tasks_Branch_Removal_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Tasks_Branch_Removal_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Tasks_Branch_Removal_Stream_Cursor_Value_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamp']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** update columns of table "tasks_branch_removal" */
+export enum Tasks_Branch_Removal_Update_Column {
+  /** column name */
+  Comment = 'comment',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+export type Tasks_Branch_Removal_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Tasks_Branch_Removal_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Tasks_Branch_Removal_Bool_Exp;
+};
+
+/** columns and relationships of "tasks_collection" */
+export type Tasks_Collection = {
+  __typename?: 'tasks_collection';
+  capactiy: Scalars['String']['output'];
+  contractor: Scalars['String']['output'];
+  created_at: Scalars['timestamptz']['output'];
+  debris_type: Scalars['String']['output'];
+  disposal_site: Scalars['String']['output'];
+  id: Scalars['uuid']['output'];
+  latitude: Scalars['String']['output'];
+  longitude: Scalars['String']['output'];
+  project_id: Scalars['uuid']['output'];
+  truck_number: Scalars['String']['output'];
+  updated_at: Scalars['timestamptz']['output'];
+  weigh_points: Scalars['String']['output'];
+};
+
+/** aggregated selection of "tasks_collection" */
+export type Tasks_Collection_Aggregate = {
+  __typename?: 'tasks_collection_aggregate';
+  aggregate?: Maybe<Tasks_Collection_Aggregate_Fields>;
+  nodes: Array<Tasks_Collection>;
+};
+
+/** aggregate fields of "tasks_collection" */
+export type Tasks_Collection_Aggregate_Fields = {
+  __typename?: 'tasks_collection_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Tasks_Collection_Max_Fields>;
+  min?: Maybe<Tasks_Collection_Min_Fields>;
+};
+
+
+/** aggregate fields of "tasks_collection" */
+export type Tasks_Collection_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Tasks_Collection_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "tasks_collection". All fields are combined with a logical 'AND'. */
+export type Tasks_Collection_Bool_Exp = {
+  _and?: InputMaybe<Array<Tasks_Collection_Bool_Exp>>;
+  _not?: InputMaybe<Tasks_Collection_Bool_Exp>;
+  _or?: InputMaybe<Array<Tasks_Collection_Bool_Exp>>;
+  capactiy?: InputMaybe<String_Comparison_Exp>;
+  contractor?: InputMaybe<String_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  debris_type?: InputMaybe<String_Comparison_Exp>;
+  disposal_site?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  latitude?: InputMaybe<String_Comparison_Exp>;
+  longitude?: InputMaybe<String_Comparison_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  truck_number?: InputMaybe<String_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  weigh_points?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "tasks_collection" */
+export enum Tasks_Collection_Constraint {
+  /** unique or primary key constraint on columns "project_id", "id" */
+  TasksCollectionPkey = 'tasks_collection_pkey'
+}
+
+/** input type for inserting data into table "tasks_collection" */
+export type Tasks_Collection_Insert_Input = {
+  capactiy?: InputMaybe<Scalars['String']['input']>;
+  contractor?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  debris_type?: InputMaybe<Scalars['String']['input']>;
+  disposal_site?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  truck_number?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  weigh_points?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type Tasks_Collection_Max_Fields = {
+  __typename?: 'tasks_collection_max_fields';
+  capactiy?: Maybe<Scalars['String']['output']>;
+  contractor?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  debris_type?: Maybe<Scalars['String']['output']>;
+  disposal_site?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  truck_number?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  weigh_points?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type Tasks_Collection_Min_Fields = {
+  __typename?: 'tasks_collection_min_fields';
+  capactiy?: Maybe<Scalars['String']['output']>;
+  contractor?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  debris_type?: Maybe<Scalars['String']['output']>;
+  disposal_site?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  truck_number?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  weigh_points?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "tasks_collection" */
+export type Tasks_Collection_Mutation_Response = {
+  __typename?: 'tasks_collection_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Tasks_Collection>;
+};
+
+/** on_conflict condition type for table "tasks_collection" */
+export type Tasks_Collection_On_Conflict = {
+  constraint: Tasks_Collection_Constraint;
+  update_columns?: Array<Tasks_Collection_Update_Column>;
+  where?: InputMaybe<Tasks_Collection_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "tasks_collection". */
+export type Tasks_Collection_Order_By = {
+  capactiy?: InputMaybe<Order_By>;
+  contractor?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  debris_type?: InputMaybe<Order_By>;
+  disposal_site?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  truck_number?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  weigh_points?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: tasks_collection */
+export type Tasks_Collection_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+  project_id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "tasks_collection" */
+export enum Tasks_Collection_Select_Column {
+  /** column name */
+  Capactiy = 'capactiy',
+  /** column name */
+  Contractor = 'contractor',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DebrisType = 'debris_type',
+  /** column name */
+  DisposalSite = 'disposal_site',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  TruckNumber = 'truck_number',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  WeighPoints = 'weigh_points'
+}
+
+/** input type for updating data in table "tasks_collection" */
+export type Tasks_Collection_Set_Input = {
+  capactiy?: InputMaybe<Scalars['String']['input']>;
+  contractor?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  debris_type?: InputMaybe<Scalars['String']['input']>;
+  disposal_site?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  truck_number?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  weigh_points?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "tasks_collection" */
+export type Tasks_Collection_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Tasks_Collection_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Tasks_Collection_Stream_Cursor_Value_Input = {
+  capactiy?: InputMaybe<Scalars['String']['input']>;
+  contractor?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  debris_type?: InputMaybe<Scalars['String']['input']>;
+  disposal_site?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  truck_number?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  weigh_points?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "tasks_collection" */
+export enum Tasks_Collection_Update_Column {
+  /** column name */
+  Capactiy = 'capactiy',
+  /** column name */
+  Contractor = 'contractor',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DebrisType = 'debris_type',
+  /** column name */
+  DisposalSite = 'disposal_site',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  TruckNumber = 'truck_number',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  WeighPoints = 'weigh_points'
+}
+
+export type Tasks_Collection_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Tasks_Collection_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Tasks_Collection_Bool_Exp;
+};
+
 /** unique or primary key constraints on table "tasks" */
 export enum Tasks_Constraint {
   /** unique or primary key constraint on columns "id" */
@@ -5485,6 +6439,249 @@ export type Tasks_Delete_Elem_Input = {
 /** delete key/value pair or string element. key/value pairs are matched based on their key value */
 export type Tasks_Delete_Key_Input = {
   metadata?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** columns and relationships of "tasks_disposal" */
+export type Tasks_Disposal = {
+  __typename?: 'tasks_disposal';
+  capacity: Scalars['String']['output'];
+  contractor: Scalars['String']['output'];
+  created_at: Scalars['timestamptz']['output'];
+  disposal_site: Scalars['String']['output'];
+  id: Scalars['uuid']['output'];
+  latitude: Scalars['String']['output'];
+  load_call: Scalars['String']['output'];
+  longitude: Scalars['String']['output'];
+  project_id: Scalars['uuid']['output'];
+  truck_number: Scalars['String']['output'];
+  updated_at: Scalars['timestamptz']['output'];
+};
+
+/** aggregated selection of "tasks_disposal" */
+export type Tasks_Disposal_Aggregate = {
+  __typename?: 'tasks_disposal_aggregate';
+  aggregate?: Maybe<Tasks_Disposal_Aggregate_Fields>;
+  nodes: Array<Tasks_Disposal>;
+};
+
+/** aggregate fields of "tasks_disposal" */
+export type Tasks_Disposal_Aggregate_Fields = {
+  __typename?: 'tasks_disposal_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Tasks_Disposal_Max_Fields>;
+  min?: Maybe<Tasks_Disposal_Min_Fields>;
+};
+
+
+/** aggregate fields of "tasks_disposal" */
+export type Tasks_Disposal_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Tasks_Disposal_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "tasks_disposal". All fields are combined with a logical 'AND'. */
+export type Tasks_Disposal_Bool_Exp = {
+  _and?: InputMaybe<Array<Tasks_Disposal_Bool_Exp>>;
+  _not?: InputMaybe<Tasks_Disposal_Bool_Exp>;
+  _or?: InputMaybe<Array<Tasks_Disposal_Bool_Exp>>;
+  capacity?: InputMaybe<String_Comparison_Exp>;
+  contractor?: InputMaybe<String_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  disposal_site?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  latitude?: InputMaybe<String_Comparison_Exp>;
+  load_call?: InputMaybe<String_Comparison_Exp>;
+  longitude?: InputMaybe<String_Comparison_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  truck_number?: InputMaybe<String_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "tasks_disposal" */
+export enum Tasks_Disposal_Constraint {
+  /** unique or primary key constraint on columns "project_id", "id" */
+  TasksDisposalPkey = 'tasks_disposal_pkey'
+}
+
+/** input type for inserting data into table "tasks_disposal" */
+export type Tasks_Disposal_Insert_Input = {
+  capacity?: InputMaybe<Scalars['String']['input']>;
+  contractor?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  disposal_site?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  load_call?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  truck_number?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** aggregate max on columns */
+export type Tasks_Disposal_Max_Fields = {
+  __typename?: 'tasks_disposal_max_fields';
+  capacity?: Maybe<Scalars['String']['output']>;
+  contractor?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  disposal_site?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  load_call?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  truck_number?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** aggregate min on columns */
+export type Tasks_Disposal_Min_Fields = {
+  __typename?: 'tasks_disposal_min_fields';
+  capacity?: Maybe<Scalars['String']['output']>;
+  contractor?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  disposal_site?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  load_call?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  truck_number?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** response of any mutation on the table "tasks_disposal" */
+export type Tasks_Disposal_Mutation_Response = {
+  __typename?: 'tasks_disposal_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Tasks_Disposal>;
+};
+
+/** on_conflict condition type for table "tasks_disposal" */
+export type Tasks_Disposal_On_Conflict = {
+  constraint: Tasks_Disposal_Constraint;
+  update_columns?: Array<Tasks_Disposal_Update_Column>;
+  where?: InputMaybe<Tasks_Disposal_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "tasks_disposal". */
+export type Tasks_Disposal_Order_By = {
+  capacity?: InputMaybe<Order_By>;
+  contractor?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  disposal_site?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  load_call?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  truck_number?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: tasks_disposal */
+export type Tasks_Disposal_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+  project_id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "tasks_disposal" */
+export enum Tasks_Disposal_Select_Column {
+  /** column name */
+  Capacity = 'capacity',
+  /** column name */
+  Contractor = 'contractor',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DisposalSite = 'disposal_site',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  LoadCall = 'load_call',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  TruckNumber = 'truck_number',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "tasks_disposal" */
+export type Tasks_Disposal_Set_Input = {
+  capacity?: InputMaybe<Scalars['String']['input']>;
+  contractor?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  disposal_site?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  load_call?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  truck_number?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** Streaming cursor of the table "tasks_disposal" */
+export type Tasks_Disposal_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Tasks_Disposal_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Tasks_Disposal_Stream_Cursor_Value_Input = {
+  capacity?: InputMaybe<Scalars['String']['input']>;
+  contractor?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  disposal_site?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  load_call?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  truck_number?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** update columns of table "tasks_disposal" */
+export enum Tasks_Disposal_Update_Column {
+  /** column name */
+  Capacity = 'capacity',
+  /** column name */
+  Contractor = 'contractor',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DisposalSite = 'disposal_site',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  LoadCall = 'load_call',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  TruckNumber = 'truck_number',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+export type Tasks_Disposal_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Tasks_Disposal_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Tasks_Disposal_Bool_Exp;
 };
 
 /** input type for inserting data into table "tasks" */
@@ -5686,6 +6883,438 @@ export type Tasks_Stream_Cursor_Value_Input = {
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
+/** columns and relationships of "tasks_ticketing" */
+export type Tasks_Ticketing = {
+  __typename?: 'tasks_ticketing';
+  add_photos: Scalars['Boolean']['output'];
+  comment?: Maybe<Scalars['String']['output']>;
+  created_at: Scalars['timestamptz']['output'];
+  id: Scalars['uuid']['output'];
+  latitude: Scalars['String']['output'];
+  longitude: Scalars['String']['output'];
+  print_ticket: Scalars['Boolean']['output'];
+  project_id: Scalars['uuid']['output'];
+  title: Scalars['String']['output'];
+  updated_at: Scalars['timestamptz']['output'];
+};
+
+/** aggregated selection of "tasks_ticketing" */
+export type Tasks_Ticketing_Aggregate = {
+  __typename?: 'tasks_ticketing_aggregate';
+  aggregate?: Maybe<Tasks_Ticketing_Aggregate_Fields>;
+  nodes: Array<Tasks_Ticketing>;
+};
+
+/** aggregate fields of "tasks_ticketing" */
+export type Tasks_Ticketing_Aggregate_Fields = {
+  __typename?: 'tasks_ticketing_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Tasks_Ticketing_Max_Fields>;
+  min?: Maybe<Tasks_Ticketing_Min_Fields>;
+};
+
+
+/** aggregate fields of "tasks_ticketing" */
+export type Tasks_Ticketing_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Tasks_Ticketing_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "tasks_ticketing". All fields are combined with a logical 'AND'. */
+export type Tasks_Ticketing_Bool_Exp = {
+  _and?: InputMaybe<Array<Tasks_Ticketing_Bool_Exp>>;
+  _not?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
+  _or?: InputMaybe<Array<Tasks_Ticketing_Bool_Exp>>;
+  add_photos?: InputMaybe<Boolean_Comparison_Exp>;
+  comment?: InputMaybe<String_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  latitude?: InputMaybe<String_Comparison_Exp>;
+  longitude?: InputMaybe<String_Comparison_Exp>;
+  print_ticket?: InputMaybe<Boolean_Comparison_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  title?: InputMaybe<String_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "tasks_ticketing" */
+export enum Tasks_Ticketing_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  TaskAdminPkey = 'task_admin_pkey'
+}
+
+/** input type for inserting data into table "tasks_ticketing" */
+export type Tasks_Ticketing_Insert_Input = {
+  add_photos?: InputMaybe<Scalars['Boolean']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  print_ticket?: InputMaybe<Scalars['Boolean']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** aggregate max on columns */
+export type Tasks_Ticketing_Max_Fields = {
+  __typename?: 'tasks_ticketing_max_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** aggregate min on columns */
+export type Tasks_Ticketing_Min_Fields = {
+  __typename?: 'tasks_ticketing_min_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** response of any mutation on the table "tasks_ticketing" */
+export type Tasks_Ticketing_Mutation_Response = {
+  __typename?: 'tasks_ticketing_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Tasks_Ticketing>;
+};
+
+/** on_conflict condition type for table "tasks_ticketing" */
+export type Tasks_Ticketing_On_Conflict = {
+  constraint: Tasks_Ticketing_Constraint;
+  update_columns?: Array<Tasks_Ticketing_Update_Column>;
+  where?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "tasks_ticketing". */
+export type Tasks_Ticketing_Order_By = {
+  add_photos?: InputMaybe<Order_By>;
+  comment?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  print_ticket?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  title?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: tasks_ticketing */
+export type Tasks_Ticketing_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "tasks_ticketing" */
+export enum Tasks_Ticketing_Select_Column {
+  /** column name */
+  AddPhotos = 'add_photos',
+  /** column name */
+  Comment = 'comment',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  PrintTicket = 'print_ticket',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  Title = 'title',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "tasks_ticketing" */
+export type Tasks_Ticketing_Set_Input = {
+  add_photos?: InputMaybe<Scalars['Boolean']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  print_ticket?: InputMaybe<Scalars['Boolean']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** Streaming cursor of the table "tasks_ticketing" */
+export type Tasks_Ticketing_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Tasks_Ticketing_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Tasks_Ticketing_Stream_Cursor_Value_Input = {
+  add_photos?: InputMaybe<Scalars['Boolean']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  print_ticket?: InputMaybe<Scalars['Boolean']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** update columns of table "tasks_ticketing" */
+export enum Tasks_Ticketing_Update_Column {
+  /** column name */
+  AddPhotos = 'add_photos',
+  /** column name */
+  Comment = 'comment',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  PrintTicket = 'print_ticket',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  Title = 'title',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+export type Tasks_Ticketing_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Tasks_Ticketing_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Tasks_Ticketing_Bool_Exp;
+};
+
+/** columns and relationships of "tasks_tree_removal" */
+export type Tasks_Tree_Removal = {
+  __typename?: 'tasks_tree_removal';
+  comment?: Maybe<Scalars['String']['output']>;
+  created_at: Scalars['date']['output'];
+  id: Scalars['uuid']['output'];
+  latitude: Scalars['String']['output'];
+  longitude: Scalars['String']['output'];
+  project_id: Scalars['uuid']['output'];
+  ranges: Scalars['String']['output'];
+  updated_at: Scalars['date']['output'];
+};
+
+/** aggregated selection of "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Aggregate = {
+  __typename?: 'tasks_tree_removal_aggregate';
+  aggregate?: Maybe<Tasks_Tree_Removal_Aggregate_Fields>;
+  nodes: Array<Tasks_Tree_Removal>;
+};
+
+/** aggregate fields of "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Aggregate_Fields = {
+  __typename?: 'tasks_tree_removal_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Tasks_Tree_Removal_Max_Fields>;
+  min?: Maybe<Tasks_Tree_Removal_Min_Fields>;
+};
+
+
+/** aggregate fields of "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Tasks_Tree_Removal_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "tasks_tree_removal". All fields are combined with a logical 'AND'. */
+export type Tasks_Tree_Removal_Bool_Exp = {
+  _and?: InputMaybe<Array<Tasks_Tree_Removal_Bool_Exp>>;
+  _not?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+  _or?: InputMaybe<Array<Tasks_Tree_Removal_Bool_Exp>>;
+  comment?: InputMaybe<String_Comparison_Exp>;
+  created_at?: InputMaybe<Date_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  latitude?: InputMaybe<String_Comparison_Exp>;
+  longitude?: InputMaybe<String_Comparison_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  ranges?: InputMaybe<String_Comparison_Exp>;
+  updated_at?: InputMaybe<Date_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "tasks_tree_removal" */
+export enum Tasks_Tree_Removal_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  TreeRemovalTasksPkey = 'tree_removal_tasks_pkey'
+}
+
+/** input type for inserting data into table "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Insert_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['date']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  ranges?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['date']['input']>;
+};
+
+/** aggregate max on columns */
+export type Tasks_Tree_Removal_Max_Fields = {
+  __typename?: 'tasks_tree_removal_max_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['date']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  ranges?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['date']['output']>;
+};
+
+/** aggregate min on columns */
+export type Tasks_Tree_Removal_Min_Fields = {
+  __typename?: 'tasks_tree_removal_min_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['date']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  ranges?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['date']['output']>;
+};
+
+/** response of any mutation on the table "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Mutation_Response = {
+  __typename?: 'tasks_tree_removal_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Tasks_Tree_Removal>;
+};
+
+/** on_conflict condition type for table "tasks_tree_removal" */
+export type Tasks_Tree_Removal_On_Conflict = {
+  constraint: Tasks_Tree_Removal_Constraint;
+  update_columns?: Array<Tasks_Tree_Removal_Update_Column>;
+  where?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "tasks_tree_removal". */
+export type Tasks_Tree_Removal_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  ranges?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: tasks_tree_removal */
+export type Tasks_Tree_Removal_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "tasks_tree_removal" */
+export enum Tasks_Tree_Removal_Select_Column {
+  /** column name */
+  Comment = 'comment',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  Ranges = 'ranges',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Set_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['date']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  ranges?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['date']['input']>;
+};
+
+/** Streaming cursor of the table "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Tasks_Tree_Removal_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Tasks_Tree_Removal_Stream_Cursor_Value_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['date']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  ranges?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['date']['input']>;
+};
+
+/** update columns of table "tasks_tree_removal" */
+export enum Tasks_Tree_Removal_Update_Column {
+  /** column name */
+  Comment = 'comment',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  Ranges = 'ranges',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+export type Tasks_Tree_Removal_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Tasks_Tree_Removal_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Tasks_Tree_Removal_Bool_Exp;
+};
+
 /** update columns of table "tasks" */
 export enum Tasks_Update_Column {
   /** column name */
@@ -5729,189 +7358,17 @@ export type Tasks_Updates = {
   where: Tasks_Bool_Exp;
 };
 
-/** columns and relationships of "ticketing" */
-export type Ticketing = {
-  __typename?: 'ticketing';
-  id: Scalars['uuid']['output'];
-  metadata?: Maybe<Scalars['jsonb']['output']>;
-  project_id: Scalars['uuid']['output'];
-};
-
-
-/** columns and relationships of "ticketing" */
-export type TicketingMetadataArgs = {
-  path?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** aggregated selection of "ticketing" */
-export type Ticketing_Aggregate = {
-  __typename?: 'ticketing_aggregate';
-  aggregate?: Maybe<Ticketing_Aggregate_Fields>;
-  nodes: Array<Ticketing>;
-};
-
-/** aggregate fields of "ticketing" */
-export type Ticketing_Aggregate_Fields = {
-  __typename?: 'ticketing_aggregate_fields';
-  count: Scalars['Int']['output'];
-  max?: Maybe<Ticketing_Max_Fields>;
-  min?: Maybe<Ticketing_Min_Fields>;
-};
-
-
-/** aggregate fields of "ticketing" */
-export type Ticketing_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Ticketing_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** append existing jsonb value of filtered columns with new jsonb value */
-export type Ticketing_Append_Input = {
-  metadata?: InputMaybe<Scalars['jsonb']['input']>;
-};
-
-/** Boolean expression to filter rows from the table "ticketing". All fields are combined with a logical 'AND'. */
-export type Ticketing_Bool_Exp = {
-  _and?: InputMaybe<Array<Ticketing_Bool_Exp>>;
-  _not?: InputMaybe<Ticketing_Bool_Exp>;
-  _or?: InputMaybe<Array<Ticketing_Bool_Exp>>;
-  id?: InputMaybe<Uuid_Comparison_Exp>;
-  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
-  project_id?: InputMaybe<Uuid_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "ticketing" */
-export enum Ticketing_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  TaskAdminPkey = 'task_admin_pkey'
-}
-
-/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-export type Ticketing_Delete_At_Path_Input = {
-  metadata?: InputMaybe<Array<Scalars['String']['input']>>;
-};
-
-/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-export type Ticketing_Delete_Elem_Input = {
-  metadata?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-export type Ticketing_Delete_Key_Input = {
-  metadata?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** input type for inserting data into table "ticketing" */
-export type Ticketing_Insert_Input = {
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  metadata?: InputMaybe<Scalars['jsonb']['input']>;
-  project_id?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** aggregate max on columns */
-export type Ticketing_Max_Fields = {
-  __typename?: 'ticketing_max_fields';
-  id?: Maybe<Scalars['uuid']['output']>;
-  project_id?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** aggregate min on columns */
-export type Ticketing_Min_Fields = {
-  __typename?: 'ticketing_min_fields';
-  id?: Maybe<Scalars['uuid']['output']>;
-  project_id?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** response of any mutation on the table "ticketing" */
-export type Ticketing_Mutation_Response = {
-  __typename?: 'ticketing_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Ticketing>;
-};
-
-/** on_conflict condition type for table "ticketing" */
-export type Ticketing_On_Conflict = {
-  constraint: Ticketing_Constraint;
-  update_columns?: Array<Ticketing_Update_Column>;
-  where?: InputMaybe<Ticketing_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "ticketing". */
-export type Ticketing_Order_By = {
-  id?: InputMaybe<Order_By>;
-  metadata?: InputMaybe<Order_By>;
-  project_id?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: ticketing */
-export type Ticketing_Pk_Columns_Input = {
-  id: Scalars['uuid']['input'];
-};
-
-/** prepend existing jsonb value of filtered columns with new jsonb value */
-export type Ticketing_Prepend_Input = {
-  metadata?: InputMaybe<Scalars['jsonb']['input']>;
-};
-
-/** select columns of table "ticketing" */
-export enum Ticketing_Select_Column {
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Metadata = 'metadata',
-  /** column name */
-  ProjectId = 'project_id'
-}
-
-/** input type for updating data in table "ticketing" */
-export type Ticketing_Set_Input = {
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  metadata?: InputMaybe<Scalars['jsonb']['input']>;
-  project_id?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** Streaming cursor of the table "ticketing" */
-export type Ticketing_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Ticketing_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Ticketing_Stream_Cursor_Value_Input = {
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  metadata?: InputMaybe<Scalars['jsonb']['input']>;
-  project_id?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** update columns of table "ticketing" */
-export enum Ticketing_Update_Column {
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Metadata = 'metadata',
-  /** column name */
-  ProjectId = 'project_id'
-}
-
-export type Ticketing_Updates = {
-  /** append existing jsonb value of filtered columns with new jsonb value */
-  _append?: InputMaybe<Ticketing_Append_Input>;
-  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-  _delete_at_path?: InputMaybe<Ticketing_Delete_At_Path_Input>;
-  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-  _delete_elem?: InputMaybe<Ticketing_Delete_Elem_Input>;
-  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
-  _delete_key?: InputMaybe<Ticketing_Delete_Key_Input>;
-  /** prepend existing jsonb value of filtered columns with new jsonb value */
-  _prepend?: InputMaybe<Ticketing_Prepend_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Ticketing_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Ticketing_Bool_Exp;
+/** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
+export type Timestamp_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['timestamp']['input']>;
+  _gt?: InputMaybe<Scalars['timestamp']['input']>;
+  _gte?: InputMaybe<Scalars['timestamp']['input']>;
+  _in?: InputMaybe<Array<Scalars['timestamp']['input']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['timestamp']['input']>;
+  _lte?: InputMaybe<Scalars['timestamp']['input']>;
+  _neq?: InputMaybe<Scalars['timestamp']['input']>;
+  _nin?: InputMaybe<Array<Scalars['timestamp']['input']>>;
 };
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */

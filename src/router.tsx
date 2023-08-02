@@ -1,15 +1,11 @@
-import { onlineManager } from '@tanstack/react-query'
-import { RootRoute, Route, Router } from '@tanstack/router'
-import request from 'graphql-request'
+import { Outlet, RootRoute, Route, Router } from '@tanstack/router'
 import { AccountView } from './components/AccountView'
 import { Dashboard, Home } from './components/Dashboard'
 import { GeoLocationView } from './components/GeoLocationView'
 import { ProjectsView } from './components/Projects'
 import { QRCodeView } from './components/QRCodeView'
-import { TasksView } from './components/TasksView'
+import { TaskExample, TasksView } from './components/TasksView'
 import { Test } from './components/Test'
-import { allTasksDocument } from './graphql-operations'
-import { nhost, queryClient } from './helpers'
 
 const rootRoute = new RootRoute({
   component: () => <Dashboard />
@@ -50,31 +46,26 @@ const qrcodeRoute = new Route({
   errorComponent: () => 'Oh crap!'
 })
 
-const tasksRoute = (isRestoring: boolean) =>
-  new Route({
-    getParentRoute: () => rootRoute,
-    path: 'tasks',
-    component: () => <TasksView />,
-    errorComponent: () => 'Oh crap!',
-    loader: async () =>
-      queryClient.getQueryData(['allTasks']) ??
-      // do not load if we are offline or hydrating because it returns a promise that is pending until we go online again
-      // we just let the TasksView component handle it
-      (onlineManager.isOnline() && !isRestoring
-        ? queryClient.fetchQuery({
-            queryKey: ['allTasks'],
-            queryFn: () =>
-              request(
-                import.meta.env.VITE_HASURA_ENDPOINT,
-                allTasksDocument,
-                {},
-                {
-                  Authorization: `Bearer ${nhost.auth.getAccessToken()}`
-                }
-              )
-          })
-        : undefined)
-  })
+const tasksRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'tasks',
+  component: () => <Outlet />,
+  errorComponent: () => 'Oh crap!'
+})
+
+const tasksHome = new Route({
+  getParentRoute: () => tasksRoute,
+  path: '/',
+  component: () => <TasksView />,
+  errorComponent: () => 'Oh crap!'
+})
+
+const fieldMonitorTask = new Route({
+  getParentRoute: () => tasksRoute,
+  path: 'field-monitor',
+  component: () => <TaskExample />,
+  errorComponent: () => 'Oh crap!'
+})
 
 declare module '@tanstack/router' {
   interface Register {
@@ -95,7 +86,7 @@ const routeTree = (isRestoring: boolean) =>
     testRoute,
     projectsRoute,
     accountRoute,
-    tasksRoute(isRestoring),
+    tasksRoute.addChildren([tasksHome, fieldMonitorTask]),
     geolocationRoute,
     qrcodeRoute
   ])

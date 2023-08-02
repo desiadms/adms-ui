@@ -18,6 +18,7 @@ export function fullName(
 export function userRoles(user: RxDocument<UserDocType> | undefined) {
   return (
     user &&
+    // eslint-disable-next-line no-underscore-dangle
     Object.entries(user._data)
       .filter(([k, v]) => k.startsWith('role_') && v)
       .map(([k]) => {
