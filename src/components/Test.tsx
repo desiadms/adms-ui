@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { useRxCollection } from 'rxdb-hooks'
-import { nhost } from '../helpers'
-import { base64toFile, blobToBase64 } from '../utils'
+import { base64toFile, blobToBase64, nhost } from '../utils'
 import { Button, Input, useFilesForm } from './Forms'
 
 function saveMedia(files) {

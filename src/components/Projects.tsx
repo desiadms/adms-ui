@@ -1,19 +1,10 @@
 import { GlobeAmericasIcon } from '@heroicons/react/24/solid'
-import { projectsDocument } from '../graphql-operations'
-import { useHasuraQuery } from '../helpers'
-import { QueryStates } from './common'
 
 export function ProjectsView() {
-  const res = useHasuraQuery({
-    queryKey: ['projects'],
-    document: projectsDocument
-  })
-
-  const activeProject = res.data?.projects[0]
+  const activeProject = {}
 
   return (
     <div>
-      <QueryStates {...res} />
       {(activeProject && (
         <div>
           <h2 className='font-medium pb-2'> Active Projects </h2>

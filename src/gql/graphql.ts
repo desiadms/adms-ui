@@ -2748,6 +2748,128 @@ export type Files_Variance_Order_By = {
   size?: InputMaybe<Order_By>;
 };
 
+/** to record when an image was taken i.e. before, measure, after */
+export type Image_Taken = {
+  __typename?: 'image_taken';
+  taken_time: Scalars['String']['output'];
+};
+
+/** aggregated selection of "image_taken" */
+export type Image_Taken_Aggregate = {
+  __typename?: 'image_taken_aggregate';
+  aggregate?: Maybe<Image_Taken_Aggregate_Fields>;
+  nodes: Array<Image_Taken>;
+};
+
+/** aggregate fields of "image_taken" */
+export type Image_Taken_Aggregate_Fields = {
+  __typename?: 'image_taken_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Image_Taken_Max_Fields>;
+  min?: Maybe<Image_Taken_Min_Fields>;
+};
+
+
+/** aggregate fields of "image_taken" */
+export type Image_Taken_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Image_Taken_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "image_taken". All fields are combined with a logical 'AND'. */
+export type Image_Taken_Bool_Exp = {
+  _and?: InputMaybe<Array<Image_Taken_Bool_Exp>>;
+  _not?: InputMaybe<Image_Taken_Bool_Exp>;
+  _or?: InputMaybe<Array<Image_Taken_Bool_Exp>>;
+  taken_time?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "image_taken" */
+export enum Image_Taken_Constraint {
+  /** unique or primary key constraint on columns "taken_time" */
+  ImageTakenPkey = 'image_taken_pkey'
+}
+
+/** input type for inserting data into table "image_taken" */
+export type Image_Taken_Insert_Input = {
+  taken_time?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type Image_Taken_Max_Fields = {
+  __typename?: 'image_taken_max_fields';
+  taken_time?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type Image_Taken_Min_Fields = {
+  __typename?: 'image_taken_min_fields';
+  taken_time?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "image_taken" */
+export type Image_Taken_Mutation_Response = {
+  __typename?: 'image_taken_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Image_Taken>;
+};
+
+/** on_conflict condition type for table "image_taken" */
+export type Image_Taken_On_Conflict = {
+  constraint: Image_Taken_Constraint;
+  update_columns?: Array<Image_Taken_Update_Column>;
+  where?: InputMaybe<Image_Taken_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "image_taken". */
+export type Image_Taken_Order_By = {
+  taken_time?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: image_taken */
+export type Image_Taken_Pk_Columns_Input = {
+  taken_time: Scalars['String']['input'];
+};
+
+/** select columns of table "image_taken" */
+export enum Image_Taken_Select_Column {
+  /** column name */
+  TakenTime = 'taken_time'
+}
+
+/** input type for updating data in table "image_taken" */
+export type Image_Taken_Set_Input = {
+  taken_time?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "image_taken" */
+export type Image_Taken_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Image_Taken_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Image_Taken_Stream_Cursor_Value_Input = {
+  taken_time?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "image_taken" */
+export enum Image_Taken_Update_Column {
+  /** column name */
+  TakenTime = 'taken_time'
+}
+
+export type Image_Taken_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Image_Taken_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Image_Taken_Bool_Exp;
+};
+
 /** columns and relationships of "images" */
 export type Images = {
   __typename?: 'images';
@@ -3018,6 +3140,10 @@ export type Mutation_Root = {
   deleteUser?: Maybe<Users>;
   /** delete data from the table: "auth.users" */
   deleteUsers?: Maybe<Users_Mutation_Response>;
+  /** delete data from the table: "image_taken" */
+  delete_image_taken?: Maybe<Image_Taken_Mutation_Response>;
+  /** delete single row from the table: "image_taken" */
+  delete_image_taken_by_pk?: Maybe<Image_Taken>;
   /** delete data from the table: "images" */
   delete_images?: Maybe<Images_Mutation_Response>;
   /** delete single row from the table: "images" */
@@ -3050,6 +3176,10 @@ export type Mutation_Root = {
   delete_tasks_tree_removal?: Maybe<Tasks_Tree_Removal_Mutation_Response>;
   /** delete single row from the table: "tasks_tree_removal" */
   delete_tasks_tree_removal_by_pk?: Maybe<Tasks_Tree_Removal>;
+  /** delete data from the table: "ticketing_names" */
+  delete_ticketing_names?: Maybe<Ticketing_Names_Mutation_Response>;
+  /** delete single row from the table: "ticketing_names" */
+  delete_ticketing_names_by_pk?: Maybe<Ticketing_Names>;
   /** delete data from the table: "usersMetadata" */
   delete_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
   /** delete single row from the table: "usersMetadata" */
@@ -3098,6 +3228,10 @@ export type Mutation_Root = {
   insertUser?: Maybe<Users>;
   /** insert data into the table: "auth.users" */
   insertUsers?: Maybe<Users_Mutation_Response>;
+  /** insert data into the table: "image_taken" */
+  insert_image_taken?: Maybe<Image_Taken_Mutation_Response>;
+  /** insert a single row into the table: "image_taken" */
+  insert_image_taken_one?: Maybe<Image_Taken>;
   /** insert data into the table: "images" */
   insert_images?: Maybe<Images_Mutation_Response>;
   /** insert a single row into the table: "images" */
@@ -3130,6 +3264,10 @@ export type Mutation_Root = {
   insert_tasks_tree_removal?: Maybe<Tasks_Tree_Removal_Mutation_Response>;
   /** insert a single row into the table: "tasks_tree_removal" */
   insert_tasks_tree_removal_one?: Maybe<Tasks_Tree_Removal>;
+  /** insert data into the table: "ticketing_names" */
+  insert_ticketing_names?: Maybe<Ticketing_Names_Mutation_Response>;
+  /** insert a single row into the table: "ticketing_names" */
+  insert_ticketing_names_one?: Maybe<Ticketing_Names>;
   /** insert data into the table: "usersMetadata" */
   insert_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
   /** insert a single row into the table: "usersMetadata" */
@@ -3198,6 +3336,12 @@ export type Mutation_Root = {
   update_buckets_many?: Maybe<Array<Maybe<Buckets_Mutation_Response>>>;
   /** update multiples rows of table: "storage.files" */
   update_files_many?: Maybe<Array<Maybe<Files_Mutation_Response>>>;
+  /** update data of the table: "image_taken" */
+  update_image_taken?: Maybe<Image_Taken_Mutation_Response>;
+  /** update single row of the table: "image_taken" */
+  update_image_taken_by_pk?: Maybe<Image_Taken>;
+  /** update multiples rows of table: "image_taken" */
+  update_image_taken_many?: Maybe<Array<Maybe<Image_Taken_Mutation_Response>>>;
   /** update data of the table: "images" */
   update_images?: Maybe<Images_Mutation_Response>;
   /** update single row of the table: "images" */
@@ -3246,6 +3390,12 @@ export type Mutation_Root = {
   update_tasks_tree_removal_by_pk?: Maybe<Tasks_Tree_Removal>;
   /** update multiples rows of table: "tasks_tree_removal" */
   update_tasks_tree_removal_many?: Maybe<Array<Maybe<Tasks_Tree_Removal_Mutation_Response>>>;
+  /** update data of the table: "ticketing_names" */
+  update_ticketing_names?: Maybe<Ticketing_Names_Mutation_Response>;
+  /** update single row of the table: "ticketing_names" */
+  update_ticketing_names_by_pk?: Maybe<Ticketing_Names>;
+  /** update multiples rows of table: "ticketing_names" */
+  update_ticketing_names_many?: Maybe<Array<Maybe<Ticketing_Names_Mutation_Response>>>;
   /** update data of the table: "usersMetadata" */
   update_usersMetadata?: Maybe<UsersMetadata_Mutation_Response>;
   /** update single row of the table: "usersMetadata" */
@@ -3390,6 +3540,18 @@ export type Mutation_RootDeleteUsersArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_Image_TakenArgs = {
+  where: Image_Taken_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Image_Taken_By_PkArgs = {
+  taken_time: Scalars['String']['input'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_ImagesArgs = {
   where: Images_Bool_Exp;
 };
@@ -3446,7 +3608,6 @@ export type Mutation_RootDelete_Tasks_CollectionArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Tasks_Collection_By_PkArgs = {
   id: Scalars['uuid']['input'];
-  project_id: Scalars['uuid']['input'];
 };
 
 
@@ -3459,7 +3620,6 @@ export type Mutation_RootDelete_Tasks_DisposalArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Tasks_Disposal_By_PkArgs = {
   id: Scalars['uuid']['input'];
-  project_id: Scalars['uuid']['input'];
 };
 
 
@@ -3483,6 +3643,18 @@ export type Mutation_RootDelete_Tasks_Tree_RemovalArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Tasks_Tree_Removal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Ticketing_NamesArgs = {
+  where: Ticketing_Names_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Ticketing_Names_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -3654,6 +3826,20 @@ export type Mutation_RootInsertUsersArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_Image_TakenArgs = {
+  objects: Array<Image_Taken_Insert_Input>;
+  on_conflict?: InputMaybe<Image_Taken_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Image_Taken_OneArgs = {
+  object: Image_Taken_Insert_Input;
+  on_conflict?: InputMaybe<Image_Taken_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_ImagesArgs = {
   objects: Array<Images_Insert_Input>;
   on_conflict?: InputMaybe<Images_On_Conflict>;
@@ -3762,6 +3948,20 @@ export type Mutation_RootInsert_Tasks_Tree_RemovalArgs = {
 export type Mutation_RootInsert_Tasks_Tree_Removal_OneArgs = {
   object: Tasks_Tree_Removal_Insert_Input;
   on_conflict?: InputMaybe<Tasks_Tree_Removal_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Ticketing_NamesArgs = {
+  objects: Array<Ticketing_Names_Insert_Input>;
+  on_conflict?: InputMaybe<Ticketing_Names_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Ticketing_Names_OneArgs = {
+  object: Ticketing_Names_Insert_Input;
+  on_conflict?: InputMaybe<Ticketing_Names_On_Conflict>;
 };
 
 
@@ -4030,6 +4230,26 @@ export type Mutation_RootUpdate_Files_ManyArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Image_TakenArgs = {
+  _set?: InputMaybe<Image_Taken_Set_Input>;
+  where: Image_Taken_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Image_Taken_By_PkArgs = {
+  _set?: InputMaybe<Image_Taken_Set_Input>;
+  pk_columns: Image_Taken_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Image_Taken_ManyArgs = {
+  updates: Array<Image_Taken_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_ImagesArgs = {
   _set?: InputMaybe<Images_Set_Input>;
   where: Images_Bool_Exp;
@@ -4200,6 +4420,26 @@ export type Mutation_RootUpdate_Tasks_Tree_Removal_ManyArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Ticketing_NamesArgs = {
+  _set?: InputMaybe<Ticketing_Names_Set_Input>;
+  where: Ticketing_Names_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Ticketing_Names_By_PkArgs = {
+  _set?: InputMaybe<Ticketing_Names_Set_Input>;
+  pk_columns: Ticketing_Names_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Ticketing_Names_ManyArgs = {
+  updates: Array<Ticketing_Names_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_UsersMetadataArgs = {
   _set?: InputMaybe<UsersMetadata_Set_Input>;
   where: UsersMetadata_Bool_Exp;
@@ -4245,6 +4485,7 @@ export type Projects = {
   __typename?: 'projects';
   comment?: Maybe<Scalars['String']['output']>;
   contractor?: Maybe<Scalars['String']['output']>;
+  date_created: Scalars['timestamptz']['output'];
   id: Scalars['uuid']['output'];
   location?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -4306,6 +4547,7 @@ export type Projects_Bool_Exp = {
   _or?: InputMaybe<Array<Projects_Bool_Exp>>;
   comment?: InputMaybe<String_Comparison_Exp>;
   contractor?: InputMaybe<String_Comparison_Exp>;
+  date_created?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   location?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
@@ -4326,6 +4568,7 @@ export enum Projects_Constraint {
 export type Projects_Insert_Input = {
   comment?: InputMaybe<Scalars['String']['input']>;
   contractor?: InputMaybe<Scalars['String']['input']>;
+  date_created?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -4340,6 +4583,7 @@ export type Projects_Max_Fields = {
   __typename?: 'projects_max_fields';
   comment?: Maybe<Scalars['String']['output']>;
   contractor?: Maybe<Scalars['String']['output']>;
+  date_created?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   location?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
@@ -4352,6 +4596,7 @@ export type Projects_Min_Fields = {
   __typename?: 'projects_min_fields';
   comment?: Maybe<Scalars['String']['output']>;
   contractor?: Maybe<Scalars['String']['output']>;
+  date_created?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   location?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
@@ -4386,6 +4631,7 @@ export type Projects_On_Conflict = {
 export type Projects_Order_By = {
   comment?: InputMaybe<Order_By>;
   contractor?: InputMaybe<Order_By>;
+  date_created?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   location?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
@@ -4407,6 +4653,8 @@ export enum Projects_Select_Column {
   /** column name */
   Contractor = 'contractor',
   /** column name */
+  DateCreated = 'date_created',
+  /** column name */
   Id = 'id',
   /** column name */
   Location = 'location',
@@ -4424,6 +4672,7 @@ export enum Projects_Select_Column {
 export type Projects_Set_Input = {
   comment?: InputMaybe<Scalars['String']['input']>;
   contractor?: InputMaybe<Scalars['String']['input']>;
+  date_created?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -4444,6 +4693,7 @@ export type Projects_Stream_Cursor_Input = {
 export type Projects_Stream_Cursor_Value_Input = {
   comment?: InputMaybe<Scalars['String']['input']>;
   contractor?: InputMaybe<Scalars['String']['input']>;
+  date_created?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -4458,6 +4708,8 @@ export enum Projects_Update_Column {
   Comment = 'comment',
   /** column name */
   Contractor = 'contractor',
+  /** column name */
+  DateCreated = 'date_created',
   /** column name */
   Id = 'id',
   /** column name */
@@ -4541,6 +4793,12 @@ export type Query_Root = {
   files: Array<Files>;
   /** fetch aggregated fields from the table: "storage.files" */
   filesAggregate: Files_Aggregate;
+  /** fetch data from the table: "image_taken" */
+  image_taken: Array<Image_Taken>;
+  /** fetch aggregated fields from the table: "image_taken" */
+  image_taken_aggregate: Image_Taken_Aggregate;
+  /** fetch data from the table: "image_taken" using primary key columns */
+  image_taken_by_pk?: Maybe<Image_Taken>;
   /** fetch data from the table: "images" */
   images: Array<Images>;
   /** fetch aggregated fields from the table: "images" */
@@ -4589,6 +4847,12 @@ export type Query_Root = {
   tasks_tree_removal_aggregate: Tasks_Tree_Removal_Aggregate;
   /** fetch data from the table: "tasks_tree_removal" using primary key columns */
   tasks_tree_removal_by_pk?: Maybe<Tasks_Tree_Removal>;
+  /** fetch data from the table: "ticketing_names" */
+  ticketing_names: Array<Ticketing_Names>;
+  /** fetch aggregated fields from the table: "ticketing_names" */
+  ticketing_names_aggregate: Ticketing_Names_Aggregate;
+  /** fetch data from the table: "ticketing_names" using primary key columns */
+  ticketing_names_by_pk?: Maybe<Ticketing_Names>;
   /** fetch data from the table: "auth.users" using primary key columns */
   user?: Maybe<Users>;
   /** fetch data from the table: "auth.users" */
@@ -4834,6 +5098,29 @@ export type Query_RootFilesAggregateArgs = {
 };
 
 
+export type Query_RootImage_TakenArgs = {
+  distinct_on?: InputMaybe<Array<Image_Taken_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Image_Taken_Order_By>>;
+  where?: InputMaybe<Image_Taken_Bool_Exp>;
+};
+
+
+export type Query_RootImage_Taken_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Image_Taken_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Image_Taken_Order_By>>;
+  where?: InputMaybe<Image_Taken_Bool_Exp>;
+};
+
+
+export type Query_RootImage_Taken_By_PkArgs = {
+  taken_time: Scalars['String']['input'];
+};
+
+
 export type Query_RootImagesArgs = {
   distinct_on?: InputMaybe<Array<Images_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -4946,7 +5233,6 @@ export type Query_RootTasks_Collection_AggregateArgs = {
 
 export type Query_RootTasks_Collection_By_PkArgs = {
   id: Scalars['uuid']['input'];
-  project_id: Scalars['uuid']['input'];
 };
 
 
@@ -4970,7 +5256,6 @@ export type Query_RootTasks_Disposal_AggregateArgs = {
 
 export type Query_RootTasks_Disposal_By_PkArgs = {
   id: Scalars['uuid']['input'];
-  project_id: Scalars['uuid']['input'];
 };
 
 
@@ -5016,6 +5301,29 @@ export type Query_RootTasks_Tree_Removal_AggregateArgs = {
 
 
 export type Query_RootTasks_Tree_Removal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootTicketing_NamesArgs = {
+  distinct_on?: InputMaybe<Array<Ticketing_Names_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Ticketing_Names_Order_By>>;
+  where?: InputMaybe<Ticketing_Names_Bool_Exp>;
+};
+
+
+export type Query_RootTicketing_Names_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Ticketing_Names_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Ticketing_Names_Order_By>>;
+  where?: InputMaybe<Ticketing_Names_Bool_Exp>;
+};
+
+
+export type Query_RootTicketing_Names_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -5147,6 +5455,14 @@ export type Subscription_Root = {
   filesAggregate: Files_Aggregate;
   /** fetch data from the table in a streaming manner: "storage.files" */
   files_stream: Array<Files>;
+  /** fetch data from the table: "image_taken" */
+  image_taken: Array<Image_Taken>;
+  /** fetch aggregated fields from the table: "image_taken" */
+  image_taken_aggregate: Image_Taken_Aggregate;
+  /** fetch data from the table: "image_taken" using primary key columns */
+  image_taken_by_pk?: Maybe<Image_Taken>;
+  /** fetch data from the table in a streaming manner: "image_taken" */
+  image_taken_stream: Array<Image_Taken>;
   /** fetch data from the table: "images" */
   images: Array<Images>;
   /** fetch aggregated fields from the table: "images" */
@@ -5211,6 +5527,14 @@ export type Subscription_Root = {
   tasks_tree_removal_by_pk?: Maybe<Tasks_Tree_Removal>;
   /** fetch data from the table in a streaming manner: "tasks_tree_removal" */
   tasks_tree_removal_stream: Array<Tasks_Tree_Removal>;
+  /** fetch data from the table: "ticketing_names" */
+  ticketing_names: Array<Ticketing_Names>;
+  /** fetch aggregated fields from the table: "ticketing_names" */
+  ticketing_names_aggregate: Ticketing_Names_Aggregate;
+  /** fetch data from the table: "ticketing_names" using primary key columns */
+  ticketing_names_by_pk?: Maybe<Ticketing_Names>;
+  /** fetch data from the table in a streaming manner: "ticketing_names" */
+  ticketing_names_stream: Array<Ticketing_Names>;
   /** fetch data from the table: "auth.users" using primary key columns */
   user?: Maybe<Users>;
   /** fetch data from the table: "auth.users" */
@@ -5530,6 +5854,36 @@ export type Subscription_RootFiles_StreamArgs = {
 };
 
 
+export type Subscription_RootImage_TakenArgs = {
+  distinct_on?: InputMaybe<Array<Image_Taken_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Image_Taken_Order_By>>;
+  where?: InputMaybe<Image_Taken_Bool_Exp>;
+};
+
+
+export type Subscription_RootImage_Taken_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Image_Taken_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Image_Taken_Order_By>>;
+  where?: InputMaybe<Image_Taken_Bool_Exp>;
+};
+
+
+export type Subscription_RootImage_Taken_By_PkArgs = {
+  taken_time: Scalars['String']['input'];
+};
+
+
+export type Subscription_RootImage_Taken_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Image_Taken_Stream_Cursor_Input>>;
+  where?: InputMaybe<Image_Taken_Bool_Exp>;
+};
+
+
 export type Subscription_RootImagesArgs = {
   distinct_on?: InputMaybe<Array<Images_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -5663,7 +6017,6 @@ export type Subscription_RootTasks_Collection_AggregateArgs = {
 
 export type Subscription_RootTasks_Collection_By_PkArgs = {
   id: Scalars['uuid']['input'];
-  project_id: Scalars['uuid']['input'];
 };
 
 
@@ -5694,7 +6047,6 @@ export type Subscription_RootTasks_Disposal_AggregateArgs = {
 
 export type Subscription_RootTasks_Disposal_By_PkArgs = {
   id: Scalars['uuid']['input'];
-  project_id: Scalars['uuid']['input'];
 };
 
 
@@ -5769,6 +6121,36 @@ export type Subscription_RootTasks_Tree_Removal_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Tasks_Tree_Removal_Stream_Cursor_Input>>;
   where?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+};
+
+
+export type Subscription_RootTicketing_NamesArgs = {
+  distinct_on?: InputMaybe<Array<Ticketing_Names_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Ticketing_Names_Order_By>>;
+  where?: InputMaybe<Ticketing_Names_Bool_Exp>;
+};
+
+
+export type Subscription_RootTicketing_Names_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Ticketing_Names_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Ticketing_Names_Order_By>>;
+  where?: InputMaybe<Ticketing_Names_Bool_Exp>;
+};
+
+
+export type Subscription_RootTicketing_Names_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootTicketing_Names_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Ticketing_Names_Stream_Cursor_Input>>;
+  where?: InputMaybe<Ticketing_Names_Bool_Exp>;
 };
 
 
@@ -6225,7 +6607,7 @@ export type Tasks_Collection_Bool_Exp = {
 
 /** unique or primary key constraints on table "tasks_collection" */
 export enum Tasks_Collection_Constraint {
-  /** unique or primary key constraint on columns "project_id", "id" */
+  /** unique or primary key constraint on columns "id" */
   TasksCollectionPkey = 'tasks_collection_pkey'
 }
 
@@ -6314,7 +6696,6 @@ export type Tasks_Collection_Order_By = {
 /** primary key columns input for table: tasks_collection */
 export type Tasks_Collection_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
-  project_id: Scalars['uuid']['input'];
 };
 
 /** select columns of table "tasks_collection" */
@@ -6453,6 +6834,7 @@ export type Tasks_Disposal = {
   load_call: Scalars['String']['output'];
   longitude: Scalars['String']['output'];
   project_id: Scalars['uuid']['output'];
+  task_collection_id: Scalars['uuid']['output'];
   truck_number: Scalars['String']['output'];
   updated_at: Scalars['timestamptz']['output'];
 };
@@ -6493,14 +6875,17 @@ export type Tasks_Disposal_Bool_Exp = {
   load_call?: InputMaybe<String_Comparison_Exp>;
   longitude?: InputMaybe<String_Comparison_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  task_collection_id?: InputMaybe<Uuid_Comparison_Exp>;
   truck_number?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "tasks_disposal" */
 export enum Tasks_Disposal_Constraint {
-  /** unique or primary key constraint on columns "project_id", "id" */
-  TasksDisposalPkey = 'tasks_disposal_pkey'
+  /** unique or primary key constraint on columns "id" */
+  TasksDisposalPkey = 'tasks_disposal_pkey',
+  /** unique or primary key constraint on columns "task_collection_id" */
+  TasksDisposalTaskCollectionIdKey = 'tasks_disposal_task_collection_id_key'
 }
 
 /** input type for inserting data into table "tasks_disposal" */
@@ -6514,6 +6899,7 @@ export type Tasks_Disposal_Insert_Input = {
   load_call?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
+  task_collection_id?: InputMaybe<Scalars['uuid']['input']>;
   truck_number?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
@@ -6530,6 +6916,7 @@ export type Tasks_Disposal_Max_Fields = {
   load_call?: Maybe<Scalars['String']['output']>;
   longitude?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
+  task_collection_id?: Maybe<Scalars['uuid']['output']>;
   truck_number?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
@@ -6546,6 +6933,7 @@ export type Tasks_Disposal_Min_Fields = {
   load_call?: Maybe<Scalars['String']['output']>;
   longitude?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
+  task_collection_id?: Maybe<Scalars['uuid']['output']>;
   truck_number?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
@@ -6577,6 +6965,7 @@ export type Tasks_Disposal_Order_By = {
   load_call?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
+  task_collection_id?: InputMaybe<Order_By>;
   truck_number?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
@@ -6584,7 +6973,6 @@ export type Tasks_Disposal_Order_By = {
 /** primary key columns input for table: tasks_disposal */
 export type Tasks_Disposal_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
-  project_id: Scalars['uuid']['input'];
 };
 
 /** select columns of table "tasks_disposal" */
@@ -6608,6 +6996,8 @@ export enum Tasks_Disposal_Select_Column {
   /** column name */
   ProjectId = 'project_id',
   /** column name */
+  TaskCollectionId = 'task_collection_id',
+  /** column name */
   TruckNumber = 'truck_number',
   /** column name */
   UpdatedAt = 'updated_at'
@@ -6624,6 +7014,7 @@ export type Tasks_Disposal_Set_Input = {
   load_call?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
+  task_collection_id?: InputMaybe<Scalars['uuid']['input']>;
   truck_number?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
@@ -6647,6 +7038,7 @@ export type Tasks_Disposal_Stream_Cursor_Value_Input = {
   load_call?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
+  task_collection_id?: InputMaybe<Scalars['uuid']['input']>;
   truck_number?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
@@ -6671,6 +7063,8 @@ export enum Tasks_Disposal_Update_Column {
   Longitude = 'longitude',
   /** column name */
   ProjectId = 'project_id',
+  /** column name */
+  TaskCollectionId = 'task_collection_id',
   /** column name */
   TruckNumber = 'truck_number',
   /** column name */
@@ -7356,6 +7750,152 @@ export type Tasks_Updates = {
   _set?: InputMaybe<Tasks_Set_Input>;
   /** filter the rows which have to be updated */
   where: Tasks_Bool_Exp;
+};
+
+/** this table is for the backend to be populated so the UI knows about the names of the ticketing tasks when they're submitted */
+export type Ticketing_Names = {
+  __typename?: 'ticketing_names';
+  id: Scalars['uuid']['output'];
+  name: Scalars['String']['output'];
+  project_id: Scalars['uuid']['output'];
+};
+
+/** aggregated selection of "ticketing_names" */
+export type Ticketing_Names_Aggregate = {
+  __typename?: 'ticketing_names_aggregate';
+  aggregate?: Maybe<Ticketing_Names_Aggregate_Fields>;
+  nodes: Array<Ticketing_Names>;
+};
+
+/** aggregate fields of "ticketing_names" */
+export type Ticketing_Names_Aggregate_Fields = {
+  __typename?: 'ticketing_names_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Ticketing_Names_Max_Fields>;
+  min?: Maybe<Ticketing_Names_Min_Fields>;
+};
+
+
+/** aggregate fields of "ticketing_names" */
+export type Ticketing_Names_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Ticketing_Names_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "ticketing_names". All fields are combined with a logical 'AND'. */
+export type Ticketing_Names_Bool_Exp = {
+  _and?: InputMaybe<Array<Ticketing_Names_Bool_Exp>>;
+  _not?: InputMaybe<Ticketing_Names_Bool_Exp>;
+  _or?: InputMaybe<Array<Ticketing_Names_Bool_Exp>>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "ticketing_names" */
+export enum Ticketing_Names_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  TicketingNamesPkey = 'ticketing_names_pkey'
+}
+
+/** input type for inserting data into table "ticketing_names" */
+export type Ticketing_Names_Insert_Input = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type Ticketing_Names_Max_Fields = {
+  __typename?: 'ticketing_names_max_fields';
+  id?: Maybe<Scalars['uuid']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** aggregate min on columns */
+export type Ticketing_Names_Min_Fields = {
+  __typename?: 'ticketing_names_min_fields';
+  id?: Maybe<Scalars['uuid']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** response of any mutation on the table "ticketing_names" */
+export type Ticketing_Names_Mutation_Response = {
+  __typename?: 'ticketing_names_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Ticketing_Names>;
+};
+
+/** on_conflict condition type for table "ticketing_names" */
+export type Ticketing_Names_On_Conflict = {
+  constraint: Ticketing_Names_Constraint;
+  update_columns?: Array<Ticketing_Names_Update_Column>;
+  where?: InputMaybe<Ticketing_Names_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "ticketing_names". */
+export type Ticketing_Names_Order_By = {
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: ticketing_names */
+export type Ticketing_Names_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "ticketing_names" */
+export enum Ticketing_Names_Select_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  ProjectId = 'project_id'
+}
+
+/** input type for updating data in table "ticketing_names" */
+export type Ticketing_Names_Set_Input = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** Streaming cursor of the table "ticketing_names" */
+export type Ticketing_Names_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Ticketing_Names_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Ticketing_Names_Stream_Cursor_Value_Input = {
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** update columns of table "ticketing_names" */
+export enum Ticketing_Names_Update_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  ProjectId = 'project_id'
+}
+
+export type Ticketing_Names_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Ticketing_Names_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Ticketing_Names_Bool_Exp;
 };
 
 /** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */

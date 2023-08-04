@@ -1,4 +1,4 @@
-import { useGeoLocation } from '../helpers'
+import { useGeoLocation } from '../utils'
 
 export function GeoLocationView() {
   const { coordinates, isLoading, error } = useGeoLocation()

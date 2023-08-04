@@ -1,6 +1,7 @@
 import { Outlet, RootRoute, Route, Router } from '@tanstack/router'
 import { AccountView } from './components/AccountView'
 import { Dashboard, Home } from './components/Dashboard'
+import { FieldMonitorTasks } from './components/FieldMonitorTasks'
 import { GeoLocationView } from './components/GeoLocationView'
 import { ProjectsView } from './components/Projects'
 import { QRCodeView } from './components/QRCodeView'
@@ -63,6 +64,20 @@ const tasksHome = new Route({
 const fieldMonitorTask = new Route({
   getParentRoute: () => tasksRoute,
   path: 'field-monitor',
+  component: () => <Outlet />,
+  errorComponent: () => 'Oh crap!'
+})
+
+const fieldMonitorHome = new Route({
+  getParentRoute: () => fieldMonitorTask,
+  path: '/',
+  component: () => <FieldMonitorTasks />,
+  errorComponent: () => 'Oh crap!'
+})
+
+const fieldMonitorTree = new Route({
+  getParentRoute: () => fieldMonitorTask,
+  path: 'tree-removal',
   component: () => <TaskExample />,
   errorComponent: () => 'Oh crap!'
 })
@@ -80,19 +95,20 @@ const testRoute = new Route({
   errorComponent: () => 'Oh crap!'
 })
 
-const routeTree = (isRestoring: boolean) =>
-  rootRoute.addChildren([
-    homeRoute,
-    testRoute,
-    projectsRoute,
-    accountRoute,
-    tasksRoute.addChildren([tasksHome, fieldMonitorTask]),
-    geolocationRoute,
-    qrcodeRoute
-  ])
+const routeTree = rootRoute.addChildren([
+  homeRoute,
+  testRoute,
+  projectsRoute,
+  accountRoute,
+  tasksRoute.addChildren([
+    tasksHome,
+    fieldMonitorTask.addChildren([fieldMonitorHome, fieldMonitorTree])
+  ]),
+  geolocationRoute,
+  qrcodeRoute
+])
 
-export const router = (isRestoring: boolean) =>
-  new Router({
-    routeTree: routeTree(isRestoring),
-    defaultPreload: 'intent'
-  })
+export const router = new Router({
+  routeTree: routeTree,
+  defaultPreload: 'intent'
+})

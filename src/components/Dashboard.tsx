@@ -7,8 +7,7 @@ import { Link, Navigate, Outlet, useMatchRoute } from '@tanstack/router'
 import { useCallback } from 'preact/hooks'
 import { useRxData } from 'rxdb-hooks'
 import { UserDocType } from 'src/rxdb/rxdb-schemas'
-import { useIsOnline } from '../helpers'
-import { emailToId, fullName } from '../utils'
+import { emailToId, fullName, useIsOnline } from '../utils'
 
 const navigation = [
   ['/projects', 'Projects'],
@@ -152,6 +151,7 @@ export function Dashboard() {
 
         {routeLabel && (
           <header className='bg-white shadow-sm'>
+            {/* <button onClick={() => 3}>back button</button> */}
             <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center'>
               <h1 className='text-lg font-semibold leading-6 text-gray-900'>
                 {routeLabel}

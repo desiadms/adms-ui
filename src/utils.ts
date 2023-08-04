@@ -1,8 +1,78 @@
+import { NhostClient, useAuthenticationStatus } from '@nhost/react'
+import { useEffect, useState } from 'preact/hooks'
 import { RxDocument } from 'rxdb'
-import { nhost } from './helpers'
 import { UserDocType } from './rxdb/rxdb-schemas'
 
 export const devMode = import.meta.env.MODE === 'development'
+
+export const nhost = new NhostClient({
+  subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
+  region: import.meta.env.VITE_NHOST_REGION
+})
+
+export const hasuraURL = import.meta.env.VITE_HASURA_ENDPOINT
+
+export function useIsOnline() {
+  const [isOnline, setIsOnline] = useState(navigator.onLine)
+  useEffect(() => {
+    const handleOfflineStatus = () => {
+      setIsOnline(false)
+    }
+
+    const handleOnlineStatus = () => {
+      setIsOnline(true)
+    }
+
+    window.addEventListener('offline', handleOfflineStatus)
+    window.addEventListener('online', handleOnlineStatus)
+
+    return () => {
+      window.removeEventListener('offline', handleOfflineStatus)
+      window.removeEventListener('online', handleOnlineStatus)
+    }
+  }, [])
+  return isOnline
+}
+
+export function useAuth() {
+  const isOnline = useIsOnline()
+  const { isAuthenticated, isLoading } = useAuthenticationStatus()
+
+  return !isOnline
+    ? { isAuthenticated: true, isLoading: false }
+    : { isAuthenticated, isLoading }
+}
+
+export function useGeoLocation() {
+  const [coordinates, setCoordinates] = useState<GeolocationCoordinates | null>(
+    null
+  )
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
+
+  function getGeoLocation() {
+    setIsLoading(true)
+    setError(null)
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const pos = position.coords
+        setCoordinates(pos)
+        setIsLoading(false)
+      },
+      (error) => {
+        setError(error.message)
+        setIsLoading(false)
+      }
+    )
+  }
+
+  useEffect(() => {
+    getGeoLocation()
+  }, [])
+
+  return { coordinates, isLoading, error, getGeoLocation }
+}
 
 export function emailToId(email: string | undefined) {
   return email && email.split('@')[0]

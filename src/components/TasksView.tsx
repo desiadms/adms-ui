@@ -1,14 +1,11 @@
-import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import { CameraIcon, XCircleIcon } from '@heroicons/react/24/solid'
-import { Link } from '@tanstack/router'
 import classNames from 'classnames'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useRxCollection, useRxData } from 'rxdb-hooks'
 import { v4 } from 'uuid'
-import { nhost } from '../helpers'
 import { TaskDocType } from '../rxdb/rxdb-schemas'
-import { blobToBase64, keep } from '../utils'
+import { blobToBase64, keep, nhost } from '../utils'
 import {
   Button,
   ErrorMessage,
@@ -17,6 +14,7 @@ import {
   LabelledTextArea,
   useFilesForm
 } from './Forms'
+import { TaskType } from './common'
 
 function Tasks({ data }: { data: TaskDocType[] }) {
   const [imageUrls, setImageUrls] = useState<Record<string, string[]>>()
@@ -100,29 +98,6 @@ async function genTaskImagesMetadata(filesData: FileForm[]) {
   return { images, files, taskId }
 }
 
-function TaskType({ name, href }: { name: string; href: string }) {
-  return (
-    <div className='w-full bg-slate-300 px-2 py-3 capitalize font-medium flex items-center rounded-md'>
-      <div className='flex gap-2 items-center'>
-        <PlusCircleIcon className='text-gray-700 w-10 flex-shrink-0' />
-        <Link key={href} to={href} className='flex-shrink-0'>
-          {name}
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-export function TasksView() {
-  return (
-    <div className='flex flex-col gap-2'>
-      <TaskType name='field monitor' href='/tasks/field-monitor' />
-      <TaskType name='field collections' href='/tasks/field-collections' />
-      <TaskType name='field disposal' href='/tasks/field-disposal' />
-    </div>
-  )
-}
-
 export function TaskExample() {
   const query = useCallback((collection) => collection.find(), [])
   const { result: tasks } = useRxData<TaskDocType>('tasks', query)
@@ -131,8 +106,6 @@ export function TaskExample() {
   const {
     register,
     handleSubmit,
-    setError,
-    clearErrors,
     control,
     formState: { errors }
   } = useForm<TaskFormData>({
@@ -296,6 +269,16 @@ export function TaskExample() {
         </div>
       </form>
       {tasks && <Tasks data={tasks} />}
+    </div>
+  )
+}
+
+export function TasksView() {
+  return (
+    <div className='flex flex-col gap-2'>
+      <TaskType name='field monitor' href='/tasks/field-monitor' />
+      <TaskType name='field collections' href='/tasks/field-collections' />
+      <TaskType name='field disposal' href='/tasks/field-disposal' />
     </div>
   )
 }

@@ -7,7 +7,7 @@ import { UserCircleIcon } from '@heroicons/react/24/outline'
 import { useCallback } from 'preact/hooks'
 import { useForm } from 'react-hook-form'
 import { useRxCollection, useRxData } from 'rxdb-hooks'
-import { UserDocType } from 'src/rxdb/rxdb-schemas'
+import { UserDocType } from '../rxdb/rxdb-schemas'
 import { emailToId, fullName, userRoles } from '../utils'
 import { Button, ErrorMessage, LabelledInput } from './Forms'
 
@@ -16,11 +16,20 @@ type UserFormData = {
   last_name: string
 }
 
-function AccountForm({
-  user: { id, first_name, last_name }
-}: {
-  user: UserDocType
-}) {
+function AccountForm({ user }: { user: UserDocType }) {
+  const {
+    id,
+    first_name,
+    last_name,
+    hire_date,
+    role_data_manager,
+    role_field_supervisor,
+    role_filed_monitor,
+    role_operations_manager,
+    role_pc_admin,
+    role_project_manager,
+    usersMetadata_user
+  } = user
   const userCollection = useRxCollection<UserDocType>('user')
 
   const {
@@ -38,7 +47,17 @@ function AccountForm({
     userCollection?.upsert({
       id,
       first_name: data.first_name,
-      last_name: data.last_name
+      last_name: data.last_name,
+      hire_date,
+      role_data_manager,
+      role_field_supervisor,
+      role_filed_monitor,
+      role_operations_manager,
+      role_pc_admin,
+      role_project_manager,
+      usersMetadata_user: {
+        email: usersMetadata_user?.email
+      }
     })
   }
 
