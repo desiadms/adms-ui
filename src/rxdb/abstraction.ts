@@ -14,14 +14,20 @@ type DB = RxDatabase<{
 
 type ExtractRxJsonSchemaType<T> = T extends RxJsonSchema<infer U> ? U : never
 
+type PushQueryBuilder = (
+  db: DB,
+  rows
+) => RxGraphQLReplicationQueryBuilderResponse
+type PullQueryBuilder = (
+  db: DB,
+  checkpoint: null,
+  limit: number
+) => RxGraphQLReplicationQueryBuilderResponse
+
 type ReplicationBase = {
   accessToken: string
-  pullQueryBuilder: (
-    db: DB,
-    checkpoint: null,
-    limit: number
-  ) => RxGraphQLReplicationQueryBuilderResponse
-  pushQueryBuilder: (db: DB, rows) => RxGraphQLReplicationQueryBuilderResponse
+  pullQueryBuilder: PullQueryBuilder
+  pushQueryBuilder?: PushQueryBuilder
 }
 
 type ReplicationType = ReplicationBase & {
@@ -55,11 +61,13 @@ export function replication<TDocType>({
         }
       }
     },
-    push: {
-      queryBuilder: (rows) => pushQueryBuilder(db, rows),
-      responseModifier: () => [],
-      batchSize: 10
-    },
+    ...(pushQueryBuilder && {
+      push: {
+        queryBuilder: (rows) => pushQueryBuilder(db, rows),
+        responseModifier: () => [],
+        batchSize: 10
+      }
+    }),
     // headers which will be used in http requests against the server.
     headers: {
       Authorization: `Bearer ${accessToken}`

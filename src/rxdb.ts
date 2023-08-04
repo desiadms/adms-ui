@@ -5,12 +5,13 @@ import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie'
 import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv'
 import { addCollections } from './rxdb/abstraction'
 import {
+  projectRead,
   tasksRead,
   tasksWrite,
   userRead,
   userWrite
 } from './rxdb/replication-handlers'
-import { taskSchema, userSchema } from './rxdb/rxdb-schemas'
+import { projectSchema, taskSchema, userSchema } from './rxdb/rxdb-schemas'
 import { devMode } from './utils'
 
 addRxPlugin(RxDBMigrationPlugin)
@@ -66,6 +67,12 @@ export async function initialize(accessToken: string) {
       schema: userSchema,
       pullQueryBuilder: userRead,
       pushQueryBuilder: userWrite,
+      accessToken
+    },
+    {
+      name: 'project',
+      schema: projectSchema,
+      pullQueryBuilder: projectRead,
       accessToken
     }
   ])

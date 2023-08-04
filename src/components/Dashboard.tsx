@@ -6,8 +6,8 @@ import { useSignOut } from '@nhost/react'
 import { Link, Navigate, Outlet, useMatchRoute } from '@tanstack/router'
 import { useCallback } from 'preact/hooks'
 import { useRxData } from 'rxdb-hooks'
-import { UserDocType } from 'src/rxdb/rxdb-schemas'
 import { emailToId, fullName, useIsOnline } from '../utils'
+import { UserDocType } from './rxdb/rxdb-schemas'
 
 const navigation = [
   ['/projects', 'Projects'],

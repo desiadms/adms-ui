@@ -5236,7 +5236,7 @@ columns and relationships of "projects"
 type projects {
   comment: String
   contractor: String
-  date_created: timestamptz!
+  created_at: timestamptz!
   id: uuid!
   location: String
   name: String!
@@ -5279,6 +5279,7 @@ type projects {
   ): tasks_aggregate!
   status: Boolean
   sub_contractor: String
+  updated_at: timestamptz
 }
 
 """
@@ -5307,7 +5308,7 @@ input projects_bool_exp {
   _or: [projects_bool_exp!]
   comment: String_comparison_exp
   contractor: String_comparison_exp
-  date_created: timestamptz_comparison_exp
+  created_at: timestamptz_comparison_exp
   id: uuid_comparison_exp
   location: String_comparison_exp
   name: String_comparison_exp
@@ -5316,6 +5317,7 @@ input projects_bool_exp {
   projects_tasks_aggregate: tasks_aggregate_bool_exp
   status: Boolean_comparison_exp
   sub_contractor: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
 }
 
 """
@@ -5334,7 +5336,7 @@ input type for inserting data into table "projects"
 input projects_insert_input {
   comment: String
   contractor: String
-  date_created: timestamptz
+  created_at: timestamptz
   id: uuid
   location: String
   name: String
@@ -5342,30 +5344,33 @@ input projects_insert_input {
   projects_tasks: tasks_arr_rel_insert_input
   status: Boolean
   sub_contractor: String
+  updated_at: timestamptz
 }
 
 """aggregate max on columns"""
 type projects_max_fields {
   comment: String
   contractor: String
-  date_created: timestamptz
+  created_at: timestamptz
   id: uuid
   location: String
   name: String
   poc: String
   sub_contractor: String
+  updated_at: timestamptz
 }
 
 """aggregate min on columns"""
 type projects_min_fields {
   comment: String
   contractor: String
-  date_created: timestamptz
+  created_at: timestamptz
   id: uuid
   location: String
   name: String
   poc: String
   sub_contractor: String
+  updated_at: timestamptz
 }
 
 """
@@ -5402,7 +5407,7 @@ input projects_on_conflict {
 input projects_order_by {
   comment: order_by
   contractor: order_by
-  date_created: order_by
+  created_at: order_by
   id: order_by
   location: order_by
   name: order_by
@@ -5410,6 +5415,7 @@ input projects_order_by {
   projects_tasks_aggregate: tasks_aggregate_order_by
   status: order_by
   sub_contractor: order_by
+  updated_at: order_by
 }
 
 """primary key columns input for table: projects"""
@@ -5428,7 +5434,7 @@ enum projects_select_column {
   contractor
 
   """column name"""
-  date_created
+  created_at
 
   """column name"""
   id
@@ -5447,6 +5453,9 @@ enum projects_select_column {
 
   """column name"""
   sub_contractor
+
+  """column name"""
+  updated_at
 }
 
 """
@@ -5455,13 +5464,14 @@ input type for updating data in table "projects"
 input projects_set_input {
   comment: String
   contractor: String
-  date_created: timestamptz
+  created_at: timestamptz
   id: uuid
   location: String
   name: String
   poc: String
   status: Boolean
   sub_contractor: String
+  updated_at: timestamptz
 }
 
 """
@@ -5479,13 +5489,14 @@ input projects_stream_cursor_input {
 input projects_stream_cursor_value_input {
   comment: String
   contractor: String
-  date_created: timestamptz
+  created_at: timestamptz
   id: uuid
   location: String
   name: String
   poc: String
   status: Boolean
   sub_contractor: String
+  updated_at: timestamptz
 }
 
 """
@@ -5499,7 +5510,7 @@ enum projects_update_column {
   contractor
 
   """column name"""
-  date_created
+  created_at
 
   """column name"""
   id
@@ -5518,6 +5529,9 @@ enum projects_update_column {
 
   """column name"""
   sub_contractor
+
+  """column name"""
+  updated_at
 }
 
 input projects_updates {

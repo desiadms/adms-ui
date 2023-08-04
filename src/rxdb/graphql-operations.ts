@@ -65,3 +65,17 @@ export const updateUserDocument = graphql(/* GraphQL */ `
     }
   }
 `)
+
+export const projectsDocument = graphql(/* GraphQL */ `
+  query projects {
+    projects {
+      id
+      name
+      comment
+      contractor
+      sub_contractor
+      location
+      poc
+    }
+  }
+`)

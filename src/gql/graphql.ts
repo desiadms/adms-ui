@@ -4485,7 +4485,7 @@ export type Projects = {
   __typename?: 'projects';
   comment?: Maybe<Scalars['String']['output']>;
   contractor?: Maybe<Scalars['String']['output']>;
-  date_created: Scalars['timestamptz']['output'];
+  created_at: Scalars['timestamptz']['output'];
   id: Scalars['uuid']['output'];
   location?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -4496,6 +4496,7 @@ export type Projects = {
   projects_tasks_aggregate: Tasks_Aggregate;
   status?: Maybe<Scalars['Boolean']['output']>;
   sub_contractor?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
 
@@ -4547,7 +4548,7 @@ export type Projects_Bool_Exp = {
   _or?: InputMaybe<Array<Projects_Bool_Exp>>;
   comment?: InputMaybe<String_Comparison_Exp>;
   contractor?: InputMaybe<String_Comparison_Exp>;
-  date_created?: InputMaybe<Timestamptz_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   location?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
@@ -4556,6 +4557,7 @@ export type Projects_Bool_Exp = {
   projects_tasks_aggregate?: InputMaybe<Tasks_Aggregate_Bool_Exp>;
   status?: InputMaybe<Boolean_Comparison_Exp>;
   sub_contractor?: InputMaybe<String_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "projects" */
@@ -4568,7 +4570,7 @@ export enum Projects_Constraint {
 export type Projects_Insert_Input = {
   comment?: InputMaybe<Scalars['String']['input']>;
   contractor?: InputMaybe<Scalars['String']['input']>;
-  date_created?: InputMaybe<Scalars['timestamptz']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -4576,6 +4578,7 @@ export type Projects_Insert_Input = {
   projects_tasks?: InputMaybe<Tasks_Arr_Rel_Insert_Input>;
   status?: InputMaybe<Scalars['Boolean']['input']>;
   sub_contractor?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
 /** aggregate max on columns */
@@ -4583,12 +4586,13 @@ export type Projects_Max_Fields = {
   __typename?: 'projects_max_fields';
   comment?: Maybe<Scalars['String']['output']>;
   contractor?: Maybe<Scalars['String']['output']>;
-  date_created?: Maybe<Scalars['timestamptz']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   location?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   poc?: Maybe<Scalars['String']['output']>;
   sub_contractor?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
 /** aggregate min on columns */
@@ -4596,12 +4600,13 @@ export type Projects_Min_Fields = {
   __typename?: 'projects_min_fields';
   comment?: Maybe<Scalars['String']['output']>;
   contractor?: Maybe<Scalars['String']['output']>;
-  date_created?: Maybe<Scalars['timestamptz']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   location?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   poc?: Maybe<Scalars['String']['output']>;
   sub_contractor?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
 /** response of any mutation on the table "projects" */
@@ -4631,7 +4636,7 @@ export type Projects_On_Conflict = {
 export type Projects_Order_By = {
   comment?: InputMaybe<Order_By>;
   contractor?: InputMaybe<Order_By>;
-  date_created?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   location?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
@@ -4639,6 +4644,7 @@ export type Projects_Order_By = {
   projects_tasks_aggregate?: InputMaybe<Tasks_Aggregate_Order_By>;
   status?: InputMaybe<Order_By>;
   sub_contractor?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: projects */
@@ -4653,7 +4659,7 @@ export enum Projects_Select_Column {
   /** column name */
   Contractor = 'contractor',
   /** column name */
-  DateCreated = 'date_created',
+  CreatedAt = 'created_at',
   /** column name */
   Id = 'id',
   /** column name */
@@ -4665,20 +4671,23 @@ export enum Projects_Select_Column {
   /** column name */
   Status = 'status',
   /** column name */
-  SubContractor = 'sub_contractor'
+  SubContractor = 'sub_contractor',
+  /** column name */
+  UpdatedAt = 'updated_at'
 }
 
 /** input type for updating data in table "projects" */
 export type Projects_Set_Input = {
   comment?: InputMaybe<Scalars['String']['input']>;
   contractor?: InputMaybe<Scalars['String']['input']>;
-  date_created?: InputMaybe<Scalars['timestamptz']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   poc?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['Boolean']['input']>;
   sub_contractor?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
 /** Streaming cursor of the table "projects" */
@@ -4693,13 +4702,14 @@ export type Projects_Stream_Cursor_Input = {
 export type Projects_Stream_Cursor_Value_Input = {
   comment?: InputMaybe<Scalars['String']['input']>;
   contractor?: InputMaybe<Scalars['String']['input']>;
-  date_created?: InputMaybe<Scalars['timestamptz']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   poc?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['Boolean']['input']>;
   sub_contractor?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
 /** update columns of table "projects" */
@@ -4709,7 +4719,7 @@ export enum Projects_Update_Column {
   /** column name */
   Contractor = 'contractor',
   /** column name */
-  DateCreated = 'date_created',
+  CreatedAt = 'created_at',
   /** column name */
   Id = 'id',
   /** column name */
@@ -4721,7 +4731,9 @@ export enum Projects_Update_Column {
   /** column name */
   Status = 'status',
   /** column name */
-  SubContractor = 'sub_contractor'
+  SubContractor = 'sub_contractor',
+  /** column name */
+  UpdatedAt = 'updated_at'
 }
 
 export type Projects_Updates = {
@@ -8959,6 +8971,19 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']['input']>>;
 };
 
+export type AllTasksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllTasksQuery = { __typename?: 'query_root', tasks: Array<{ __typename?: 'tasks', id: any, name: string, updated_at?: any | null, created_at?: any | null, _deleted?: boolean | null, tasks_images: Array<{ __typename?: 'images', id: any, task_id: any }> }> };
+
+export type TasksMutationVariables = Exact<{
+  tasks_images: Array<Images_Insert_Input> | Images_Insert_Input;
+  tasks: Array<Tasks_Insert_Input> | Tasks_Insert_Input;
+}>;
+
+
+export type TasksMutation = { __typename?: 'mutation_root', insert_tasks?: { __typename?: 'tasks_mutation_response', returning: Array<{ __typename?: 'tasks', id: any }> } | null, insert_images?: { __typename?: 'images_mutation_response', returning: Array<{ __typename?: 'images', id: any, task_id: any }> } | null };
+
 export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -8976,24 +9001,11 @@ export type UpdateUserMutation = { __typename?: 'mutation_root', update_usersMet
 export type ProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProjectsQuery = { __typename?: 'query_root', projects: Array<{ __typename?: 'projects', name: string, comment?: string | null, contractor?: string | null, sub_contractor?: string | null, location?: string | null, poc?: string | null }> };
-
-export type AllTasksQueryVariables = Exact<{ [key: string]: never; }>;
+export type ProjectsQuery = { __typename?: 'query_root', projects: Array<{ __typename?: 'projects', id: any, name: string, comment?: string | null, contractor?: string | null, sub_contractor?: string | null, location?: string | null, poc?: string | null }> };
 
 
-export type AllTasksQuery = { __typename?: 'query_root', tasks: Array<{ __typename?: 'tasks', id: any, name: string, updated_at?: any | null, created_at?: any | null, _deleted?: boolean | null, tasks_images: Array<{ __typename?: 'images', id: any, task_id: any }> }> };
-
-export type TasksMutationVariables = Exact<{
-  tasks_images: Array<Images_Insert_Input> | Images_Insert_Input;
-  tasks: Array<Tasks_Insert_Input> | Tasks_Insert_Input;
-}>;
-
-
-export type TasksMutation = { __typename?: 'mutation_root', insert_tasks?: { __typename?: 'tasks_mutation_response', returning: Array<{ __typename?: 'tasks', id: any }> } | null, insert_images?: { __typename?: 'images_mutation_response', returning: Array<{ __typename?: 'images', id: any, task_id: any }> } | null };
-
-
-export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersMetadata"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"hire_date"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"role_data_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_field_supervisor"}},{"kind":"Field","name":{"kind":"Name","value":"role_filed_monitor"}},{"kind":"Field","name":{"kind":"Name","value":"role_operations_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_pc_admin"}},{"kind":"Field","name":{"kind":"Name","value":"role_project_manager"}},{"kind":"Field","name":{"kind":"Name","value":"usersMetadata_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
-export const UpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_usersMetadata_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"first_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"last_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
-export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"sub_contractor"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"poc"}}]}}]}}]} as unknown as DocumentNode<ProjectsQuery, ProjectsQueryVariables>;
 export const AllTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"_deleted"}},{"kind":"Field","name":{"kind":"Name","value":"tasks_images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"task_id"}}]}}]}}]}}]} as unknown as DocumentNode<AllTasksQuery, AllTasksQueryVariables>;
 export const TasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"tasks"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tasks_images"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"images_insert_input"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"tasks_insert_input"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tasks"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tasks_images"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"task_id"}}]}}]}}]}}]} as unknown as DocumentNode<TasksMutation, TasksMutationVariables>;
+export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersMetadata"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"hire_date"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"role_data_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_field_supervisor"}},{"kind":"Field","name":{"kind":"Name","value":"role_filed_monitor"}},{"kind":"Field","name":{"kind":"Name","value":"role_operations_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_pc_admin"}},{"kind":"Field","name":{"kind":"Name","value":"role_project_manager"}},{"kind":"Field","name":{"kind":"Name","value":"usersMetadata_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
+export const UpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_usersMetadata_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"first_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"last_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
+export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"sub_contractor"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"poc"}}]}}]}}]} as unknown as DocumentNode<ProjectsQuery, ProjectsQueryVariables>;

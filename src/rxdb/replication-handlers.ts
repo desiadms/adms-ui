@@ -4,6 +4,7 @@ import { base64toFile, saveFilesToNhost } from '../utils'
 import {
   allTasksDocument,
   createTasksDocument,
+  projectsDocument,
   updateUserDocument,
   userDocument
 } from './graphql-operations'
@@ -75,5 +76,12 @@ export function userWrite(
       first_name: user?.first_name,
       last_name: user?.last_name
     }
+  }
+}
+
+export function projectRead() {
+  return {
+    query: resolveRequestDocument(projectsDocument).query,
+    variables: {}
   }
 }

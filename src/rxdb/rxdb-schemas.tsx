@@ -107,3 +107,57 @@ export const userSchema: RxJsonSchema<UserDocType> = {
     }
   }
 } as const
+
+export type ProjectDocType = {
+  id: string
+  name: string
+  location: string
+  updated_at: string
+  created_at: string
+  poc: string
+  contractor: string
+  sub_contractor: string
+  status: boolean
+  comment: string
+}
+
+export const projectSchema: RxJsonSchema<ProjectDocType> = {
+  title: 'project schema',
+  version: 0,
+  type: 'object',
+  primaryKey: 'id',
+  properties: {
+    id: {
+      type: 'string',
+      maxLength: 100
+    },
+    name: {
+      type: 'string'
+    },
+    created_at: {
+      type: 'string'
+    },
+    updated_at: {
+      type: 'string'
+    },
+    location: {
+      type: 'string'
+    },
+    poc: {
+      type: 'string'
+    },
+    contractor: {
+      type: 'string'
+    },
+    sub_contractor: {
+      type: 'string'
+    },
+    status: {
+      type: 'string'
+    },
+    comment: {
+      type: 'string'
+    }
+  },
+  required: ['id']
+} as const

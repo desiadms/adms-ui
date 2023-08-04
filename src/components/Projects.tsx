@@ -1,7 +1,12 @@
 import { GlobeAmericasIcon } from '@heroicons/react/24/solid'
+import { useCallback } from 'preact/hooks'
+import { useRxData } from 'rxdb-hooks'
+import { ProjectDocType } from '../rxdb/rxdb-schemas'
 
 export function ProjectsView() {
-  const activeProject = {}
+  const query = useCallback((collection) => collection.find(), [])
+  const { result } = useRxData<ProjectDocType>('project', query)
+  const activeProject = result[0]
 
   return (
     <div>
