@@ -1,4 +1,5 @@
 import { NhostClient, useAuthenticationStatus } from '@nhost/react'
+import { atom } from 'jotai'
 import { useEffect, useState } from 'preact/hooks'
 import { RxDocument } from 'rxdb'
 import { UserDocType } from './rxdb/rxdb-schemas'
@@ -181,4 +182,23 @@ export function saveFilesToNhost(files: { id: string; file: File }[]) {
   return Promise.all(
     files.map(({ id, file }) => nhost.storage.upload({ file, id }))
   )
+}
+
+export const atomState = atom({ treeRemoval: [] })
+
+const a = {
+  treeRemoval: [
+    {
+      id: 1,
+      steps: [
+        {
+          id: 1,
+          files: ['file1'],
+          coordinates: [1, 2],
+          datetime: '2021-01-01'
+        },
+        { id: 2, name: 'step 2' }
+      ]
+    }
+  ]
 }

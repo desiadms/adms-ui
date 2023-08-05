@@ -1,12 +1,16 @@
 import { Outlet, RootRoute, Route, Router } from '@tanstack/router'
 import { AccountView } from './components/AccountView'
 import { Dashboard, Home } from './components/Dashboard'
-import { FieldMonitorTasks } from './components/FieldMonitorTasks'
+import {
+  FieldMonitorTasks,
+  TreeRemovalForm
+} from './components/FieldMonitorTasks'
 import { GeoLocationView } from './components/GeoLocationView'
 import { ProjectsView } from './components/Projects'
 import { QRCodeView } from './components/QRCodeView'
-import { TaskExample, TasksView } from './components/TasksView'
-import { Test } from './components/Test'
+import { TasksCompleted } from './components/TasksCompleted'
+import { TasksProgress } from './components/TasksProgress'
+import { TasksView } from './components/TasksView'
 
 const rootRoute = new RootRoute({
   component: () => <Dashboard />
@@ -61,6 +65,20 @@ const tasksHome = new Route({
   errorComponent: () => 'Oh crap!'
 })
 
+const tasksProgress = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/progress',
+  component: () => <TasksProgress />,
+  errorComponent: () => 'Oh crap!'
+})
+
+const tasksCompleted = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/completed',
+  component: () => <TasksCompleted />,
+  errorComponent: () => 'Oh crap!'
+})
+
 const fieldMonitorTask = new Route({
   getParentRoute: () => tasksRoute,
   path: 'field-monitor',
@@ -77,8 +95,8 @@ const fieldMonitorHome = new Route({
 
 const fieldMonitorTree = new Route({
   getParentRoute: () => fieldMonitorTask,
-  path: 'tree-removal',
-  component: () => <TaskExample />,
+  path: 'tree-removal/$id',
+  component: () => <TreeRemovalForm />,
   errorComponent: () => 'Oh crap!'
 })
 
@@ -88,27 +106,19 @@ declare module '@tanstack/router' {
   }
 }
 
-const testRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: 'test',
-  component: () => <Test />,
-  errorComponent: () => 'Oh crap!'
-})
-
 const routeTree = rootRoute.addChildren([
   homeRoute,
-  testRoute,
   projectsRoute,
   accountRoute,
+  tasksProgress,
+  tasksCompleted,
   tasksRoute.addChildren([
     tasksHome,
     fieldMonitorTask.addChildren([fieldMonitorHome, fieldMonitorTree])
-  ]),
-  geolocationRoute,
-  qrcodeRoute
+  ])
 ])
 
 export const router = new Router({
-  routeTree: routeTree,
+  routeTree,
   defaultPreload: 'intent'
 })

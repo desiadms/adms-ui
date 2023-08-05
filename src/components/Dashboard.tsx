@@ -4,17 +4,17 @@ import { UserCircleIcon } from '@heroicons/react/24/outline'
 import { SignalIcon, SignalSlashIcon } from '@heroicons/react/24/solid'
 import { useSignOut } from '@nhost/react'
 import { Link, Navigate, Outlet, useMatchRoute } from '@tanstack/router'
+import { useAtom } from 'jotai'
 import { useCallback } from 'preact/hooks'
 import { useRxData } from 'rxdb-hooks'
-import { emailToId, fullName, useIsOnline } from '../utils'
-import { UserDocType } from './rxdb/rxdb-schemas'
+import { UserDocType } from '../rxdb/rxdb-schemas'
+import { atomState, emailToId, fullName, useIsOnline } from '../utils'
 
 const navigation = [
   ['/projects', 'Projects'],
-  ['/geoLocation', 'GeoLocation'],
-  ['/camera', 'Camera'],
-  ['/qrCode', 'QRCode'],
-  ['/tasks', 'Tasks']
+  ['/tasks', 'New Task'],
+  ['/progress', 'In Progress'],
+  ['/completed', 'Completed']
 ]
 
 export function Home() {
@@ -41,6 +41,8 @@ export function Dashboard() {
   const routeLabel = currentRoute?.[1]
 
   const { signOut } = useSignOut()
+
+  const [state] = useAtom(atomState)
 
   return (
     <div className='min-h-full'>
@@ -176,6 +178,7 @@ export function Dashboard() {
         <div className='mx-auto max-w-7xl py-6 px-2 sm:px-6 lg:px-8'>
           <Outlet />
         </div>
+        {/* <pre>{JSON.stringify(state, null, 2)}</pre> */}
       </main>
     </div>
   )
