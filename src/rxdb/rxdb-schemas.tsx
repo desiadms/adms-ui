@@ -1,48 +1,5 @@
 import { RxJsonSchema } from 'rxdb'
 
-export type TaskDocType = {
-  id: string
-  name: string
-  tasks_images?: { id: string; task_id: string }[]
-  updated_at: string
-  created_at: string
-}
-
-export const taskSchema: RxJsonSchema<TaskDocType> = {
-  title: 'task schema',
-  description: 'task schema',
-  version: 0,
-  type: 'object',
-  primaryKey: 'id',
-  properties: {
-    id: {
-      type: 'string',
-      maxLength: 100
-    },
-    name: {
-      type: 'string'
-    },
-    created_at: {
-      type: 'string'
-    },
-    updated_at: {
-      type: 'string'
-    },
-    tasks_images: {
-      type: 'array',
-      properties: {
-        id: {
-          type: 'string'
-        },
-        task_id: {
-          type: 'string'
-        }
-      }
-    }
-  },
-  required: ['id', 'name']
-} as const
-
 export type UserDocType = {
   id: string
   first_name: string
@@ -157,6 +114,71 @@ export const projectSchema: RxJsonSchema<ProjectDocType> = {
     },
     comment: {
       type: 'string'
+    }
+  },
+  required: ['id']
+} as const
+
+export type TreeRemovalTaskDocType = {
+  id: string
+  updated_at: string
+  created_at: string
+  comment: string
+  completed: boolean
+  images: {
+    id: string
+    created_at: string
+    latitude: string
+    longitude: string
+    ranges: string
+    taken_at_step: string
+  }
+}
+
+export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
+  title: 'tree removal task schema',
+  version: 0,
+  type: 'object',
+  primaryKey: 'id',
+  properties: {
+    id: {
+      type: 'string',
+      maxLength: 100
+    },
+    comment: {
+      type: 'string'
+    },
+    created_at: {
+      type: 'string'
+    },
+    updated_at: {
+      type: 'string'
+    },
+    completed: {
+      type: 'boolean'
+    },
+    images: {
+      type: 'array',
+      properties: {
+        id: {
+          type: 'string'
+        },
+        created_at: {
+          type: 'string'
+        },
+        latitude: {
+          type: 'string'
+        },
+        longitude: {
+          type: 'string'
+        },
+        ranges: {
+          type: 'string'
+        },
+        taken_at_step: {
+          type: 'string'
+        }
+      }
     }
   },
   required: ['id']

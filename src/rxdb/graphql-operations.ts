@@ -1,35 +1,38 @@
 import { graphql } from '../gql'
 
-export const allTasksDocument = graphql(/* GraphQL */ `
-  query allTasks {
-    tasks {
-      id
-      name
-      updated_at
+export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
+  query treeRemovalTasks {
+    tasks_tree_removal {
+      comment
+      completed
       created_at
-      _deleted
-      tasks_images {
+      updated_at
+      id
+      images: tasks_tree_removal_images {
         id
-        task_id
+        created_at
+        latitude
+        longitude
+        ranges
+        taken_at_step
       }
     }
   }
 `)
 
-export const createTasksDocument = graphql(/* GraphQL */ `
-  mutation tasks(
-    $tasks_images: [images_insert_input!]!
-    $tasks: [tasks_insert_input!]!
+export const upsertTreeRemovalTasks = graphql(/* GraphQL */ `
+  mutation upsertTreeRemovalTasks(
+    $tasks: [tasks_tree_removal_insert_input!]!
+    $images: [images_insert_input!]!
   ) {
-    insert_tasks(objects: $tasks) {
+    insert_tasks_tree_removal(objects: $tasks) {
       returning {
         id
       }
     }
-    insert_images(objects: $tasks_images) {
+    insert_images(objects: $images) {
       returning {
         id
-        task_id
       }
     }
   }
@@ -79,3 +82,17 @@ export const projectsDocument = graphql(/* GraphQL */ `
     }
   }
 `)
+
+// mutation upsertTaskTreeRemoval($tasks: [tasks_tree_removal_insert_input!]!, $images: [images_insert_input!]!) {
+//   insert_tasks_tree_removal(objects: $tasks, on_conflict: {update_columns: [comment, completed], constraint: tree_removal_tasks_pkey}) {
+//     returning {
+//       id
+//       updated_at
+//     }
+//   }
+//   insert_images(objects: $images, on_conflict: {constraint: images_pkey, update_columns: [latitude, longitude, ranges, taken_at_step]}) {
+//     returning {
+//       id
+//     }
+//   }
+// }
