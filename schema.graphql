@@ -3237,6 +3237,41 @@ input files_variance_order_by {
 
 """to record when an image was taken i.e. before, measure, after"""
 type image_taken {
+  """An array relationship"""
+  images(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): [images!]!
+
+  """An aggregate relationship"""
+  images_aggregate(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): images_aggregate!
   taken_time: String!
 }
 
@@ -3264,6 +3299,8 @@ input image_taken_bool_exp {
   _and: [image_taken_bool_exp!]
   _not: image_taken_bool_exp
   _or: [image_taken_bool_exp!]
+  images: images_bool_exp
+  images_aggregate: images_aggregate_bool_exp
   taken_time: String_comparison_exp
 }
 
@@ -3281,6 +3318,7 @@ enum image_taken_constraint {
 input type for inserting data into table "image_taken"
 """
 input image_taken_insert_input {
+  images: images_arr_rel_insert_input
   taken_time: String
 }
 
@@ -3306,6 +3344,16 @@ type image_taken_mutation_response {
 }
 
 """
+input type for inserting object relation for remote table "image_taken"
+"""
+input image_taken_obj_rel_insert_input {
+  data: image_taken_insert_input!
+
+  """upsert condition"""
+  on_conflict: image_taken_on_conflict
+}
+
+"""
 on_conflict condition type for table "image_taken"
 """
 input image_taken_on_conflict {
@@ -3316,6 +3364,7 @@ input image_taken_on_conflict {
 
 """Ordering options when selecting data from "image_taken"."""
 input image_taken_order_by {
+  images_aggregate: images_aggregate_order_by
   taken_time: order_by
 }
 
@@ -3375,15 +3424,25 @@ input image_taken_updates {
 columns and relationships of "images"
 """
 type images {
+  _deleted: Boolean
+  created_at: timestamptz
   id: uuid!
-  image_taken: String
+
+  """An object relationship"""
+  image_taken: image_taken
 
   """An object relationship"""
   images_file: files!
 
   """An object relationship"""
-  images_task: tasks!
+  images_tasks_tree_removal: tasks_tree_removal!
+  latitude: String
+  longitude: String
+  ranges: String
+  taken_at_step: String
   task_id: uuid!
+  updated_at: timestamptz
+  user_id: uuid!
 }
 
 """
@@ -3395,7 +3454,23 @@ type images_aggregate {
 }
 
 input images_aggregate_bool_exp {
+  bool_and: images_aggregate_bool_exp_bool_and
+  bool_or: images_aggregate_bool_exp_bool_or
   count: images_aggregate_bool_exp_count
+}
+
+input images_aggregate_bool_exp_bool_and {
+  arguments: images_select_column_images_aggregate_bool_exp_bool_and_arguments_columns!
+  distinct: Boolean
+  filter: images_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input images_aggregate_bool_exp_bool_or {
+  arguments: images_select_column_images_aggregate_bool_exp_bool_or_arguments_columns!
+  distinct: Boolean
+  filter: images_bool_exp
+  predicate: Boolean_comparison_exp!
 }
 
 input images_aggregate_bool_exp_count {
@@ -3438,13 +3513,21 @@ Boolean expression to filter rows from the table "images". All fields are combin
 """
 input images_bool_exp {
   _and: [images_bool_exp!]
+  _deleted: Boolean_comparison_exp
   _not: images_bool_exp
   _or: [images_bool_exp!]
+  created_at: timestamptz_comparison_exp
   id: uuid_comparison_exp
-  image_taken: String_comparison_exp
+  image_taken: image_taken_bool_exp
   images_file: files_bool_exp
-  images_task: tasks_bool_exp
+  images_tasks_tree_removal: tasks_tree_removal_bool_exp
+  latitude: String_comparison_exp
+  longitude: String_comparison_exp
+  ranges: String_comparison_exp
+  taken_at_step: String_comparison_exp
   task_id: uuid_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  user_id: uuid_comparison_exp
 }
 
 """
@@ -3461,43 +3544,75 @@ enum images_constraint {
 input type for inserting data into table "images"
 """
 input images_insert_input {
+  _deleted: Boolean
+  created_at: timestamptz
   id: uuid
-  image_taken: String
+  image_taken: image_taken_obj_rel_insert_input
   images_file: files_obj_rel_insert_input
-  images_task: tasks_obj_rel_insert_input
+  images_tasks_tree_removal: tasks_tree_removal_obj_rel_insert_input
+  latitude: String
+  longitude: String
+  ranges: String
+  taken_at_step: String
   task_id: uuid
+  updated_at: timestamptz
+  user_id: uuid
 }
 
 """aggregate max on columns"""
 type images_max_fields {
+  created_at: timestamptz
   id: uuid
-  image_taken: String
+  latitude: String
+  longitude: String
+  ranges: String
+  taken_at_step: String
   task_id: uuid
+  updated_at: timestamptz
+  user_id: uuid
 }
 
 """
 order by max() on columns of table "images"
 """
 input images_max_order_by {
+  created_at: order_by
   id: order_by
-  image_taken: order_by
+  latitude: order_by
+  longitude: order_by
+  ranges: order_by
+  taken_at_step: order_by
   task_id: order_by
+  updated_at: order_by
+  user_id: order_by
 }
 
 """aggregate min on columns"""
 type images_min_fields {
+  created_at: timestamptz
   id: uuid
-  image_taken: String
+  latitude: String
+  longitude: String
+  ranges: String
+  taken_at_step: String
   task_id: uuid
+  updated_at: timestamptz
+  user_id: uuid
 }
 
 """
 order by min() on columns of table "images"
 """
 input images_min_order_by {
+  created_at: order_by
   id: order_by
-  image_taken: order_by
+  latitude: order_by
+  longitude: order_by
+  ranges: order_by
+  taken_at_step: order_by
   task_id: order_by
+  updated_at: order_by
+  user_id: order_by
 }
 
 """
@@ -3522,11 +3637,19 @@ input images_on_conflict {
 
 """Ordering options when selecting data from "images"."""
 input images_order_by {
+  _deleted: order_by
+  created_at: order_by
   id: order_by
-  image_taken: order_by
+  image_taken: image_taken_order_by
   images_file: files_order_by
-  images_task: tasks_order_by
+  images_tasks_tree_removal: tasks_tree_removal_order_by
+  latitude: order_by
+  longitude: order_by
+  ranges: order_by
+  taken_at_step: order_by
   task_id: order_by
+  updated_at: order_by
+  user_id: order_by
 }
 
 """primary key columns input for table: images"""
@@ -3539,22 +3662,66 @@ select columns of table "images"
 """
 enum images_select_column {
   """column name"""
+  _deleted
+
+  """column name"""
+  created_at
+
+  """column name"""
   id
 
   """column name"""
-  image_taken
+  latitude
+
+  """column name"""
+  longitude
+
+  """column name"""
+  ranges
+
+  """column name"""
+  taken_at_step
 
   """column name"""
   task_id
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  user_id
+}
+
+"""
+select "images_aggregate_bool_exp_bool_and_arguments_columns" columns of table "images"
+"""
+enum images_select_column_images_aggregate_bool_exp_bool_and_arguments_columns {
+  """column name"""
+  _deleted
+}
+
+"""
+select "images_aggregate_bool_exp_bool_or_arguments_columns" columns of table "images"
+"""
+enum images_select_column_images_aggregate_bool_exp_bool_or_arguments_columns {
+  """column name"""
+  _deleted
 }
 
 """
 input type for updating data in table "images"
 """
 input images_set_input {
+  _deleted: Boolean
+  created_at: timestamptz
   id: uuid
-  image_taken: String
+  latitude: String
+  longitude: String
+  ranges: String
+  taken_at_step: String
   task_id: uuid
+  updated_at: timestamptz
+  user_id: uuid
 }
 
 """
@@ -3570,9 +3737,16 @@ input images_stream_cursor_input {
 
 """Initial value of the column from where the streaming should start"""
 input images_stream_cursor_value_input {
+  _deleted: Boolean
+  created_at: timestamptz
   id: uuid
-  image_taken: String
+  latitude: String
+  longitude: String
+  ranges: String
+  taken_at_step: String
   task_id: uuid
+  updated_at: timestamptz
+  user_id: uuid
 }
 
 """
@@ -3580,13 +3754,34 @@ update columns of table "images"
 """
 enum images_update_column {
   """column name"""
+  _deleted
+
+  """column name"""
+  created_at
+
+  """column name"""
   id
 
   """column name"""
-  image_taken
+  latitude
+
+  """column name"""
+  longitude
+
+  """column name"""
+  ranges
+
+  """column name"""
+  taken_at_step
 
   """column name"""
   task_id
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  user_id
 }
 
 input images_updates {
@@ -5241,44 +5436,224 @@ type projects {
   location: String
   name: String!
   poc: String
-
-  """An array relationship"""
-  projects_tasks(
-    """distinct select on columns"""
-    distinct_on: [tasks_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [tasks_order_by!]
-
-    """filter the rows returned"""
-    where: tasks_bool_exp
-  ): [tasks!]!
-
-  """An aggregate relationship"""
-  projects_tasks_aggregate(
-    """distinct select on columns"""
-    distinct_on: [tasks_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [tasks_order_by!]
-
-    """filter the rows returned"""
-    where: tasks_bool_exp
-  ): tasks_aggregate!
   status: Boolean
   sub_contractor: String
+
+  """An array relationship"""
+  tasks_branch_removals(
+    """distinct select on columns"""
+    distinct_on: [tasks_branch_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_branch_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_branch_removal_bool_exp
+  ): [tasks_branch_removal!]!
+
+  """An aggregate relationship"""
+  tasks_branch_removals_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_branch_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_branch_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_branch_removal_bool_exp
+  ): tasks_branch_removal_aggregate!
+
+  """An array relationship"""
+  tasks_collections(
+    """distinct select on columns"""
+    distinct_on: [tasks_collection_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_collection_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_collection_bool_exp
+  ): [tasks_collection!]!
+
+  """An aggregate relationship"""
+  tasks_collections_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_collection_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_collection_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_collection_bool_exp
+  ): tasks_collection_aggregate!
+
+  """An array relationship"""
+  tasks_disposals(
+    """distinct select on columns"""
+    distinct_on: [tasks_disposal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_disposal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_disposal_bool_exp
+  ): [tasks_disposal!]!
+
+  """An aggregate relationship"""
+  tasks_disposals_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_disposal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_disposal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_disposal_bool_exp
+  ): tasks_disposal_aggregate!
+
+  """An array relationship"""
+  tasks_ticketings(
+    """distinct select on columns"""
+    distinct_on: [tasks_ticketing_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_ticketing_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_ticketing_bool_exp
+  ): [tasks_ticketing!]!
+
+  """An aggregate relationship"""
+  tasks_ticketings_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_ticketing_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_ticketing_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_ticketing_bool_exp
+  ): tasks_ticketing_aggregate!
+
+  """An array relationship"""
+  tasks_tree_removals(
+    """distinct select on columns"""
+    distinct_on: [tasks_tree_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_tree_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_tree_removal_bool_exp
+  ): [tasks_tree_removal!]!
+
+  """An aggregate relationship"""
+  tasks_tree_removals_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_tree_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_tree_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_tree_removal_bool_exp
+  ): tasks_tree_removal_aggregate!
+
+  """An array relationship"""
+  ticketing_names(
+    """distinct select on columns"""
+    distinct_on: [ticketing_names_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [ticketing_names_order_by!]
+
+    """filter the rows returned"""
+    where: ticketing_names_bool_exp
+  ): [ticketing_names!]!
+
+  """An aggregate relationship"""
+  ticketing_names_aggregate(
+    """distinct select on columns"""
+    distinct_on: [ticketing_names_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [ticketing_names_order_by!]
+
+    """filter the rows returned"""
+    where: ticketing_names_bool_exp
+  ): ticketing_names_aggregate!
   updated_at: timestamptz
 }
 
@@ -5313,10 +5688,20 @@ input projects_bool_exp {
   location: String_comparison_exp
   name: String_comparison_exp
   poc: String_comparison_exp
-  projects_tasks: tasks_bool_exp
-  projects_tasks_aggregate: tasks_aggregate_bool_exp
   status: Boolean_comparison_exp
   sub_contractor: String_comparison_exp
+  tasks_branch_removals: tasks_branch_removal_bool_exp
+  tasks_branch_removals_aggregate: tasks_branch_removal_aggregate_bool_exp
+  tasks_collections: tasks_collection_bool_exp
+  tasks_collections_aggregate: tasks_collection_aggregate_bool_exp
+  tasks_disposals: tasks_disposal_bool_exp
+  tasks_disposals_aggregate: tasks_disposal_aggregate_bool_exp
+  tasks_ticketings: tasks_ticketing_bool_exp
+  tasks_ticketings_aggregate: tasks_ticketing_aggregate_bool_exp
+  tasks_tree_removals: tasks_tree_removal_bool_exp
+  tasks_tree_removals_aggregate: tasks_tree_removal_aggregate_bool_exp
+  ticketing_names: ticketing_names_bool_exp
+  ticketing_names_aggregate: ticketing_names_aggregate_bool_exp
   updated_at: timestamptz_comparison_exp
 }
 
@@ -5341,9 +5726,14 @@ input projects_insert_input {
   location: String
   name: String
   poc: String
-  projects_tasks: tasks_arr_rel_insert_input
   status: Boolean
   sub_contractor: String
+  tasks_branch_removals: tasks_branch_removal_arr_rel_insert_input
+  tasks_collections: tasks_collection_arr_rel_insert_input
+  tasks_disposals: tasks_disposal_arr_rel_insert_input
+  tasks_ticketings: tasks_ticketing_arr_rel_insert_input
+  tasks_tree_removals: tasks_tree_removal_arr_rel_insert_input
+  ticketing_names: ticketing_names_arr_rel_insert_input
   updated_at: timestamptz
 }
 
@@ -5412,9 +5802,14 @@ input projects_order_by {
   location: order_by
   name: order_by
   poc: order_by
-  projects_tasks_aggregate: tasks_aggregate_order_by
   status: order_by
   sub_contractor: order_by
+  tasks_branch_removals_aggregate: tasks_branch_removal_aggregate_order_by
+  tasks_collections_aggregate: tasks_collection_aggregate_order_by
+  tasks_disposals_aggregate: tasks_disposal_aggregate_order_by
+  tasks_ticketings_aggregate: tasks_ticketing_aggregate_order_by
+  tasks_tree_removals_aggregate: tasks_tree_removal_aggregate_order_by
+  ticketing_names_aggregate: ticketing_names_aggregate_order_by
   updated_at: order_by
 }
 
@@ -6024,9 +6419,7 @@ type query_root {
   """fetch data from the table: "image_taken" using primary key columns"""
   image_taken_by_pk(taken_time: String!): image_taken
 
-  """
-  fetch data from the table: "images"
-  """
+  """An array relationship"""
   images(
     """distinct select on columns"""
     distinct_on: [images_select_column!]
@@ -6044,9 +6437,7 @@ type query_root {
     where: images_bool_exp
   ): [images!]!
 
-  """
-  fetch aggregated fields from the table: "images"
-  """
+  """An aggregate relationship"""
   images_aggregate(
     """distinct select on columns"""
     distinct_on: [images_select_column!]
@@ -6374,9 +6765,7 @@ type query_root {
   """
   tasks_tree_removal_by_pk(id: uuid!): tasks_tree_removal
 
-  """
-  fetch data from the table: "ticketing_names"
-  """
+  """An array relationship"""
   ticketing_names(
     """distinct select on columns"""
     distinct_on: [ticketing_names_select_column!]
@@ -6394,9 +6783,7 @@ type query_root {
     where: ticketing_names_bool_exp
   ): [ticketing_names!]!
 
-  """
-  fetch aggregated fields from the table: "ticketing_names"
-  """
+  """An aggregate relationship"""
   ticketing_names_aggregate(
     """distinct select on columns"""
     distinct_on: [ticketing_names_select_column!]
@@ -7140,9 +7527,7 @@ type subscription_root {
     where: image_taken_bool_exp
   ): [image_taken!]!
 
-  """
-  fetch data from the table: "images"
-  """
+  """An array relationship"""
   images(
     """distinct select on columns"""
     distinct_on: [images_select_column!]
@@ -7160,9 +7545,7 @@ type subscription_root {
     where: images_bool_exp
   ): [images!]!
 
-  """
-  fetch aggregated fields from the table: "images"
-  """
+  """An aggregate relationship"""
   images_aggregate(
     """distinct select on columns"""
     distinct_on: [images_select_column!]
@@ -7602,9 +7985,7 @@ type subscription_root {
     where: tasks_tree_removal_bool_exp
   ): [tasks_tree_removal!]!
 
-  """
-  fetch data from the table: "ticketing_names"
-  """
+  """An array relationship"""
   ticketing_names(
     """distinct select on columns"""
     distinct_on: [ticketing_names_select_column!]
@@ -7622,9 +8003,7 @@ type subscription_root {
     where: ticketing_names_bool_exp
   ): [ticketing_names!]!
 
-  """
-  fetch aggregated fields from the table: "ticketing_names"
-  """
+  """An aggregate relationship"""
   ticketing_names_aggregate(
     """distinct select on columns"""
     distinct_on: [ticketing_names_select_column!]
@@ -7789,48 +8168,6 @@ type tasks {
   ): jsonb
   name: String!
   project_id: uuid!
-
-  """An array relationship"""
-  tasks_images(
-    """distinct select on columns"""
-    distinct_on: [images_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [images_order_by!]
-
-    """filter the rows returned"""
-    where: images_bool_exp
-  ): [images!]!
-
-  """An aggregate relationship"""
-  tasks_images_aggregate(
-    """distinct select on columns"""
-    distinct_on: [images_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [images_order_by!]
-
-    """filter the rows returned"""
-    where: images_bool_exp
-  ): images_aggregate!
-
-  """An object relationship"""
-  tasks_project: projects!
-
-  """An object relationship"""
-  tasks_user: users!
   type: String
   updated_at: timestamptz
   user_id: uuid!
@@ -7844,33 +8181,6 @@ type tasks_aggregate {
   nodes: [tasks!]!
 }
 
-input tasks_aggregate_bool_exp {
-  bool_and: tasks_aggregate_bool_exp_bool_and
-  bool_or: tasks_aggregate_bool_exp_bool_or
-  count: tasks_aggregate_bool_exp_count
-}
-
-input tasks_aggregate_bool_exp_bool_and {
-  arguments: tasks_select_column_tasks_aggregate_bool_exp_bool_and_arguments_columns!
-  distinct: Boolean
-  filter: tasks_bool_exp
-  predicate: Boolean_comparison_exp!
-}
-
-input tasks_aggregate_bool_exp_bool_or {
-  arguments: tasks_select_column_tasks_aggregate_bool_exp_bool_or_arguments_columns!
-  distinct: Boolean
-  filter: tasks_bool_exp
-  predicate: Boolean_comparison_exp!
-}
-
-input tasks_aggregate_bool_exp_count {
-  arguments: [tasks_select_column!]
-  distinct: Boolean
-  filter: tasks_bool_exp
-  predicate: Int_comparison_exp!
-}
-
 """
 aggregate fields of "tasks"
 """
@@ -7880,28 +8190,9 @@ type tasks_aggregate_fields {
   min: tasks_min_fields
 }
 
-"""
-order by aggregate values of table "tasks"
-"""
-input tasks_aggregate_order_by {
-  count: order_by
-  max: tasks_max_order_by
-  min: tasks_min_order_by
-}
-
 """append existing jsonb value of filtered columns with new jsonb value"""
 input tasks_append_input {
   metadata: jsonb
-}
-
-"""
-input type for inserting array relation for remote table "tasks"
-"""
-input tasks_arr_rel_insert_input {
-  data: [tasks_insert_input!]!
-
-  """upsert condition"""
-  on_conflict: tasks_on_conflict
 }
 
 """
@@ -7919,10 +8210,6 @@ input tasks_bool_exp {
   metadata: jsonb_comparison_exp
   name: String_comparison_exp
   project_id: uuid_comparison_exp
-  tasks_images: images_bool_exp
-  tasks_images_aggregate: images_aggregate_bool_exp
-  tasks_project: projects_bool_exp
-  tasks_user: users_bool_exp
   type: String_comparison_exp
   updated_at: timestamptz_comparison_exp
   user_id: uuid_comparison_exp
@@ -7935,6 +8222,9 @@ type tasks_branch_removal {
   id: uuid!
   latitude: String!
   longitude: String!
+
+  """An object relationship"""
+  project: projects!
   project_id: uuid!
   updated_at: timestamptz!
 }
@@ -7947,6 +8237,17 @@ type tasks_branch_removal_aggregate {
   nodes: [tasks_branch_removal!]!
 }
 
+input tasks_branch_removal_aggregate_bool_exp {
+  count: tasks_branch_removal_aggregate_bool_exp_count
+}
+
+input tasks_branch_removal_aggregate_bool_exp_count {
+  arguments: [tasks_branch_removal_select_column!]
+  distinct: Boolean
+  filter: tasks_branch_removal_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 """
 aggregate fields of "tasks_branch_removal"
 """
@@ -7954,6 +8255,25 @@ type tasks_branch_removal_aggregate_fields {
   count(columns: [tasks_branch_removal_select_column!], distinct: Boolean): Int!
   max: tasks_branch_removal_max_fields
   min: tasks_branch_removal_min_fields
+}
+
+"""
+order by aggregate values of table "tasks_branch_removal"
+"""
+input tasks_branch_removal_aggregate_order_by {
+  count: order_by
+  max: tasks_branch_removal_max_order_by
+  min: tasks_branch_removal_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "tasks_branch_removal"
+"""
+input tasks_branch_removal_arr_rel_insert_input {
+  data: [tasks_branch_removal_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: tasks_branch_removal_on_conflict
 }
 
 """
@@ -7968,6 +8288,7 @@ input tasks_branch_removal_bool_exp {
   id: uuid_comparison_exp
   latitude: String_comparison_exp
   longitude: String_comparison_exp
+  project: projects_bool_exp
   project_id: uuid_comparison_exp
   updated_at: timestamptz_comparison_exp
 }
@@ -7991,6 +8312,7 @@ input tasks_branch_removal_insert_input {
   id: uuid
   latitude: String
   longitude: String
+  project: projects_obj_rel_insert_input
   project_id: uuid
   updated_at: timestamptz
 }
@@ -8006,6 +8328,19 @@ type tasks_branch_removal_max_fields {
   updated_at: timestamptz
 }
 
+"""
+order by max() on columns of table "tasks_branch_removal"
+"""
+input tasks_branch_removal_max_order_by {
+  comment: order_by
+  created_at: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  project_id: order_by
+  updated_at: order_by
+}
+
 """aggregate min on columns"""
 type tasks_branch_removal_min_fields {
   comment: String
@@ -8015,6 +8350,19 @@ type tasks_branch_removal_min_fields {
   longitude: String
   project_id: uuid
   updated_at: timestamptz
+}
+
+"""
+order by min() on columns of table "tasks_branch_removal"
+"""
+input tasks_branch_removal_min_order_by {
+  comment: order_by
+  created_at: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  project_id: order_by
+  updated_at: order_by
 }
 
 """
@@ -8044,6 +8392,7 @@ input tasks_branch_removal_order_by {
   id: order_by
   latitude: order_by
   longitude: order_by
+  project: projects_order_by
   project_id: order_by
   updated_at: order_by
 }
@@ -8160,7 +8509,13 @@ type tasks_collection {
   id: uuid!
   latitude: String!
   longitude: String!
+
+  """An object relationship"""
+  project: projects!
   project_id: uuid!
+
+  """An object relationship"""
+  tasks_disposal: tasks_disposal
   truck_number: String!
   updated_at: timestamptz!
   weigh_points: String!
@@ -8174,6 +8529,17 @@ type tasks_collection_aggregate {
   nodes: [tasks_collection!]!
 }
 
+input tasks_collection_aggregate_bool_exp {
+  count: tasks_collection_aggregate_bool_exp_count
+}
+
+input tasks_collection_aggregate_bool_exp_count {
+  arguments: [tasks_collection_select_column!]
+  distinct: Boolean
+  filter: tasks_collection_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 """
 aggregate fields of "tasks_collection"
 """
@@ -8181,6 +8547,25 @@ type tasks_collection_aggregate_fields {
   count(columns: [tasks_collection_select_column!], distinct: Boolean): Int!
   max: tasks_collection_max_fields
   min: tasks_collection_min_fields
+}
+
+"""
+order by aggregate values of table "tasks_collection"
+"""
+input tasks_collection_aggregate_order_by {
+  count: order_by
+  max: tasks_collection_max_order_by
+  min: tasks_collection_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "tasks_collection"
+"""
+input tasks_collection_arr_rel_insert_input {
+  data: [tasks_collection_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: tasks_collection_on_conflict
 }
 
 """
@@ -8198,7 +8583,9 @@ input tasks_collection_bool_exp {
   id: uuid_comparison_exp
   latitude: String_comparison_exp
   longitude: String_comparison_exp
+  project: projects_bool_exp
   project_id: uuid_comparison_exp
+  tasks_disposal: tasks_disposal_bool_exp
   truck_number: String_comparison_exp
   updated_at: timestamptz_comparison_exp
   weigh_points: String_comparison_exp
@@ -8226,7 +8613,9 @@ input tasks_collection_insert_input {
   id: uuid
   latitude: String
   longitude: String
+  project: projects_obj_rel_insert_input
   project_id: uuid
+  tasks_disposal: tasks_disposal_obj_rel_insert_input
   truck_number: String
   updated_at: timestamptz
   weigh_points: String
@@ -8248,6 +8637,24 @@ type tasks_collection_max_fields {
   weigh_points: String
 }
 
+"""
+order by max() on columns of table "tasks_collection"
+"""
+input tasks_collection_max_order_by {
+  capactiy: order_by
+  contractor: order_by
+  created_at: order_by
+  debris_type: order_by
+  disposal_site: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  project_id: order_by
+  truck_number: order_by
+  updated_at: order_by
+  weigh_points: order_by
+}
+
 """aggregate min on columns"""
 type tasks_collection_min_fields {
   capactiy: String
@@ -8265,6 +8672,24 @@ type tasks_collection_min_fields {
 }
 
 """
+order by min() on columns of table "tasks_collection"
+"""
+input tasks_collection_min_order_by {
+  capactiy: order_by
+  contractor: order_by
+  created_at: order_by
+  debris_type: order_by
+  disposal_site: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  project_id: order_by
+  truck_number: order_by
+  updated_at: order_by
+  weigh_points: order_by
+}
+
+"""
 response of any mutation on the table "tasks_collection"
 """
 type tasks_collection_mutation_response {
@@ -8273,6 +8698,16 @@ type tasks_collection_mutation_response {
 
   """data from the rows affected by the mutation"""
   returning: [tasks_collection!]!
+}
+
+"""
+input type for inserting object relation for remote table "tasks_collection"
+"""
+input tasks_collection_obj_rel_insert_input {
+  data: tasks_collection_insert_input!
+
+  """upsert condition"""
+  on_conflict: tasks_collection_on_conflict
 }
 
 """
@@ -8294,7 +8729,9 @@ input tasks_collection_order_by {
   id: order_by
   latitude: order_by
   longitude: order_by
+  project: projects_order_by
   project_id: order_by
+  tasks_disposal: tasks_disposal_order_by
   truck_number: order_by
   updated_at: order_by
   weigh_points: order_by
@@ -8483,8 +8920,14 @@ type tasks_disposal {
   latitude: String!
   load_call: String!
   longitude: String!
+
+  """An object relationship"""
+  project: projects!
   project_id: uuid!
   task_collection_id: uuid!
+
+  """An object relationship"""
+  tasks_collection: tasks_collection!
   truck_number: String!
   updated_at: timestamptz!
 }
@@ -8497,6 +8940,17 @@ type tasks_disposal_aggregate {
   nodes: [tasks_disposal!]!
 }
 
+input tasks_disposal_aggregate_bool_exp {
+  count: tasks_disposal_aggregate_bool_exp_count
+}
+
+input tasks_disposal_aggregate_bool_exp_count {
+  arguments: [tasks_disposal_select_column!]
+  distinct: Boolean
+  filter: tasks_disposal_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 """
 aggregate fields of "tasks_disposal"
 """
@@ -8504,6 +8958,25 @@ type tasks_disposal_aggregate_fields {
   count(columns: [tasks_disposal_select_column!], distinct: Boolean): Int!
   max: tasks_disposal_max_fields
   min: tasks_disposal_min_fields
+}
+
+"""
+order by aggregate values of table "tasks_disposal"
+"""
+input tasks_disposal_aggregate_order_by {
+  count: order_by
+  max: tasks_disposal_max_order_by
+  min: tasks_disposal_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "tasks_disposal"
+"""
+input tasks_disposal_arr_rel_insert_input {
+  data: [tasks_disposal_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: tasks_disposal_on_conflict
 }
 
 """
@@ -8521,8 +8994,10 @@ input tasks_disposal_bool_exp {
   latitude: String_comparison_exp
   load_call: String_comparison_exp
   longitude: String_comparison_exp
+  project: projects_bool_exp
   project_id: uuid_comparison_exp
   task_collection_id: uuid_comparison_exp
+  tasks_collection: tasks_collection_bool_exp
   truck_number: String_comparison_exp
   updated_at: timestamptz_comparison_exp
 }
@@ -8554,8 +9029,10 @@ input tasks_disposal_insert_input {
   latitude: String
   load_call: String
   longitude: String
+  project: projects_obj_rel_insert_input
   project_id: uuid
   task_collection_id: uuid
+  tasks_collection: tasks_collection_obj_rel_insert_input
   truck_number: String
   updated_at: timestamptz
 }
@@ -8576,6 +9053,24 @@ type tasks_disposal_max_fields {
   updated_at: timestamptz
 }
 
+"""
+order by max() on columns of table "tasks_disposal"
+"""
+input tasks_disposal_max_order_by {
+  capacity: order_by
+  contractor: order_by
+  created_at: order_by
+  disposal_site: order_by
+  id: order_by
+  latitude: order_by
+  load_call: order_by
+  longitude: order_by
+  project_id: order_by
+  task_collection_id: order_by
+  truck_number: order_by
+  updated_at: order_by
+}
+
 """aggregate min on columns"""
 type tasks_disposal_min_fields {
   capacity: String
@@ -8593,6 +9088,24 @@ type tasks_disposal_min_fields {
 }
 
 """
+order by min() on columns of table "tasks_disposal"
+"""
+input tasks_disposal_min_order_by {
+  capacity: order_by
+  contractor: order_by
+  created_at: order_by
+  disposal_site: order_by
+  id: order_by
+  latitude: order_by
+  load_call: order_by
+  longitude: order_by
+  project_id: order_by
+  task_collection_id: order_by
+  truck_number: order_by
+  updated_at: order_by
+}
+
+"""
 response of any mutation on the table "tasks_disposal"
 """
 type tasks_disposal_mutation_response {
@@ -8601,6 +9114,16 @@ type tasks_disposal_mutation_response {
 
   """data from the rows affected by the mutation"""
   returning: [tasks_disposal!]!
+}
+
+"""
+input type for inserting object relation for remote table "tasks_disposal"
+"""
+input tasks_disposal_obj_rel_insert_input {
+  data: tasks_disposal_insert_input!
+
+  """upsert condition"""
+  on_conflict: tasks_disposal_on_conflict
 }
 
 """
@@ -8622,8 +9145,10 @@ input tasks_disposal_order_by {
   latitude: order_by
   load_call: order_by
   longitude: order_by
+  project: projects_order_by
   project_id: order_by
   task_collection_id: order_by
+  tasks_collection: tasks_collection_order_by
   truck_number: order_by
   updated_at: order_by
 }
@@ -8780,9 +9305,6 @@ input tasks_insert_input {
   metadata: jsonb
   name: String
   project_id: uuid
-  tasks_images: images_arr_rel_insert_input
-  tasks_project: projects_obj_rel_insert_input
-  tasks_user: users_obj_rel_insert_input
   type: String
   updated_at: timestamptz
   user_id: uuid
@@ -8801,21 +9323,6 @@ type tasks_max_fields {
   user_id: uuid
 }
 
-"""
-order by max() on columns of table "tasks"
-"""
-input tasks_max_order_by {
-  created_at: order_by
-  id: order_by
-  latitude: order_by
-  longitude: order_by
-  name: order_by
-  project_id: order_by
-  type: order_by
-  updated_at: order_by
-  user_id: order_by
-}
-
 """aggregate min on columns"""
 type tasks_min_fields {
   created_at: timestamptz
@@ -8830,21 +9337,6 @@ type tasks_min_fields {
 }
 
 """
-order by min() on columns of table "tasks"
-"""
-input tasks_min_order_by {
-  created_at: order_by
-  id: order_by
-  latitude: order_by
-  longitude: order_by
-  name: order_by
-  project_id: order_by
-  type: order_by
-  updated_at: order_by
-  user_id: order_by
-}
-
-"""
 response of any mutation on the table "tasks"
 """
 type tasks_mutation_response {
@@ -8853,16 +9345,6 @@ type tasks_mutation_response {
 
   """data from the rows affected by the mutation"""
   returning: [tasks!]!
-}
-
-"""
-input type for inserting object relation for remote table "tasks"
-"""
-input tasks_obj_rel_insert_input {
-  data: tasks_insert_input!
-
-  """upsert condition"""
-  on_conflict: tasks_on_conflict
 }
 
 """
@@ -8884,9 +9366,6 @@ input tasks_order_by {
   metadata: order_by
   name: order_by
   project_id: order_by
-  tasks_images_aggregate: images_aggregate_order_by
-  tasks_project: projects_order_by
-  tasks_user: users_order_by
   type: order_by
   updated_at: order_by
   user_id: order_by
@@ -8938,22 +9417,6 @@ enum tasks_select_column {
 
   """column name"""
   user_id
-}
-
-"""
-select "tasks_aggregate_bool_exp_bool_and_arguments_columns" columns of table "tasks"
-"""
-enum tasks_select_column_tasks_aggregate_bool_exp_bool_and_arguments_columns {
-  """column name"""
-  _deleted
-}
-
-"""
-select "tasks_aggregate_bool_exp_bool_or_arguments_columns" columns of table "tasks"
-"""
-enum tasks_select_column_tasks_aggregate_bool_exp_bool_or_arguments_columns {
-  """column name"""
-  _deleted
 }
 
 """
@@ -9010,6 +9473,9 @@ type tasks_ticketing {
   latitude: String!
   longitude: String!
   print_ticket: Boolean!
+
+  """An object relationship"""
+  project: projects!
   project_id: uuid!
   title: String!
   updated_at: timestamptz!
@@ -9023,6 +9489,33 @@ type tasks_ticketing_aggregate {
   nodes: [tasks_ticketing!]!
 }
 
+input tasks_ticketing_aggregate_bool_exp {
+  bool_and: tasks_ticketing_aggregate_bool_exp_bool_and
+  bool_or: tasks_ticketing_aggregate_bool_exp_bool_or
+  count: tasks_ticketing_aggregate_bool_exp_count
+}
+
+input tasks_ticketing_aggregate_bool_exp_bool_and {
+  arguments: tasks_ticketing_select_column_tasks_ticketing_aggregate_bool_exp_bool_and_arguments_columns!
+  distinct: Boolean
+  filter: tasks_ticketing_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input tasks_ticketing_aggregate_bool_exp_bool_or {
+  arguments: tasks_ticketing_select_column_tasks_ticketing_aggregate_bool_exp_bool_or_arguments_columns!
+  distinct: Boolean
+  filter: tasks_ticketing_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input tasks_ticketing_aggregate_bool_exp_count {
+  arguments: [tasks_ticketing_select_column!]
+  distinct: Boolean
+  filter: tasks_ticketing_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 """
 aggregate fields of "tasks_ticketing"
 """
@@ -9030,6 +9523,25 @@ type tasks_ticketing_aggregate_fields {
   count(columns: [tasks_ticketing_select_column!], distinct: Boolean): Int!
   max: tasks_ticketing_max_fields
   min: tasks_ticketing_min_fields
+}
+
+"""
+order by aggregate values of table "tasks_ticketing"
+"""
+input tasks_ticketing_aggregate_order_by {
+  count: order_by
+  max: tasks_ticketing_max_order_by
+  min: tasks_ticketing_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "tasks_ticketing"
+"""
+input tasks_ticketing_arr_rel_insert_input {
+  data: [tasks_ticketing_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: tasks_ticketing_on_conflict
 }
 
 """
@@ -9046,6 +9558,7 @@ input tasks_ticketing_bool_exp {
   latitude: String_comparison_exp
   longitude: String_comparison_exp
   print_ticket: Boolean_comparison_exp
+  project: projects_bool_exp
   project_id: uuid_comparison_exp
   title: String_comparison_exp
   updated_at: timestamptz_comparison_exp
@@ -9072,6 +9585,7 @@ input tasks_ticketing_insert_input {
   latitude: String
   longitude: String
   print_ticket: Boolean
+  project: projects_obj_rel_insert_input
   project_id: uuid
   title: String
   updated_at: timestamptz
@@ -9089,6 +9603,20 @@ type tasks_ticketing_max_fields {
   updated_at: timestamptz
 }
 
+"""
+order by max() on columns of table "tasks_ticketing"
+"""
+input tasks_ticketing_max_order_by {
+  comment: order_by
+  created_at: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  project_id: order_by
+  title: order_by
+  updated_at: order_by
+}
+
 """aggregate min on columns"""
 type tasks_ticketing_min_fields {
   comment: String
@@ -9099,6 +9627,20 @@ type tasks_ticketing_min_fields {
   project_id: uuid
   title: String
   updated_at: timestamptz
+}
+
+"""
+order by min() on columns of table "tasks_ticketing"
+"""
+input tasks_ticketing_min_order_by {
+  comment: order_by
+  created_at: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  project_id: order_by
+  title: order_by
+  updated_at: order_by
 }
 
 """
@@ -9130,6 +9672,7 @@ input tasks_ticketing_order_by {
   latitude: order_by
   longitude: order_by
   print_ticket: order_by
+  project: projects_order_by
   project_id: order_by
   title: order_by
   updated_at: order_by
@@ -9173,6 +9716,28 @@ enum tasks_ticketing_select_column {
 
   """column name"""
   updated_at
+}
+
+"""
+select "tasks_ticketing_aggregate_bool_exp_bool_and_arguments_columns" columns of table "tasks_ticketing"
+"""
+enum tasks_ticketing_select_column_tasks_ticketing_aggregate_bool_exp_bool_and_arguments_columns {
+  """column name"""
+  add_photos
+
+  """column name"""
+  print_ticket
+}
+
+"""
+select "tasks_ticketing_aggregate_bool_exp_bool_or_arguments_columns" columns of table "tasks_ticketing"
+"""
+enum tasks_ticketing_select_column_tasks_ticketing_aggregate_bool_exp_bool_or_arguments_columns {
+  """column name"""
+  add_photos
+
+  """column name"""
+  print_ticket
 }
 
 """
@@ -9263,14 +9828,92 @@ input tasks_ticketing_updates {
 columns and relationships of "tasks_tree_removal"
 """
 type tasks_tree_removal {
+  _deleted: Boolean
   comment: String
-  created_at: date!
+  completed: Boolean
+  created_at: timestamptz!
   id: uuid!
-  latitude: String!
-  longitude: String!
+
+  """An array relationship"""
+  images(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): [images!]!
+
+  """An aggregate relationship"""
+  images_aggregate(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): images_aggregate!
   project_id: uuid!
-  ranges: String!
-  updated_at: date!
+
+  """An array relationship"""
+  tasks_tree_removal_images(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): [images!]!
+
+  """An aggregate relationship"""
+  tasks_tree_removal_images_aggregate(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): images_aggregate!
+
+  """An object relationship"""
+  tasks_tree_removal_project: projects!
+
+  """An object relationship"""
+  tasks_tree_removal_user: users!
+  updated_at: timestamptz!
+  user_id: uuid!
 }
 
 """
@@ -9279,6 +9922,33 @@ aggregated selection of "tasks_tree_removal"
 type tasks_tree_removal_aggregate {
   aggregate: tasks_tree_removal_aggregate_fields
   nodes: [tasks_tree_removal!]!
+}
+
+input tasks_tree_removal_aggregate_bool_exp {
+  bool_and: tasks_tree_removal_aggregate_bool_exp_bool_and
+  bool_or: tasks_tree_removal_aggregate_bool_exp_bool_or
+  count: tasks_tree_removal_aggregate_bool_exp_count
+}
+
+input tasks_tree_removal_aggregate_bool_exp_bool_and {
+  arguments: tasks_tree_removal_select_column_tasks_tree_removal_aggregate_bool_exp_bool_and_arguments_columns!
+  distinct: Boolean
+  filter: tasks_tree_removal_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input tasks_tree_removal_aggregate_bool_exp_bool_or {
+  arguments: tasks_tree_removal_select_column_tasks_tree_removal_aggregate_bool_exp_bool_or_arguments_columns!
+  distinct: Boolean
+  filter: tasks_tree_removal_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input tasks_tree_removal_aggregate_bool_exp_count {
+  arguments: [tasks_tree_removal_select_column!]
+  distinct: Boolean
+  filter: tasks_tree_removal_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -9291,20 +9961,45 @@ type tasks_tree_removal_aggregate_fields {
 }
 
 """
+order by aggregate values of table "tasks_tree_removal"
+"""
+input tasks_tree_removal_aggregate_order_by {
+  count: order_by
+  max: tasks_tree_removal_max_order_by
+  min: tasks_tree_removal_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "tasks_tree_removal"
+"""
+input tasks_tree_removal_arr_rel_insert_input {
+  data: [tasks_tree_removal_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: tasks_tree_removal_on_conflict
+}
+
+"""
 Boolean expression to filter rows from the table "tasks_tree_removal". All fields are combined with a logical 'AND'.
 """
 input tasks_tree_removal_bool_exp {
   _and: [tasks_tree_removal_bool_exp!]
+  _deleted: Boolean_comparison_exp
   _not: tasks_tree_removal_bool_exp
   _or: [tasks_tree_removal_bool_exp!]
   comment: String_comparison_exp
-  created_at: date_comparison_exp
+  completed: Boolean_comparison_exp
+  created_at: timestamptz_comparison_exp
   id: uuid_comparison_exp
-  latitude: String_comparison_exp
-  longitude: String_comparison_exp
+  images: images_bool_exp
+  images_aggregate: images_aggregate_bool_exp
   project_id: uuid_comparison_exp
-  ranges: String_comparison_exp
-  updated_at: date_comparison_exp
+  tasks_tree_removal_images: images_bool_exp
+  tasks_tree_removal_images_aggregate: images_aggregate_bool_exp
+  tasks_tree_removal_project: projects_bool_exp
+  tasks_tree_removal_user: users_bool_exp
+  updated_at: timestamptz_comparison_exp
+  user_id: uuid_comparison_exp
 }
 
 """
@@ -9321,38 +10016,62 @@ enum tasks_tree_removal_constraint {
 input type for inserting data into table "tasks_tree_removal"
 """
 input tasks_tree_removal_insert_input {
+  _deleted: Boolean
   comment: String
-  created_at: date
+  completed: Boolean
+  created_at: timestamptz
   id: uuid
-  latitude: String
-  longitude: String
+  images: images_arr_rel_insert_input
   project_id: uuid
-  ranges: String
-  updated_at: date
+  tasks_tree_removal_images: images_arr_rel_insert_input
+  tasks_tree_removal_project: projects_obj_rel_insert_input
+  tasks_tree_removal_user: users_obj_rel_insert_input
+  updated_at: timestamptz
+  user_id: uuid
 }
 
 """aggregate max on columns"""
 type tasks_tree_removal_max_fields {
   comment: String
-  created_at: date
+  created_at: timestamptz
   id: uuid
-  latitude: String
-  longitude: String
   project_id: uuid
-  ranges: String
-  updated_at: date
+  updated_at: timestamptz
+  user_id: uuid
+}
+
+"""
+order by max() on columns of table "tasks_tree_removal"
+"""
+input tasks_tree_removal_max_order_by {
+  comment: order_by
+  created_at: order_by
+  id: order_by
+  project_id: order_by
+  updated_at: order_by
+  user_id: order_by
 }
 
 """aggregate min on columns"""
 type tasks_tree_removal_min_fields {
   comment: String
-  created_at: date
+  created_at: timestamptz
   id: uuid
-  latitude: String
-  longitude: String
   project_id: uuid
-  ranges: String
-  updated_at: date
+  updated_at: timestamptz
+  user_id: uuid
+}
+
+"""
+order by min() on columns of table "tasks_tree_removal"
+"""
+input tasks_tree_removal_min_order_by {
+  comment: order_by
+  created_at: order_by
+  id: order_by
+  project_id: order_by
+  updated_at: order_by
+  user_id: order_by
 }
 
 """
@@ -9367,6 +10086,16 @@ type tasks_tree_removal_mutation_response {
 }
 
 """
+input type for inserting object relation for remote table "tasks_tree_removal"
+"""
+input tasks_tree_removal_obj_rel_insert_input {
+  data: tasks_tree_removal_insert_input!
+
+  """upsert condition"""
+  on_conflict: tasks_tree_removal_on_conflict
+}
+
+"""
 on_conflict condition type for table "tasks_tree_removal"
 """
 input tasks_tree_removal_on_conflict {
@@ -9377,14 +10106,18 @@ input tasks_tree_removal_on_conflict {
 
 """Ordering options when selecting data from "tasks_tree_removal"."""
 input tasks_tree_removal_order_by {
+  _deleted: order_by
   comment: order_by
+  completed: order_by
   created_at: order_by
   id: order_by
-  latitude: order_by
-  longitude: order_by
+  images_aggregate: images_aggregate_order_by
   project_id: order_by
-  ranges: order_by
+  tasks_tree_removal_images_aggregate: images_aggregate_order_by
+  tasks_tree_removal_project: projects_order_by
+  tasks_tree_removal_user: users_order_by
   updated_at: order_by
+  user_id: order_by
 }
 
 """primary key columns input for table: tasks_tree_removal"""
@@ -9397,7 +10130,13 @@ select columns of table "tasks_tree_removal"
 """
 enum tasks_tree_removal_select_column {
   """column name"""
+  _deleted
+
+  """column name"""
   comment
+
+  """column name"""
+  completed
 
   """column name"""
   created_at
@@ -9406,33 +10145,49 @@ enum tasks_tree_removal_select_column {
   id
 
   """column name"""
-  latitude
-
-  """column name"""
-  longitude
-
-  """column name"""
   project_id
 
   """column name"""
-  ranges
+  updated_at
 
   """column name"""
-  updated_at
+  user_id
+}
+
+"""
+select "tasks_tree_removal_aggregate_bool_exp_bool_and_arguments_columns" columns of table "tasks_tree_removal"
+"""
+enum tasks_tree_removal_select_column_tasks_tree_removal_aggregate_bool_exp_bool_and_arguments_columns {
+  """column name"""
+  _deleted
+
+  """column name"""
+  completed
+}
+
+"""
+select "tasks_tree_removal_aggregate_bool_exp_bool_or_arguments_columns" columns of table "tasks_tree_removal"
+"""
+enum tasks_tree_removal_select_column_tasks_tree_removal_aggregate_bool_exp_bool_or_arguments_columns {
+  """column name"""
+  _deleted
+
+  """column name"""
+  completed
 }
 
 """
 input type for updating data in table "tasks_tree_removal"
 """
 input tasks_tree_removal_set_input {
+  _deleted: Boolean
   comment: String
-  created_at: date
+  completed: Boolean
+  created_at: timestamptz
   id: uuid
-  latitude: String
-  longitude: String
   project_id: uuid
-  ranges: String
-  updated_at: date
+  updated_at: timestamptz
+  user_id: uuid
 }
 
 """
@@ -9448,14 +10203,14 @@ input tasks_tree_removal_stream_cursor_input {
 
 """Initial value of the column from where the streaming should start"""
 input tasks_tree_removal_stream_cursor_value_input {
+  _deleted: Boolean
   comment: String
-  created_at: date
+  completed: Boolean
+  created_at: timestamptz
   id: uuid
-  latitude: String
-  longitude: String
   project_id: uuid
-  ranges: String
-  updated_at: date
+  updated_at: timestamptz
+  user_id: uuid
 }
 
 """
@@ -9463,7 +10218,13 @@ update columns of table "tasks_tree_removal"
 """
 enum tasks_tree_removal_update_column {
   """column name"""
+  _deleted
+
+  """column name"""
   comment
+
+  """column name"""
+  completed
 
   """column name"""
   created_at
@@ -9472,19 +10233,13 @@ enum tasks_tree_removal_update_column {
   id
 
   """column name"""
-  latitude
-
-  """column name"""
-  longitude
-
-  """column name"""
   project_id
 
   """column name"""
-  ranges
+  updated_at
 
   """column name"""
-  updated_at
+  user_id
 }
 
 input tasks_tree_removal_updates {
@@ -9568,6 +10323,9 @@ this table is for the backend to be populated so the UI knows about the names of
 type ticketing_names {
   id: uuid!
   name: String!
+
+  """An object relationship"""
+  project: projects!
   project_id: uuid!
 }
 
@@ -9577,6 +10335,17 @@ aggregated selection of "ticketing_names"
 type ticketing_names_aggregate {
   aggregate: ticketing_names_aggregate_fields
   nodes: [ticketing_names!]!
+}
+
+input ticketing_names_aggregate_bool_exp {
+  count: ticketing_names_aggregate_bool_exp_count
+}
+
+input ticketing_names_aggregate_bool_exp_count {
+  arguments: [ticketing_names_select_column!]
+  distinct: Boolean
+  filter: ticketing_names_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -9589,6 +10358,25 @@ type ticketing_names_aggregate_fields {
 }
 
 """
+order by aggregate values of table "ticketing_names"
+"""
+input ticketing_names_aggregate_order_by {
+  count: order_by
+  max: ticketing_names_max_order_by
+  min: ticketing_names_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "ticketing_names"
+"""
+input ticketing_names_arr_rel_insert_input {
+  data: [ticketing_names_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: ticketing_names_on_conflict
+}
+
+"""
 Boolean expression to filter rows from the table "ticketing_names". All fields are combined with a logical 'AND'.
 """
 input ticketing_names_bool_exp {
@@ -9597,6 +10385,7 @@ input ticketing_names_bool_exp {
   _or: [ticketing_names_bool_exp!]
   id: uuid_comparison_exp
   name: String_comparison_exp
+  project: projects_bool_exp
   project_id: uuid_comparison_exp
 }
 
@@ -9616,6 +10405,7 @@ input type for inserting data into table "ticketing_names"
 input ticketing_names_insert_input {
   id: uuid
   name: String
+  project: projects_obj_rel_insert_input
   project_id: uuid
 }
 
@@ -9626,11 +10416,29 @@ type ticketing_names_max_fields {
   project_id: uuid
 }
 
+"""
+order by max() on columns of table "ticketing_names"
+"""
+input ticketing_names_max_order_by {
+  id: order_by
+  name: order_by
+  project_id: order_by
+}
+
 """aggregate min on columns"""
 type ticketing_names_min_fields {
   id: uuid
   name: String
   project_id: uuid
+}
+
+"""
+order by min() on columns of table "ticketing_names"
+"""
+input ticketing_names_min_order_by {
+  id: order_by
+  name: order_by
+  project_id: order_by
 }
 
 """
@@ -9657,6 +10465,7 @@ input ticketing_names_on_conflict {
 input ticketing_names_order_by {
   id: order_by
   name: order_by
+  project: projects_order_by
   project_id: order_by
 }
 

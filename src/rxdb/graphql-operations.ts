@@ -21,16 +21,35 @@ export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
 `)
 
 export const upsertTreeRemovalTasks = graphql(/* GraphQL */ `
-  mutation upsertTreeRemovalTasks(
+  mutation upsertTreeRemovalTask(
     $tasks: [tasks_tree_removal_insert_input!]!
     $images: [images_insert_input!]!
   ) {
-    insert_tasks_tree_removal(objects: $tasks) {
+    insert_tasks_tree_removal(
+      objects: $tasks
+      on_conflict: {
+        update_columns: [comment, completed, updated_at, _deleted]
+        constraint: tree_removal_tasks_pkey
+      }
+    ) {
       returning {
         id
       }
     }
-    insert_images(objects: $images) {
+    insert_images(
+      objects: $images
+      on_conflict: {
+        constraint: images_pkey
+        update_columns: [
+          latitude
+          longitude
+          ranges
+          taken_at_step
+          updated_at
+          _deleted
+        ]
+      }
+    ) {
       returning {
         id
       }
@@ -82,17 +101,3 @@ export const projectsDocument = graphql(/* GraphQL */ `
     }
   }
 `)
-
-// mutation upsertTaskTreeRemoval($tasks: [tasks_tree_removal_insert_input!]!, $images: [images_insert_input!]!) {
-//   insert_tasks_tree_removal(objects: $tasks, on_conflict: {update_columns: [comment, completed], constraint: tree_removal_tasks_pkey}) {
-//     returning {
-//       id
-//       updated_at
-//     }
-//   }
-//   insert_images(objects: $images, on_conflict: {constraint: images_pkey, update_columns: [latitude, longitude, ranges, taken_at_step]}) {
-//     returning {
-//       id
-//     }
-//   }
-// }

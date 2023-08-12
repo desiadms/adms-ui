@@ -2751,7 +2751,31 @@ export type Files_Variance_Order_By = {
 /** to record when an image was taken i.e. before, measure, after */
 export type Image_Taken = {
   __typename?: 'image_taken';
+  /** An array relationship */
+  images: Array<Images>;
+  /** An aggregate relationship */
+  images_aggregate: Images_Aggregate;
   taken_time: Scalars['String']['output'];
+};
+
+
+/** to record when an image was taken i.e. before, measure, after */
+export type Image_TakenImagesArgs = {
+  distinct_on?: InputMaybe<Array<Images_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Images_Order_By>>;
+  where?: InputMaybe<Images_Bool_Exp>;
+};
+
+
+/** to record when an image was taken i.e. before, measure, after */
+export type Image_TakenImages_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Images_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Images_Order_By>>;
+  where?: InputMaybe<Images_Bool_Exp>;
 };
 
 /** aggregated selection of "image_taken" */
@@ -2781,6 +2805,8 @@ export type Image_Taken_Bool_Exp = {
   _and?: InputMaybe<Array<Image_Taken_Bool_Exp>>;
   _not?: InputMaybe<Image_Taken_Bool_Exp>;
   _or?: InputMaybe<Array<Image_Taken_Bool_Exp>>;
+  images?: InputMaybe<Images_Bool_Exp>;
+  images_aggregate?: InputMaybe<Images_Aggregate_Bool_Exp>;
   taken_time?: InputMaybe<String_Comparison_Exp>;
 };
 
@@ -2792,6 +2818,7 @@ export enum Image_Taken_Constraint {
 
 /** input type for inserting data into table "image_taken" */
 export type Image_Taken_Insert_Input = {
+  images?: InputMaybe<Images_Arr_Rel_Insert_Input>;
   taken_time?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2816,6 +2843,13 @@ export type Image_Taken_Mutation_Response = {
   returning: Array<Image_Taken>;
 };
 
+/** input type for inserting object relation for remote table "image_taken" */
+export type Image_Taken_Obj_Rel_Insert_Input = {
+  data: Image_Taken_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Image_Taken_On_Conflict>;
+};
+
 /** on_conflict condition type for table "image_taken" */
 export type Image_Taken_On_Conflict = {
   constraint: Image_Taken_Constraint;
@@ -2825,6 +2859,7 @@ export type Image_Taken_On_Conflict = {
 
 /** Ordering options when selecting data from "image_taken". */
 export type Image_Taken_Order_By = {
+  images_aggregate?: InputMaybe<Images_Aggregate_Order_By>;
   taken_time?: InputMaybe<Order_By>;
 };
 
@@ -2873,13 +2908,22 @@ export type Image_Taken_Updates = {
 /** columns and relationships of "images" */
 export type Images = {
   __typename?: 'images';
+  _deleted?: Maybe<Scalars['Boolean']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
   id: Scalars['uuid']['output'];
-  image_taken?: Maybe<Scalars['String']['output']>;
+  /** An object relationship */
+  image_taken?: Maybe<Image_Taken>;
   /** An object relationship */
   images_file: Files;
   /** An object relationship */
-  images_task: Tasks;
+  images_tasks_tree_removal: Tasks_Tree_Removal;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  ranges?: Maybe<Scalars['String']['output']>;
+  taken_at_step?: Maybe<Scalars['String']['output']>;
   task_id: Scalars['uuid']['output'];
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  user_id: Scalars['uuid']['output'];
 };
 
 /** aggregated selection of "images" */
@@ -2890,7 +2934,23 @@ export type Images_Aggregate = {
 };
 
 export type Images_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Images_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Images_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<Images_Aggregate_Bool_Exp_Count>;
+};
+
+export type Images_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Images_Select_Column_Images_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Images_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Images_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Images_Select_Column_Images_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Images_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
 };
 
 export type Images_Aggregate_Bool_Exp_Count = {
@@ -2932,13 +2992,21 @@ export type Images_Arr_Rel_Insert_Input = {
 /** Boolean expression to filter rows from the table "images". All fields are combined with a logical 'AND'. */
 export type Images_Bool_Exp = {
   _and?: InputMaybe<Array<Images_Bool_Exp>>;
+  _deleted?: InputMaybe<Boolean_Comparison_Exp>;
   _not?: InputMaybe<Images_Bool_Exp>;
   _or?: InputMaybe<Array<Images_Bool_Exp>>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
-  image_taken?: InputMaybe<String_Comparison_Exp>;
+  image_taken?: InputMaybe<Image_Taken_Bool_Exp>;
   images_file?: InputMaybe<Files_Bool_Exp>;
-  images_task?: InputMaybe<Tasks_Bool_Exp>;
+  images_tasks_tree_removal?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+  latitude?: InputMaybe<String_Comparison_Exp>;
+  longitude?: InputMaybe<String_Comparison_Exp>;
+  ranges?: InputMaybe<String_Comparison_Exp>;
+  taken_at_step?: InputMaybe<String_Comparison_Exp>;
   task_id?: InputMaybe<Uuid_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "images" */
@@ -2949,41 +3017,73 @@ export enum Images_Constraint {
 
 /** input type for inserting data into table "images" */
 export type Images_Insert_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  image_taken?: InputMaybe<Scalars['String']['input']>;
+  image_taken?: InputMaybe<Image_Taken_Obj_Rel_Insert_Input>;
   images_file?: InputMaybe<Files_Obj_Rel_Insert_Input>;
-  images_task?: InputMaybe<Tasks_Obj_Rel_Insert_Input>;
+  images_tasks_tree_removal?: InputMaybe<Tasks_Tree_Removal_Obj_Rel_Insert_Input>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  ranges?: InputMaybe<Scalars['String']['input']>;
+  taken_at_step?: InputMaybe<Scalars['String']['input']>;
   task_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** aggregate max on columns */
 export type Images_Max_Fields = {
   __typename?: 'images_max_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  image_taken?: Maybe<Scalars['String']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  ranges?: Maybe<Scalars['String']['output']>;
+  taken_at_step?: Maybe<Scalars['String']['output']>;
   task_id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by max() on columns of table "images" */
 export type Images_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  image_taken?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  ranges?: InputMaybe<Order_By>;
+  taken_at_step?: InputMaybe<Order_By>;
   task_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
 export type Images_Min_Fields = {
   __typename?: 'images_min_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  image_taken?: Maybe<Scalars['String']['output']>;
+  latitude?: Maybe<Scalars['String']['output']>;
+  longitude?: Maybe<Scalars['String']['output']>;
+  ranges?: Maybe<Scalars['String']['output']>;
+  taken_at_step?: Maybe<Scalars['String']['output']>;
   task_id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by min() on columns of table "images" */
 export type Images_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  image_taken?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  ranges?: InputMaybe<Order_By>;
+  taken_at_step?: InputMaybe<Order_By>;
   task_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "images" */
@@ -3004,11 +3104,19 @@ export type Images_On_Conflict = {
 
 /** Ordering options when selecting data from "images". */
 export type Images_Order_By = {
+  _deleted?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  image_taken?: InputMaybe<Order_By>;
+  image_taken?: InputMaybe<Image_Taken_Order_By>;
   images_file?: InputMaybe<Files_Order_By>;
-  images_task?: InputMaybe<Tasks_Order_By>;
+  images_tasks_tree_removal?: InputMaybe<Tasks_Tree_Removal_Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  ranges?: InputMaybe<Order_By>;
+  taken_at_step?: InputMaybe<Order_By>;
   task_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: images */
@@ -3019,18 +3127,51 @@ export type Images_Pk_Columns_Input = {
 /** select columns of table "images" */
 export enum Images_Select_Column {
   /** column name */
+  Deleted = '_deleted',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
   Id = 'id',
   /** column name */
-  ImageTaken = 'image_taken',
+  Latitude = 'latitude',
   /** column name */
-  TaskId = 'task_id'
+  Longitude = 'longitude',
+  /** column name */
+  Ranges = 'ranges',
+  /** column name */
+  TakenAtStep = 'taken_at_step',
+  /** column name */
+  TaskId = 'task_id',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** select "images_aggregate_bool_exp_bool_and_arguments_columns" columns of table "images" */
+export enum Images_Select_Column_Images_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Deleted = '_deleted'
+}
+
+/** select "images_aggregate_bool_exp_bool_or_arguments_columns" columns of table "images" */
+export enum Images_Select_Column_Images_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Deleted = '_deleted'
 }
 
 /** input type for updating data in table "images" */
 export type Images_Set_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  image_taken?: InputMaybe<Scalars['String']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  ranges?: InputMaybe<Scalars['String']['input']>;
+  taken_at_step?: InputMaybe<Scalars['String']['input']>;
   task_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** Streaming cursor of the table "images" */
@@ -3043,19 +3184,40 @@ export type Images_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Images_Stream_Cursor_Value_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  image_taken?: InputMaybe<Scalars['String']['input']>;
+  latitude?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['String']['input']>;
+  ranges?: InputMaybe<Scalars['String']['input']>;
+  taken_at_step?: InputMaybe<Scalars['String']['input']>;
   task_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** update columns of table "images" */
 export enum Images_Update_Column {
   /** column name */
+  Deleted = '_deleted',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
   Id = 'id',
   /** column name */
-  ImageTaken = 'image_taken',
+  Latitude = 'latitude',
   /** column name */
-  TaskId = 'task_id'
+  Longitude = 'longitude',
+  /** column name */
+  Ranges = 'ranges',
+  /** column name */
+  TakenAtStep = 'taken_at_step',
+  /** column name */
+  TaskId = 'task_id',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id'
 }
 
 export type Images_Updates = {
@@ -4490,33 +4652,153 @@ export type Projects = {
   location?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   poc?: Maybe<Scalars['String']['output']>;
-  /** An array relationship */
-  projects_tasks: Array<Tasks>;
-  /** An aggregate relationship */
-  projects_tasks_aggregate: Tasks_Aggregate;
   status?: Maybe<Scalars['Boolean']['output']>;
   sub_contractor?: Maybe<Scalars['String']['output']>;
+  /** An array relationship */
+  tasks_branch_removals: Array<Tasks_Branch_Removal>;
+  /** An aggregate relationship */
+  tasks_branch_removals_aggregate: Tasks_Branch_Removal_Aggregate;
+  /** An array relationship */
+  tasks_collections: Array<Tasks_Collection>;
+  /** An aggregate relationship */
+  tasks_collections_aggregate: Tasks_Collection_Aggregate;
+  /** An array relationship */
+  tasks_disposals: Array<Tasks_Disposal>;
+  /** An aggregate relationship */
+  tasks_disposals_aggregate: Tasks_Disposal_Aggregate;
+  /** An array relationship */
+  tasks_ticketings: Array<Tasks_Ticketing>;
+  /** An aggregate relationship */
+  tasks_ticketings_aggregate: Tasks_Ticketing_Aggregate;
+  /** An array relationship */
+  tasks_tree_removals: Array<Tasks_Tree_Removal>;
+  /** An aggregate relationship */
+  tasks_tree_removals_aggregate: Tasks_Tree_Removal_Aggregate;
+  /** An array relationship */
+  ticketing_names: Array<Ticketing_Names>;
+  /** An aggregate relationship */
+  ticketing_names_aggregate: Ticketing_Names_Aggregate;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
 
 /** columns and relationships of "projects" */
-export type ProjectsProjects_TasksArgs = {
-  distinct_on?: InputMaybe<Array<Tasks_Select_Column>>;
+export type ProjectsTasks_Branch_RemovalsArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Tasks_Order_By>>;
-  where?: InputMaybe<Tasks_Bool_Exp>;
+  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
 };
 
 
 /** columns and relationships of "projects" */
-export type ProjectsProjects_Tasks_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Tasks_Select_Column>>;
+export type ProjectsTasks_Branch_Removals_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Tasks_Order_By>>;
-  where?: InputMaybe<Tasks_Bool_Exp>;
+  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+};
+
+
+/** columns and relationships of "projects" */
+export type ProjectsTasks_CollectionsArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Collection_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Collection_Order_By>>;
+  where?: InputMaybe<Tasks_Collection_Bool_Exp>;
+};
+
+
+/** columns and relationships of "projects" */
+export type ProjectsTasks_Collections_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Collection_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Collection_Order_By>>;
+  where?: InputMaybe<Tasks_Collection_Bool_Exp>;
+};
+
+
+/** columns and relationships of "projects" */
+export type ProjectsTasks_DisposalsArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Disposal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Disposal_Order_By>>;
+  where?: InputMaybe<Tasks_Disposal_Bool_Exp>;
+};
+
+
+/** columns and relationships of "projects" */
+export type ProjectsTasks_Disposals_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Disposal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Disposal_Order_By>>;
+  where?: InputMaybe<Tasks_Disposal_Bool_Exp>;
+};
+
+
+/** columns and relationships of "projects" */
+export type ProjectsTasks_TicketingsArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Ticketing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Ticketing_Order_By>>;
+  where?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
+};
+
+
+/** columns and relationships of "projects" */
+export type ProjectsTasks_Ticketings_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Ticketing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Ticketing_Order_By>>;
+  where?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
+};
+
+
+/** columns and relationships of "projects" */
+export type ProjectsTasks_Tree_RemovalsArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Tree_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Tree_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+};
+
+
+/** columns and relationships of "projects" */
+export type ProjectsTasks_Tree_Removals_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Tree_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Tree_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+};
+
+
+/** columns and relationships of "projects" */
+export type ProjectsTicketing_NamesArgs = {
+  distinct_on?: InputMaybe<Array<Ticketing_Names_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Ticketing_Names_Order_By>>;
+  where?: InputMaybe<Ticketing_Names_Bool_Exp>;
+};
+
+
+/** columns and relationships of "projects" */
+export type ProjectsTicketing_Names_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Ticketing_Names_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Ticketing_Names_Order_By>>;
+  where?: InputMaybe<Ticketing_Names_Bool_Exp>;
 };
 
 /** aggregated selection of "projects" */
@@ -4553,10 +4835,20 @@ export type Projects_Bool_Exp = {
   location?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   poc?: InputMaybe<String_Comparison_Exp>;
-  projects_tasks?: InputMaybe<Tasks_Bool_Exp>;
-  projects_tasks_aggregate?: InputMaybe<Tasks_Aggregate_Bool_Exp>;
   status?: InputMaybe<Boolean_Comparison_Exp>;
   sub_contractor?: InputMaybe<String_Comparison_Exp>;
+  tasks_branch_removals?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+  tasks_branch_removals_aggregate?: InputMaybe<Tasks_Branch_Removal_Aggregate_Bool_Exp>;
+  tasks_collections?: InputMaybe<Tasks_Collection_Bool_Exp>;
+  tasks_collections_aggregate?: InputMaybe<Tasks_Collection_Aggregate_Bool_Exp>;
+  tasks_disposals?: InputMaybe<Tasks_Disposal_Bool_Exp>;
+  tasks_disposals_aggregate?: InputMaybe<Tasks_Disposal_Aggregate_Bool_Exp>;
+  tasks_ticketings?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
+  tasks_ticketings_aggregate?: InputMaybe<Tasks_Ticketing_Aggregate_Bool_Exp>;
+  tasks_tree_removals?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+  tasks_tree_removals_aggregate?: InputMaybe<Tasks_Tree_Removal_Aggregate_Bool_Exp>;
+  ticketing_names?: InputMaybe<Ticketing_Names_Bool_Exp>;
+  ticketing_names_aggregate?: InputMaybe<Ticketing_Names_Aggregate_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -4575,9 +4867,14 @@ export type Projects_Insert_Input = {
   location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   poc?: InputMaybe<Scalars['String']['input']>;
-  projects_tasks?: InputMaybe<Tasks_Arr_Rel_Insert_Input>;
   status?: InputMaybe<Scalars['Boolean']['input']>;
   sub_contractor?: InputMaybe<Scalars['String']['input']>;
+  tasks_branch_removals?: InputMaybe<Tasks_Branch_Removal_Arr_Rel_Insert_Input>;
+  tasks_collections?: InputMaybe<Tasks_Collection_Arr_Rel_Insert_Input>;
+  tasks_disposals?: InputMaybe<Tasks_Disposal_Arr_Rel_Insert_Input>;
+  tasks_ticketings?: InputMaybe<Tasks_Ticketing_Arr_Rel_Insert_Input>;
+  tasks_tree_removals?: InputMaybe<Tasks_Tree_Removal_Arr_Rel_Insert_Input>;
+  ticketing_names?: InputMaybe<Ticketing_Names_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -4641,9 +4938,14 @@ export type Projects_Order_By = {
   location?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   poc?: InputMaybe<Order_By>;
-  projects_tasks_aggregate?: InputMaybe<Tasks_Aggregate_Order_By>;
   status?: InputMaybe<Order_By>;
   sub_contractor?: InputMaybe<Order_By>;
+  tasks_branch_removals_aggregate?: InputMaybe<Tasks_Branch_Removal_Aggregate_Order_By>;
+  tasks_collections_aggregate?: InputMaybe<Tasks_Collection_Aggregate_Order_By>;
+  tasks_disposals_aggregate?: InputMaybe<Tasks_Disposal_Aggregate_Order_By>;
+  tasks_ticketings_aggregate?: InputMaybe<Tasks_Ticketing_Aggregate_Order_By>;
+  tasks_tree_removals_aggregate?: InputMaybe<Tasks_Tree_Removal_Aggregate_Order_By>;
+  ticketing_names_aggregate?: InputMaybe<Ticketing_Names_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -4811,9 +5113,9 @@ export type Query_Root = {
   image_taken_aggregate: Image_Taken_Aggregate;
   /** fetch data from the table: "image_taken" using primary key columns */
   image_taken_by_pk?: Maybe<Image_Taken>;
-  /** fetch data from the table: "images" */
+  /** An array relationship */
   images: Array<Images>;
-  /** fetch aggregated fields from the table: "images" */
+  /** An aggregate relationship */
   images_aggregate: Images_Aggregate;
   /** fetch data from the table: "images" using primary key columns */
   images_by_pk?: Maybe<Images>;
@@ -4859,9 +5161,9 @@ export type Query_Root = {
   tasks_tree_removal_aggregate: Tasks_Tree_Removal_Aggregate;
   /** fetch data from the table: "tasks_tree_removal" using primary key columns */
   tasks_tree_removal_by_pk?: Maybe<Tasks_Tree_Removal>;
-  /** fetch data from the table: "ticketing_names" */
+  /** An array relationship */
   ticketing_names: Array<Ticketing_Names>;
-  /** fetch aggregated fields from the table: "ticketing_names" */
+  /** An aggregate relationship */
   ticketing_names_aggregate: Ticketing_Names_Aggregate;
   /** fetch data from the table: "ticketing_names" using primary key columns */
   ticketing_names_by_pk?: Maybe<Ticketing_Names>;
@@ -5475,9 +5777,9 @@ export type Subscription_Root = {
   image_taken_by_pk?: Maybe<Image_Taken>;
   /** fetch data from the table in a streaming manner: "image_taken" */
   image_taken_stream: Array<Image_Taken>;
-  /** fetch data from the table: "images" */
+  /** An array relationship */
   images: Array<Images>;
-  /** fetch aggregated fields from the table: "images" */
+  /** An aggregate relationship */
   images_aggregate: Images_Aggregate;
   /** fetch data from the table: "images" using primary key columns */
   images_by_pk?: Maybe<Images>;
@@ -5539,9 +5841,9 @@ export type Subscription_Root = {
   tasks_tree_removal_by_pk?: Maybe<Tasks_Tree_Removal>;
   /** fetch data from the table in a streaming manner: "tasks_tree_removal" */
   tasks_tree_removal_stream: Array<Tasks_Tree_Removal>;
-  /** fetch data from the table: "ticketing_names" */
+  /** An array relationship */
   ticketing_names: Array<Ticketing_Names>;
-  /** fetch aggregated fields from the table: "ticketing_names" */
+  /** An aggregate relationship */
   ticketing_names_aggregate: Ticketing_Names_Aggregate;
   /** fetch data from the table: "ticketing_names" using primary key columns */
   ticketing_names_by_pk?: Maybe<Ticketing_Names>;
@@ -6236,14 +6538,6 @@ export type Tasks = {
   metadata?: Maybe<Scalars['jsonb']['output']>;
   name: Scalars['String']['output'];
   project_id: Scalars['uuid']['output'];
-  /** An array relationship */
-  tasks_images: Array<Images>;
-  /** An aggregate relationship */
-  tasks_images_aggregate: Images_Aggregate;
-  /** An object relationship */
-  tasks_project: Projects;
-  /** An object relationship */
-  tasks_user: Users;
   type?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id: Scalars['uuid']['output'];
@@ -6255,58 +6549,11 @@ export type TasksMetadataArgs = {
   path?: InputMaybe<Scalars['String']['input']>;
 };
 
-
-/** columns and relationships of "tasks" */
-export type TasksTasks_ImagesArgs = {
-  distinct_on?: InputMaybe<Array<Images_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Images_Order_By>>;
-  where?: InputMaybe<Images_Bool_Exp>;
-};
-
-
-/** columns and relationships of "tasks" */
-export type TasksTasks_Images_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Images_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Images_Order_By>>;
-  where?: InputMaybe<Images_Bool_Exp>;
-};
-
 /** aggregated selection of "tasks" */
 export type Tasks_Aggregate = {
   __typename?: 'tasks_aggregate';
   aggregate?: Maybe<Tasks_Aggregate_Fields>;
   nodes: Array<Tasks>;
-};
-
-export type Tasks_Aggregate_Bool_Exp = {
-  bool_and?: InputMaybe<Tasks_Aggregate_Bool_Exp_Bool_And>;
-  bool_or?: InputMaybe<Tasks_Aggregate_Bool_Exp_Bool_Or>;
-  count?: InputMaybe<Tasks_Aggregate_Bool_Exp_Count>;
-};
-
-export type Tasks_Aggregate_Bool_Exp_Bool_And = {
-  arguments: Tasks_Select_Column_Tasks_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<Tasks_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
-};
-
-export type Tasks_Aggregate_Bool_Exp_Bool_Or = {
-  arguments: Tasks_Select_Column_Tasks_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<Tasks_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
-};
-
-export type Tasks_Aggregate_Bool_Exp_Count = {
-  arguments?: InputMaybe<Array<Tasks_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<Tasks_Bool_Exp>;
-  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "tasks" */
@@ -6324,23 +6571,9 @@ export type Tasks_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** order by aggregate values of table "tasks" */
-export type Tasks_Aggregate_Order_By = {
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Tasks_Max_Order_By>;
-  min?: InputMaybe<Tasks_Min_Order_By>;
-};
-
 /** append existing jsonb value of filtered columns with new jsonb value */
 export type Tasks_Append_Input = {
   metadata?: InputMaybe<Scalars['jsonb']['input']>;
-};
-
-/** input type for inserting array relation for remote table "tasks" */
-export type Tasks_Arr_Rel_Insert_Input = {
-  data: Array<Tasks_Insert_Input>;
-  /** upsert condition */
-  on_conflict?: InputMaybe<Tasks_On_Conflict>;
 };
 
 /** Boolean expression to filter rows from the table "tasks". All fields are combined with a logical 'AND'. */
@@ -6356,10 +6589,6 @@ export type Tasks_Bool_Exp = {
   metadata?: InputMaybe<Jsonb_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
-  tasks_images?: InputMaybe<Images_Bool_Exp>;
-  tasks_images_aggregate?: InputMaybe<Images_Aggregate_Bool_Exp>;
-  tasks_project?: InputMaybe<Projects_Bool_Exp>;
-  tasks_user?: InputMaybe<Users_Bool_Exp>;
   type?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -6373,6 +6602,8 @@ export type Tasks_Branch_Removal = {
   id: Scalars['uuid']['output'];
   latitude: Scalars['String']['output'];
   longitude: Scalars['String']['output'];
+  /** An object relationship */
+  project: Projects;
   project_id: Scalars['uuid']['output'];
   updated_at: Scalars['timestamptz']['output'];
 };
@@ -6382,6 +6613,17 @@ export type Tasks_Branch_Removal_Aggregate = {
   __typename?: 'tasks_branch_removal_aggregate';
   aggregate?: Maybe<Tasks_Branch_Removal_Aggregate_Fields>;
   nodes: Array<Tasks_Branch_Removal>;
+};
+
+export type Tasks_Branch_Removal_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Tasks_Branch_Removal_Aggregate_Bool_Exp_Count>;
+};
+
+export type Tasks_Branch_Removal_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "tasks_branch_removal" */
@@ -6399,6 +6641,20 @@ export type Tasks_Branch_Removal_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "tasks_branch_removal" */
+export type Tasks_Branch_Removal_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Tasks_Branch_Removal_Max_Order_By>;
+  min?: InputMaybe<Tasks_Branch_Removal_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "tasks_branch_removal" */
+export type Tasks_Branch_Removal_Arr_Rel_Insert_Input = {
+  data: Array<Tasks_Branch_Removal_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Tasks_Branch_Removal_On_Conflict>;
+};
+
 /** Boolean expression to filter rows from the table "tasks_branch_removal". All fields are combined with a logical 'AND'. */
 export type Tasks_Branch_Removal_Bool_Exp = {
   _and?: InputMaybe<Array<Tasks_Branch_Removal_Bool_Exp>>;
@@ -6409,6 +6665,7 @@ export type Tasks_Branch_Removal_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   latitude?: InputMaybe<String_Comparison_Exp>;
   longitude?: InputMaybe<String_Comparison_Exp>;
+  project?: InputMaybe<Projects_Bool_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
@@ -6426,6 +6683,7 @@ export type Tasks_Branch_Removal_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   latitude?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['String']['input']>;
+  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
@@ -6442,6 +6700,17 @@ export type Tasks_Branch_Removal_Max_Fields = {
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
+/** order by max() on columns of table "tasks_branch_removal" */
+export type Tasks_Branch_Removal_Max_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Tasks_Branch_Removal_Min_Fields = {
   __typename?: 'tasks_branch_removal_min_fields';
@@ -6452,6 +6721,17 @@ export type Tasks_Branch_Removal_Min_Fields = {
   longitude?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** order by min() on columns of table "tasks_branch_removal" */
+export type Tasks_Branch_Removal_Min_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "tasks_branch_removal" */
@@ -6477,6 +6757,7 @@ export type Tasks_Branch_Removal_Order_By = {
   id?: InputMaybe<Order_By>;
   latitude?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
+  project?: InputMaybe<Projects_Order_By>;
   project_id?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
@@ -6570,7 +6851,11 @@ export type Tasks_Collection = {
   id: Scalars['uuid']['output'];
   latitude: Scalars['String']['output'];
   longitude: Scalars['String']['output'];
+  /** An object relationship */
+  project: Projects;
   project_id: Scalars['uuid']['output'];
+  /** An object relationship */
+  tasks_disposal?: Maybe<Tasks_Disposal>;
   truck_number: Scalars['String']['output'];
   updated_at: Scalars['timestamptz']['output'];
   weigh_points: Scalars['String']['output'];
@@ -6581,6 +6866,17 @@ export type Tasks_Collection_Aggregate = {
   __typename?: 'tasks_collection_aggregate';
   aggregate?: Maybe<Tasks_Collection_Aggregate_Fields>;
   nodes: Array<Tasks_Collection>;
+};
+
+export type Tasks_Collection_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Tasks_Collection_Aggregate_Bool_Exp_Count>;
+};
+
+export type Tasks_Collection_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Tasks_Collection_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Collection_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "tasks_collection" */
@@ -6598,6 +6894,20 @@ export type Tasks_Collection_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "tasks_collection" */
+export type Tasks_Collection_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Tasks_Collection_Max_Order_By>;
+  min?: InputMaybe<Tasks_Collection_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "tasks_collection" */
+export type Tasks_Collection_Arr_Rel_Insert_Input = {
+  data: Array<Tasks_Collection_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Tasks_Collection_On_Conflict>;
+};
+
 /** Boolean expression to filter rows from the table "tasks_collection". All fields are combined with a logical 'AND'. */
 export type Tasks_Collection_Bool_Exp = {
   _and?: InputMaybe<Array<Tasks_Collection_Bool_Exp>>;
@@ -6611,7 +6921,9 @@ export type Tasks_Collection_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   latitude?: InputMaybe<String_Comparison_Exp>;
   longitude?: InputMaybe<String_Comparison_Exp>;
+  project?: InputMaybe<Projects_Bool_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  tasks_disposal?: InputMaybe<Tasks_Disposal_Bool_Exp>;
   truck_number?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   weigh_points?: InputMaybe<String_Comparison_Exp>;
@@ -6633,7 +6945,9 @@ export type Tasks_Collection_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   latitude?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['String']['input']>;
+  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
+  tasks_disposal?: InputMaybe<Tasks_Disposal_Obj_Rel_Insert_Input>;
   truck_number?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   weigh_points?: InputMaybe<Scalars['String']['input']>;
@@ -6656,6 +6970,22 @@ export type Tasks_Collection_Max_Fields = {
   weigh_points?: Maybe<Scalars['String']['output']>;
 };
 
+/** order by max() on columns of table "tasks_collection" */
+export type Tasks_Collection_Max_Order_By = {
+  capactiy?: InputMaybe<Order_By>;
+  contractor?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  debris_type?: InputMaybe<Order_By>;
+  disposal_site?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  truck_number?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  weigh_points?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Tasks_Collection_Min_Fields = {
   __typename?: 'tasks_collection_min_fields';
@@ -6673,6 +7003,22 @@ export type Tasks_Collection_Min_Fields = {
   weigh_points?: Maybe<Scalars['String']['output']>;
 };
 
+/** order by min() on columns of table "tasks_collection" */
+export type Tasks_Collection_Min_Order_By = {
+  capactiy?: InputMaybe<Order_By>;
+  contractor?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  debris_type?: InputMaybe<Order_By>;
+  disposal_site?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  truck_number?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  weigh_points?: InputMaybe<Order_By>;
+};
+
 /** response of any mutation on the table "tasks_collection" */
 export type Tasks_Collection_Mutation_Response = {
   __typename?: 'tasks_collection_mutation_response';
@@ -6680,6 +7026,13 @@ export type Tasks_Collection_Mutation_Response = {
   affected_rows: Scalars['Int']['output'];
   /** data from the rows affected by the mutation */
   returning: Array<Tasks_Collection>;
+};
+
+/** input type for inserting object relation for remote table "tasks_collection" */
+export type Tasks_Collection_Obj_Rel_Insert_Input = {
+  data: Tasks_Collection_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Tasks_Collection_On_Conflict>;
 };
 
 /** on_conflict condition type for table "tasks_collection" */
@@ -6699,7 +7052,9 @@ export type Tasks_Collection_Order_By = {
   id?: InputMaybe<Order_By>;
   latitude?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
+  project?: InputMaybe<Projects_Order_By>;
   project_id?: InputMaybe<Order_By>;
+  tasks_disposal?: InputMaybe<Tasks_Disposal_Order_By>;
   truck_number?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   weigh_points?: InputMaybe<Order_By>;
@@ -6845,8 +7200,12 @@ export type Tasks_Disposal = {
   latitude: Scalars['String']['output'];
   load_call: Scalars['String']['output'];
   longitude: Scalars['String']['output'];
+  /** An object relationship */
+  project: Projects;
   project_id: Scalars['uuid']['output'];
   task_collection_id: Scalars['uuid']['output'];
+  /** An object relationship */
+  tasks_collection: Tasks_Collection;
   truck_number: Scalars['String']['output'];
   updated_at: Scalars['timestamptz']['output'];
 };
@@ -6856,6 +7215,17 @@ export type Tasks_Disposal_Aggregate = {
   __typename?: 'tasks_disposal_aggregate';
   aggregate?: Maybe<Tasks_Disposal_Aggregate_Fields>;
   nodes: Array<Tasks_Disposal>;
+};
+
+export type Tasks_Disposal_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Tasks_Disposal_Aggregate_Bool_Exp_Count>;
+};
+
+export type Tasks_Disposal_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Tasks_Disposal_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Disposal_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "tasks_disposal" */
@@ -6873,6 +7243,20 @@ export type Tasks_Disposal_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "tasks_disposal" */
+export type Tasks_Disposal_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Tasks_Disposal_Max_Order_By>;
+  min?: InputMaybe<Tasks_Disposal_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "tasks_disposal" */
+export type Tasks_Disposal_Arr_Rel_Insert_Input = {
+  data: Array<Tasks_Disposal_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Tasks_Disposal_On_Conflict>;
+};
+
 /** Boolean expression to filter rows from the table "tasks_disposal". All fields are combined with a logical 'AND'. */
 export type Tasks_Disposal_Bool_Exp = {
   _and?: InputMaybe<Array<Tasks_Disposal_Bool_Exp>>;
@@ -6886,8 +7270,10 @@ export type Tasks_Disposal_Bool_Exp = {
   latitude?: InputMaybe<String_Comparison_Exp>;
   load_call?: InputMaybe<String_Comparison_Exp>;
   longitude?: InputMaybe<String_Comparison_Exp>;
+  project?: InputMaybe<Projects_Bool_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
   task_collection_id?: InputMaybe<Uuid_Comparison_Exp>;
+  tasks_collection?: InputMaybe<Tasks_Collection_Bool_Exp>;
   truck_number?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
@@ -6910,8 +7296,10 @@ export type Tasks_Disposal_Insert_Input = {
   latitude?: InputMaybe<Scalars['String']['input']>;
   load_call?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['String']['input']>;
+  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
   task_collection_id?: InputMaybe<Scalars['uuid']['input']>;
+  tasks_collection?: InputMaybe<Tasks_Collection_Obj_Rel_Insert_Input>;
   truck_number?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
@@ -6933,6 +7321,22 @@ export type Tasks_Disposal_Max_Fields = {
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
+/** order by max() on columns of table "tasks_disposal" */
+export type Tasks_Disposal_Max_Order_By = {
+  capacity?: InputMaybe<Order_By>;
+  contractor?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  disposal_site?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  load_call?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  task_collection_id?: InputMaybe<Order_By>;
+  truck_number?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Tasks_Disposal_Min_Fields = {
   __typename?: 'tasks_disposal_min_fields';
@@ -6950,6 +7354,22 @@ export type Tasks_Disposal_Min_Fields = {
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
+/** order by min() on columns of table "tasks_disposal" */
+export type Tasks_Disposal_Min_Order_By = {
+  capacity?: InputMaybe<Order_By>;
+  contractor?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  disposal_site?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  load_call?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  task_collection_id?: InputMaybe<Order_By>;
+  truck_number?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
 /** response of any mutation on the table "tasks_disposal" */
 export type Tasks_Disposal_Mutation_Response = {
   __typename?: 'tasks_disposal_mutation_response';
@@ -6957,6 +7377,13 @@ export type Tasks_Disposal_Mutation_Response = {
   affected_rows: Scalars['Int']['output'];
   /** data from the rows affected by the mutation */
   returning: Array<Tasks_Disposal>;
+};
+
+/** input type for inserting object relation for remote table "tasks_disposal" */
+export type Tasks_Disposal_Obj_Rel_Insert_Input = {
+  data: Tasks_Disposal_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Tasks_Disposal_On_Conflict>;
 };
 
 /** on_conflict condition type for table "tasks_disposal" */
@@ -6976,8 +7403,10 @@ export type Tasks_Disposal_Order_By = {
   latitude?: InputMaybe<Order_By>;
   load_call?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
+  project?: InputMaybe<Projects_Order_By>;
   project_id?: InputMaybe<Order_By>;
   task_collection_id?: InputMaybe<Order_By>;
+  tasks_collection?: InputMaybe<Tasks_Collection_Order_By>;
   truck_number?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
@@ -7100,9 +7529,6 @@ export type Tasks_Insert_Input = {
   metadata?: InputMaybe<Scalars['jsonb']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
-  tasks_images?: InputMaybe<Images_Arr_Rel_Insert_Input>;
-  tasks_project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
-  tasks_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   type?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -7122,19 +7548,6 @@ export type Tasks_Max_Fields = {
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
-/** order by max() on columns of table "tasks" */
-export type Tasks_Max_Order_By = {
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  latitude?: InputMaybe<Order_By>;
-  longitude?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-  project_id?: InputMaybe<Order_By>;
-  type?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-  user_id?: InputMaybe<Order_By>;
-};
-
 /** aggregate min on columns */
 export type Tasks_Min_Fields = {
   __typename?: 'tasks_min_fields';
@@ -7149,19 +7562,6 @@ export type Tasks_Min_Fields = {
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
-/** order by min() on columns of table "tasks" */
-export type Tasks_Min_Order_By = {
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  latitude?: InputMaybe<Order_By>;
-  longitude?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-  project_id?: InputMaybe<Order_By>;
-  type?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-  user_id?: InputMaybe<Order_By>;
-};
-
 /** response of any mutation on the table "tasks" */
 export type Tasks_Mutation_Response = {
   __typename?: 'tasks_mutation_response';
@@ -7169,13 +7569,6 @@ export type Tasks_Mutation_Response = {
   affected_rows: Scalars['Int']['output'];
   /** data from the rows affected by the mutation */
   returning: Array<Tasks>;
-};
-
-/** input type for inserting object relation for remote table "tasks" */
-export type Tasks_Obj_Rel_Insert_Input = {
-  data: Tasks_Insert_Input;
-  /** upsert condition */
-  on_conflict?: InputMaybe<Tasks_On_Conflict>;
 };
 
 /** on_conflict condition type for table "tasks" */
@@ -7195,9 +7588,6 @@ export type Tasks_Order_By = {
   metadata?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
-  tasks_images_aggregate?: InputMaybe<Images_Aggregate_Order_By>;
-  tasks_project?: InputMaybe<Projects_Order_By>;
-  tasks_user?: InputMaybe<Users_Order_By>;
   type?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
@@ -7237,18 +7627,6 @@ export enum Tasks_Select_Column {
   UpdatedAt = 'updated_at',
   /** column name */
   UserId = 'user_id'
-}
-
-/** select "tasks_aggregate_bool_exp_bool_and_arguments_columns" columns of table "tasks" */
-export enum Tasks_Select_Column_Tasks_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  Deleted = '_deleted'
-}
-
-/** select "tasks_aggregate_bool_exp_bool_or_arguments_columns" columns of table "tasks" */
-export enum Tasks_Select_Column_Tasks_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  Deleted = '_deleted'
 }
 
 /** input type for updating data in table "tasks" */
@@ -7299,6 +7677,8 @@ export type Tasks_Ticketing = {
   latitude: Scalars['String']['output'];
   longitude: Scalars['String']['output'];
   print_ticket: Scalars['Boolean']['output'];
+  /** An object relationship */
+  project: Projects;
   project_id: Scalars['uuid']['output'];
   title: Scalars['String']['output'];
   updated_at: Scalars['timestamptz']['output'];
@@ -7309,6 +7689,33 @@ export type Tasks_Ticketing_Aggregate = {
   __typename?: 'tasks_ticketing_aggregate';
   aggregate?: Maybe<Tasks_Ticketing_Aggregate_Fields>;
   nodes: Array<Tasks_Ticketing>;
+};
+
+export type Tasks_Ticketing_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Tasks_Ticketing_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Tasks_Ticketing_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Tasks_Ticketing_Aggregate_Bool_Exp_Count>;
+};
+
+export type Tasks_Ticketing_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Tasks_Ticketing_Select_Column_Tasks_Ticketing_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Tasks_Ticketing_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Tasks_Ticketing_Select_Column_Tasks_Ticketing_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Tasks_Ticketing_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Tasks_Ticketing_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "tasks_ticketing" */
@@ -7326,6 +7733,20 @@ export type Tasks_Ticketing_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "tasks_ticketing" */
+export type Tasks_Ticketing_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Tasks_Ticketing_Max_Order_By>;
+  min?: InputMaybe<Tasks_Ticketing_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "tasks_ticketing" */
+export type Tasks_Ticketing_Arr_Rel_Insert_Input = {
+  data: Array<Tasks_Ticketing_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Tasks_Ticketing_On_Conflict>;
+};
+
 /** Boolean expression to filter rows from the table "tasks_ticketing". All fields are combined with a logical 'AND'. */
 export type Tasks_Ticketing_Bool_Exp = {
   _and?: InputMaybe<Array<Tasks_Ticketing_Bool_Exp>>;
@@ -7338,6 +7759,7 @@ export type Tasks_Ticketing_Bool_Exp = {
   latitude?: InputMaybe<String_Comparison_Exp>;
   longitude?: InputMaybe<String_Comparison_Exp>;
   print_ticket?: InputMaybe<Boolean_Comparison_Exp>;
+  project?: InputMaybe<Projects_Bool_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
   title?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -7358,6 +7780,7 @@ export type Tasks_Ticketing_Insert_Input = {
   latitude?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['String']['input']>;
   print_ticket?: InputMaybe<Scalars['Boolean']['input']>;
+  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -7376,6 +7799,18 @@ export type Tasks_Ticketing_Max_Fields = {
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
+/** order by max() on columns of table "tasks_ticketing" */
+export type Tasks_Ticketing_Max_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  title?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Tasks_Ticketing_Min_Fields = {
   __typename?: 'tasks_ticketing_min_fields';
@@ -7387,6 +7822,18 @@ export type Tasks_Ticketing_Min_Fields = {
   project_id?: Maybe<Scalars['uuid']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** order by min() on columns of table "tasks_ticketing" */
+export type Tasks_Ticketing_Min_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  latitude?: InputMaybe<Order_By>;
+  longitude?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  title?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "tasks_ticketing" */
@@ -7414,6 +7861,7 @@ export type Tasks_Ticketing_Order_By = {
   latitude?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
   print_ticket?: InputMaybe<Order_By>;
+  project?: InputMaybe<Projects_Order_By>;
   project_id?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
@@ -7446,6 +7894,22 @@ export enum Tasks_Ticketing_Select_Column {
   Title = 'title',
   /** column name */
   UpdatedAt = 'updated_at'
+}
+
+/** select "tasks_ticketing_aggregate_bool_exp_bool_and_arguments_columns" columns of table "tasks_ticketing" */
+export enum Tasks_Ticketing_Select_Column_Tasks_Ticketing_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  AddPhotos = 'add_photos',
+  /** column name */
+  PrintTicket = 'print_ticket'
+}
+
+/** select "tasks_ticketing_aggregate_bool_exp_bool_or_arguments_columns" columns of table "tasks_ticketing" */
+export enum Tasks_Ticketing_Select_Column_Tasks_Ticketing_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  AddPhotos = 'add_photos',
+  /** column name */
+  PrintTicket = 'print_ticket'
 }
 
 /** input type for updating data in table "tasks_ticketing" */
@@ -7518,14 +7982,66 @@ export type Tasks_Ticketing_Updates = {
 /** columns and relationships of "tasks_tree_removal" */
 export type Tasks_Tree_Removal = {
   __typename?: 'tasks_tree_removal';
+  _deleted?: Maybe<Scalars['Boolean']['output']>;
   comment?: Maybe<Scalars['String']['output']>;
-  created_at: Scalars['date']['output'];
+  completed?: Maybe<Scalars['Boolean']['output']>;
+  created_at: Scalars['timestamptz']['output'];
   id: Scalars['uuid']['output'];
-  latitude: Scalars['String']['output'];
-  longitude: Scalars['String']['output'];
+  /** An array relationship */
+  images: Array<Images>;
+  /** An aggregate relationship */
+  images_aggregate: Images_Aggregate;
   project_id: Scalars['uuid']['output'];
-  ranges: Scalars['String']['output'];
-  updated_at: Scalars['date']['output'];
+  /** An array relationship */
+  tasks_tree_removal_images: Array<Images>;
+  /** An aggregate relationship */
+  tasks_tree_removal_images_aggregate: Images_Aggregate;
+  /** An object relationship */
+  tasks_tree_removal_project: Projects;
+  /** An object relationship */
+  tasks_tree_removal_user: Users;
+  updated_at: Scalars['timestamptz']['output'];
+  user_id: Scalars['uuid']['output'];
+};
+
+
+/** columns and relationships of "tasks_tree_removal" */
+export type Tasks_Tree_RemovalImagesArgs = {
+  distinct_on?: InputMaybe<Array<Images_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Images_Order_By>>;
+  where?: InputMaybe<Images_Bool_Exp>;
+};
+
+
+/** columns and relationships of "tasks_tree_removal" */
+export type Tasks_Tree_RemovalImages_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Images_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Images_Order_By>>;
+  where?: InputMaybe<Images_Bool_Exp>;
+};
+
+
+/** columns and relationships of "tasks_tree_removal" */
+export type Tasks_Tree_RemovalTasks_Tree_Removal_ImagesArgs = {
+  distinct_on?: InputMaybe<Array<Images_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Images_Order_By>>;
+  where?: InputMaybe<Images_Bool_Exp>;
+};
+
+
+/** columns and relationships of "tasks_tree_removal" */
+export type Tasks_Tree_RemovalTasks_Tree_Removal_Images_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Images_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Images_Order_By>>;
+  where?: InputMaybe<Images_Bool_Exp>;
 };
 
 /** aggregated selection of "tasks_tree_removal" */
@@ -7533,6 +8049,33 @@ export type Tasks_Tree_Removal_Aggregate = {
   __typename?: 'tasks_tree_removal_aggregate';
   aggregate?: Maybe<Tasks_Tree_Removal_Aggregate_Fields>;
   nodes: Array<Tasks_Tree_Removal>;
+};
+
+export type Tasks_Tree_Removal_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Tasks_Tree_Removal_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Tasks_Tree_Removal_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Tasks_Tree_Removal_Aggregate_Bool_Exp_Count>;
+};
+
+export type Tasks_Tree_Removal_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Tasks_Tree_Removal_Select_Column_Tasks_Tree_Removal_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Tasks_Tree_Removal_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Tasks_Tree_Removal_Select_Column_Tasks_Tree_Removal_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Tasks_Tree_Removal_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Tasks_Tree_Removal_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "tasks_tree_removal" */
@@ -7550,19 +8093,39 @@ export type Tasks_Tree_Removal_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Tasks_Tree_Removal_Max_Order_By>;
+  min?: InputMaybe<Tasks_Tree_Removal_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Arr_Rel_Insert_Input = {
+  data: Array<Tasks_Tree_Removal_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Tasks_Tree_Removal_On_Conflict>;
+};
+
 /** Boolean expression to filter rows from the table "tasks_tree_removal". All fields are combined with a logical 'AND'. */
 export type Tasks_Tree_Removal_Bool_Exp = {
   _and?: InputMaybe<Array<Tasks_Tree_Removal_Bool_Exp>>;
+  _deleted?: InputMaybe<Boolean_Comparison_Exp>;
   _not?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
   _or?: InputMaybe<Array<Tasks_Tree_Removal_Bool_Exp>>;
   comment?: InputMaybe<String_Comparison_Exp>;
-  created_at?: InputMaybe<Date_Comparison_Exp>;
+  completed?: InputMaybe<Boolean_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
-  latitude?: InputMaybe<String_Comparison_Exp>;
-  longitude?: InputMaybe<String_Comparison_Exp>;
+  images?: InputMaybe<Images_Bool_Exp>;
+  images_aggregate?: InputMaybe<Images_Aggregate_Bool_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
-  ranges?: InputMaybe<String_Comparison_Exp>;
-  updated_at?: InputMaybe<Date_Comparison_Exp>;
+  tasks_tree_removal_images?: InputMaybe<Images_Bool_Exp>;
+  tasks_tree_removal_images_aggregate?: InputMaybe<Images_Aggregate_Bool_Exp>;
+  tasks_tree_removal_project?: InputMaybe<Projects_Bool_Exp>;
+  tasks_tree_removal_user?: InputMaybe<Users_Bool_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "tasks_tree_removal" */
@@ -7573,40 +8136,60 @@ export enum Tasks_Tree_Removal_Constraint {
 
 /** input type for inserting data into table "tasks_tree_removal" */
 export type Tasks_Tree_Removal_Insert_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   comment?: InputMaybe<Scalars['String']['input']>;
-  created_at?: InputMaybe<Scalars['date']['input']>;
+  completed?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  latitude?: InputMaybe<Scalars['String']['input']>;
-  longitude?: InputMaybe<Scalars['String']['input']>;
+  images?: InputMaybe<Images_Arr_Rel_Insert_Input>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
-  ranges?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['date']['input']>;
+  tasks_tree_removal_images?: InputMaybe<Images_Arr_Rel_Insert_Input>;
+  tasks_tree_removal_project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
+  tasks_tree_removal_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** aggregate max on columns */
 export type Tasks_Tree_Removal_Max_Fields = {
   __typename?: 'tasks_tree_removal_max_fields';
   comment?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['date']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  latitude?: Maybe<Scalars['String']['output']>;
-  longitude?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
-  ranges?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['date']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Max_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
 export type Tasks_Tree_Removal_Min_Fields = {
   __typename?: 'tasks_tree_removal_min_fields';
   comment?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['date']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  latitude?: Maybe<Scalars['String']['output']>;
-  longitude?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
-  ranges?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['date']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Min_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "tasks_tree_removal" */
@@ -7618,6 +8201,13 @@ export type Tasks_Tree_Removal_Mutation_Response = {
   returning: Array<Tasks_Tree_Removal>;
 };
 
+/** input type for inserting object relation for remote table "tasks_tree_removal" */
+export type Tasks_Tree_Removal_Obj_Rel_Insert_Input = {
+  data: Tasks_Tree_Removal_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Tasks_Tree_Removal_On_Conflict>;
+};
+
 /** on_conflict condition type for table "tasks_tree_removal" */
 export type Tasks_Tree_Removal_On_Conflict = {
   constraint: Tasks_Tree_Removal_Constraint;
@@ -7627,14 +8217,18 @@ export type Tasks_Tree_Removal_On_Conflict = {
 
 /** Ordering options when selecting data from "tasks_tree_removal". */
 export type Tasks_Tree_Removal_Order_By = {
+  _deleted?: InputMaybe<Order_By>;
   comment?: InputMaybe<Order_By>;
+  completed?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  latitude?: InputMaybe<Order_By>;
-  longitude?: InputMaybe<Order_By>;
+  images_aggregate?: InputMaybe<Images_Aggregate_Order_By>;
   project_id?: InputMaybe<Order_By>;
-  ranges?: InputMaybe<Order_By>;
+  tasks_tree_removal_images_aggregate?: InputMaybe<Images_Aggregate_Order_By>;
+  tasks_tree_removal_project?: InputMaybe<Projects_Order_By>;
+  tasks_tree_removal_user?: InputMaybe<Users_Order_By>;
   updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: tasks_tree_removal */
@@ -7645,33 +8239,49 @@ export type Tasks_Tree_Removal_Pk_Columns_Input = {
 /** select columns of table "tasks_tree_removal" */
 export enum Tasks_Tree_Removal_Select_Column {
   /** column name */
+  Deleted = '_deleted',
+  /** column name */
   Comment = 'comment',
+  /** column name */
+  Completed = 'completed',
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
   Id = 'id',
   /** column name */
-  Latitude = 'latitude',
-  /** column name */
-  Longitude = 'longitude',
-  /** column name */
   ProjectId = 'project_id',
   /** column name */
-  Ranges = 'ranges',
+  UpdatedAt = 'updated_at',
   /** column name */
-  UpdatedAt = 'updated_at'
+  UserId = 'user_id'
+}
+
+/** select "tasks_tree_removal_aggregate_bool_exp_bool_and_arguments_columns" columns of table "tasks_tree_removal" */
+export enum Tasks_Tree_Removal_Select_Column_Tasks_Tree_Removal_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Deleted = '_deleted',
+  /** column name */
+  Completed = 'completed'
+}
+
+/** select "tasks_tree_removal_aggregate_bool_exp_bool_or_arguments_columns" columns of table "tasks_tree_removal" */
+export enum Tasks_Tree_Removal_Select_Column_Tasks_Tree_Removal_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Deleted = '_deleted',
+  /** column name */
+  Completed = 'completed'
 }
 
 /** input type for updating data in table "tasks_tree_removal" */
 export type Tasks_Tree_Removal_Set_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   comment?: InputMaybe<Scalars['String']['input']>;
-  created_at?: InputMaybe<Scalars['date']['input']>;
+  completed?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  latitude?: InputMaybe<Scalars['String']['input']>;
-  longitude?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
-  ranges?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['date']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** Streaming cursor of the table "tasks_tree_removal" */
@@ -7684,34 +8294,34 @@ export type Tasks_Tree_Removal_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Tasks_Tree_Removal_Stream_Cursor_Value_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   comment?: InputMaybe<Scalars['String']['input']>;
-  created_at?: InputMaybe<Scalars['date']['input']>;
+  completed?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  latitude?: InputMaybe<Scalars['String']['input']>;
-  longitude?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
-  ranges?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['date']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** update columns of table "tasks_tree_removal" */
 export enum Tasks_Tree_Removal_Update_Column {
   /** column name */
+  Deleted = '_deleted',
+  /** column name */
   Comment = 'comment',
+  /** column name */
+  Completed = 'completed',
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
   Id = 'id',
   /** column name */
-  Latitude = 'latitude',
-  /** column name */
-  Longitude = 'longitude',
-  /** column name */
   ProjectId = 'project_id',
   /** column name */
-  Ranges = 'ranges',
+  UpdatedAt = 'updated_at',
   /** column name */
-  UpdatedAt = 'updated_at'
+  UserId = 'user_id'
 }
 
 export type Tasks_Tree_Removal_Updates = {
@@ -7769,6 +8379,8 @@ export type Ticketing_Names = {
   __typename?: 'ticketing_names';
   id: Scalars['uuid']['output'];
   name: Scalars['String']['output'];
+  /** An object relationship */
+  project: Projects;
   project_id: Scalars['uuid']['output'];
 };
 
@@ -7777,6 +8389,17 @@ export type Ticketing_Names_Aggregate = {
   __typename?: 'ticketing_names_aggregate';
   aggregate?: Maybe<Ticketing_Names_Aggregate_Fields>;
   nodes: Array<Ticketing_Names>;
+};
+
+export type Ticketing_Names_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Ticketing_Names_Aggregate_Bool_Exp_Count>;
+};
+
+export type Ticketing_Names_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Ticketing_Names_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Ticketing_Names_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "ticketing_names" */
@@ -7794,6 +8417,20 @@ export type Ticketing_Names_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "ticketing_names" */
+export type Ticketing_Names_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Ticketing_Names_Max_Order_By>;
+  min?: InputMaybe<Ticketing_Names_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "ticketing_names" */
+export type Ticketing_Names_Arr_Rel_Insert_Input = {
+  data: Array<Ticketing_Names_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Ticketing_Names_On_Conflict>;
+};
+
 /** Boolean expression to filter rows from the table "ticketing_names". All fields are combined with a logical 'AND'. */
 export type Ticketing_Names_Bool_Exp = {
   _and?: InputMaybe<Array<Ticketing_Names_Bool_Exp>>;
@@ -7801,6 +8438,7 @@ export type Ticketing_Names_Bool_Exp = {
   _or?: InputMaybe<Array<Ticketing_Names_Bool_Exp>>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
+  project?: InputMaybe<Projects_Bool_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
@@ -7814,6 +8452,7 @@ export enum Ticketing_Names_Constraint {
 export type Ticketing_Names_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -7825,12 +8464,26 @@ export type Ticketing_Names_Max_Fields = {
   project_id?: Maybe<Scalars['uuid']['output']>;
 };
 
+/** order by max() on columns of table "ticketing_names" */
+export type Ticketing_Names_Max_Order_By = {
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Ticketing_Names_Min_Fields = {
   __typename?: 'ticketing_names_min_fields';
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "ticketing_names" */
+export type Ticketing_Names_Min_Order_By = {
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "ticketing_names" */
@@ -7853,6 +8506,7 @@ export type Ticketing_Names_On_Conflict = {
 export type Ticketing_Names_Order_By = {
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  project?: InputMaybe<Projects_Order_By>;
   project_id?: InputMaybe<Order_By>;
 };
 
@@ -8971,18 +9625,18 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']['input']>>;
 };
 
-export type AllTasksQueryVariables = Exact<{ [key: string]: never; }>;
+export type TreeRemovalTasksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllTasksQuery = { __typename?: 'query_root', tasks: Array<{ __typename?: 'tasks', id: any, name: string, updated_at?: any | null, created_at?: any | null, _deleted?: boolean | null, tasks_images: Array<{ __typename?: 'images', id: any, task_id: any }> }> };
+export type TreeRemovalTasksQuery = { __typename?: 'query_root', tasks_tree_removal: Array<{ __typename?: 'tasks_tree_removal', comment?: string | null, completed?: boolean | null, created_at: any, updated_at: any, id: any, images: Array<{ __typename?: 'images', id: any, created_at?: any | null, latitude?: string | null, longitude?: string | null, ranges?: string | null, taken_at_step?: string | null }> }> };
 
-export type TasksMutationVariables = Exact<{
-  tasks_images: Array<Images_Insert_Input> | Images_Insert_Input;
-  tasks: Array<Tasks_Insert_Input> | Tasks_Insert_Input;
+export type UpsertTreeRemovalTaskMutationVariables = Exact<{
+  tasks: Array<Tasks_Tree_Removal_Insert_Input> | Tasks_Tree_Removal_Insert_Input;
+  images: Array<Images_Insert_Input> | Images_Insert_Input;
 }>;
 
 
-export type TasksMutation = { __typename?: 'mutation_root', insert_tasks?: { __typename?: 'tasks_mutation_response', returning: Array<{ __typename?: 'tasks', id: any }> } | null, insert_images?: { __typename?: 'images_mutation_response', returning: Array<{ __typename?: 'images', id: any, task_id: any }> } | null };
+export type UpsertTreeRemovalTaskMutation = { __typename?: 'mutation_root', insert_tasks_tree_removal?: { __typename?: 'tasks_tree_removal_mutation_response', returning: Array<{ __typename?: 'tasks_tree_removal', id: any }> } | null, insert_images?: { __typename?: 'images_mutation_response', returning: Array<{ __typename?: 'images', id: any }> } | null };
 
 export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -9004,8 +9658,8 @@ export type ProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 export type ProjectsQuery = { __typename?: 'query_root', projects: Array<{ __typename?: 'projects', id: any, name: string, comment?: string | null, contractor?: string | null, sub_contractor?: string | null, location?: string | null, poc?: string | null }> };
 
 
-export const AllTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"_deleted"}},{"kind":"Field","name":{"kind":"Name","value":"tasks_images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"task_id"}}]}}]}}]}}]} as unknown as DocumentNode<AllTasksQuery, AllTasksQueryVariables>;
-export const TasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"tasks"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tasks_images"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"images_insert_input"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"tasks_insert_input"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tasks"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tasks_images"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"task_id"}}]}}]}}]}}]} as unknown as DocumentNode<TasksMutation, TasksMutationVariables>;
+export const TreeRemovalTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"treeRemovalTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tasks_tree_removal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"completed"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","alias":{"kind":"Name","value":"images"},"name":{"kind":"Name","value":"tasks_tree_removal_images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"ranges"}},{"kind":"Field","name":{"kind":"Name","value":"taken_at_step"}}]}}]}}]}}]} as unknown as DocumentNode<TreeRemovalTasksQuery, TreeRemovalTasksQueryVariables>;
+export const UpsertTreeRemovalTaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"upsertTreeRemovalTask"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"tasks_tree_removal_insert_input"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"images"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"images_insert_input"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tasks_tree_removal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"comment"},{"kind":"EnumValue","value":"completed"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"tree_removal_tasks_pkey"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"images"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"images_pkey"}},{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"latitude"},{"kind":"EnumValue","value":"longitude"},{"kind":"EnumValue","value":"ranges"},{"kind":"EnumValue","value":"taken_at_step"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpsertTreeRemovalTaskMutation, UpsertTreeRemovalTaskMutationVariables>;
 export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersMetadata"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"hire_date"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"role_data_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_field_supervisor"}},{"kind":"Field","name":{"kind":"Name","value":"role_filed_monitor"}},{"kind":"Field","name":{"kind":"Name","value":"role_operations_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_pc_admin"}},{"kind":"Field","name":{"kind":"Name","value":"role_project_manager"}},{"kind":"Field","name":{"kind":"Name","value":"usersMetadata_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
 export const UpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_usersMetadata_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"first_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"last_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
 export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"sub_contractor"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"poc"}}]}}]}}]} as unknown as DocumentNode<ProjectsQuery, ProjectsQueryVariables>;

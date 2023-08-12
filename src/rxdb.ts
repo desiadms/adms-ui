@@ -11,7 +11,11 @@ import {
   userRead,
   userWrite
 } from './rxdb/replication-handlers'
-import { projectSchema, taskSchema, userSchema } from './rxdb/rxdb-schemas'
+import {
+  projectSchema,
+  treeRemovalTaskSchema,
+  userSchema
+} from './rxdb/rxdb-schemas'
 import { devMode } from './utils'
 
 addRxPlugin(RxDBMigrationPlugin)
@@ -55,8 +59,8 @@ export async function initialize(accessToken: string) {
 
   await addCollections(db, [
     {
-      name: 'tasks',
-      schema: taskSchema,
+      name: 'treeRemovalTasks',
+      schema: treeRemovalTaskSchema,
       localDocuments: true,
       pullQueryBuilder: tasksRead,
       pushQueryBuilder: tasksWrite,

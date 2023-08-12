@@ -2,24 +2,24 @@ import { resolveRequestDocument } from 'graphql-request'
 import { RxReplicationWriteToMasterRow } from 'rxdb'
 import { base64toFile, saveFilesToNhost } from '../utils'
 import {
-  allTasksDocument,
-  createTasksDocument,
   projectsDocument,
+  queryTreeRemovalTasks,
   updateUserDocument,
+  upsertTreeRemovalTasks,
   userDocument
 } from './graphql-operations'
-import { TaskDocType, UserDocType } from './rxdb-schemas'
+import { TreeRemovalTaskDocType, UserDocType } from './rxdb-schemas'
 
 export function tasksRead() {
   return {
-    query: resolveRequestDocument(allTasksDocument).query,
+    query: resolveRequestDocument(queryTreeRemovalTasks).query,
     variables: {}
   }
 }
 
 export async function tasksWrite(
   db,
-  rows: RxReplicationWriteToMasterRow<TaskDocType>[]
+  rows: RxReplicationWriteToMasterRow<TreeRemovalTaskDocType>[]
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState)
   const taskIds = extractedData.map(({ id }) => id)
@@ -41,16 +41,14 @@ export async function tasksWrite(
   const flattenedTaskImages = (await taskImages).flat()
   await saveFilesToNhost(flattenedTaskImages)
 
-  const extractedImages = extractedData
-    .map(({ tasks_images }) => tasks_images)
-    .flat()
+  const extractedImages = extractedData.map(({ images }) => images).flat()
   const extractedTasks = extractedData.map(
-    ({ tasks_images, _deleted, updated_at, created_at, ...rest }) => rest
+    ({ images, _deleted, updated_at, created_at, ...rest }) => rest
   )
 
   return {
-    query: resolveRequestDocument(createTasksDocument).query,
-    variables: { tasks: extractedTasks, tasks_images: extractedImages }
+    query: resolveRequestDocument(upsertTreeRemovalTasks).query,
+    variables: { tasks: extractedTasks, images: extractedImages }
   }
 }
 
