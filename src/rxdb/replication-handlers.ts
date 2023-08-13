@@ -26,10 +26,14 @@ export async function tasksWrite(
     .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
     .flat()
 
-  const blobFiles = images.map(({ id, base64Preview }) => ({
-    id,
-    file: base64toFile(base64Preview, 'task', 'image/png')
-  }))
+  console.log('in replication', images)
+
+  const blobFiles = images
+    .filter((image) => image.base64Preview)
+    .map(({ id, base64Preview }) => ({
+      id,
+      file: base64toFile(base64Preview, 'task', 'image/png')
+    }))
 
   const flattenedTaskImages = blobFiles.flat()
   await saveFilesToNhost(flattenedTaskImages)

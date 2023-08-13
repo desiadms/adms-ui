@@ -1,11 +1,14 @@
-import { PlusCircleIcon } from '@heroicons/react/20/solid'
+import { CheckIcon, PlusIcon } from '@heroicons/react/20/solid'
 import { Link } from '@tanstack/router'
-import { useCallback, useEffect, useState } from 'preact/hooks'
+import classNames from 'classnames'
+import { useCallback } from 'preact/hooks'
 import { useRxData } from 'rxdb-hooks'
-import { TreeRemovalTaskDocType } from 'src/rxdb/rxdb-schemas'
+import { Images, Steps, TreeRemovalTaskDocType } from '../rxdb/rxdb-schemas'
 import { nhost } from '../utils'
 
-async function tasksWithImages(tasks: TreeRemovalTaskDocType[] | undefined) {
+export async function tasksWithImages(
+  tasks: TreeRemovalTaskDocType[] | undefined
+) {
   const tasksWithImageUrls = Promise.all(
     tasks?.map(async (task) => {
       const imagesWithUrls = await Promise.all(
@@ -22,10 +25,6 @@ async function tasksWithImages(tasks: TreeRemovalTaskDocType[] | undefined) {
   return tasksWithImageUrls
 }
 
-type TasksInProgress = {
-  'tree-removal-tasks': TreeRemovalTaskDocType[]
-}
-
 function useInProgressTasks() {
   const query = useCallback((collection) => collection.find(), [])
 
@@ -34,57 +33,108 @@ function useInProgressTasks() {
     query
   )
 
-  const [tasks, setTasks] = useState<TasksInProgress>()
-
-  useEffect(() => {
-    const enrichTasks = async () => {
-      const tasksWithImageUrls = await tasksWithImages(result)
-      setTasks({ 'tree-removal-tasks': tasksWithImageUrls })
-    }
-    enrichTasks()
-  }, [result])
-
   return {
-    results: tasks,
+    results: { 'tree-removal-tasks': result },
     isFetching
   }
 }
 
-export function TasksProgress() {
-  const { results, isFetching } = useInProgressTasks()
+function generateSteps(taskId: string, images: Images[]) {
+  const steps: Steps[] = ['before', 'during', 'after']
+  const takenAtSteps = images.map((image) => image.taken_at_step)
+  const missingSteps = steps.filter((step) => !takenAtSteps.includes(step))
+  // add href link only to first step
+  const missingStepsFinal = missingSteps.map((step, index) => {
+    if (index === 0) {
+      return {
+        step,
+        href: `/tasks/field-monitor/tree-removal/${taskId}?step=${step}`
+      }
+    }
+    return {
+      step,
+      disabled: true
+    }
+  })
 
+  const groupedSteps = images.reduce((acc, image) => {
+    const { taken_at_step } = image
+    if (!acc[taken_at_step]) {
+      acc[taken_at_step] = []
+    }
+    acc[taken_at_step].push(image)
+    return acc
+  }, {} as Record<Steps, Images[]>)
+
+  return { missingSteps: missingStepsFinal, steps: groupedSteps }
+}
+
+function TaskCheck({
+  taken_at_step,
+  icon
+}: {
+  taken_at_step: Steps
+  icon: 'done' | 'add' | 'disabled'
+}) {
+  const iconComponent = () => {
+    switch (icon) {
+      case 'done':
+        return <CheckIcon className='text-white' />
+      case 'add':
+        return <PlusIcon className='text-white' />
+      case 'disabled':
+        return <div />
+      default:
+        return <div />
+    }
+  }
+
+  return (
+    <div className='flex flex-col gap-2 items-center justify-center'>
+      <p
+        className={classNames('text-xs text-center capitalize', {
+          'text-gray-500': icon === 'disabled'
+        })}
+      >
+        {taken_at_step} <br /> measurement
+      </p>
+      <div
+        className={classNames('rounded-xl border-2 w-20 h-20', {
+          'bg-amber-500': icon === 'add',
+          'bg-green-500': icon === 'done',
+          'bg-gray-400': icon === 'disabled'
+        })}
+      >
+        {iconComponent()}
+      </div>
+    </div>
+  )
+}
+
+export function TasksProgress() {
+  const { results } = useInProgressTasks()
   return (
     <div className='flex flex-col gap-4'>
       <div>Tree Removal Tasks</div>
       {results?.['tree-removal-tasks'].map((task) => {
+        const { missingSteps, steps } = generateSteps(task.id, task.images)
         return (
           <div key={task.id} className='bg-stone-300 rounded-lg p-4'>
-            <div className='flex gap-4'>
-              {task.images.map(({ taken_at_step, base64Preview }) => {
-                console.log(base64Preview)
-                return (
-                  <div className='flex flex-col gap-2 items-center'>
-                    <p className='text-xs'>
-                      {taken_at_step} <br /> measurement
-                    </p>
-                    <img
-                      src={base64Preview}
-                      className='p-4 w-20 h-20 underline capitalize font-light bg-green-400 flex items-center justify-center rounded-lg'
-                    ></img>
-                  </div>
-                )
-              })}
-              {[...Array(3 - task.images.length)].map((_, idx) => {
-                return (
-                  <Link
-                    key={idx}
-                    to={`/tasks/field-monitor/tree-removal/${task.id}`}
-                    className='p-4 w-20 h-20 underline capitalize font-light bg-amber-400 flex items-center justify-center rounded-lg'
-                  >
-                    <PlusCircleIcon />
-                  </Link>
-                )
-              })}
+            <div className='flex gap-10'>
+              {Object.entries(steps).map(([taken_at_step]) => (
+                <TaskCheck taken_at_step={taken_at_step as Steps} icon='done' />
+              ))}
+              {missingSteps.map(({ disabled, step, href }) => (
+                <div>
+                  {disabled ? (
+                    <TaskCheck taken_at_step={step} icon='disabled' />
+                  ) : (
+                    <Link key={href} to={href}>
+                      <TaskCheck taken_at_step={step} icon='add' />
+                    </Link>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         )

@@ -11,6 +11,7 @@ import { QRCodeView } from './components/QRCodeView'
 import { TasksCompleted } from './components/TasksCompleted'
 import { TasksProgress } from './components/TasksProgress'
 import { TasksView } from './components/TasksView'
+import { Steps } from './rxdb/rxdb-schemas'
 
 const rootRoute = new RootRoute({
   component: () => <Dashboard />
@@ -94,7 +95,7 @@ const fieldMonitorHome = new Route({
 })
 
 type FieldMonitorSearch = {
-  step: 'before' | 'during' | 'after'
+  step: Steps
 }
 
 const fieldMonitorTree = new Route({

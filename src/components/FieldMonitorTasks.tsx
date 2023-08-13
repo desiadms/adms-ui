@@ -4,8 +4,8 @@ import classNames from 'classnames'
 import { useMemo } from 'preact/hooks'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useRxCollection } from 'rxdb-hooks'
-import { Images, TreeRemovalTaskDocType } from 'src/rxdb/rxdb-schemas'
 import { v4 } from 'uuid'
+import { Images, Steps, TreeRemovalTaskDocType } from '../rxdb/rxdb-schemas'
 import { blobToBase64, keep, useGeoLocation } from '../utils'
 import {
   Button,
@@ -42,7 +42,7 @@ async function genTaskImagesMetadata({
 }: {
   filesData: FileForm[]
   coordinates: GeolocationCoordinates
-  taken_at_step: 'before' | 'during' | 'after'
+  taken_at_step: Steps
   extraFields: Record<string, string>
 }): Promise<Images[]> {
   const images = await Promise.all(
@@ -63,7 +63,7 @@ async function genTaskImagesMetadata({
 
 type TreeRemovalFormProps = {
   taskId: string
-  step: 'before' | 'during' | 'after'
+  step: Steps
 }
 
 type FormProps = {
@@ -138,9 +138,12 @@ function TreeRemovalForm({ taskId, step }: TreeRemovalFormProps) {
       })
 
       const nowUTC = new Date().toISOString()
+
+      const existingDoc = await treeRemovalColl?.findOne(taskId).exec()
+
       treeRemovalColl?.upsert({
         id: taskId,
-        images,
+        images: existingDoc?.images.concat(images) || images,
         comment: data.comment,
         created_at: nowUTC,
         updated_at: nowUTC,

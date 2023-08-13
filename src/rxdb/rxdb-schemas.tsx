@@ -119,6 +119,8 @@ export const projectSchema: RxJsonSchema<ProjectDocType> = {
   required: ['id']
 } as const
 
+export type Steps = 'before' | 'during' | 'after'
+
 export type Images = {
   id: string
   base64Preview?: string
@@ -126,7 +128,7 @@ export type Images = {
   latitude: string
   longitude: string
   ranges?: string
-  taken_at_step: 'before' | 'during' | 'after'
+  taken_at_step: Steps
 }
 
 export type TreeRemovalTaskDocType = {
