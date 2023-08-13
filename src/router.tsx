@@ -3,7 +3,7 @@ import { AccountView } from './components/AccountView'
 import { Dashboard, Home } from './components/Dashboard'
 import {
   FieldMonitorTasks,
-  TreeRemovalForm
+  TreeRemovalFormWrapper
 } from './components/FieldMonitorTasks'
 import { GeoLocationView } from './components/GeoLocationView'
 import { ProjectsView } from './components/Projects'
@@ -93,11 +93,23 @@ const fieldMonitorHome = new Route({
   errorComponent: () => 'Oh crap!'
 })
 
+type FieldMonitorSearch = {
+  step: 'before' | 'during' | 'after'
+}
+
 const fieldMonitorTree = new Route({
   getParentRoute: () => fieldMonitorTask,
   path: 'tree-removal/$id',
-  component: () => <TreeRemovalForm />,
-  errorComponent: () => 'Oh crap!'
+  component: () => <TreeRemovalFormWrapper />,
+  errorComponent: () => 'Oh crap!',
+  validateSearch: (search: Record<string, unknown>): FieldMonitorSearch => ({
+    step:
+      search.step === 'before' ||
+      search.step === 'during' ||
+      search.step === 'after'
+        ? search.step
+        : 'before'
+  })
 })
 
 declare module '@tanstack/router' {

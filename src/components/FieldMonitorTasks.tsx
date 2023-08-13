@@ -1,11 +1,12 @@
 import { CameraIcon, XCircleIcon } from '@heroicons/react/20/solid'
-import { useNavigate, useParams } from '@tanstack/router'
+import { useNavigate, useParams, useSearch } from '@tanstack/router'
 import classNames from 'classnames'
-import { useAtom } from 'jotai'
 import { useMemo } from 'preact/hooks'
 import { useFieldArray, useForm } from 'react-hook-form'
+import { useRxCollection } from 'rxdb-hooks'
+import { Images, TreeRemovalTaskDocType } from 'src/rxdb/rxdb-schemas'
 import { v4 } from 'uuid'
-import { atomState, blobToBase64, keep, useGeoLocation } from '../utils'
+import { blobToBase64, keep, useGeoLocation } from '../utils'
 import {
   Button,
   ErrorMessage,
@@ -34,28 +35,45 @@ export function FieldMonitorTasks() {
 
 type FileForm = { fileInstance: File | undefined }
 
-async function genTaskImagesMetadata(filesData: FileForm[]) {
-  const taskId = v4()
-  const fileMetadata = await Promise.all(
+async function genTaskImagesMetadata({
+  filesData,
+  coordinates,
+  taken_at_step
+}: {
+  filesData: FileForm[]
+  coordinates: GeolocationCoordinates
+  taken_at_step: 'before' | 'during' | 'after'
+  extraFields: Record<string, string>
+}): Promise<Images[]> {
+  const images = await Promise.all(
     keep(
       filesData,
       (file) => file?.fileInstance && (file.fileInstance[0] as File)
     ).map(async (file) => ({
       id: v4(),
-      task_id: taskId,
-      // add back remove prefix
-      // await blobToBase64(file, 'removePrefix')
-      base64: await blobToBase64(file)
+      latitude: coordinates.latitude.toString(),
+      longitude: coordinates.longitude.toString(),
+      created_at: new Date().toISOString(),
+      taken_at_step,
+      base64Preview: await blobToBase64(file),
+      base64Nhost: await blobToBase64(file, 'removePrefix')
     }))
   )
-
-  const images = fileMetadata.map(({ id, task_id }) => ({ id, task_id }))
-  const files = fileMetadata.map(({ id, base64 }) => ({ id, base64 }))
-
-  return { images, files, taskId }
+  return images
 }
 
-export function TreeRemovalForm() {
+type TreeRemovalFormProps = {
+  taskId: string
+  step: 'before' | 'during' | 'after'
+}
+
+type FormProps = {
+  comment?: string
+  range?: string
+  files: FileForm[]
+}
+
+function TreeRemovalForm({ taskId, step }: TreeRemovalFormProps) {
   const {
     register,
     handleSubmit,
@@ -63,29 +81,14 @@ export function TreeRemovalForm() {
     setError,
     clearErrors,
     formState: { errors }
-  } = useForm({
+  } = useForm<FormProps>({
     defaultValues: {
-      task: '',
       comment: '',
       files: [{ fileInstance: undefined }, { fileInstance: undefined }]
     }
   })
 
-  const [state, setState] = useAtom(atomState)
-
-  const { id } = useParams()
-
-  function stageFn() {
-    const currentTask = state.treeRemoval.find((task) => task.id === id)
-
-    if (!currentTask) return 'before'
-
-    return currentTask.steps.length === 1 ? 'during' : 'after'
-  }
-
-  const stage = useMemo(() => stageFn(), [state.treeRemoval])
-  console.log('stage', stage)
-  const { fields, append, update } = useFieldArray({
+  const { fields, update } = useFieldArray({
     control,
     name: 'files'
   })
@@ -112,6 +115,9 @@ export function TreeRemovalForm() {
   const { coordinates } = useGeoLocation()
   const navigate = useNavigate()
 
+  const treeRemovalColl =
+    useRxCollection<TreeRemovalTaskDocType>('tree-removal-task')
+
   async function submitForm(data) {
     clearErrors()
     // to check that at least one file was uploaded
@@ -122,57 +128,27 @@ export function TreeRemovalForm() {
       setError('files', { message: 'Please take at least one picture' })
       return
     }
-    const { taskId, files } = await genTaskImagesMetadata(data.files)
+    if (coordinates) {
+      const images = await genTaskImagesMetadata({
+        filesData: data.files,
+        coordinates,
+        taken_at_step: step,
+        extraFields: {
+          ranges: data.ranges
+        }
+      })
 
-    const payload = {
-      id: v4(),
-      coordinates,
-      stage,
-      datetime: currentDateTime,
-      files
-    }
+      const nowUTC = new Date().toISOString()
+      treeRemovalColl?.upsert({
+        id: taskId,
+        images,
+        comment: data.comment,
+        created_at: nowUTC,
+        updated_at: nowUTC,
+        completed: step === 'after'
+      })
 
-    if (stage === 'before') {
-      setState((state) => ({
-        ...state,
-        treeRemoval: [
-          ...state.treeRemoval,
-          {
-            id: taskId,
-            name: 'hazardous tree removal',
-            steps: [payload]
-          }
-        ]
-      }))
-    } else {
-      setState((state) => ({
-        ...state,
-        treeRemoval: state.treeRemoval.map((task) => {
-          if (task.id === id) {
-            return {
-              ...task,
-              steps: [
-                ...task.steps,
-                {
-                  ...payload,
-                  ...(stage === 'after' && { comment: data.comment })
-                }
-              ]
-            }
-          }
-          return task
-        })
-      }))
-    }
-
-    navigate({ to: stage === 'after' ? '/completed' : '/progress' })
-  }
-
-  const maxSize = 2
-
-  function handleAppend() {
-    if (fields.length < maxSize) {
-      append({ fileInstance: undefined })
+      navigate({ to: step === 'after' ? '/completed' : '/progress' })
     }
   }
 
@@ -184,7 +160,7 @@ export function TreeRemovalForm() {
   return (
     <div>
       <div className='capitalize font-medium pb-4'>
-        Tree Removal - {`${stage} measurement`}
+        Tree Removal - {`${step} measurement`}
       </div>
       <form
         onSubmit={handleSubmit(submitForm)}
@@ -270,13 +246,13 @@ export function TreeRemovalForm() {
         </div>
 
         {errors.files && <p className='text-red-500'>{errors.files.message}</p>}
-        {stage === 'after' && (
+        {step === 'after' && (
           <div className='p-2 w-full rounded-lg'>
             <LabelledTextArea
               label='Comment'
               {...register('comment', { required: 'Task name is required' })}
             />
-            <ErrorMessage message={errors.task?.message} />
+            <ErrorMessage message={errors.comment?.message} />
           </div>
         )}
         <div className='px-2'>
@@ -285,4 +261,14 @@ export function TreeRemovalForm() {
       </form>
     </div>
   )
+}
+
+export function TreeRemovalFormWrapper() {
+  const { id } = useParams()
+  const { step } = useSearch({
+    from: '/tasks/field-monitor/tree-removal/$id'
+  })
+  console.log('step', step)
+
+  return <TreeRemovalForm taskId={id as string} step={step} />
 }

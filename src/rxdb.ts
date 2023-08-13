@@ -59,7 +59,7 @@ export async function initialize(accessToken: string) {
 
   await addCollections(db, [
     {
-      name: 'treeRemovalTasks',
+      name: 'tree-removal-task',
       schema: treeRemovalTaskSchema,
       localDocuments: true,
       pullQueryBuilder: tasksRead,

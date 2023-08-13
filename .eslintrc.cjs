@@ -45,14 +45,7 @@ module.exports = {
     'jsx-a11y/media-has-caption': 'off',
     'no-plusplus': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/naming-convention': [
-      'error',
-      {
-        selector: 'variable',
-        format: ['camelCase', 'PascalCase', 'UPPER_CASE', 'snake_case'],
-        leadingUnderscore: 'allow'
-      }
-    ],
+    '@typescript-eslint/naming-convention': 'off',
     'jsx-a11y/label-has-associated-control': [
       2,
       {
