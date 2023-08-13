@@ -18,37 +18,28 @@ export function tasksRead() {
 }
 
 export async function tasksWrite(
-  db,
+  _db,
   rows: RxReplicationWriteToMasterRow<TreeRemovalTaskDocType>[]
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState)
-  const taskIds = extractedData.map(({ id }) => id)
+  const images = extractedData
+    .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
+    .flat()
 
-  const taskImages = Promise.all<{ id: string; file: File }[]>(
-    taskIds.map(async (taskId) => {
-      const rxLocalDoc = await db.collections.tasks.getLocal(taskId)
-      const b64Files = rxLocalDoc?.get('files')
+  const blobFiles = images.map(({ id, base64Preview }) => ({
+    id,
+    file: base64toFile(base64Preview, 'task', 'image/png')
+  }))
 
-      const blobFiles = b64Files.map(({ id, base64 }) => ({
-        id,
-        file: base64toFile(base64, 'task', 'image/png')
-      }))
-
-      return blobFiles
-    })
-  )
-
-  const flattenedTaskImages = (await taskImages).flat()
+  const flattenedTaskImages = blobFiles.flat()
   await saveFilesToNhost(flattenedTaskImages)
 
-  const extractedImages = extractedData.map(({ images }) => images).flat()
-  const extractedTasks = extractedData.map(
-    ({ images, _deleted, updated_at, created_at, ...rest }) => rest
-  )
+  const variableImages = images.map(({ base64Preview, ...rest }) => rest)
+  const variableTasks = extractedData.map(({ images, ...rest }) => rest)
 
   return {
     query: resolveRequestDocument(upsertTreeRemovalTasks).query,
-    variables: { tasks: extractedTasks, images: extractedImages }
+    variables: { tasks: variableTasks, images: variableImages }
   }
 }
 

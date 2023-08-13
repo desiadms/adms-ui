@@ -25,7 +25,7 @@ type PullQueryBuilder = (
 ) => RxGraphQLReplicationQueryBuilderResponse
 
 type ReplicationBase = {
-  accessToken: string
+  accessToken: string | null
   pullQueryBuilder: PullQueryBuilder
   pushQueryBuilder?: PushQueryBuilder
 }

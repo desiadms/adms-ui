@@ -121,7 +121,6 @@ export const projectSchema: RxJsonSchema<ProjectDocType> = {
 
 export type Images = {
   id: string
-  base64Nhost?: string
   base64Preview?: string
   created_at: string
   latitude: string
@@ -180,6 +179,9 @@ export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
           type: 'string'
         },
         taken_at_step: {
+          type: 'string'
+        },
+        base64Preview: {
           type: 'string'
         }
       }

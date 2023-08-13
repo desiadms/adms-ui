@@ -1,18 +1,7 @@
-import { PlusCircleIcon } from '@heroicons/react/24/outline'
-import { Link } from '@tanstack/router'
-import { useAtom } from 'jotai'
-import { atomState } from '../utils'
-
 export function TasksCompleted() {
-  const [state, setState] = useAtom(atomState)
-
-  const inProgressTreeRemoval = state.treeRemoval.filter(
-    (task) => task.steps.length === 3
-  )
-
   return (
     <div className='flex flex-col gap-4'>
-      {inProgressTreeRemoval.map((task) => {
+      {/* {inProgressTreeRemoval.map((task) => {
         return (
           <div key={task.id} className='bg-stone-300 rounded-lg p-4'>
             <h2 className='text-xl uppercase pb-4'>{task.name}</h2>
@@ -40,26 +29,10 @@ export function TasksCompleted() {
               })}
             </div>
 
-            {/* <div className='flex gap-4'>
-              {task.steps.map((step) => {
-                return (
-                  <div className='w-full' key={step.id}>
-                    {step.files.map((file) => {
-                      return (
-                        <img
-                          className='w-1/6 bg-black aspect-square object-contain'
-                          src={file.base64}
-                          alt=''
-                        />
-                      )
-                    })}
-                  </div>
-                )
-              })}
-            </div> */}
+           
           </div>
         )
-      })}
+      })} */}
     </div>
   )
 }

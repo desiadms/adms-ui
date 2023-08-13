@@ -41,7 +41,7 @@ if (devMode) {
   )
 }
 
-export async function initialize(accessToken: string) {
+export async function initialize(accessToken: string | null) {
   const dexie = getRxStorageDexie()
 
   const storage = devMode

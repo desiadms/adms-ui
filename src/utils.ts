@@ -1,5 +1,4 @@
 import { NhostClient, useAuthenticationStatus } from '@nhost/react'
-import { atom } from 'jotai'
 import { useEffect, useState } from 'preact/hooks'
 import { RxDocument } from 'rxdb'
 import { UserDocType } from './rxdb/rxdb-schemas'
@@ -40,8 +39,8 @@ export function useAuth() {
   const { isAuthenticated, isLoading } = useAuthenticationStatus()
 
   return !isOnline
-    ? { isAuthenticated: true, isLoading: false }
-    : { isAuthenticated, isLoading }
+    ? { isAuthenticated: true, isLoading: false, isOffline: true }
+    : { isAuthenticated, isLoading, isOffline: false }
 }
 
 export function useGeoLocation() {
@@ -142,11 +141,17 @@ export async function blobToBase64(
 }
 
 export function base64toFile(
-  base64String: string,
+  base64String: string | undefined,
   fileName: string,
   mimeType: string
 ): File {
-  const byteCharacters = atob(base64String)
+  if (!base64String) {
+    throw new Error('No base64 string provided')
+  }
+  const base64StringNoMime = base64String.substring(
+    base64String.indexOf(',') + 1
+  )
+  const byteCharacters = atob(base64StringNoMime)
   const byteArrays: Uint8Array[] = []
 
   for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
@@ -182,23 +187,4 @@ export function saveFilesToNhost(files: { id: string; file: File }[]) {
   return Promise.all(
     files.map(({ id, file }) => nhost.storage.upload({ file, id }))
   )
-}
-
-export const atomState = atom({ treeRemoval: [] })
-
-const a = {
-  treeRemoval: [
-    {
-      id: 1,
-      steps: [
-        {
-          id: 1,
-          files: ['file1'],
-          coordinates: [1, 2],
-          datetime: '2021-01-01'
-        },
-        { id: 2, name: 'step 2' }
-      ]
-    }
-  ]
 }

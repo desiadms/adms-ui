@@ -55,8 +55,7 @@ async function genTaskImagesMetadata({
       longitude: coordinates.longitude.toString(),
       created_at: new Date().toISOString(),
       taken_at_step,
-      base64Preview: await blobToBase64(file),
-      base64Nhost: await blobToBase64(file, 'removePrefix')
+      base64Preview: await blobToBase64(file)
     }))
   )
   return images

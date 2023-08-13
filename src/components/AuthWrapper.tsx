@@ -91,14 +91,14 @@ function FullPageSpinner() {
 }
 
 export function AuthWrapper() {
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading, isOffline } = useAuth()
   const accessToken = useAccessToken()
 
   const [db, setDb] = useState<RxDatabase>()
 
   useEffect(() => {
-    if (accessToken) initialize(accessToken).then(setDb)
-  }, [accessToken])
+    if (accessToken || isOffline) initialize(accessToken).then(setDb)
+  }, [accessToken, isOffline])
 
   if (isLoading || (isAuthenticated && !db)) {
     return <FullPageSpinner />
