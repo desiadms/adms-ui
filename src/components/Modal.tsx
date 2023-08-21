@@ -1,4 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import React, { Fragment, createElement } from 'preact'
 import { useState } from 'preact/hooks'
@@ -20,12 +21,14 @@ export type ModalProps = {
   modalTrigger: React.FunctionComponent<ModalTriggerProps>
   modalContent: React.FunctionComponent<ModalContentProps>
   modalClassName?: string
+  title: string
 }
 
 export const Modal = ({
   modalTrigger,
   modalContent,
-  modalClassName = 'max-w-lg'
+  modalClassName = 'max-w-lg',
+  title
 }: ModalProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -49,7 +52,7 @@ export const Modal = ({
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as='div'
-          data-testid='modal'
+          // @ts-ignore
           className='fixed inset-0 z-10 overflow-y-auto'
           onClose={closeModal}
         >
@@ -80,10 +83,18 @@ export const Modal = ({
                   <div
                     className={classNames(
                       'max-h-screen overflow-y-auto',
-                      'p-6 text-left w-max transition-all transform bg-white shadow-xl rounded-2xl dark:bg-gray-800',
+                      'p-4 text-left w-max transition-all transform bg-neutral-200 shadow-xl rounded-2xl',
                       modalClassName
                     )}
                   >
+                    <div className='flex justify-between gap-4 pb-2'>
+                      <div className='text-xl font-medium capitalize'>
+                        {title}
+                      </div>
+                      <button type='button' onClick={closeModal}>
+                        <XMarkIcon className='w-6' />
+                      </button>
+                    </div>
                     {createElement(modalContent, {
                       openModal,
                       closeModal

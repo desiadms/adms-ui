@@ -188,3 +188,13 @@ export function saveFilesToNhost(files: { id: string; file: File }[]) {
     files.map(({ id, file }) => nhost.storage.upload({ file, id }))
   )
 }
+
+export function humanizeDate(date?: string | number | Date) {
+  return new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    minute: 'numeric',
+    hour: 'numeric'
+  }).format(date ? new Date(date) : new Date())
+}

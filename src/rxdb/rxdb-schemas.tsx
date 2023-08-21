@@ -127,7 +127,6 @@ export type Images = {
   created_at: string
   latitude: string
   longitude: string
-  ranges?: string
   taken_at_step: Steps
 }
 
@@ -137,6 +136,7 @@ export type TreeRemovalTaskDocType = {
   created_at: string
   comment?: string
   completed?: boolean
+  ranges?: string
   images: Images[]
 }
 
@@ -152,6 +152,9 @@ export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
     },
     comment: {
       type: 'string'
+    },
+    ranges: {
+      type: ['string', 'null']
     },
     created_at: {
       type: 'string'

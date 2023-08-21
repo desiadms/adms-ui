@@ -6,12 +6,13 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { useRxCollection } from 'rxdb-hooks'
 import { v4 } from 'uuid'
 import { Images, Steps, TreeRemovalTaskDocType } from '../rxdb/rxdb-schemas'
-import { blobToBase64, keep, useGeoLocation } from '../utils'
+import { blobToBase64, humanizeDate, keep, useGeoLocation } from '../utils'
 import {
   Button,
   ErrorMessage,
   Input,
   Label,
+  LabelledInput,
   LabelledTextArea,
   useFilesForm
 } from './Forms'
@@ -43,7 +44,7 @@ async function genTaskImagesMetadata({
   filesData: FileForm[]
   coordinates: GeolocationCoordinates
   taken_at_step: Steps
-  extraFields: Record<string, string>
+  extraFields?: Record<string, string>
 }): Promise<Images[]> {
   const images = await Promise.all(
     keep(
@@ -68,7 +69,7 @@ type TreeRemovalFormProps = {
 
 type FormProps = {
   comment?: string
-  range?: string
+  ranges?: string
   files: FileForm[]
 }
 
@@ -99,17 +100,7 @@ function TreeRemovalForm({ taskId, step }: TreeRemovalFormProps) {
     removePreview
   } = useFilesForm()
 
-  const currentDateTime = useMemo(
-    () =>
-      new Intl.DateTimeFormat('en-US', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        minute: 'numeric',
-        hour: 'numeric'
-      }).format(new Date()),
-    []
-  )
+  const currentDateTime = useMemo(() => humanizeDate(), [])
 
   const { coordinates } = useGeoLocation()
   const navigate = useNavigate()
@@ -131,10 +122,7 @@ function TreeRemovalForm({ taskId, step }: TreeRemovalFormProps) {
       const images = await genTaskImagesMetadata({
         filesData: data.files,
         coordinates,
-        taken_at_step: step,
-        extraFields: {
-          ranges: data.ranges
-        }
+        taken_at_step: step
       })
 
       const nowUTC = new Date().toISOString()
@@ -147,6 +135,7 @@ function TreeRemovalForm({ taskId, step }: TreeRemovalFormProps) {
         comment: data.comment,
         created_at: nowUTC,
         updated_at: nowUTC,
+        ranges: data.ranges,
         completed: step === 'after'
       })
 
@@ -190,6 +179,16 @@ function TreeRemovalForm({ taskId, step }: TreeRemovalFormProps) {
             </div>
           </div>
         </div>
+
+        {step === 'during' && (
+          <div className='p-2 w-full rounded-lg'>
+            <LabelledInput
+              label='Ranges'
+              {...register('ranges', { required: 'Ranges filed is required' })}
+            />
+            <ErrorMessage message={errors.ranges?.message} />
+          </div>
+        )}
 
         <div className='p-2'>
           <Label label='Photos' />

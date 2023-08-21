@@ -26,8 +26,6 @@ export async function tasksWrite(
     .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
     .flat()
 
-  console.log('in replication', images)
-
   const blobFiles = images
     .filter((image) => image.base64Preview)
     .map(({ id, base64Preview }) => ({

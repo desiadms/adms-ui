@@ -2917,9 +2917,10 @@ export type Images = {
   images_file: Files;
   /** An object relationship */
   images_tasks_tree_removal: Tasks_Tree_Removal;
+  /** An object relationship */
+  images_user: Users;
   latitude?: Maybe<Scalars['String']['output']>;
   longitude?: Maybe<Scalars['String']['output']>;
-  ranges?: Maybe<Scalars['String']['output']>;
   taken_at_step?: Maybe<Scalars['String']['output']>;
   task_id: Scalars['uuid']['output'];
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -3000,9 +3001,9 @@ export type Images_Bool_Exp = {
   image_taken?: InputMaybe<Image_Taken_Bool_Exp>;
   images_file?: InputMaybe<Files_Bool_Exp>;
   images_tasks_tree_removal?: InputMaybe<Tasks_Tree_Removal_Bool_Exp>;
+  images_user?: InputMaybe<Users_Bool_Exp>;
   latitude?: InputMaybe<String_Comparison_Exp>;
   longitude?: InputMaybe<String_Comparison_Exp>;
-  ranges?: InputMaybe<String_Comparison_Exp>;
   taken_at_step?: InputMaybe<String_Comparison_Exp>;
   task_id?: InputMaybe<Uuid_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -3023,9 +3024,9 @@ export type Images_Insert_Input = {
   image_taken?: InputMaybe<Image_Taken_Obj_Rel_Insert_Input>;
   images_file?: InputMaybe<Files_Obj_Rel_Insert_Input>;
   images_tasks_tree_removal?: InputMaybe<Tasks_Tree_Removal_Obj_Rel_Insert_Input>;
+  images_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   latitude?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['String']['input']>;
-  ranges?: InputMaybe<Scalars['String']['input']>;
   taken_at_step?: InputMaybe<Scalars['String']['input']>;
   task_id?: InputMaybe<Scalars['uuid']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -3039,7 +3040,6 @@ export type Images_Max_Fields = {
   id?: Maybe<Scalars['uuid']['output']>;
   latitude?: Maybe<Scalars['String']['output']>;
   longitude?: Maybe<Scalars['String']['output']>;
-  ranges?: Maybe<Scalars['String']['output']>;
   taken_at_step?: Maybe<Scalars['String']['output']>;
   task_id?: Maybe<Scalars['uuid']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -3052,7 +3052,6 @@ export type Images_Max_Order_By = {
   id?: InputMaybe<Order_By>;
   latitude?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
-  ranges?: InputMaybe<Order_By>;
   taken_at_step?: InputMaybe<Order_By>;
   task_id?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
@@ -3066,7 +3065,6 @@ export type Images_Min_Fields = {
   id?: Maybe<Scalars['uuid']['output']>;
   latitude?: Maybe<Scalars['String']['output']>;
   longitude?: Maybe<Scalars['String']['output']>;
-  ranges?: Maybe<Scalars['String']['output']>;
   taken_at_step?: Maybe<Scalars['String']['output']>;
   task_id?: Maybe<Scalars['uuid']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -3079,7 +3077,6 @@ export type Images_Min_Order_By = {
   id?: InputMaybe<Order_By>;
   latitude?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
-  ranges?: InputMaybe<Order_By>;
   taken_at_step?: InputMaybe<Order_By>;
   task_id?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
@@ -3110,9 +3107,9 @@ export type Images_Order_By = {
   image_taken?: InputMaybe<Image_Taken_Order_By>;
   images_file?: InputMaybe<Files_Order_By>;
   images_tasks_tree_removal?: InputMaybe<Tasks_Tree_Removal_Order_By>;
+  images_user?: InputMaybe<Users_Order_By>;
   latitude?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
-  ranges?: InputMaybe<Order_By>;
   taken_at_step?: InputMaybe<Order_By>;
   task_id?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
@@ -3136,8 +3133,6 @@ export enum Images_Select_Column {
   Latitude = 'latitude',
   /** column name */
   Longitude = 'longitude',
-  /** column name */
-  Ranges = 'ranges',
   /** column name */
   TakenAtStep = 'taken_at_step',
   /** column name */
@@ -3167,7 +3162,6 @@ export type Images_Set_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   latitude?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['String']['input']>;
-  ranges?: InputMaybe<Scalars['String']['input']>;
   taken_at_step?: InputMaybe<Scalars['String']['input']>;
   task_id?: InputMaybe<Scalars['uuid']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -3189,7 +3183,6 @@ export type Images_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   latitude?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['String']['input']>;
-  ranges?: InputMaybe<Scalars['String']['input']>;
   taken_at_step?: InputMaybe<Scalars['String']['input']>;
   task_id?: InputMaybe<Scalars['uuid']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -3208,8 +3201,6 @@ export enum Images_Update_Column {
   Latitude = 'latitude',
   /** column name */
   Longitude = 'longitude',
-  /** column name */
-  Ranges = 'ranges',
   /** column name */
   TakenAtStep = 'taken_at_step',
   /** column name */
@@ -7992,6 +7983,7 @@ export type Tasks_Tree_Removal = {
   /** An aggregate relationship */
   images_aggregate: Images_Aggregate;
   project_id: Scalars['uuid']['output'];
+  ranges?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   tasks_tree_removal_images: Array<Images>;
   /** An aggregate relationship */
@@ -8120,6 +8112,7 @@ export type Tasks_Tree_Removal_Bool_Exp = {
   images?: InputMaybe<Images_Bool_Exp>;
   images_aggregate?: InputMaybe<Images_Aggregate_Bool_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  ranges?: InputMaybe<String_Comparison_Exp>;
   tasks_tree_removal_images?: InputMaybe<Images_Bool_Exp>;
   tasks_tree_removal_images_aggregate?: InputMaybe<Images_Aggregate_Bool_Exp>;
   tasks_tree_removal_project?: InputMaybe<Projects_Bool_Exp>;
@@ -8143,6 +8136,7 @@ export type Tasks_Tree_Removal_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   images?: InputMaybe<Images_Arr_Rel_Insert_Input>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
+  ranges?: InputMaybe<Scalars['String']['input']>;
   tasks_tree_removal_images?: InputMaybe<Images_Arr_Rel_Insert_Input>;
   tasks_tree_removal_project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
   tasks_tree_removal_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
@@ -8157,6 +8151,7 @@ export type Tasks_Tree_Removal_Max_Fields = {
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
+  ranges?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
@@ -8167,6 +8162,7 @@ export type Tasks_Tree_Removal_Max_Order_By = {
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
+  ranges?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
@@ -8178,6 +8174,7 @@ export type Tasks_Tree_Removal_Min_Fields = {
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
+  ranges?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
@@ -8188,6 +8185,7 @@ export type Tasks_Tree_Removal_Min_Order_By = {
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
+  ranges?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
@@ -8224,6 +8222,7 @@ export type Tasks_Tree_Removal_Order_By = {
   id?: InputMaybe<Order_By>;
   images_aggregate?: InputMaybe<Images_Aggregate_Order_By>;
   project_id?: InputMaybe<Order_By>;
+  ranges?: InputMaybe<Order_By>;
   tasks_tree_removal_images_aggregate?: InputMaybe<Images_Aggregate_Order_By>;
   tasks_tree_removal_project?: InputMaybe<Projects_Order_By>;
   tasks_tree_removal_user?: InputMaybe<Users_Order_By>;
@@ -8250,6 +8249,8 @@ export enum Tasks_Tree_Removal_Select_Column {
   Id = 'id',
   /** column name */
   ProjectId = 'project_id',
+  /** column name */
+  Ranges = 'ranges',
   /** column name */
   UpdatedAt = 'updated_at',
   /** column name */
@@ -8280,6 +8281,7 @@ export type Tasks_Tree_Removal_Set_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
+  ranges?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -8300,6 +8302,7 @@ export type Tasks_Tree_Removal_Stream_Cursor_Value_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
+  ranges?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -8318,6 +8321,8 @@ export enum Tasks_Tree_Removal_Update_Column {
   Id = 'id',
   /** column name */
   ProjectId = 'project_id',
+  /** column name */
+  Ranges = 'ranges',
   /** column name */
   UpdatedAt = 'updated_at',
   /** column name */
@@ -9628,7 +9633,7 @@ export type Uuid_Comparison_Exp = {
 export type TreeRemovalTasksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TreeRemovalTasksQuery = { __typename?: 'query_root', tasks_tree_removal: Array<{ __typename?: 'tasks_tree_removal', comment?: string | null, completed?: boolean | null, created_at: any, updated_at: any, id: any, images: Array<{ __typename?: 'images', id: any, created_at?: any | null, latitude?: string | null, longitude?: string | null, ranges?: string | null, taken_at_step?: string | null }> }> };
+export type TreeRemovalTasksQuery = { __typename?: 'query_root', tasks_tree_removal: Array<{ __typename?: 'tasks_tree_removal', comment?: string | null, completed?: boolean | null, created_at: any, updated_at: any, id: any, ranges?: string | null, images: Array<{ __typename?: 'images', id: any, created_at?: any | null, latitude?: string | null, longitude?: string | null, taken_at_step?: string | null }> }> };
 
 export type UpsertTreeRemovalTaskMutationVariables = Exact<{
   tasks: Array<Tasks_Tree_Removal_Insert_Input> | Tasks_Tree_Removal_Insert_Input;
@@ -9658,8 +9663,8 @@ export type ProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 export type ProjectsQuery = { __typename?: 'query_root', projects: Array<{ __typename?: 'projects', id: any, name: string, comment?: string | null, contractor?: string | null, sub_contractor?: string | null, location?: string | null, poc?: string | null }> };
 
 
-export const TreeRemovalTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"treeRemovalTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tasks_tree_removal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"completed"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","alias":{"kind":"Name","value":"images"},"name":{"kind":"Name","value":"tasks_tree_removal_images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"ranges"}},{"kind":"Field","name":{"kind":"Name","value":"taken_at_step"}}]}}]}}]}}]} as unknown as DocumentNode<TreeRemovalTasksQuery, TreeRemovalTasksQueryVariables>;
-export const UpsertTreeRemovalTaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"upsertTreeRemovalTask"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"tasks_tree_removal_insert_input"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"images"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"images_insert_input"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tasks_tree_removal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"comment"},{"kind":"EnumValue","value":"completed"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"tree_removal_tasks_pkey"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"images"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"images_pkey"}},{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"latitude"},{"kind":"EnumValue","value":"longitude"},{"kind":"EnumValue","value":"ranges"},{"kind":"EnumValue","value":"taken_at_step"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpsertTreeRemovalTaskMutation, UpsertTreeRemovalTaskMutationVariables>;
+export const TreeRemovalTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"treeRemovalTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tasks_tree_removal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"completed"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"ranges"}},{"kind":"Field","alias":{"kind":"Name","value":"images"},"name":{"kind":"Name","value":"tasks_tree_removal_images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"taken_at_step"}}]}}]}}]}}]} as unknown as DocumentNode<TreeRemovalTasksQuery, TreeRemovalTasksQueryVariables>;
+export const UpsertTreeRemovalTaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"upsertTreeRemovalTask"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"tasks_tree_removal_insert_input"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"images"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"images_insert_input"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tasks_tree_removal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"comment"},{"kind":"EnumValue","value":"completed"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"},{"kind":"EnumValue","value":"ranges"}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"tree_removal_tasks_pkey"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"images"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"images_pkey"}},{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"latitude"},{"kind":"EnumValue","value":"longitude"},{"kind":"EnumValue","value":"taken_at_step"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpsertTreeRemovalTaskMutation, UpsertTreeRemovalTaskMutationVariables>;
 export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersMetadata"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"hire_date"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"role_data_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_field_supervisor"}},{"kind":"Field","name":{"kind":"Name","value":"role_filed_monitor"}},{"kind":"Field","name":{"kind":"Name","value":"role_operations_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_pc_admin"}},{"kind":"Field","name":{"kind":"Name","value":"role_project_manager"}},{"kind":"Field","name":{"kind":"Name","value":"usersMetadata_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
 export const UpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_usersMetadata_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"first_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"last_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
 export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"sub_contractor"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"poc"}}]}}]}}]} as unknown as DocumentNode<ProjectsQuery, ProjectsQueryVariables>;

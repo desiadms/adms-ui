@@ -8,12 +8,12 @@ export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
       created_at
       updated_at
       id
+      ranges
       images: tasks_tree_removal_images {
         id
         created_at
         latitude
         longitude
-        ranges
         taken_at_step
       }
     }
@@ -28,7 +28,7 @@ export const upsertTreeRemovalTasks = graphql(/* GraphQL */ `
     insert_tasks_tree_removal(
       objects: $tasks
       on_conflict: {
-        update_columns: [comment, completed, updated_at, _deleted]
+        update_columns: [comment, completed, updated_at, _deleted, ranges]
         constraint: tree_removal_tasks_pkey
       }
     ) {
@@ -43,7 +43,6 @@ export const upsertTreeRemovalTasks = graphql(/* GraphQL */ `
         update_columns: [
           latitude
           longitude
-          ranges
           taken_at_step
           updated_at
           _deleted
