@@ -1,6 +1,6 @@
 import { CheckIcon, PlusIcon } from '@heroicons/react/20/solid'
 import { ClockIcon } from '@heroicons/react/24/outline'
-import { Link } from '@tanstack/router'
+import { Link, useNavigate } from '@tanstack/router'
 import classNames from 'classnames'
 import { useCallback, useEffect, useState } from 'preact/hooks'
 import { useRxData } from 'rxdb-hooks'
@@ -143,6 +143,14 @@ function TaskPreview({
 }) {
   const [fetchedImages, setFetchedImages] = useState<Images[]>([])
 
+  const navigate = useNavigate()
+
+  const edit = () =>
+    navigate({
+      to: `/tasks/field-monitor/tree-removal/${task.id}`,
+      search: { step: taken_at_step, edit: true }
+    })
+
   useEffect(() => {
     fetchImages(images).then(setFetchedImages)
   }, [])
@@ -167,7 +175,6 @@ function TaskPreview({
             className='w-full h-full object-cover'
             src={image.base64Preview}
             alt=''
-            onError={() => console.log('in here bitch')}
           />
         </div>
       ))}
@@ -176,7 +183,7 @@ function TaskPreview({
           <Button onClick={modalProps.closeModal}>Back</Button>
         </div>
         <div className='w-fit'>
-          <Button onClick={modalProps.closeModal}>Retake</Button>
+          <Button onClick={edit}>Retake</Button>
         </div>
       </div>
     </div>

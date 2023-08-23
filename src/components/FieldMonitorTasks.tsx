@@ -65,6 +65,7 @@ async function genTaskImagesMetadata({
 type TreeRemovalFormProps = {
   taskId: string
   step: Steps
+  edit: boolean
 }
 
 type FormProps = {
@@ -73,7 +74,7 @@ type FormProps = {
   files: FileForm[]
 }
 
-function TreeRemovalForm({ taskId, step }: TreeRemovalFormProps) {
+function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
   const {
     register,
     handleSubmit,
@@ -129,9 +130,18 @@ function TreeRemovalForm({ taskId, step }: TreeRemovalFormProps) {
 
       const existingDoc = await treeRemovalColl?.findOne(taskId).exec()
 
+      const updatedimages = edit
+        ? existingDoc?.images.map((image) => {
+            if (image.taken_at_step === step)
+              return { ...image, _deleted: true }
+
+            return image
+          })
+        : existingDoc?.images
+
       treeRemovalColl?.upsert({
         id: taskId,
-        images: existingDoc?.images.concat(images) || images,
+        images: updatedimages?.concat(images) || images,
         comment: data.comment,
         created_at: nowUTC,
         updated_at: nowUTC,
@@ -266,10 +276,10 @@ function TreeRemovalForm({ taskId, step }: TreeRemovalFormProps) {
 
 export function TreeRemovalFormWrapper() {
   const { id } = useParams()
-  const { step } = useSearch({
+  const { step, edit } = useSearch({
     from: '/tasks/field-monitor/tree-removal/$id'
   })
   console.log('step', step)
 
-  return <TreeRemovalForm taskId={id as string} step={step} />
+  return <TreeRemovalForm taskId={id as string} step={step} edit={edit} />
 }

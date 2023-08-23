@@ -96,6 +96,7 @@ const fieldMonitorHome = new Route({
 
 type FieldMonitorSearch = {
   step: Steps
+  edit: boolean
 }
 
 const fieldMonitorTree = new Route({
@@ -104,6 +105,7 @@ const fieldMonitorTree = new Route({
   component: () => <TreeRemovalFormWrapper />,
   errorComponent: () => 'Oh crap!',
   validateSearch: (search: Record<string, unknown>): FieldMonitorSearch => ({
+    edit: Boolean(search?.edit),
     step:
       search.step === 'before' ||
       search.step === 'during' ||
