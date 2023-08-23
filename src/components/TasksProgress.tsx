@@ -167,6 +167,7 @@ function TaskPreview({
             className='w-full h-full object-cover'
             src={image.base64Preview}
             alt=''
+            onError={() => console.log('in here bitch')}
           />
         </div>
       ))}
