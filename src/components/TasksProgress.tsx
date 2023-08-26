@@ -42,7 +42,10 @@ function useInProgressTasks() {
   const query = useCallback(
     (collection) =>
       collection.find({
-        sort: [{ created_at: 'desc' }]
+        sort: [{ created_at: 'desc' }],
+        selector: {
+          completed: false
+        }
       }),
     []
   )
@@ -152,8 +155,9 @@ function TaskPreview({
     })
 
   useEffect(() => {
-    fetchImages(images).then(setFetchedImages)
-  }, [])
+    const filteredImages = images.filter((image) => !image._deleted)
+    fetchImages(filteredImages).then(setFetchedImages)
+  }, [images])
 
   return (
     <div className='relative flex flex-col gap-4'>
@@ -194,9 +198,9 @@ export function TasksProgress() {
   const { results } = useInProgressTasks()
   const modalTrigger = useCallback(
     ({ openModal }: ModalTriggerProps, taken_at_step: Steps) => (
-      <div onClick={openModal}>
+      <button type='button' onClick={openModal}>
         <TaskCheck taken_at_step={taken_at_step} icon='done' />
-      </div>
+      </button>
     ),
     []
   )

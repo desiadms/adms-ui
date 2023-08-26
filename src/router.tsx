@@ -5,10 +5,7 @@ import {
   FieldMonitorTasks,
   TreeRemovalFormWrapper
 } from './components/FieldMonitorTasks'
-import { GeoLocationView } from './components/GeoLocationView'
 import { ProjectsView } from './components/Projects'
-import { QRCodeView } from './components/QRCodeView'
-import { TasksCompleted } from './components/TasksCompleted'
 import { TasksProgress } from './components/TasksProgress'
 import { TasksView } from './components/TasksView'
 import { Steps } from './rxdb/rxdb-schemas'
@@ -38,20 +35,6 @@ const projectsRoute = new Route({
   errorComponent: () => 'Oh crap!'
 })
 
-const geolocationRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: 'geoLocation',
-  component: () => <GeoLocationView />,
-  errorComponent: () => 'Oh crap!'
-})
-
-const qrcodeRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: 'qrCode',
-  component: () => <QRCodeView />,
-  errorComponent: () => 'Oh crap!'
-})
-
 const tasksRoute = new Route({
   getParentRoute: () => rootRoute,
   path: 'tasks',
@@ -70,13 +53,6 @@ const tasksProgress = new Route({
   getParentRoute: () => rootRoute,
   path: '/progress',
   component: () => <TasksProgress />,
-  errorComponent: () => 'Oh crap!'
-})
-
-const tasksCompleted = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/completed',
-  component: () => <TasksCompleted />,
   errorComponent: () => 'Oh crap!'
 })
 
@@ -126,7 +102,6 @@ const routeTree = rootRoute.addChildren([
   projectsRoute,
   accountRoute,
   tasksProgress,
-  tasksCompleted,
   tasksRoute.addChildren([
     tasksHome,
     fieldMonitorTask.addChildren([fieldMonitorHome, fieldMonitorTree])

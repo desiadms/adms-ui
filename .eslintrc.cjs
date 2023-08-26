@@ -51,6 +51,7 @@ module.exports = {
       {
         controlComponents: ['Input']
       }
-    ]
+    ],
+    'no-underscore-dangle': 'off'
   }
 }

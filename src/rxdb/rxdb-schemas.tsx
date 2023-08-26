@@ -128,6 +128,7 @@ export type Images = {
   latitude: string
   longitude: string
   taken_at_step: Steps
+  _deleted?: boolean
 }
 
 export type TreeRemovalTaskDocType = {
