@@ -119,7 +119,7 @@ export const projectSchema: RxJsonSchema<ProjectDocType> = {
   required: ['id']
 } as const
 
-export type Steps = 'before' | 'during' | 'after' | undefined
+export type Steps = 'before' | 'during' | 'after'
 
 export type Images = {
   id: string
@@ -127,7 +127,7 @@ export type Images = {
   created_at: string
   latitude: string
   longitude: string
-  taken_at_step: Steps
+  taken_at_step: Steps | undefined
   _deleted?: boolean
 }
 

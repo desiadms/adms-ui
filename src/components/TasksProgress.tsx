@@ -82,10 +82,10 @@ function generateSteps(taskId: string, images: Images[]) {
 
   const groupedSteps = images.reduce((acc, image) => {
     const { taken_at_step } = image
-    if (!acc[taken_at_step]) {
+    if (taken_at_step && !acc[taken_at_step]) {
       acc[taken_at_step] = []
     }
-    acc[taken_at_step].push(image)
+    if (taken_at_step) acc[taken_at_step].push(image)
     return acc
   }, {} as Record<Steps, Images[]>)
 
