@@ -3,6 +3,7 @@ import { ClockIcon } from '@heroicons/react/24/outline'
 import { Link, useNavigate } from '@tanstack/router'
 import classNames from 'classnames'
 import { useCallback, useEffect, useState } from 'preact/hooks'
+import { QRCodeCanvas } from 'qrcode.react'
 import { useRxData } from 'rxdb-hooks'
 import { Images, Steps, TreeRemovalTaskDocType } from '../rxdb/rxdb-schemas'
 import { humanizeDate, nhost } from '../utils'
@@ -191,6 +192,36 @@ function TaskPreview({
   )
 }
 
+function QRCodeID({ taskId }: { taskId: string }) {
+  const modalTrigger = useCallback(
+    ({ openModal }: ModalTriggerProps) => (
+      <Button bgColor='bg-gray-700' onClick={openModal}>
+        Show Task ID
+      </Button>
+    ),
+    []
+  )
+
+  const modalBody = useCallback(
+    (_modalProps: ModalContentProps, taskId: string) => (
+      <div className='w-full'>
+        <QRCodeCanvas value={taskId} includeMargin />
+      </div>
+    ),
+    []
+  )
+
+  return (
+    <div>
+      <Modal
+        title='Task ID'
+        modalTrigger={modalTrigger}
+        modalContent={(props) => modalBody(props, taskId)}
+      />
+    </div>
+  )
+}
+
 export function TasksProgress() {
   const { results } = useInProgressTasks()
   const modalTrigger = useCallback(
@@ -226,13 +257,18 @@ export function TasksProgress() {
         const { missingSteps, steps } = generateSteps(task.id, task.images)
         return (
           <div key={task.id} className='bg-stone-300 rounded-lg p-4'>
-            <div className='flex justify-end items-center gap-1 pb-4'>
-              <div className='text-xs'>
-                <ClockIcon className='w-4 h-4' />
+            <div className='flex justify-between items-center gap-4'>
+              <div className='w-fit'>
+                <QRCodeID taskId={task.id} />
               </div>
-              <div className='text-xs'>{humanizeDate(task.updated_at)}</div>
+              <div className='flex justify-end items-center gap-1 pb-4'>
+                <div className='text-xs'>
+                  <ClockIcon className='w-4 h-4' />
+                </div>
+                <div className='text-xs'>{humanizeDate(task.updated_at)}</div>
+              </div>
             </div>
-            <div className='flex gap-10'>
+            <div className='flex gap-10 items-end'>
               {Object.entries(steps).map(([taken_at_step, images]) => (
                 <Modal
                   title={`${taken_at_step} measurement`}
