@@ -1,7 +1,8 @@
 import { NhostClient, useAuthenticationStatus } from '@nhost/react'
 import { useEffect, useState } from 'preact/hooks'
 import { RxDocument } from 'rxdb'
-import { UserDocType } from './rxdb/rxdb-schemas'
+import { v4 } from 'uuid'
+import { Images, Steps, UserDocType } from './rxdb/rxdb-schemas'
 
 export const devMode = import.meta.env.MODE === 'development'
 
@@ -99,30 +100,6 @@ export function userRoles(user: RxDocument<UserDocType> | undefined) {
   )
 }
 
-export function throwCustomError({
-  status
-}: {
-  status: number
-  message: string
-}) {
-  const error = new Error('Custom error')
-  ;(error as Error & { status: number }).status = status
-  throw error
-}
-
-export function arraysAreEqual(
-  array1: readonly unknown[] | undefined,
-  array2: readonly unknown[] | undefined
-): boolean {
-  if (!array1 || !array2) return false
-
-  if (array1.length !== array2.length) {
-    return false
-  }
-
-  return array1.every((element, index) => element === array2[index])
-}
-
 export async function blobToBase64(
   blob: Blob,
   removePrefix?: 'removePrefix'
@@ -197,4 +174,48 @@ export function humanizeDate(date?: string | number | Date) {
     minute: 'numeric',
     hour: 'numeric'
   }).format(date ? new Date(date) : new Date())
+}
+
+export async function extractFilesAndSaveToNhost(images: Images[]) {
+  const blobFiles = images
+    .filter((image) => image.base64Preview)
+    .map(({ id, base64Preview }) => ({
+      id,
+      file: base64toFile(base64Preview, 'task', 'image/png')
+    }))
+
+  const flattenedTaskImages = blobFiles.flat()
+  try {
+    return await saveFilesToNhost(flattenedTaskImages)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export type FileForm = { fileInstance: File | undefined }
+
+export async function genTaskImagesMetadata({
+  filesData,
+  coordinates,
+  taken_at_step
+}: {
+  filesData: FileForm[]
+  coordinates: GeolocationCoordinates
+  taken_at_step?: Steps
+  extraFields?: Record<string, string>
+}): Promise<Images[]> {
+  const images = await Promise.all(
+    keep(
+      filesData,
+      (file) => file?.fileInstance && (file.fileInstance[0] as File)
+    ).map(async (file) => ({
+      id: v4(),
+      latitude: coordinates.latitude.toString(),
+      longitude: coordinates.longitude.toString(),
+      created_at: new Date().toISOString(),
+      taken_at_step,
+      base64Preview: await blobToBase64(file)
+    }))
+  )
+  return images
 }

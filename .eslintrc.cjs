@@ -52,6 +52,8 @@ module.exports = {
         controlComponents: ['Input']
       }
     ],
-    'no-underscore-dangle': 'off'
+    'no-underscore-dangle': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['off']
   }
 }

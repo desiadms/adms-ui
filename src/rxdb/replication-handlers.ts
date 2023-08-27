@@ -1,6 +1,6 @@
 import { resolveRequestDocument } from 'graphql-request'
 import { RxReplicationWriteToMasterRow } from 'rxdb'
-import { base64toFile, saveFilesToNhost } from '../utils'
+import { extractFilesAndSaveToNhost } from '../utils'
 import {
   projectsDocument,
   queryTreeRemovalTasks,
@@ -26,15 +26,7 @@ export async function tasksWrite(
     .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
     .flat()
 
-  const blobFiles = images
-    .filter((image) => image.base64Preview)
-    .map(({ id, base64Preview }) => ({
-      id,
-      file: base64toFile(base64Preview, 'task', 'image/png')
-    }))
-
-  const flattenedTaskImages = blobFiles.flat()
-  await saveFilesToNhost(flattenedTaskImages)
+  await extractFilesAndSaveToNhost(images)
 
   const variableImages = images.map(({ base64Preview, ...rest }) => rest)
   const variableTasks = extractedData.map(({ images, ...rest }) => rest)
@@ -58,7 +50,6 @@ export function userWrite(
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState)
   const user = extractedData[0]
-  console.log('in user write', user)
 
   return {
     query: resolveRequestDocument(updateUserDocument).query,

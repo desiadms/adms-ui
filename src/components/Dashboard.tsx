@@ -12,8 +12,7 @@ import { emailToId, fullName, useIsOnline } from '../utils'
 const navigation = [
   ['/projects', 'Projects'],
   ['/tasks', 'New Task'],
-  ['/progress', 'In Progress'],
-  ['/completed', 'Completed']
+  ['/progress', 'In Progress']
 ]
 
 export function Home() {

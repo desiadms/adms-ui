@@ -1,4 +1,4 @@
-import { addRxPlugin, createRxDatabase, lastOfArray } from 'rxdb'
+import { addRxPlugin, createRxDatabase } from 'rxdb'
 import { RxDBLocalDocumentsPlugin } from 'rxdb/plugins/local-documents'
 import { RxDBMigrationPlugin } from 'rxdb/plugins/migration'
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie'
@@ -20,20 +20,6 @@ import { devMode } from './utils'
 
 addRxPlugin(RxDBMigrationPlugin)
 addRxPlugin(RxDBLocalDocumentsPlugin)
-
-function getCheckpoint<T extends { id: string; updated_at: string }>(
-  data: T[],
-  lastCheckpoint
-) {
-  const lastDoc = lastOfArray(data)
-  return {
-    id: lastDoc?.id ?? lastCheckpoint?.id ?? '',
-    updatedAt:
-      lastDoc?.updated_at ??
-      lastCheckpoint?.updated_at ??
-      new Date(0).toISOString()
-  }
-}
 
 if (devMode) {
   await import('rxdb/plugins/dev-mode').then(({ RxDBDevModePlugin }) =>

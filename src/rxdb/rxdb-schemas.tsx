@@ -119,7 +119,7 @@ export const projectSchema: RxJsonSchema<ProjectDocType> = {
   required: ['id']
 } as const
 
-export type Steps = 'before' | 'during' | 'after'
+export type Steps = 'before' | 'during' | 'after' | undefined
 
 export type Images = {
   id: string

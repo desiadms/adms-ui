@@ -2,7 +2,7 @@ import { graphql } from '../gql'
 
 export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
   query treeRemovalTasks {
-    tasks_tree_removal {
+    tasks_tree_removal(where: { completed: { _neq: true } }) {
       comment
       completed
       created_at

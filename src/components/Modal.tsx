@@ -83,7 +83,7 @@ export const Modal = ({
                   <div
                     className={classNames(
                       'max-h-screen overflow-y-auto',
-                      'p-4 text-left w-max transition-all transform bg-neutral-200 shadow-xl rounded-2xl',
+                      'p-4 text-left min-w-full transition-all transform bg-neutral-200 shadow-xl rounded-2xl',
                       modalClassName
                     )}
                   >

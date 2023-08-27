@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { forwardRef, useState } from 'preact/compat'
+import { forwardRef, useEffect, useState } from 'preact/compat'
 import { JSX } from 'preact/jsx-runtime'
 import { blobToBase64 } from '../utils'
 
@@ -98,6 +98,12 @@ export function validateFileSize(
 
 export function useFilesForm() {
   const [filePreviews, setFilePreviews] = useState<Record<string, string>>()
+  const [noFiles, setNoFiles] = useState<boolean>()
+
+  useEffect(() => {
+    if (Object.keys(filePreviews || {}).length === 0) setNoFiles(true)
+    else setNoFiles(false)
+  }, [filePreviews])
 
   const onChangeSetFilePreviewFn = async (e, id) => {
     const fileInput = e?.target
@@ -109,6 +115,7 @@ export function useFilesForm() {
   const validateFileSizeFn = (file, maxSize) => validateFileSize(file, maxSize)
 
   return {
+    noFilesUploaded: noFiles,
     useFilePreviews: [filePreviews, setFilePreviews],
     onChangeSetFilePreview: onChangeSetFilePreviewFn,
     validateFileSize: validateFileSizeFn,

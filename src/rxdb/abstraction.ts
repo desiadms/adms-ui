@@ -45,7 +45,6 @@ export function replication<TDocType>({
   const replicationState = replicateGraphQL<TDocType, null>({
     collection,
 
-    // urls to the GraphQL endpoints
     url: {
       http: hasuraURL
     },
@@ -56,7 +55,7 @@ export function replication<TDocType>({
       responseModifier: (response) => {
         console.log(response, 'in response')
         return {
-          checkpoint: null, // getCheckpoint(response, requestCheckpoint),
+          checkpoint: null,
           documents: response
         }
       }

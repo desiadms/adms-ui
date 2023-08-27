@@ -3,10 +3,16 @@ import { useNavigate, useParams, useSearch } from '@tanstack/router'
 import classNames from 'classnames'
 import { useMemo } from 'preact/hooks'
 import { useFieldArray, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { useRxCollection } from 'rxdb-hooks'
 import { v4 } from 'uuid'
-import { Images, Steps, TreeRemovalTaskDocType } from '../rxdb/rxdb-schemas'
-import { blobToBase64, humanizeDate, keep, useGeoLocation } from '../utils'
+import { Steps, TreeRemovalTaskDocType } from '../rxdb/rxdb-schemas'
+import {
+  FileForm,
+  genTaskImagesMetadata,
+  humanizeDate,
+  useGeoLocation
+} from '../utils'
 import {
   Button,
   ErrorMessage,
@@ -34,34 +40,6 @@ export function FieldMonitorTasks() {
   )
 }
 
-type FileForm = { fileInstance: File | undefined }
-
-async function genTaskImagesMetadata({
-  filesData,
-  coordinates,
-  taken_at_step
-}: {
-  filesData: FileForm[]
-  coordinates: GeolocationCoordinates
-  taken_at_step: Steps
-  extraFields?: Record<string, string>
-}): Promise<Images[]> {
-  const images = await Promise.all(
-    keep(
-      filesData,
-      (file) => file?.fileInstance && (file.fileInstance[0] as File)
-    ).map(async (file) => ({
-      id: v4(),
-      latitude: coordinates.latitude.toString(),
-      longitude: coordinates.longitude.toString(),
-      created_at: new Date().toISOString(),
-      taken_at_step,
-      base64Preview: await blobToBase64(file)
-    }))
-  )
-  return images
-}
-
 type TreeRemovalFormProps = {
   taskId: string
   step: Steps
@@ -79,9 +57,7 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
     register,
     handleSubmit,
     control,
-    setError,
-    clearErrors,
-    formState: { errors }
+    formState: { errors, submitCount }
   } = useForm<FormProps>({
     defaultValues: {
       comment: '',
@@ -96,6 +72,7 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
 
   const {
     useFilePreviews: [filePreviews],
+    noFilesUploaded,
     onChangeSetFilePreview,
     validateFileSize,
     removePreview
@@ -110,15 +87,8 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
     useRxCollection<TreeRemovalTaskDocType>('tree-removal-task')
 
   async function submitForm(data) {
-    clearErrors()
-    // to check that at least one file was uploaded
-    const hasFiles = data.files.some(
-      (file) => file.fileInstance && file.fileInstance[0]
-    )
-    if (!hasFiles) {
-      setError('files', { message: 'Please take at least one picture' })
-      return
-    }
+    if (noFilesUploaded) return
+
     if (coordinates) {
       const images = await genTaskImagesMetadata({
         filesData: data.files,
@@ -130,7 +100,7 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
 
       const existingDoc = await treeRemovalColl?.findOne(taskId).exec()
 
-      const updatedimages = edit
+      const updatedImages = edit
         ? existingDoc?.images.map((image) => {
             if (image.taken_at_step === step)
               return { ...image, _deleted: true }
@@ -141,7 +111,7 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
 
       treeRemovalColl?.upsert({
         id: taskId,
-        images: updatedimages?.concat(images) || images,
+        images: updatedImages?.concat(images) || images,
         comment: data.comment,
         created_at: nowUTC,
         updated_at: nowUTC,
@@ -149,7 +119,12 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
         completed: step === 'after'
       })
 
-      navigate({ to: step === 'after' ? '/completed' : '/progress' })
+      if (step === 'after') {
+        toast('Task completed!')
+        navigate({ to: '/tasks' })
+      } else {
+        navigate({ to: '/progress' })
+      }
     }
   }
 
@@ -246,13 +221,11 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
                     </div>
                   </div>
                 )}
-                {errors.files && errors.files[index] && (
-                  <ErrorMessage
-                    message={errors.files[index]?.fileInstance?.message}
-                  />
-                )}
               </div>
             ))}
+            {noFilesUploaded && submitCount > 0 && (
+              <ErrorMessage message='Please upload at least one image' />
+            )}
           </div>
         </div>
 

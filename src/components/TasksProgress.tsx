@@ -7,6 +7,7 @@ import { useRxData } from 'rxdb-hooks'
 import { Images, Steps, TreeRemovalTaskDocType } from '../rxdb/rxdb-schemas'
 import { humanizeDate, nhost } from '../utils'
 import { Button } from './Forms'
+import { Image } from './Image'
 import { Modal, ModalContentProps, ModalTriggerProps } from './Modal'
 
 async function fetchImages(images: Images[] | undefined) {
@@ -175,11 +176,7 @@ function TaskPreview({
 
       {fetchedImages.map((image) => (
         <div className='' key={image.id}>
-          <img
-            className='w-full h-full object-cover'
-            src={image.base64Preview}
-            alt=''
-          />
+          <Image src={image.base64Preview} alt='' />
         </div>
       ))}
       <div className='flex justify-between'>
