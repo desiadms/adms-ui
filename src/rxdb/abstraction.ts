@@ -52,13 +52,10 @@ export function replication<TDocType>({
       queryBuilder: (checkpoint, limit) =>
         pullQueryBuilder(db, checkpoint, limit),
 
-      responseModifier: (response) => {
-        console.log(response, 'in response')
-        return {
-          checkpoint: null,
-          documents: response
-        }
-      }
+      responseModifier: (response) => ({
+        checkpoint: null,
+        documents: response
+      })
     },
     ...(pushQueryBuilder && {
       push: {

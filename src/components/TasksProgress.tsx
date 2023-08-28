@@ -4,9 +4,8 @@ import { Link, useNavigate } from '@tanstack/router'
 import classNames from 'classnames'
 import { useCallback, useEffect, useState } from 'preact/hooks'
 import { QRCodeCanvas } from 'qrcode.react'
-import { useRxData } from 'rxdb-hooks'
 import { Images, Steps, TreeRemovalTaskDocType } from '../rxdb/rxdb-schemas'
-import { humanizeDate, nhost } from '../utils'
+import { humanizeDate, nhost, useTreeRemovalTasks } from '../utils'
 import { Button } from './Forms'
 import { Image } from './Image'
 import { Modal, ModalContentProps, ModalTriggerProps } from './Modal'
@@ -41,21 +40,7 @@ export async function tasksWithImages(
 }
 
 function useInProgressTasks() {
-  const query = useCallback(
-    (collection) =>
-      collection.find({
-        sort: [{ created_at: 'desc' }],
-        selector: {
-          completed: false
-        }
-      }),
-    []
-  )
-
-  const { result, isFetching } = useRxData<TreeRemovalTaskDocType>(
-    'tree-removal-task',
-    query
-  )
+  const { result, isFetching } = useTreeRemovalTasks({ completed: false })
 
   return {
     results: { 'tree-removal-tasks': result },

@@ -5,6 +5,7 @@ import {
   FieldMonitorTasks,
   TreeRemovalFormWrapper
 } from './components/FieldMonitorTasks'
+import { Print } from './components/Print'
 import { ProjectsView } from './components/Projects'
 import { TasksProgress } from './components/TasksProgress'
 import { TasksView } from './components/TasksView'
@@ -49,7 +50,7 @@ const tasksHome = new Route({
   errorComponent: () => 'Oh crap!'
 })
 
-const tasksProgress = new Route({
+const tasksProgressRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/progress',
   component: () => <TasksProgress />,
@@ -91,6 +92,13 @@ const fieldMonitorTree = new Route({
   })
 })
 
+const printRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'print/$id',
+  component: () => <Print />,
+  errorComponent: () => 'Oh crap!'
+})
+
 declare module '@tanstack/router' {
   interface Register {
     router: typeof router
@@ -101,7 +109,8 @@ const routeTree = rootRoute.addChildren([
   homeRoute,
   projectsRoute,
   accountRoute,
-  tasksProgress,
+  tasksProgressRoute,
+  printRoute,
   tasksRoute.addChildren([
     tasksHome,
     fieldMonitorTask.addChildren([fieldMonitorHome, fieldMonitorTree])

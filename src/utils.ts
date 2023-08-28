@@ -1,8 +1,15 @@
 import { NhostClient, useAuthenticationStatus } from '@nhost/react'
-import { useEffect, useState } from 'preact/hooks'
+import { useCallback, useEffect, useState } from 'preact/hooks'
 import { RxDocument } from 'rxdb'
+import { useRxData } from 'rxdb-hooks'
 import { v4 } from 'uuid'
-import { Images, Steps, UserDocType } from './rxdb/rxdb-schemas'
+import {
+  Images,
+  ProjectDocType,
+  Steps,
+  TreeRemovalTaskDocType,
+  UserDocType
+} from './rxdb/rxdb-schemas'
 
 export const devMode = import.meta.env.MODE === 'development'
 
@@ -218,4 +225,33 @@ export async function genTaskImagesMetadata({
     }))
   )
   return images
+}
+
+export function useProject() {
+  const query = useCallback((collection) => collection.find(), [])
+  const { result, isFetching } = useRxData<ProjectDocType>('project', query)
+  return { activeProject: result[0], isFetching }
+}
+
+export function useTreeRemovalTasks(selector?: Record<string, unknown>) {
+  const query = useCallback(
+    (collection) =>
+      collection.find({
+        sort: [{ updated_at: 'desc' }],
+        selector: selector || {}
+      }),
+    [selector]
+  )
+
+  const { result, isFetching } = useRxData<TreeRemovalTaskDocType>(
+    'tree-removal-task',
+    query
+  )
+
+  return { result, isFetching }
+}
+
+export function useTask(taskId: string | undefined) {
+  const { result, isFetching } = useTreeRemovalTasks({ id: taskId })
+  return { result: result[0], isFetching, type: 'Tree' }
 }

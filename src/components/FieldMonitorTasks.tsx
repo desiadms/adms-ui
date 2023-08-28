@@ -3,7 +3,6 @@ import { useNavigate, useParams, useSearch } from '@tanstack/router'
 import classNames from 'classnames'
 import { useMemo } from 'preact/hooks'
 import { useFieldArray, useForm } from 'react-hook-form'
-import toast from 'react-hot-toast'
 import { useRxCollection } from 'rxdb-hooks'
 import { v4 } from 'uuid'
 import { Steps, TreeRemovalTaskDocType } from '../rxdb/rxdb-schemas'
@@ -109,19 +108,18 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
           })
         : existingDoc?.images
 
-      treeRemovalColl?.upsert({
+      await treeRemovalColl?.upsert({
         id: taskId,
         images: updatedImages?.concat(images) || images,
         comment: data.comment,
         created_at: nowUTC,
         updated_at: nowUTC,
-        ranges: data.ranges,
+        ranges: data?.ranges?.length ? data.ranges : existingDoc?.ranges,
         completed: step === 'after'
       })
 
       if (step === 'after') {
-        toast('Task completed!')
-        navigate({ to: '/tasks' })
+        navigate({ to: `/print/${taskId}` })
       } else {
         navigate({ to: '/progress' })
       }
@@ -221,6 +219,11 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
                     </div>
                   </div>
                 )}
+                {errors.files && errors.files[index] && (
+                  <ErrorMessage
+                    message={errors.files[index]?.fileInstance?.message}
+                  />
+                )}
               </div>
             ))}
             {noFilesUploaded && submitCount > 0 && (
@@ -240,7 +243,9 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
           </div>
         )}
         <div className='px-2'>
-          <Button type='submit'>Save</Button>
+          <Button type='submit'>
+            {step === 'after' ? 'Print Ticket' : 'Save'}
+          </Button>
         </div>
       </form>
     </div>
@@ -252,7 +257,6 @@ export function TreeRemovalFormWrapper() {
   const { step, edit } = useSearch({
     from: '/tasks/field-monitor/tree-removal/$id'
   })
-  console.log('step', step)
 
   return <TreeRemovalForm taskId={id as string} step={step} edit={edit} />
 }
