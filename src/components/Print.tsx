@@ -1,7 +1,8 @@
 import { useParams } from '@tanstack/router'
-import { useEffect } from 'preact/hooks'
 import { QRCodeCanvas } from 'qrcode.react'
+import { TreeRemovalTaskDocType } from 'src/rxdb/rxdb-schemas'
 import { humanizeDate, useProject, useTask } from '../utils'
+import { Button } from './Forms'
 
 function LabelValue({ label, value }: { label: unknown; value: unknown }) {
   return (
@@ -19,11 +20,7 @@ export function Print() {
   const { activeProject } = useProject()
   const { result, type } = useTask(id)
 
-  useEffect(() => {
-    if (result && activeProject) window.print()
-  }, [result, activeProject])
-
-  const beforeStep = result?.images.find(
+  const beforeStep = result?.images?.find(
     (image) => image.taken_at_step === 'before' && !image._deleted
   )
   const date = beforeStep?.created_at
@@ -43,11 +40,19 @@ export function Print() {
         <LabelValue label='Lat' value={latitude} />
         <LabelValue label='Lon' value={longitude} />
         <LabelValue label='Type' value={type} />
-        <LabelValue label='Size' value={result?.ranges} />
+        {type === 'tree' && (
+          <LabelValue
+            label='Size'
+            value={(result as TreeRemovalTaskDocType)?.ranges}
+          />
+        )}
         <LabelValue label='Comment' value={result?.comment} />
       </div>
       <div className='flex flex-col items-center pt-10'>
         <QRCodeCanvas value={result?.id} includeMargin />
+      </div>
+      <div className='pt-10'>
+        <Button onClick={() => window.print()}>Print</Button>
       </div>
     </div>
   )

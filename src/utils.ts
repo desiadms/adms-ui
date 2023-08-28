@@ -274,7 +274,7 @@ export function useTask(taskId: string | undefined) {
   const { result: tree, isFetching: isFetchingTree } = useTreeRemovalTasks({
     id: taskId
   })
-  const { result: stump, isFetching: isFetchingStump } = useTreeRemovalTasks({
+  const { result: stump, isFetching: isFetchingStump } = useStumpRemovalTasks({
     id: taskId
   })
 
@@ -282,10 +282,8 @@ export function useTask(taskId: string | undefined) {
     if (tree.length) {
       return { result: tree[0], type: 'Tree' }
     }
-    if (stump.length) {
-      return { result: stump[0], type: 'Stump' }
-    }
-    return { result: [], type: '' }
+
+    return { result: stump[0], type: 'Stump' }
   }
 
   const isFetching = isFetchingTree || isFetchingStump
