@@ -41,7 +41,6 @@ export async function tasksWithImages(
 
 function useInProgressTasks() {
   const { result, isFetching } = useTreeRemovalTasks({ completed: false })
-
   return {
     results: { 'tree-removal-tasks': result },
     isFetching
