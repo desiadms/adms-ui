@@ -3307,10 +3307,6 @@ export type Mutation_Root = {
   delete_projects_by_pk?: Maybe<Projects>;
   /** delete data from the table: "tasks" */
   delete_tasks?: Maybe<Tasks_Mutation_Response>;
-  /** delete data from the table: "tasks_branch_removal" */
-  delete_tasks_branch_removal?: Maybe<Tasks_Branch_Removal_Mutation_Response>;
-  /** delete single row from the table: "tasks_branch_removal" */
-  delete_tasks_branch_removal_by_pk?: Maybe<Tasks_Branch_Removal>;
   /** delete single row from the table: "tasks" */
   delete_tasks_by_pk?: Maybe<Tasks>;
   /** delete data from the table: "tasks_collection" */
@@ -3321,6 +3317,10 @@ export type Mutation_Root = {
   delete_tasks_disposal?: Maybe<Tasks_Disposal_Mutation_Response>;
   /** delete single row from the table: "tasks_disposal" */
   delete_tasks_disposal_by_pk?: Maybe<Tasks_Disposal>;
+  /** delete data from the table: "tasks_stump_removal" */
+  delete_tasks_stump_removal?: Maybe<Tasks_Stump_Removal_Mutation_Response>;
+  /** delete single row from the table: "tasks_stump_removal" */
+  delete_tasks_stump_removal_by_pk?: Maybe<Tasks_Stump_Removal>;
   /** delete data from the table: "tasks_ticketing" */
   delete_tasks_ticketing?: Maybe<Tasks_Ticketing_Mutation_Response>;
   /** delete single row from the table: "tasks_ticketing" */
@@ -3395,10 +3395,6 @@ export type Mutation_Root = {
   insert_projects_one?: Maybe<Projects>;
   /** insert data into the table: "tasks" */
   insert_tasks?: Maybe<Tasks_Mutation_Response>;
-  /** insert data into the table: "tasks_branch_removal" */
-  insert_tasks_branch_removal?: Maybe<Tasks_Branch_Removal_Mutation_Response>;
-  /** insert a single row into the table: "tasks_branch_removal" */
-  insert_tasks_branch_removal_one?: Maybe<Tasks_Branch_Removal>;
   /** insert data into the table: "tasks_collection" */
   insert_tasks_collection?: Maybe<Tasks_Collection_Mutation_Response>;
   /** insert a single row into the table: "tasks_collection" */
@@ -3409,6 +3405,10 @@ export type Mutation_Root = {
   insert_tasks_disposal_one?: Maybe<Tasks_Disposal>;
   /** insert a single row into the table: "tasks" */
   insert_tasks_one?: Maybe<Tasks>;
+  /** insert data into the table: "tasks_stump_removal" */
+  insert_tasks_stump_removal?: Maybe<Tasks_Stump_Removal_Mutation_Response>;
+  /** insert a single row into the table: "tasks_stump_removal" */
+  insert_tasks_stump_removal_one?: Maybe<Tasks_Stump_Removal>;
   /** insert data into the table: "tasks_ticketing" */
   insert_tasks_ticketing?: Maybe<Tasks_Ticketing_Mutation_Response>;
   /** insert a single row into the table: "tasks_ticketing" */
@@ -3509,12 +3509,6 @@ export type Mutation_Root = {
   update_projects_many?: Maybe<Array<Maybe<Projects_Mutation_Response>>>;
   /** update data of the table: "tasks" */
   update_tasks?: Maybe<Tasks_Mutation_Response>;
-  /** update data of the table: "tasks_branch_removal" */
-  update_tasks_branch_removal?: Maybe<Tasks_Branch_Removal_Mutation_Response>;
-  /** update single row of the table: "tasks_branch_removal" */
-  update_tasks_branch_removal_by_pk?: Maybe<Tasks_Branch_Removal>;
-  /** update multiples rows of table: "tasks_branch_removal" */
-  update_tasks_branch_removal_many?: Maybe<Array<Maybe<Tasks_Branch_Removal_Mutation_Response>>>;
   /** update single row of the table: "tasks" */
   update_tasks_by_pk?: Maybe<Tasks>;
   /** update data of the table: "tasks_collection" */
@@ -3531,6 +3525,12 @@ export type Mutation_Root = {
   update_tasks_disposal_many?: Maybe<Array<Maybe<Tasks_Disposal_Mutation_Response>>>;
   /** update multiples rows of table: "tasks" */
   update_tasks_many?: Maybe<Array<Maybe<Tasks_Mutation_Response>>>;
+  /** update data of the table: "tasks_stump_removal" */
+  update_tasks_stump_removal?: Maybe<Tasks_Stump_Removal_Mutation_Response>;
+  /** update single row of the table: "tasks_stump_removal" */
+  update_tasks_stump_removal_by_pk?: Maybe<Tasks_Stump_Removal>;
+  /** update multiples rows of table: "tasks_stump_removal" */
+  update_tasks_stump_removal_many?: Maybe<Array<Maybe<Tasks_Stump_Removal_Mutation_Response>>>;
   /** update data of the table: "tasks_ticketing" */
   update_tasks_ticketing?: Maybe<Tasks_Ticketing_Mutation_Response>;
   /** update single row of the table: "tasks_ticketing" */
@@ -3735,18 +3735,6 @@ export type Mutation_RootDelete_TasksArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Tasks_Branch_RemovalArgs = {
-  where: Tasks_Branch_Removal_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Tasks_Branch_Removal_By_PkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
-/** mutation root */
 export type Mutation_RootDelete_Tasks_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
@@ -3772,6 +3760,18 @@ export type Mutation_RootDelete_Tasks_DisposalArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Tasks_Disposal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Tasks_Stump_RemovalArgs = {
+  where: Tasks_Stump_Removal_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Tasks_Stump_Removal_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -4028,20 +4028,6 @@ export type Mutation_RootInsert_TasksArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Tasks_Branch_RemovalArgs = {
-  objects: Array<Tasks_Branch_Removal_Insert_Input>;
-  on_conflict?: InputMaybe<Tasks_Branch_Removal_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Tasks_Branch_Removal_OneArgs = {
-  object: Tasks_Branch_Removal_Insert_Input;
-  on_conflict?: InputMaybe<Tasks_Branch_Removal_On_Conflict>;
-};
-
-
-/** mutation root */
 export type Mutation_RootInsert_Tasks_CollectionArgs = {
   objects: Array<Tasks_Collection_Insert_Input>;
   on_conflict?: InputMaybe<Tasks_Collection_On_Conflict>;
@@ -4073,6 +4059,20 @@ export type Mutation_RootInsert_Tasks_Disposal_OneArgs = {
 export type Mutation_RootInsert_Tasks_OneArgs = {
   object: Tasks_Insert_Input;
   on_conflict?: InputMaybe<Tasks_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Tasks_Stump_RemovalArgs = {
+  objects: Array<Tasks_Stump_Removal_Insert_Input>;
+  on_conflict?: InputMaybe<Tasks_Stump_Removal_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Tasks_Stump_Removal_OneArgs = {
+  object: Tasks_Stump_Removal_Insert_Input;
+  on_conflict?: InputMaybe<Tasks_Stump_Removal_On_Conflict>;
 };
 
 
@@ -4455,26 +4455,6 @@ export type Mutation_RootUpdate_TasksArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Tasks_Branch_RemovalArgs = {
-  _set?: InputMaybe<Tasks_Branch_Removal_Set_Input>;
-  where: Tasks_Branch_Removal_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Tasks_Branch_Removal_By_PkArgs = {
-  _set?: InputMaybe<Tasks_Branch_Removal_Set_Input>;
-  pk_columns: Tasks_Branch_Removal_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Tasks_Branch_Removal_ManyArgs = {
-  updates: Array<Tasks_Branch_Removal_Updates>;
-};
-
-
-/** mutation root */
 export type Mutation_RootUpdate_Tasks_By_PkArgs = {
   _append?: InputMaybe<Tasks_Append_Input>;
   _delete_at_path?: InputMaybe<Tasks_Delete_At_Path_Input>;
@@ -4529,6 +4509,26 @@ export type Mutation_RootUpdate_Tasks_Disposal_ManyArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Tasks_ManyArgs = {
   updates: Array<Tasks_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Stump_RemovalArgs = {
+  _set?: InputMaybe<Tasks_Stump_Removal_Set_Input>;
+  where: Tasks_Stump_Removal_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Stump_Removal_By_PkArgs = {
+  _set?: InputMaybe<Tasks_Stump_Removal_Set_Input>;
+  pk_columns: Tasks_Stump_Removal_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Tasks_Stump_Removal_ManyArgs = {
+  updates: Array<Tasks_Stump_Removal_Updates>;
 };
 
 
@@ -4646,9 +4646,9 @@ export type Projects = {
   status?: Maybe<Scalars['Boolean']['output']>;
   sub_contractor?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
-  tasks_branch_removals: Array<Tasks_Branch_Removal>;
+  tasks_branch_removals: Array<Tasks_Stump_Removal>;
   /** An aggregate relationship */
-  tasks_branch_removals_aggregate: Tasks_Branch_Removal_Aggregate;
+  tasks_branch_removals_aggregate: Tasks_Stump_Removal_Aggregate;
   /** An array relationship */
   tasks_collections: Array<Tasks_Collection>;
   /** An aggregate relationship */
@@ -4675,21 +4675,21 @@ export type Projects = {
 
 /** columns and relationships of "projects" */
 export type ProjectsTasks_Branch_RemovalsArgs = {
-  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
+  distinct_on?: InputMaybe<Array<Tasks_Stump_Removal_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
-  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+  order_by?: InputMaybe<Array<Tasks_Stump_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
 };
 
 
 /** columns and relationships of "projects" */
 export type ProjectsTasks_Branch_Removals_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
+  distinct_on?: InputMaybe<Array<Tasks_Stump_Removal_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
-  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
+  order_by?: InputMaybe<Array<Tasks_Stump_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
 };
 
 
@@ -4828,8 +4828,8 @@ export type Projects_Bool_Exp = {
   poc?: InputMaybe<String_Comparison_Exp>;
   status?: InputMaybe<Boolean_Comparison_Exp>;
   sub_contractor?: InputMaybe<String_Comparison_Exp>;
-  tasks_branch_removals?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
-  tasks_branch_removals_aggregate?: InputMaybe<Tasks_Branch_Removal_Aggregate_Bool_Exp>;
+  tasks_branch_removals?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
+  tasks_branch_removals_aggregate?: InputMaybe<Tasks_Stump_Removal_Aggregate_Bool_Exp>;
   tasks_collections?: InputMaybe<Tasks_Collection_Bool_Exp>;
   tasks_collections_aggregate?: InputMaybe<Tasks_Collection_Aggregate_Bool_Exp>;
   tasks_disposals?: InputMaybe<Tasks_Disposal_Bool_Exp>;
@@ -4860,7 +4860,7 @@ export type Projects_Insert_Input = {
   poc?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['Boolean']['input']>;
   sub_contractor?: InputMaybe<Scalars['String']['input']>;
-  tasks_branch_removals?: InputMaybe<Tasks_Branch_Removal_Arr_Rel_Insert_Input>;
+  tasks_branch_removals?: InputMaybe<Tasks_Stump_Removal_Arr_Rel_Insert_Input>;
   tasks_collections?: InputMaybe<Tasks_Collection_Arr_Rel_Insert_Input>;
   tasks_disposals?: InputMaybe<Tasks_Disposal_Arr_Rel_Insert_Input>;
   tasks_ticketings?: InputMaybe<Tasks_Ticketing_Arr_Rel_Insert_Input>;
@@ -4931,7 +4931,7 @@ export type Projects_Order_By = {
   poc?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
   sub_contractor?: InputMaybe<Order_By>;
-  tasks_branch_removals_aggregate?: InputMaybe<Tasks_Branch_Removal_Aggregate_Order_By>;
+  tasks_branch_removals_aggregate?: InputMaybe<Tasks_Stump_Removal_Aggregate_Order_By>;
   tasks_collections_aggregate?: InputMaybe<Tasks_Collection_Aggregate_Order_By>;
   tasks_disposals_aggregate?: InputMaybe<Tasks_Disposal_Aggregate_Order_By>;
   tasks_ticketings_aggregate?: InputMaybe<Tasks_Ticketing_Aggregate_Order_By>;
@@ -5120,12 +5120,6 @@ export type Query_Root = {
   tasks: Array<Tasks>;
   /** fetch aggregated fields from the table: "tasks" */
   tasks_aggregate: Tasks_Aggregate;
-  /** fetch data from the table: "tasks_branch_removal" */
-  tasks_branch_removal: Array<Tasks_Branch_Removal>;
-  /** fetch aggregated fields from the table: "tasks_branch_removal" */
-  tasks_branch_removal_aggregate: Tasks_Branch_Removal_Aggregate;
-  /** fetch data from the table: "tasks_branch_removal" using primary key columns */
-  tasks_branch_removal_by_pk?: Maybe<Tasks_Branch_Removal>;
   /** fetch data from the table: "tasks" using primary key columns */
   tasks_by_pk?: Maybe<Tasks>;
   /** fetch data from the table: "tasks_collection" */
@@ -5140,6 +5134,12 @@ export type Query_Root = {
   tasks_disposal_aggregate: Tasks_Disposal_Aggregate;
   /** fetch data from the table: "tasks_disposal" using primary key columns */
   tasks_disposal_by_pk?: Maybe<Tasks_Disposal>;
+  /** fetch data from the table: "tasks_stump_removal" */
+  tasks_stump_removal: Array<Tasks_Stump_Removal>;
+  /** fetch aggregated fields from the table: "tasks_stump_removal" */
+  tasks_stump_removal_aggregate: Tasks_Stump_Removal_Aggregate;
+  /** fetch data from the table: "tasks_stump_removal" using primary key columns */
+  tasks_stump_removal_by_pk?: Maybe<Tasks_Stump_Removal>;
   /** fetch data from the table: "tasks_ticketing" */
   tasks_ticketing: Array<Tasks_Ticketing>;
   /** fetch aggregated fields from the table: "tasks_ticketing" */
@@ -5490,29 +5490,6 @@ export type Query_RootTasks_AggregateArgs = {
 };
 
 
-export type Query_RootTasks_Branch_RemovalArgs = {
-  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
-  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
-};
-
-
-export type Query_RootTasks_Branch_Removal_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
-  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
-};
-
-
-export type Query_RootTasks_Branch_Removal_By_PkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
 export type Query_RootTasks_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
@@ -5560,6 +5537,29 @@ export type Query_RootTasks_Disposal_AggregateArgs = {
 
 
 export type Query_RootTasks_Disposal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootTasks_Stump_RemovalArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Stump_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Stump_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
+};
+
+
+export type Query_RootTasks_Stump_Removal_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Stump_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Stump_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
+};
+
+
+export type Query_RootTasks_Stump_Removal_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -5788,14 +5788,6 @@ export type Subscription_Root = {
   tasks: Array<Tasks>;
   /** fetch aggregated fields from the table: "tasks" */
   tasks_aggregate: Tasks_Aggregate;
-  /** fetch data from the table: "tasks_branch_removal" */
-  tasks_branch_removal: Array<Tasks_Branch_Removal>;
-  /** fetch aggregated fields from the table: "tasks_branch_removal" */
-  tasks_branch_removal_aggregate: Tasks_Branch_Removal_Aggregate;
-  /** fetch data from the table: "tasks_branch_removal" using primary key columns */
-  tasks_branch_removal_by_pk?: Maybe<Tasks_Branch_Removal>;
-  /** fetch data from the table in a streaming manner: "tasks_branch_removal" */
-  tasks_branch_removal_stream: Array<Tasks_Branch_Removal>;
   /** fetch data from the table: "tasks" using primary key columns */
   tasks_by_pk?: Maybe<Tasks>;
   /** fetch data from the table: "tasks_collection" */
@@ -5816,6 +5808,14 @@ export type Subscription_Root = {
   tasks_disposal_stream: Array<Tasks_Disposal>;
   /** fetch data from the table in a streaming manner: "tasks" */
   tasks_stream: Array<Tasks>;
+  /** fetch data from the table: "tasks_stump_removal" */
+  tasks_stump_removal: Array<Tasks_Stump_Removal>;
+  /** fetch aggregated fields from the table: "tasks_stump_removal" */
+  tasks_stump_removal_aggregate: Tasks_Stump_Removal_Aggregate;
+  /** fetch data from the table: "tasks_stump_removal" using primary key columns */
+  tasks_stump_removal_by_pk?: Maybe<Tasks_Stump_Removal>;
+  /** fetch data from the table in a streaming manner: "tasks_stump_removal" */
+  tasks_stump_removal_stream: Array<Tasks_Stump_Removal>;
   /** fetch data from the table: "tasks_ticketing" */
   tasks_ticketing: Array<Tasks_Ticketing>;
   /** fetch aggregated fields from the table: "tasks_ticketing" */
@@ -6267,36 +6267,6 @@ export type Subscription_RootTasks_AggregateArgs = {
 };
 
 
-export type Subscription_RootTasks_Branch_RemovalArgs = {
-  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
-  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
-};
-
-
-export type Subscription_RootTasks_Branch_Removal_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Tasks_Branch_Removal_Order_By>>;
-  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
-};
-
-
-export type Subscription_RootTasks_Branch_Removal_By_PkArgs = {
-  id: Scalars['uuid']['input'];
-};
-
-
-export type Subscription_RootTasks_Branch_Removal_StreamArgs = {
-  batch_size: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<Tasks_Branch_Removal_Stream_Cursor_Input>>;
-  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
-};
-
-
 export type Subscription_RootTasks_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
@@ -6366,6 +6336,36 @@ export type Subscription_RootTasks_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Tasks_Stream_Cursor_Input>>;
   where?: InputMaybe<Tasks_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Stump_RemovalArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Stump_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Stump_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Stump_Removal_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Tasks_Stump_Removal_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Tasks_Stump_Removal_Order_By>>;
+  where?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
+};
+
+
+export type Subscription_RootTasks_Stump_Removal_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootTasks_Stump_Removal_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Tasks_Stump_Removal_Stream_Cursor_Input>>;
+  where?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
 };
 
 
@@ -6583,252 +6583,6 @@ export type Tasks_Bool_Exp = {
   type?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   user_id?: InputMaybe<Uuid_Comparison_Exp>;
-};
-
-/** branch/stump removal */
-export type Tasks_Branch_Removal = {
-  __typename?: 'tasks_branch_removal';
-  comment: Scalars['String']['output'];
-  created_at: Scalars['timestamp']['output'];
-  id: Scalars['uuid']['output'];
-  latitude: Scalars['String']['output'];
-  longitude: Scalars['String']['output'];
-  /** An object relationship */
-  project: Projects;
-  project_id: Scalars['uuid']['output'];
-  updated_at: Scalars['timestamptz']['output'];
-};
-
-/** aggregated selection of "tasks_branch_removal" */
-export type Tasks_Branch_Removal_Aggregate = {
-  __typename?: 'tasks_branch_removal_aggregate';
-  aggregate?: Maybe<Tasks_Branch_Removal_Aggregate_Fields>;
-  nodes: Array<Tasks_Branch_Removal>;
-};
-
-export type Tasks_Branch_Removal_Aggregate_Bool_Exp = {
-  count?: InputMaybe<Tasks_Branch_Removal_Aggregate_Bool_Exp_Count>;
-};
-
-export type Tasks_Branch_Removal_Aggregate_Bool_Exp_Count = {
-  arguments?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
-  predicate: Int_Comparison_Exp;
-};
-
-/** aggregate fields of "tasks_branch_removal" */
-export type Tasks_Branch_Removal_Aggregate_Fields = {
-  __typename?: 'tasks_branch_removal_aggregate_fields';
-  count: Scalars['Int']['output'];
-  max?: Maybe<Tasks_Branch_Removal_Max_Fields>;
-  min?: Maybe<Tasks_Branch_Removal_Min_Fields>;
-};
-
-
-/** aggregate fields of "tasks_branch_removal" */
-export type Tasks_Branch_Removal_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Tasks_Branch_Removal_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** order by aggregate values of table "tasks_branch_removal" */
-export type Tasks_Branch_Removal_Aggregate_Order_By = {
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Tasks_Branch_Removal_Max_Order_By>;
-  min?: InputMaybe<Tasks_Branch_Removal_Min_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "tasks_branch_removal" */
-export type Tasks_Branch_Removal_Arr_Rel_Insert_Input = {
-  data: Array<Tasks_Branch_Removal_Insert_Input>;
-  /** upsert condition */
-  on_conflict?: InputMaybe<Tasks_Branch_Removal_On_Conflict>;
-};
-
-/** Boolean expression to filter rows from the table "tasks_branch_removal". All fields are combined with a logical 'AND'. */
-export type Tasks_Branch_Removal_Bool_Exp = {
-  _and?: InputMaybe<Array<Tasks_Branch_Removal_Bool_Exp>>;
-  _not?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
-  _or?: InputMaybe<Array<Tasks_Branch_Removal_Bool_Exp>>;
-  comment?: InputMaybe<String_Comparison_Exp>;
-  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
-  id?: InputMaybe<Uuid_Comparison_Exp>;
-  latitude?: InputMaybe<String_Comparison_Exp>;
-  longitude?: InputMaybe<String_Comparison_Exp>;
-  project?: InputMaybe<Projects_Bool_Exp>;
-  project_id?: InputMaybe<Uuid_Comparison_Exp>;
-  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "tasks_branch_removal" */
-export enum Tasks_Branch_Removal_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  BranchRemovalTasksPkey = 'branch_removal_tasks_pkey'
-}
-
-/** input type for inserting data into table "tasks_branch_removal" */
-export type Tasks_Branch_Removal_Insert_Input = {
-  comment?: InputMaybe<Scalars['String']['input']>;
-  created_at?: InputMaybe<Scalars['timestamp']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  latitude?: InputMaybe<Scalars['String']['input']>;
-  longitude?: InputMaybe<Scalars['String']['input']>;
-  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
-  project_id?: InputMaybe<Scalars['uuid']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** aggregate max on columns */
-export type Tasks_Branch_Removal_Max_Fields = {
-  __typename?: 'tasks_branch_removal_max_fields';
-  comment?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['timestamp']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  latitude?: Maybe<Scalars['String']['output']>;
-  longitude?: Maybe<Scalars['String']['output']>;
-  project_id?: Maybe<Scalars['uuid']['output']>;
-  updated_at?: Maybe<Scalars['timestamptz']['output']>;
-};
-
-/** order by max() on columns of table "tasks_branch_removal" */
-export type Tasks_Branch_Removal_Max_Order_By = {
-  comment?: InputMaybe<Order_By>;
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  latitude?: InputMaybe<Order_By>;
-  longitude?: InputMaybe<Order_By>;
-  project_id?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Tasks_Branch_Removal_Min_Fields = {
-  __typename?: 'tasks_branch_removal_min_fields';
-  comment?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['timestamp']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  latitude?: Maybe<Scalars['String']['output']>;
-  longitude?: Maybe<Scalars['String']['output']>;
-  project_id?: Maybe<Scalars['uuid']['output']>;
-  updated_at?: Maybe<Scalars['timestamptz']['output']>;
-};
-
-/** order by min() on columns of table "tasks_branch_removal" */
-export type Tasks_Branch_Removal_Min_Order_By = {
-  comment?: InputMaybe<Order_By>;
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  latitude?: InputMaybe<Order_By>;
-  longitude?: InputMaybe<Order_By>;
-  project_id?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "tasks_branch_removal" */
-export type Tasks_Branch_Removal_Mutation_Response = {
-  __typename?: 'tasks_branch_removal_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Tasks_Branch_Removal>;
-};
-
-/** on_conflict condition type for table "tasks_branch_removal" */
-export type Tasks_Branch_Removal_On_Conflict = {
-  constraint: Tasks_Branch_Removal_Constraint;
-  update_columns?: Array<Tasks_Branch_Removal_Update_Column>;
-  where?: InputMaybe<Tasks_Branch_Removal_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "tasks_branch_removal". */
-export type Tasks_Branch_Removal_Order_By = {
-  comment?: InputMaybe<Order_By>;
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  latitude?: InputMaybe<Order_By>;
-  longitude?: InputMaybe<Order_By>;
-  project?: InputMaybe<Projects_Order_By>;
-  project_id?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: tasks_branch_removal */
-export type Tasks_Branch_Removal_Pk_Columns_Input = {
-  id: Scalars['uuid']['input'];
-};
-
-/** select columns of table "tasks_branch_removal" */
-export enum Tasks_Branch_Removal_Select_Column {
-  /** column name */
-  Comment = 'comment',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Latitude = 'latitude',
-  /** column name */
-  Longitude = 'longitude',
-  /** column name */
-  ProjectId = 'project_id',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
-/** input type for updating data in table "tasks_branch_removal" */
-export type Tasks_Branch_Removal_Set_Input = {
-  comment?: InputMaybe<Scalars['String']['input']>;
-  created_at?: InputMaybe<Scalars['timestamp']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  latitude?: InputMaybe<Scalars['String']['input']>;
-  longitude?: InputMaybe<Scalars['String']['input']>;
-  project_id?: InputMaybe<Scalars['uuid']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** Streaming cursor of the table "tasks_branch_removal" */
-export type Tasks_Branch_Removal_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Tasks_Branch_Removal_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Tasks_Branch_Removal_Stream_Cursor_Value_Input = {
-  comment?: InputMaybe<Scalars['String']['input']>;
-  created_at?: InputMaybe<Scalars['timestamp']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  latitude?: InputMaybe<Scalars['String']['input']>;
-  longitude?: InputMaybe<Scalars['String']['input']>;
-  project_id?: InputMaybe<Scalars['uuid']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** update columns of table "tasks_branch_removal" */
-export enum Tasks_Branch_Removal_Update_Column {
-  /** column name */
-  Comment = 'comment',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Latitude = 'latitude',
-  /** column name */
-  Longitude = 'longitude',
-  /** column name */
-  ProjectId = 'project_id',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
-export type Tasks_Branch_Removal_Updates = {
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Tasks_Branch_Removal_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Tasks_Branch_Removal_Bool_Exp;
 };
 
 /** columns and relationships of "tasks_collection" */
@@ -7656,6 +7410,323 @@ export type Tasks_Stream_Cursor_Value_Input = {
   type?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** branch/stump removal */
+export type Tasks_Stump_Removal = {
+  __typename?: 'tasks_stump_removal';
+  _deleted?: Maybe<Scalars['Boolean']['output']>;
+  comment: Scalars['String']['output'];
+  completed?: Maybe<Scalars['Boolean']['output']>;
+  created_at: Scalars['timestamp']['output'];
+  id: Scalars['uuid']['output'];
+  /** An object relationship */
+  project: Projects;
+  project_id: Scalars['uuid']['output'];
+  /** An object relationship */
+  tasks_branch_removal_user: Users;
+  /** An array relationship */
+  tasks_stump_removal_images: Array<Images>;
+  /** An aggregate relationship */
+  tasks_stump_removal_images_aggregate: Images_Aggregate;
+  updated_at: Scalars['timestamptz']['output'];
+  user_id: Scalars['uuid']['output'];
+};
+
+
+/** branch/stump removal */
+export type Tasks_Stump_RemovalTasks_Stump_Removal_ImagesArgs = {
+  distinct_on?: InputMaybe<Array<Images_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Images_Order_By>>;
+  where?: InputMaybe<Images_Bool_Exp>;
+};
+
+
+/** branch/stump removal */
+export type Tasks_Stump_RemovalTasks_Stump_Removal_Images_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Images_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Images_Order_By>>;
+  where?: InputMaybe<Images_Bool_Exp>;
+};
+
+/** aggregated selection of "tasks_stump_removal" */
+export type Tasks_Stump_Removal_Aggregate = {
+  __typename?: 'tasks_stump_removal_aggregate';
+  aggregate?: Maybe<Tasks_Stump_Removal_Aggregate_Fields>;
+  nodes: Array<Tasks_Stump_Removal>;
+};
+
+export type Tasks_Stump_Removal_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Tasks_Stump_Removal_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Tasks_Stump_Removal_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Tasks_Stump_Removal_Aggregate_Bool_Exp_Count>;
+};
+
+export type Tasks_Stump_Removal_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Tasks_Stump_Removal_Select_Column_Tasks_Stump_Removal_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Tasks_Stump_Removal_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Tasks_Stump_Removal_Select_Column_Tasks_Stump_Removal_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Tasks_Stump_Removal_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Tasks_Stump_Removal_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "tasks_stump_removal" */
+export type Tasks_Stump_Removal_Aggregate_Fields = {
+  __typename?: 'tasks_stump_removal_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Tasks_Stump_Removal_Max_Fields>;
+  min?: Maybe<Tasks_Stump_Removal_Min_Fields>;
+};
+
+
+/** aggregate fields of "tasks_stump_removal" */
+export type Tasks_Stump_Removal_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Tasks_Stump_Removal_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "tasks_stump_removal" */
+export type Tasks_Stump_Removal_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Tasks_Stump_Removal_Max_Order_By>;
+  min?: InputMaybe<Tasks_Stump_Removal_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "tasks_stump_removal" */
+export type Tasks_Stump_Removal_Arr_Rel_Insert_Input = {
+  data: Array<Tasks_Stump_Removal_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Tasks_Stump_Removal_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "tasks_stump_removal". All fields are combined with a logical 'AND'. */
+export type Tasks_Stump_Removal_Bool_Exp = {
+  _and?: InputMaybe<Array<Tasks_Stump_Removal_Bool_Exp>>;
+  _deleted?: InputMaybe<Boolean_Comparison_Exp>;
+  _not?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
+  _or?: InputMaybe<Array<Tasks_Stump_Removal_Bool_Exp>>;
+  comment?: InputMaybe<String_Comparison_Exp>;
+  completed?: InputMaybe<Boolean_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  project?: InputMaybe<Projects_Bool_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  tasks_branch_removal_user?: InputMaybe<Users_Bool_Exp>;
+  tasks_stump_removal_images?: InputMaybe<Images_Bool_Exp>;
+  tasks_stump_removal_images_aggregate?: InputMaybe<Images_Aggregate_Bool_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "tasks_stump_removal" */
+export enum Tasks_Stump_Removal_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  TasksStumpRemovalPkey = 'tasks_stump_removal_pkey'
+}
+
+/** input type for inserting data into table "tasks_stump_removal" */
+export type Tasks_Stump_Removal_Insert_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  completed?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['timestamp']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  tasks_branch_removal_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  tasks_stump_removal_images?: InputMaybe<Images_Arr_Rel_Insert_Input>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type Tasks_Stump_Removal_Max_Fields = {
+  __typename?: 'tasks_stump_removal_max_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamp']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "tasks_stump_removal" */
+export type Tasks_Stump_Removal_Max_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Tasks_Stump_Removal_Min_Fields = {
+  __typename?: 'tasks_stump_removal_min_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamp']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  project_id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "tasks_stump_removal" */
+export type Tasks_Stump_Removal_Min_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "tasks_stump_removal" */
+export type Tasks_Stump_Removal_Mutation_Response = {
+  __typename?: 'tasks_stump_removal_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Tasks_Stump_Removal>;
+};
+
+/** on_conflict condition type for table "tasks_stump_removal" */
+export type Tasks_Stump_Removal_On_Conflict = {
+  constraint: Tasks_Stump_Removal_Constraint;
+  update_columns?: Array<Tasks_Stump_Removal_Update_Column>;
+  where?: InputMaybe<Tasks_Stump_Removal_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "tasks_stump_removal". */
+export type Tasks_Stump_Removal_Order_By = {
+  _deleted?: InputMaybe<Order_By>;
+  comment?: InputMaybe<Order_By>;
+  completed?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  project?: InputMaybe<Projects_Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  tasks_branch_removal_user?: InputMaybe<Users_Order_By>;
+  tasks_stump_removal_images_aggregate?: InputMaybe<Images_Aggregate_Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: tasks_stump_removal */
+export type Tasks_Stump_Removal_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "tasks_stump_removal" */
+export enum Tasks_Stump_Removal_Select_Column {
+  /** column name */
+  Deleted = '_deleted',
+  /** column name */
+  Comment = 'comment',
+  /** column name */
+  Completed = 'completed',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** select "tasks_stump_removal_aggregate_bool_exp_bool_and_arguments_columns" columns of table "tasks_stump_removal" */
+export enum Tasks_Stump_Removal_Select_Column_Tasks_Stump_Removal_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Deleted = '_deleted',
+  /** column name */
+  Completed = 'completed'
+}
+
+/** select "tasks_stump_removal_aggregate_bool_exp_bool_or_arguments_columns" columns of table "tasks_stump_removal" */
+export enum Tasks_Stump_Removal_Select_Column_Tasks_Stump_Removal_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Deleted = '_deleted',
+  /** column name */
+  Completed = 'completed'
+}
+
+/** input type for updating data in table "tasks_stump_removal" */
+export type Tasks_Stump_Removal_Set_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  completed?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['timestamp']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** Streaming cursor of the table "tasks_stump_removal" */
+export type Tasks_Stump_Removal_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Tasks_Stump_Removal_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Tasks_Stump_Removal_Stream_Cursor_Value_Input = {
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  completed?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['timestamp']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  project_id?: InputMaybe<Scalars['uuid']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** update columns of table "tasks_stump_removal" */
+export enum Tasks_Stump_Removal_Update_Column {
+  /** column name */
+  Deleted = '_deleted',
+  /** column name */
+  Comment = 'comment',
+  /** column name */
+  Completed = 'completed',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id'
+}
+
+export type Tasks_Stump_Removal_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Tasks_Stump_Removal_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Tasks_Stump_Removal_Bool_Exp;
 };
 
 /** columns and relationships of "tasks_ticketing" */
@@ -9643,6 +9714,19 @@ export type UpsertTreeRemovalTaskMutationVariables = Exact<{
 
 export type UpsertTreeRemovalTaskMutation = { __typename?: 'mutation_root', insert_tasks_tree_removal?: { __typename?: 'tasks_tree_removal_mutation_response', returning: Array<{ __typename?: 'tasks_tree_removal', id: any }> } | null, insert_images?: { __typename?: 'images_mutation_response', returning: Array<{ __typename?: 'images', id: any }> } | null };
 
+export type StumpRemovalTasksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StumpRemovalTasksQuery = { __typename?: 'query_root', tasks_stump_removal: Array<{ __typename?: 'tasks_stump_removal', comment: string, completed?: boolean | null, created_at: any, updated_at: any, id: any, images: Array<{ __typename?: 'images', id: any, created_at?: any | null, latitude?: string | null, longitude?: string | null, taken_at_step?: string | null }> }> };
+
+export type UpsertStumpRemovalTaskMutationVariables = Exact<{
+  tasks: Array<Tasks_Stump_Removal_Insert_Input> | Tasks_Stump_Removal_Insert_Input;
+  images: Array<Images_Insert_Input> | Images_Insert_Input;
+}>;
+
+
+export type UpsertStumpRemovalTaskMutation = { __typename?: 'mutation_root', insert_tasks_stump_removal?: { __typename?: 'tasks_stump_removal_mutation_response', returning: Array<{ __typename?: 'tasks_stump_removal', id: any }> } | null, insert_images?: { __typename?: 'images_mutation_response', returning: Array<{ __typename?: 'images', id: any }> } | null };
+
 export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -9665,6 +9749,8 @@ export type ProjectsQuery = { __typename?: 'query_root', projects: Array<{ __typ
 
 export const TreeRemovalTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"treeRemovalTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tasks_tree_removal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"completed"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_neq"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"completed"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"ranges"}},{"kind":"Field","alias":{"kind":"Name","value":"images"},"name":{"kind":"Name","value":"tasks_tree_removal_images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"taken_at_step"}}]}}]}}]}}]} as unknown as DocumentNode<TreeRemovalTasksQuery, TreeRemovalTasksQueryVariables>;
 export const UpsertTreeRemovalTaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"upsertTreeRemovalTask"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"tasks_tree_removal_insert_input"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"images"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"images_insert_input"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tasks_tree_removal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"comment"},{"kind":"EnumValue","value":"completed"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"},{"kind":"EnumValue","value":"ranges"}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"tree_removal_tasks_pkey"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"images"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"images_pkey"}},{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"latitude"},{"kind":"EnumValue","value":"longitude"},{"kind":"EnumValue","value":"taken_at_step"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpsertTreeRemovalTaskMutation, UpsertTreeRemovalTaskMutationVariables>;
+export const StumpRemovalTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"stumpRemovalTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tasks_stump_removal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"completed"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_neq"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"completed"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","alias":{"kind":"Name","value":"images"},"name":{"kind":"Name","value":"tasks_stump_removal_images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"taken_at_step"}}]}}]}}]}}]} as unknown as DocumentNode<StumpRemovalTasksQuery, StumpRemovalTasksQueryVariables>;
+export const UpsertStumpRemovalTaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"upsertStumpRemovalTask"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"tasks_stump_removal_insert_input"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"images"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"images_insert_input"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tasks_stump_removal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"comment"},{"kind":"EnumValue","value":"completed"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"tasks_stump_removal_pkey"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"images"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"images_pkey"}},{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"latitude"},{"kind":"EnumValue","value":"longitude"},{"kind":"EnumValue","value":"taken_at_step"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpsertStumpRemovalTaskMutation, UpsertStumpRemovalTaskMutationVariables>;
 export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersMetadata"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"hire_date"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"role_data_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_field_supervisor"}},{"kind":"Field","name":{"kind":"Name","value":"role_filed_monitor"}},{"kind":"Field","name":{"kind":"Name","value":"role_operations_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_pc_admin"}},{"kind":"Field","name":{"kind":"Name","value":"role_project_manager"}},{"kind":"Field","name":{"kind":"Name","value":"usersMetadata_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
 export const UpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_usersMetadata_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"first_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"last_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
 export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"sub_contractor"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"poc"}}]}}]}}]} as unknown as DocumentNode<ProjectsQuery, ProjectsQueryVariables>;

@@ -4,11 +4,23 @@ import { Link, useNavigate } from '@tanstack/router'
 import classNames from 'classnames'
 import { useCallback, useEffect, useState } from 'preact/hooks'
 import { QRCodeCanvas } from 'qrcode.react'
-import { Images, Steps, TreeRemovalTaskDocType } from '../rxdb/rxdb-schemas'
-import { humanizeDate, nhost, useTreeRemovalTasks } from '../utils'
+import { RxDocument } from 'rxdb'
+import {
+  Images,
+  Steps,
+  StumpRemovalTaskDocType,
+  TreeRemovalTaskDocType
+} from '../rxdb/rxdb-schemas'
+import {
+  humanizeDate,
+  nhost,
+  useStumpRemovalTasks,
+  useTreeRemovalTasks
+} from '../utils'
 import { Button } from './Forms'
 import { Image } from './Image'
 import { Modal, ModalContentProps, ModalTriggerProps } from './Modal'
+import { Spinner } from './icons'
 
 async function fetchImages(images: Images[] | undefined) {
   return Promise.all(
@@ -40,14 +52,25 @@ export async function tasksWithImages(
 }
 
 function useInProgressTasks() {
-  const { result, isFetching } = useTreeRemovalTasks({ completed: false })
+  const tree = useTreeRemovalTasks({ completed: false })
+  const stump = useStumpRemovalTasks({ completed: false })
+
+  const isFetching = tree.isFetching || stump.isFetching
+
   return {
-    results: { 'tree-removal-tasks': result },
+    results: {
+      'tree-removal-tasks': tree.result,
+      'stump-removal-tasks': stump.result
+    },
     isFetching
   }
 }
 
-function generateSteps(taskId: string, images: Images[]) {
+function generateSteps(
+  taskId: string,
+  images: Images[],
+  type: 'tree' | 'stump'
+) {
   const steps: Steps[] = ['before', 'during', 'after']
   const takenAtSteps = images.map((image) => image.taken_at_step)
   const missingSteps = steps.filter((step) => !takenAtSteps.includes(step))
@@ -56,7 +79,9 @@ function generateSteps(taskId: string, images: Images[]) {
     if (index === 0) {
       return {
         step,
-        href: `/tasks/field-monitor/tree-removal/${taskId}?step=${step}`
+        href: `/tasks/field-monitor/${
+          type === 'tree' ? 'tree' : 'stump'
+        }-removal/${taskId}?step=${step}`
       }
     }
     return {
@@ -123,12 +148,14 @@ function TaskPreview({
   modalProps,
   images,
   task,
-  taken_at_step
+  taken_at_step,
+  type
 }: {
   modalProps: ModalContentProps
   images: Images[]
   task: TreeRemovalTaskDocType
   taken_at_step: Steps
+  type: 'tree' | 'stump'
 }) {
   const [fetchedImages, setFetchedImages] = useState<Images[]>([])
 
@@ -136,7 +163,9 @@ function TaskPreview({
 
   const edit = () =>
     navigate({
-      to: `/tasks/field-monitor/tree-removal/${task.id}`,
+      to: `/tasks/field-monitor/${
+        type === 'tree' ? 'tree-removal' : 'stump-removal'
+      }/${task.id}`,
       search: { step: taken_at_step, edit: true }
     })
 
@@ -206,8 +235,15 @@ function QRCodeID({ taskId }: { taskId: string }) {
   )
 }
 
-export function TasksProgress() {
-  const { results } = useInProgressTasks()
+function TreeStumpRemovalSingleTask({
+  task,
+  type
+}: {
+  task: RxDocument<TreeRemovalTaskDocType | StumpRemovalTaskDocType>
+  type: 'tree' | 'stump'
+}) {
+  const { missingSteps, steps } = generateSteps(task.id, task.images, type)
+
   const modalTrigger = useCallback(
     ({ openModal }: ModalTriggerProps, taken_at_step: Steps) => (
       <button type='button' onClick={openModal}>
@@ -225,61 +261,101 @@ export function TasksProgress() {
       taken_at_step: Steps
     ) => (
       <TaskPreview
+        type={type}
         modalProps={modalProps}
         images={images}
         task={task}
         taken_at_step={taken_at_step}
       />
     ),
-    []
+    [type]
   )
+  return (
+    <div>
+      <div key={task.id} className='bg-stone-300 rounded-lg p-4'>
+        <div className='flex justify-between items-center gap-4'>
+          <div className='w-fit'>
+            <QRCodeID taskId={task.id} />
+          </div>
+          <div className='flex justify-end items-center gap-1 pb-4'>
+            <div className='text-xs'>
+              <ClockIcon className='w-4 h-4' />
+            </div>
+            <div className='text-xs'>{humanizeDate(task.updated_at)}</div>
+          </div>
+        </div>
+        <div className='flex gap-10 items-end'>
+          {Object.entries(steps).map(([taken_at_step, images]) => (
+            <Modal
+              title={`${taken_at_step} measurement`}
+              key={taken_at_step}
+              modalTrigger={(props) =>
+                modalTrigger(props, taken_at_step as Steps)
+              }
+              modalContent={(props) =>
+                modalBody(props, images, task, taken_at_step as Steps)
+              }
+            />
+          ))}
+          {missingSteps.map(({ disabled, step, href }) => (
+            <div>
+              {disabled ? (
+                <TaskCheck taken_at_step={step} icon='disabled' />
+              ) : (
+                <Link key={href} to={href}>
+                  <TaskCheck taken_at_step={step} icon='add' />
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function TasksProgress() {
+  const { results, isFetching } = useInProgressTasks()
+
+  if (isFetching) return <Spinner />
+
+  if (Object.values(results).every((result) => result.length === 0))
+    return (
+      <div className='flex flex-col gap-2'>
+        <div className='text-lg font-medium'>No tasks in progress</div>
+        <div className='text-sm font-light'>
+          You can start a new task by clicking on the button below
+        </div>
+        <div className='w-fit'>
+          <Link to='/tasks'>
+            <Button>New Task</Button>
+          </Link>
+        </div>
+      </div>
+    )
 
   return (
     <div className='flex flex-col gap-4'>
-      <div>Tree Removal Tasks</div>
-      {results?.['tree-removal-tasks'].map((task) => {
-        const { missingSteps, steps } = generateSteps(task.id, task.images)
-        return (
-          <div key={task.id} className='bg-stone-300 rounded-lg p-4'>
-            <div className='flex justify-between items-center gap-4'>
-              <div className='w-fit'>
-                <QRCodeID taskId={task.id} />
-              </div>
-              <div className='flex justify-end items-center gap-1 pb-4'>
-                <div className='text-xs'>
-                  <ClockIcon className='w-4 h-4' />
-                </div>
-                <div className='text-xs'>{humanizeDate(task.updated_at)}</div>
-              </div>
-            </div>
-            <div className='flex gap-10 items-end'>
-              {Object.entries(steps).map(([taken_at_step, images]) => (
-                <Modal
-                  title={`${taken_at_step} measurement`}
-                  key={taken_at_step}
-                  modalTrigger={(props) =>
-                    modalTrigger(props, taken_at_step as Steps)
-                  }
-                  modalContent={(props) =>
-                    modalBody(props, images, task, taken_at_step as Steps)
-                  }
-                />
-              ))}
-              {missingSteps.map(({ disabled, step, href }) => (
-                <div>
-                  {disabled ? (
-                    <TaskCheck taken_at_step={step} icon='disabled' />
-                  ) : (
-                    <Link key={href} to={href}>
-                      <TaskCheck taken_at_step={step} icon='add' />
-                    </Link>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )
-      })}
+      {results['tree-removal-tasks'].length > 0 && (
+        <div className='flex flex-col gap-4'>
+          <div>Tree Removal Tasks</div>
+          {results['tree-removal-tasks']?.map((task) => (
+            <TreeStumpRemovalSingleTask key={task.id} task={task} type='tree' />
+          ))}
+        </div>
+      )}
+      {results['stump-removal-tasks'].length > 0 && (
+        <div className='flex flex-col gap-4'>
+          <div>Stump Removal Tasks</div>
+          {results['stump-removal-tasks']?.map((task) => (
+            <TreeStumpRemovalSingleTask
+              key={task.id}
+              task={task}
+              type='stump'
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

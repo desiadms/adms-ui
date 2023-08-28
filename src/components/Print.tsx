@@ -37,11 +37,7 @@ export function Print() {
       <div className='text-center text-lg'>{type} Ticket</div>
       <div className='pl-4 flex flex-col gap-2 pt-4'>
         <LabelValue label='Project' value={activeProject?.name} />
-        <LabelValue
-          label='Sub Contractor'
-          value={activeProject?.sub_contractor}
-        />
-
+        <LabelValue label='Contractor' value={activeProject?.contractor} />
         <LabelValue label='Date' value={date} />
         <LabelValue label='Ticket ID' value={`Tree-${result?.id}`} />
         <LabelValue label='Lat' value={latitude} />

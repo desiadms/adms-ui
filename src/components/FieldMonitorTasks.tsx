@@ -5,7 +5,11 @@ import { useMemo } from 'preact/hooks'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useRxCollection } from 'rxdb-hooks'
 import { v4 } from 'uuid'
-import { Steps, TreeRemovalTaskDocType } from '../rxdb/rxdb-schemas'
+import {
+  Steps,
+  StumpRemovalTaskDocType,
+  TreeRemovalTaskDocType
+} from '../rxdb/rxdb-schemas'
 import {
   FileForm,
   genTaskImagesMetadata,
@@ -33,7 +37,7 @@ export function FieldMonitorTasks() {
       />
       <TaskType
         name='branch/stump tree removal'
-        href='/tasks/field-monitor/branch-removal'
+        href={`/tasks/field-monitor/stump-removal/${v4()}`}
       />
     </div>
   )
@@ -43,6 +47,7 @@ type TreeRemovalFormProps = {
   taskId: string
   step: Steps
   edit: boolean
+  type: 'tree' | 'stump'
 }
 
 type FormProps = {
@@ -51,7 +56,12 @@ type FormProps = {
   files: FileForm[]
 }
 
-function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
+function TreeStumpRemovalForm({
+  taskId,
+  step,
+  edit,
+  type
+}: TreeRemovalFormProps) {
   const {
     register,
     handleSubmit,
@@ -84,6 +94,8 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
 
   const treeRemovalColl =
     useRxCollection<TreeRemovalTaskDocType>('tree-removal-task')
+  const stumpRemovalColl =
+    useRxCollection<StumpRemovalTaskDocType>('stump-removal-task')
 
   async function submitForm(data) {
     if (noFilesUploaded) return
@@ -97,7 +109,9 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
 
       const nowUTC = new Date().toISOString()
 
-      const existingDoc = await treeRemovalColl?.findOne(taskId).exec()
+      const existingTreeDoc = await treeRemovalColl?.findOne(taskId).exec()
+      const existingStumpDoc = await stumpRemovalColl?.findOne(taskId).exec()
+      const existingDoc = type === 'tree' ? existingTreeDoc : existingStumpDoc
 
       const updatedImages = edit
         ? existingDoc?.images.map((image) => {
@@ -108,15 +122,26 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
           })
         : existingDoc?.images
 
-      await treeRemovalColl?.upsert({
-        id: taskId,
-        images: updatedImages?.concat(images) || images,
-        comment: data.comment,
-        created_at: nowUTC,
-        updated_at: nowUTC,
-        ranges: data?.ranges?.length ? data.ranges : existingDoc?.ranges,
-        completed: step === 'after'
-      })
+      if (type === 'tree') {
+        await treeRemovalColl?.upsert({
+          id: taskId,
+          images: updatedImages?.concat(images) || images,
+          comment: data.comment,
+          created_at: nowUTC,
+          updated_at: nowUTC,
+          ranges: data?.ranges?.length ? data.ranges : existingDoc?.ranges,
+          completed: step === 'after'
+        })
+      } else {
+        await stumpRemovalColl?.upsert({
+          id: taskId,
+          images: updatedImages?.concat(images) || images,
+          comment: data.comment,
+          created_at: nowUTC,
+          updated_at: nowUTC,
+          completed: step === 'after'
+        })
+      }
 
       if (step === 'after') {
         navigate({ to: `/print/${taskId}` })
@@ -134,7 +159,7 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
   return (
     <div>
       <div className='capitalize font-medium pb-4'>
-        Tree Removal - {`${step} measurement`}
+        {type} Removal - {`${step} measurement`}
       </div>
       <form
         onSubmit={handleSubmit(submitForm)}
@@ -163,7 +188,7 @@ function TreeRemovalForm({ taskId, step, edit }: TreeRemovalFormProps) {
           </div>
         </div>
 
-        {step === 'during' && (
+        {step === 'during' && type !== 'stump' && (
           <div className='p-2 w-full rounded-lg'>
             <LabelledInput
               label='Ranges'
@@ -258,5 +283,28 @@ export function TreeRemovalFormWrapper() {
     from: '/tasks/field-monitor/tree-removal/$id'
   })
 
-  return <TreeRemovalForm taskId={id as string} step={step} edit={edit} />
+  return (
+    <TreeStumpRemovalForm
+      taskId={id as string}
+      step={step}
+      edit={edit}
+      type='tree'
+    />
+  )
+}
+
+export function StumpRemovalFormWrapper() {
+  const { id } = useParams()
+  const { step, edit } = useSearch({
+    from: '/tasks/field-monitor/stump-removal/$id'
+  })
+
+  return (
+    <TreeStumpRemovalForm
+      taskId={id as string}
+      step={step}
+      edit={edit}
+      type='stump'
+    />
+  )
 }

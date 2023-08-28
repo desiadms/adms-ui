@@ -3,6 +3,7 @@ import { AccountView } from './components/AccountView'
 import { Dashboard, Home } from './components/Dashboard'
 import {
   FieldMonitorTasks,
+  StumpRemovalFormWrapper,
   TreeRemovalFormWrapper
 } from './components/FieldMonitorTasks'
 import { Print } from './components/Print'
@@ -92,6 +93,22 @@ const fieldMonitorTree = new Route({
   })
 })
 
+const fieldMonitorStump = new Route({
+  getParentRoute: () => fieldMonitorTask,
+  path: 'stump-removal/$id',
+  component: () => <StumpRemovalFormWrapper />,
+  errorComponent: () => 'Oh crap!',
+  validateSearch: (search: Record<string, unknown>): FieldMonitorSearch => ({
+    edit: Boolean(search?.edit),
+    step:
+      search.step === 'before' ||
+      search.step === 'during' ||
+      search.step === 'after'
+        ? search.step
+        : 'before'
+  })
+})
+
 const printRoute = new Route({
   getParentRoute: () => rootRoute,
   path: 'print/$id',
@@ -113,7 +130,11 @@ const routeTree = rootRoute.addChildren([
   printRoute,
   tasksRoute.addChildren([
     tasksHome,
-    fieldMonitorTask.addChildren([fieldMonitorHome, fieldMonitorTree])
+    fieldMonitorTask.addChildren([
+      fieldMonitorHome,
+      fieldMonitorTree,
+      fieldMonitorStump
+    ])
   ])
 ])
 

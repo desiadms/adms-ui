@@ -4012,19 +4012,6 @@ type mutation_root {
   ): tasks_mutation_response
 
   """
-  delete data from the table: "tasks_branch_removal"
-  """
-  delete_tasks_branch_removal(
-    """filter the rows which have to be deleted"""
-    where: tasks_branch_removal_bool_exp!
-  ): tasks_branch_removal_mutation_response
-
-  """
-  delete single row from the table: "tasks_branch_removal"
-  """
-  delete_tasks_branch_removal_by_pk(id: uuid!): tasks_branch_removal
-
-  """
   delete single row from the table: "tasks"
   """
   delete_tasks_by_pk(id: uuid!): tasks
@@ -4054,6 +4041,19 @@ type mutation_root {
   delete single row from the table: "tasks_disposal"
   """
   delete_tasks_disposal_by_pk(id: uuid!): tasks_disposal
+
+  """
+  delete data from the table: "tasks_stump_removal"
+  """
+  delete_tasks_stump_removal(
+    """filter the rows which have to be deleted"""
+    where: tasks_stump_removal_bool_exp!
+  ): tasks_stump_removal_mutation_response
+
+  """
+  delete single row from the table: "tasks_stump_removal"
+  """
+  delete_tasks_stump_removal_by_pk(id: uuid!): tasks_stump_removal
 
   """
   delete data from the table: "tasks_ticketing"
@@ -4427,28 +4427,6 @@ type mutation_root {
   ): tasks_mutation_response
 
   """
-  insert data into the table: "tasks_branch_removal"
-  """
-  insert_tasks_branch_removal(
-    """the rows to be inserted"""
-    objects: [tasks_branch_removal_insert_input!]!
-
-    """upsert condition"""
-    on_conflict: tasks_branch_removal_on_conflict
-  ): tasks_branch_removal_mutation_response
-
-  """
-  insert a single row into the table: "tasks_branch_removal"
-  """
-  insert_tasks_branch_removal_one(
-    """the row to be inserted"""
-    object: tasks_branch_removal_insert_input!
-
-    """upsert condition"""
-    on_conflict: tasks_branch_removal_on_conflict
-  ): tasks_branch_removal
-
-  """
   insert data into the table: "tasks_collection"
   """
   insert_tasks_collection(
@@ -4502,6 +4480,28 @@ type mutation_root {
     """upsert condition"""
     on_conflict: tasks_on_conflict
   ): tasks
+
+  """
+  insert data into the table: "tasks_stump_removal"
+  """
+  insert_tasks_stump_removal(
+    """the rows to be inserted"""
+    objects: [tasks_stump_removal_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: tasks_stump_removal_on_conflict
+  ): tasks_stump_removal_mutation_response
+
+  """
+  insert a single row into the table: "tasks_stump_removal"
+  """
+  insert_tasks_stump_removal_one(
+    """the row to be inserted"""
+    object: tasks_stump_removal_insert_input!
+
+    """upsert condition"""
+    on_conflict: tasks_stump_removal_on_conflict
+  ): tasks_stump_removal
 
   """
   insert data into the table: "tasks_ticketing"
@@ -5152,34 +5152,6 @@ type mutation_root {
   ): tasks_mutation_response
 
   """
-  update data of the table: "tasks_branch_removal"
-  """
-  update_tasks_branch_removal(
-    """sets the columns of the filtered rows to the given values"""
-    _set: tasks_branch_removal_set_input
-
-    """filter the rows which have to be updated"""
-    where: tasks_branch_removal_bool_exp!
-  ): tasks_branch_removal_mutation_response
-
-  """
-  update single row of the table: "tasks_branch_removal"
-  """
-  update_tasks_branch_removal_by_pk(
-    """sets the columns of the filtered rows to the given values"""
-    _set: tasks_branch_removal_set_input
-    pk_columns: tasks_branch_removal_pk_columns_input!
-  ): tasks_branch_removal
-
-  """
-  update multiples rows of table: "tasks_branch_removal"
-  """
-  update_tasks_branch_removal_many(
-    """updates to execute, in order"""
-    updates: [tasks_branch_removal_updates!]!
-  ): [tasks_branch_removal_mutation_response]
-
-  """
   update single row of the table: "tasks"
   """
   update_tasks_by_pk(
@@ -5272,6 +5244,34 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [tasks_updates!]!
   ): [tasks_mutation_response]
+
+  """
+  update data of the table: "tasks_stump_removal"
+  """
+  update_tasks_stump_removal(
+    """sets the columns of the filtered rows to the given values"""
+    _set: tasks_stump_removal_set_input
+
+    """filter the rows which have to be updated"""
+    where: tasks_stump_removal_bool_exp!
+  ): tasks_stump_removal_mutation_response
+
+  """
+  update single row of the table: "tasks_stump_removal"
+  """
+  update_tasks_stump_removal_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: tasks_stump_removal_set_input
+    pk_columns: tasks_stump_removal_pk_columns_input!
+  ): tasks_stump_removal
+
+  """
+  update multiples rows of table: "tasks_stump_removal"
+  """
+  update_tasks_stump_removal_many(
+    """updates to execute, in order"""
+    updates: [tasks_stump_removal_updates!]!
+  ): [tasks_stump_removal_mutation_response]
 
   """
   update data of the table: "tasks_ticketing"
@@ -5432,7 +5432,7 @@ type projects {
   """An array relationship"""
   tasks_branch_removals(
     """distinct select on columns"""
-    distinct_on: [tasks_branch_removal_select_column!]
+    distinct_on: [tasks_stump_removal_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -5441,16 +5441,16 @@ type projects {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [tasks_branch_removal_order_by!]
+    order_by: [tasks_stump_removal_order_by!]
 
     """filter the rows returned"""
-    where: tasks_branch_removal_bool_exp
-  ): [tasks_branch_removal!]!
+    where: tasks_stump_removal_bool_exp
+  ): [tasks_stump_removal!]!
 
   """An aggregate relationship"""
   tasks_branch_removals_aggregate(
     """distinct select on columns"""
-    distinct_on: [tasks_branch_removal_select_column!]
+    distinct_on: [tasks_stump_removal_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -5459,11 +5459,11 @@ type projects {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [tasks_branch_removal_order_by!]
+    order_by: [tasks_stump_removal_order_by!]
 
     """filter the rows returned"""
-    where: tasks_branch_removal_bool_exp
-  ): tasks_branch_removal_aggregate!
+    where: tasks_stump_removal_bool_exp
+  ): tasks_stump_removal_aggregate!
 
   """An array relationship"""
   tasks_collections(
@@ -5680,8 +5680,8 @@ input projects_bool_exp {
   poc: String_comparison_exp
   status: Boolean_comparison_exp
   sub_contractor: String_comparison_exp
-  tasks_branch_removals: tasks_branch_removal_bool_exp
-  tasks_branch_removals_aggregate: tasks_branch_removal_aggregate_bool_exp
+  tasks_branch_removals: tasks_stump_removal_bool_exp
+  tasks_branch_removals_aggregate: tasks_stump_removal_aggregate_bool_exp
   tasks_collections: tasks_collection_bool_exp
   tasks_collections_aggregate: tasks_collection_aggregate_bool_exp
   tasks_disposals: tasks_disposal_bool_exp
@@ -5718,7 +5718,7 @@ input projects_insert_input {
   poc: String
   status: Boolean
   sub_contractor: String
-  tasks_branch_removals: tasks_branch_removal_arr_rel_insert_input
+  tasks_branch_removals: tasks_stump_removal_arr_rel_insert_input
   tasks_collections: tasks_collection_arr_rel_insert_input
   tasks_disposals: tasks_disposal_arr_rel_insert_input
   tasks_ticketings: tasks_ticketing_arr_rel_insert_input
@@ -5794,7 +5794,7 @@ input projects_order_by {
   poc: order_by
   status: order_by
   sub_contractor: order_by
-  tasks_branch_removals_aggregate: tasks_branch_removal_aggregate_order_by
+  tasks_branch_removals_aggregate: tasks_stump_removal_aggregate_order_by
   tasks_collections_aggregate: tasks_collection_aggregate_order_by
   tasks_disposals_aggregate: tasks_disposal_aggregate_order_by
   tasks_ticketings_aggregate: tasks_ticketing_aggregate_order_by
@@ -6531,51 +6531,6 @@ type query_root {
     where: tasks_bool_exp
   ): tasks_aggregate!
 
-  """
-  fetch data from the table: "tasks_branch_removal"
-  """
-  tasks_branch_removal(
-    """distinct select on columns"""
-    distinct_on: [tasks_branch_removal_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [tasks_branch_removal_order_by!]
-
-    """filter the rows returned"""
-    where: tasks_branch_removal_bool_exp
-  ): [tasks_branch_removal!]!
-
-  """
-  fetch aggregated fields from the table: "tasks_branch_removal"
-  """
-  tasks_branch_removal_aggregate(
-    """distinct select on columns"""
-    distinct_on: [tasks_branch_removal_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [tasks_branch_removal_order_by!]
-
-    """filter the rows returned"""
-    where: tasks_branch_removal_bool_exp
-  ): tasks_branch_removal_aggregate!
-
-  """
-  fetch data from the table: "tasks_branch_removal" using primary key columns
-  """
-  tasks_branch_removal_by_pk(id: uuid!): tasks_branch_removal
-
   """fetch data from the table: "tasks" using primary key columns"""
   tasks_by_pk(id: uuid!): tasks
 
@@ -6666,6 +6621,51 @@ type query_root {
 
   """fetch data from the table: "tasks_disposal" using primary key columns"""
   tasks_disposal_by_pk(id: uuid!): tasks_disposal
+
+  """
+  fetch data from the table: "tasks_stump_removal"
+  """
+  tasks_stump_removal(
+    """distinct select on columns"""
+    distinct_on: [tasks_stump_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_stump_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_stump_removal_bool_exp
+  ): [tasks_stump_removal!]!
+
+  """
+  fetch aggregated fields from the table: "tasks_stump_removal"
+  """
+  tasks_stump_removal_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_stump_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_stump_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_stump_removal_bool_exp
+  ): tasks_stump_removal_aggregate!
+
+  """
+  fetch data from the table: "tasks_stump_removal" using primary key columns
+  """
+  tasks_stump_removal_by_pk(id: uuid!): tasks_stump_removal
 
   """
   fetch data from the table: "tasks_ticketing"
@@ -7667,65 +7667,6 @@ type subscription_root {
     where: tasks_bool_exp
   ): tasks_aggregate!
 
-  """
-  fetch data from the table: "tasks_branch_removal"
-  """
-  tasks_branch_removal(
-    """distinct select on columns"""
-    distinct_on: [tasks_branch_removal_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [tasks_branch_removal_order_by!]
-
-    """filter the rows returned"""
-    where: tasks_branch_removal_bool_exp
-  ): [tasks_branch_removal!]!
-
-  """
-  fetch aggregated fields from the table: "tasks_branch_removal"
-  """
-  tasks_branch_removal_aggregate(
-    """distinct select on columns"""
-    distinct_on: [tasks_branch_removal_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [tasks_branch_removal_order_by!]
-
-    """filter the rows returned"""
-    where: tasks_branch_removal_bool_exp
-  ): tasks_branch_removal_aggregate!
-
-  """
-  fetch data from the table: "tasks_branch_removal" using primary key columns
-  """
-  tasks_branch_removal_by_pk(id: uuid!): tasks_branch_removal
-
-  """
-  fetch data from the table in a streaming manner: "tasks_branch_removal"
-  """
-  tasks_branch_removal_stream(
-    """maximum number of rows returned in a single batch"""
-    batch_size: Int!
-
-    """cursor to stream the results returned by the query"""
-    cursor: [tasks_branch_removal_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: tasks_branch_removal_bool_exp
-  ): [tasks_branch_removal!]!
-
   """fetch data from the table: "tasks" using primary key columns"""
   tasks_by_pk(id: uuid!): tasks
 
@@ -7858,6 +7799,65 @@ type subscription_root {
     """filter the rows returned"""
     where: tasks_bool_exp
   ): [tasks!]!
+
+  """
+  fetch data from the table: "tasks_stump_removal"
+  """
+  tasks_stump_removal(
+    """distinct select on columns"""
+    distinct_on: [tasks_stump_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_stump_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_stump_removal_bool_exp
+  ): [tasks_stump_removal!]!
+
+  """
+  fetch aggregated fields from the table: "tasks_stump_removal"
+  """
+  tasks_stump_removal_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tasks_stump_removal_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tasks_stump_removal_order_by!]
+
+    """filter the rows returned"""
+    where: tasks_stump_removal_bool_exp
+  ): tasks_stump_removal_aggregate!
+
+  """
+  fetch data from the table: "tasks_stump_removal" using primary key columns
+  """
+  tasks_stump_removal_by_pk(id: uuid!): tasks_stump_removal
+
+  """
+  fetch data from the table in a streaming manner: "tasks_stump_removal"
+  """
+  tasks_stump_removal_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [tasks_stump_removal_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: tasks_stump_removal_bool_exp
+  ): [tasks_stump_removal!]!
 
   """
   fetch data from the table: "tasks_ticketing"
@@ -8203,288 +8203,6 @@ input tasks_bool_exp {
   type: String_comparison_exp
   updated_at: timestamptz_comparison_exp
   user_id: uuid_comparison_exp
-}
-
-"""branch/stump removal"""
-type tasks_branch_removal {
-  comment: String!
-  created_at: timestamp!
-  id: uuid!
-  latitude: String!
-  longitude: String!
-
-  """An object relationship"""
-  project: projects!
-  project_id: uuid!
-  updated_at: timestamptz!
-}
-
-"""
-aggregated selection of "tasks_branch_removal"
-"""
-type tasks_branch_removal_aggregate {
-  aggregate: tasks_branch_removal_aggregate_fields
-  nodes: [tasks_branch_removal!]!
-}
-
-input tasks_branch_removal_aggregate_bool_exp {
-  count: tasks_branch_removal_aggregate_bool_exp_count
-}
-
-input tasks_branch_removal_aggregate_bool_exp_count {
-  arguments: [tasks_branch_removal_select_column!]
-  distinct: Boolean
-  filter: tasks_branch_removal_bool_exp
-  predicate: Int_comparison_exp!
-}
-
-"""
-aggregate fields of "tasks_branch_removal"
-"""
-type tasks_branch_removal_aggregate_fields {
-  count(columns: [tasks_branch_removal_select_column!], distinct: Boolean): Int!
-  max: tasks_branch_removal_max_fields
-  min: tasks_branch_removal_min_fields
-}
-
-"""
-order by aggregate values of table "tasks_branch_removal"
-"""
-input tasks_branch_removal_aggregate_order_by {
-  count: order_by
-  max: tasks_branch_removal_max_order_by
-  min: tasks_branch_removal_min_order_by
-}
-
-"""
-input type for inserting array relation for remote table "tasks_branch_removal"
-"""
-input tasks_branch_removal_arr_rel_insert_input {
-  data: [tasks_branch_removal_insert_input!]!
-
-  """upsert condition"""
-  on_conflict: tasks_branch_removal_on_conflict
-}
-
-"""
-Boolean expression to filter rows from the table "tasks_branch_removal". All fields are combined with a logical 'AND'.
-"""
-input tasks_branch_removal_bool_exp {
-  _and: [tasks_branch_removal_bool_exp!]
-  _not: tasks_branch_removal_bool_exp
-  _or: [tasks_branch_removal_bool_exp!]
-  comment: String_comparison_exp
-  created_at: timestamp_comparison_exp
-  id: uuid_comparison_exp
-  latitude: String_comparison_exp
-  longitude: String_comparison_exp
-  project: projects_bool_exp
-  project_id: uuid_comparison_exp
-  updated_at: timestamptz_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "tasks_branch_removal"
-"""
-enum tasks_branch_removal_constraint {
-  """
-  unique or primary key constraint on columns "id"
-  """
-  branch_removal_tasks_pkey
-}
-
-"""
-input type for inserting data into table "tasks_branch_removal"
-"""
-input tasks_branch_removal_insert_input {
-  comment: String
-  created_at: timestamp
-  id: uuid
-  latitude: String
-  longitude: String
-  project: projects_obj_rel_insert_input
-  project_id: uuid
-  updated_at: timestamptz
-}
-
-"""aggregate max on columns"""
-type tasks_branch_removal_max_fields {
-  comment: String
-  created_at: timestamp
-  id: uuid
-  latitude: String
-  longitude: String
-  project_id: uuid
-  updated_at: timestamptz
-}
-
-"""
-order by max() on columns of table "tasks_branch_removal"
-"""
-input tasks_branch_removal_max_order_by {
-  comment: order_by
-  created_at: order_by
-  id: order_by
-  latitude: order_by
-  longitude: order_by
-  project_id: order_by
-  updated_at: order_by
-}
-
-"""aggregate min on columns"""
-type tasks_branch_removal_min_fields {
-  comment: String
-  created_at: timestamp
-  id: uuid
-  latitude: String
-  longitude: String
-  project_id: uuid
-  updated_at: timestamptz
-}
-
-"""
-order by min() on columns of table "tasks_branch_removal"
-"""
-input tasks_branch_removal_min_order_by {
-  comment: order_by
-  created_at: order_by
-  id: order_by
-  latitude: order_by
-  longitude: order_by
-  project_id: order_by
-  updated_at: order_by
-}
-
-"""
-response of any mutation on the table "tasks_branch_removal"
-"""
-type tasks_branch_removal_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [tasks_branch_removal!]!
-}
-
-"""
-on_conflict condition type for table "tasks_branch_removal"
-"""
-input tasks_branch_removal_on_conflict {
-  constraint: tasks_branch_removal_constraint!
-  update_columns: [tasks_branch_removal_update_column!]! = []
-  where: tasks_branch_removal_bool_exp
-}
-
-"""Ordering options when selecting data from "tasks_branch_removal"."""
-input tasks_branch_removal_order_by {
-  comment: order_by
-  created_at: order_by
-  id: order_by
-  latitude: order_by
-  longitude: order_by
-  project: projects_order_by
-  project_id: order_by
-  updated_at: order_by
-}
-
-"""primary key columns input for table: tasks_branch_removal"""
-input tasks_branch_removal_pk_columns_input {
-  id: uuid!
-}
-
-"""
-select columns of table "tasks_branch_removal"
-"""
-enum tasks_branch_removal_select_column {
-  """column name"""
-  comment
-
-  """column name"""
-  created_at
-
-  """column name"""
-  id
-
-  """column name"""
-  latitude
-
-  """column name"""
-  longitude
-
-  """column name"""
-  project_id
-
-  """column name"""
-  updated_at
-}
-
-"""
-input type for updating data in table "tasks_branch_removal"
-"""
-input tasks_branch_removal_set_input {
-  comment: String
-  created_at: timestamp
-  id: uuid
-  latitude: String
-  longitude: String
-  project_id: uuid
-  updated_at: timestamptz
-}
-
-"""
-Streaming cursor of the table "tasks_branch_removal"
-"""
-input tasks_branch_removal_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: tasks_branch_removal_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input tasks_branch_removal_stream_cursor_value_input {
-  comment: String
-  created_at: timestamp
-  id: uuid
-  latitude: String
-  longitude: String
-  project_id: uuid
-  updated_at: timestamptz
-}
-
-"""
-update columns of table "tasks_branch_removal"
-"""
-enum tasks_branch_removal_update_column {
-  """column name"""
-  comment
-
-  """column name"""
-  created_at
-
-  """column name"""
-  id
-
-  """column name"""
-  latitude
-
-  """column name"""
-  longitude
-
-  """column name"""
-  project_id
-
-  """column name"""
-  updated_at
-}
-
-input tasks_branch_removal_updates {
-  """sets the columns of the filtered rows to the given values"""
-  _set: tasks_branch_removal_set_input
-
-  """filter the rows which have to be updated"""
-  where: tasks_branch_removal_bool_exp!
 }
 
 """
@@ -9450,6 +9168,380 @@ input tasks_stream_cursor_value_input {
   type: String
   updated_at: timestamptz
   user_id: uuid
+}
+
+"""branch/stump removal"""
+type tasks_stump_removal {
+  _deleted: Boolean
+  comment: String!
+  completed: Boolean
+  created_at: timestamp!
+  id: uuid!
+
+  """An object relationship"""
+  project: projects!
+  project_id: uuid!
+
+  """An object relationship"""
+  tasks_branch_removal_user: users!
+
+  """An array relationship"""
+  tasks_stump_removal_images(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): [images!]!
+
+  """An aggregate relationship"""
+  tasks_stump_removal_images_aggregate(
+    """distinct select on columns"""
+    distinct_on: [images_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [images_order_by!]
+
+    """filter the rows returned"""
+    where: images_bool_exp
+  ): images_aggregate!
+  updated_at: timestamptz!
+  user_id: uuid!
+}
+
+"""
+aggregated selection of "tasks_stump_removal"
+"""
+type tasks_stump_removal_aggregate {
+  aggregate: tasks_stump_removal_aggregate_fields
+  nodes: [tasks_stump_removal!]!
+}
+
+input tasks_stump_removal_aggregate_bool_exp {
+  bool_and: tasks_stump_removal_aggregate_bool_exp_bool_and
+  bool_or: tasks_stump_removal_aggregate_bool_exp_bool_or
+  count: tasks_stump_removal_aggregate_bool_exp_count
+}
+
+input tasks_stump_removal_aggregate_bool_exp_bool_and {
+  arguments: tasks_stump_removal_select_column_tasks_stump_removal_aggregate_bool_exp_bool_and_arguments_columns!
+  distinct: Boolean
+  filter: tasks_stump_removal_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input tasks_stump_removal_aggregate_bool_exp_bool_or {
+  arguments: tasks_stump_removal_select_column_tasks_stump_removal_aggregate_bool_exp_bool_or_arguments_columns!
+  distinct: Boolean
+  filter: tasks_stump_removal_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input tasks_stump_removal_aggregate_bool_exp_count {
+  arguments: [tasks_stump_removal_select_column!]
+  distinct: Boolean
+  filter: tasks_stump_removal_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "tasks_stump_removal"
+"""
+type tasks_stump_removal_aggregate_fields {
+  count(columns: [tasks_stump_removal_select_column!], distinct: Boolean): Int!
+  max: tasks_stump_removal_max_fields
+  min: tasks_stump_removal_min_fields
+}
+
+"""
+order by aggregate values of table "tasks_stump_removal"
+"""
+input tasks_stump_removal_aggregate_order_by {
+  count: order_by
+  max: tasks_stump_removal_max_order_by
+  min: tasks_stump_removal_min_order_by
+}
+
+"""
+input type for inserting array relation for remote table "tasks_stump_removal"
+"""
+input tasks_stump_removal_arr_rel_insert_input {
+  data: [tasks_stump_removal_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: tasks_stump_removal_on_conflict
+}
+
+"""
+Boolean expression to filter rows from the table "tasks_stump_removal". All fields are combined with a logical 'AND'.
+"""
+input tasks_stump_removal_bool_exp {
+  _and: [tasks_stump_removal_bool_exp!]
+  _deleted: Boolean_comparison_exp
+  _not: tasks_stump_removal_bool_exp
+  _or: [tasks_stump_removal_bool_exp!]
+  comment: String_comparison_exp
+  completed: Boolean_comparison_exp
+  created_at: timestamp_comparison_exp
+  id: uuid_comparison_exp
+  project: projects_bool_exp
+  project_id: uuid_comparison_exp
+  tasks_branch_removal_user: users_bool_exp
+  tasks_stump_removal_images: images_bool_exp
+  tasks_stump_removal_images_aggregate: images_aggregate_bool_exp
+  updated_at: timestamptz_comparison_exp
+  user_id: uuid_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "tasks_stump_removal"
+"""
+enum tasks_stump_removal_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  tasks_stump_removal_pkey
+}
+
+"""
+input type for inserting data into table "tasks_stump_removal"
+"""
+input tasks_stump_removal_insert_input {
+  _deleted: Boolean
+  comment: String
+  completed: Boolean
+  created_at: timestamp
+  id: uuid
+  project: projects_obj_rel_insert_input
+  project_id: uuid
+  tasks_branch_removal_user: users_obj_rel_insert_input
+  tasks_stump_removal_images: images_arr_rel_insert_input
+  updated_at: timestamptz
+  user_id: uuid
+}
+
+"""aggregate max on columns"""
+type tasks_stump_removal_max_fields {
+  comment: String
+  created_at: timestamp
+  id: uuid
+  project_id: uuid
+  updated_at: timestamptz
+  user_id: uuid
+}
+
+"""
+order by max() on columns of table "tasks_stump_removal"
+"""
+input tasks_stump_removal_max_order_by {
+  comment: order_by
+  created_at: order_by
+  id: order_by
+  project_id: order_by
+  updated_at: order_by
+  user_id: order_by
+}
+
+"""aggregate min on columns"""
+type tasks_stump_removal_min_fields {
+  comment: String
+  created_at: timestamp
+  id: uuid
+  project_id: uuid
+  updated_at: timestamptz
+  user_id: uuid
+}
+
+"""
+order by min() on columns of table "tasks_stump_removal"
+"""
+input tasks_stump_removal_min_order_by {
+  comment: order_by
+  created_at: order_by
+  id: order_by
+  project_id: order_by
+  updated_at: order_by
+  user_id: order_by
+}
+
+"""
+response of any mutation on the table "tasks_stump_removal"
+"""
+type tasks_stump_removal_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [tasks_stump_removal!]!
+}
+
+"""
+on_conflict condition type for table "tasks_stump_removal"
+"""
+input tasks_stump_removal_on_conflict {
+  constraint: tasks_stump_removal_constraint!
+  update_columns: [tasks_stump_removal_update_column!]! = []
+  where: tasks_stump_removal_bool_exp
+}
+
+"""Ordering options when selecting data from "tasks_stump_removal"."""
+input tasks_stump_removal_order_by {
+  _deleted: order_by
+  comment: order_by
+  completed: order_by
+  created_at: order_by
+  id: order_by
+  project: projects_order_by
+  project_id: order_by
+  tasks_branch_removal_user: users_order_by
+  tasks_stump_removal_images_aggregate: images_aggregate_order_by
+  updated_at: order_by
+  user_id: order_by
+}
+
+"""primary key columns input for table: tasks_stump_removal"""
+input tasks_stump_removal_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "tasks_stump_removal"
+"""
+enum tasks_stump_removal_select_column {
+  """column name"""
+  _deleted
+
+  """column name"""
+  comment
+
+  """column name"""
+  completed
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  project_id
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  user_id
+}
+
+"""
+select "tasks_stump_removal_aggregate_bool_exp_bool_and_arguments_columns" columns of table "tasks_stump_removal"
+"""
+enum tasks_stump_removal_select_column_tasks_stump_removal_aggregate_bool_exp_bool_and_arguments_columns {
+  """column name"""
+  _deleted
+
+  """column name"""
+  completed
+}
+
+"""
+select "tasks_stump_removal_aggregate_bool_exp_bool_or_arguments_columns" columns of table "tasks_stump_removal"
+"""
+enum tasks_stump_removal_select_column_tasks_stump_removal_aggregate_bool_exp_bool_or_arguments_columns {
+  """column name"""
+  _deleted
+
+  """column name"""
+  completed
+}
+
+"""
+input type for updating data in table "tasks_stump_removal"
+"""
+input tasks_stump_removal_set_input {
+  _deleted: Boolean
+  comment: String
+  completed: Boolean
+  created_at: timestamp
+  id: uuid
+  project_id: uuid
+  updated_at: timestamptz
+  user_id: uuid
+}
+
+"""
+Streaming cursor of the table "tasks_stump_removal"
+"""
+input tasks_stump_removal_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: tasks_stump_removal_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input tasks_stump_removal_stream_cursor_value_input {
+  _deleted: Boolean
+  comment: String
+  completed: Boolean
+  created_at: timestamp
+  id: uuid
+  project_id: uuid
+  updated_at: timestamptz
+  user_id: uuid
+}
+
+"""
+update columns of table "tasks_stump_removal"
+"""
+enum tasks_stump_removal_update_column {
+  """column name"""
+  _deleted
+
+  """column name"""
+  comment
+
+  """column name"""
+  completed
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  project_id
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  user_id
+}
+
+input tasks_stump_removal_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: tasks_stump_removal_set_input
+
+  """filter the rows which have to be updated"""
+  where: tasks_stump_removal_bool_exp!
 }
 
 """

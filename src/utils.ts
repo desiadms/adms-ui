@@ -7,6 +7,7 @@ import {
   Images,
   ProjectDocType,
   Steps,
+  StumpRemovalTaskDocType,
   TreeRemovalTaskDocType,
   UserDocType
 } from './rxdb/rxdb-schemas'
@@ -251,7 +252,43 @@ export function useTreeRemovalTasks(selector?: Record<string, unknown>) {
   return { result, isFetching }
 }
 
+export function useStumpRemovalTasks(selector?: Record<string, unknown>) {
+  const query = useCallback(
+    (collection) =>
+      collection.find({
+        sort: [{ updated_at: 'desc' }],
+        selector: selector || {}
+      }),
+    [selector]
+  )
+
+  const { result, isFetching } = useRxData<StumpRemovalTaskDocType>(
+    'stump-removal-task',
+    query
+  )
+
+  return { result, isFetching }
+}
+
 export function useTask(taskId: string | undefined) {
-  const { result, isFetching } = useTreeRemovalTasks({ id: taskId })
-  return { result: result[0], isFetching, type: 'Tree' }
+  const { result: tree, isFetching: isFetchingTree } = useTreeRemovalTasks({
+    id: taskId
+  })
+  const { result: stump, isFetching: isFetchingStump } = useTreeRemovalTasks({
+    id: taskId
+  })
+
+  const result = () => {
+    if (tree.length) {
+      return { result: tree[0], type: 'Tree' }
+    }
+    if (stump.length) {
+      return { result: stump[0], type: 'Stump' }
+    }
+    return { result: [], type: '' }
+  }
+
+  const isFetching = isFetchingTree || isFetchingStump
+
+  return { ...result(), isFetching }
 }

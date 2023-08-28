@@ -3,21 +3,27 @@ import { RxReplicationWriteToMasterRow } from 'rxdb'
 import { extractFilesAndSaveToNhost } from '../utils'
 import {
   projectsDocument,
+  queryStumpRemovalTasks,
   queryTreeRemovalTasks,
   updateUserDocument,
+  upsertStumpRemovalTasks,
   upsertTreeRemovalTasks,
   userDocument
 } from './graphql-operations'
-import { TreeRemovalTaskDocType, UserDocType } from './rxdb-schemas'
+import {
+  StumpRemovalTaskDocType,
+  TreeRemovalTaskDocType,
+  UserDocType
+} from './rxdb-schemas'
 
-export function tasksRead() {
+export function treeRemovalTasksRead() {
   return {
     query: resolveRequestDocument(queryTreeRemovalTasks).query,
     variables: {}
   }
 }
 
-export async function tasksWrite(
+export async function treeRemovalTasksWrite(
   _db,
   rows: RxReplicationWriteToMasterRow<TreeRemovalTaskDocType>[]
 ) {
@@ -33,6 +39,33 @@ export async function tasksWrite(
 
   return {
     query: resolveRequestDocument(upsertTreeRemovalTasks).query,
+    variables: { tasks: variableTasks, images: variableImages }
+  }
+}
+
+export function stumpRemovalTasksRead() {
+  return {
+    query: resolveRequestDocument(queryStumpRemovalTasks).query,
+    variables: {}
+  }
+}
+
+export async function stumpRemovalTasksWrite(
+  _db,
+  rows: RxReplicationWriteToMasterRow<StumpRemovalTaskDocType>[]
+) {
+  const extractedData = rows.map(({ newDocumentState }) => newDocumentState)
+  const images = extractedData
+    .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
+    .flat()
+
+  await extractFilesAndSaveToNhost(images)
+
+  const variableImages = images.map(({ base64Preview, ...rest }) => rest)
+  const variableTasks = extractedData.map(({ images, ...rest }) => rest)
+
+  return {
+    query: resolveRequestDocument(upsertStumpRemovalTasks).query,
     variables: { tasks: variableTasks, images: variableImages }
   }
 }

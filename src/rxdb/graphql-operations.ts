@@ -56,6 +56,61 @@ export const upsertTreeRemovalTasks = graphql(/* GraphQL */ `
   }
 `)
 
+export const queryStumpRemovalTasks = graphql(/* GraphQL */ `
+  query stumpRemovalTasks {
+    tasks_stump_removal(where: { completed: { _neq: true } }) {
+      comment
+      completed
+      created_at
+      updated_at
+      id
+      images: tasks_stump_removal_images {
+        id
+        created_at
+        latitude
+        longitude
+        taken_at_step
+      }
+    }
+  }
+`)
+
+export const upsertStumpRemovalTasks = graphql(/* GraphQL */ `
+  mutation upsertStumpRemovalTask(
+    $tasks: [tasks_stump_removal_insert_input!]!
+    $images: [images_insert_input!]!
+  ) {
+    insert_tasks_stump_removal(
+      objects: $tasks
+      on_conflict: {
+        update_columns: [comment, completed, updated_at, _deleted]
+        constraint: tasks_stump_removal_pkey
+      }
+    ) {
+      returning {
+        id
+      }
+    }
+    insert_images(
+      objects: $images
+      on_conflict: {
+        constraint: images_pkey
+        update_columns: [
+          latitude
+          longitude
+          taken_at_step
+          updated_at
+          _deleted
+        ]
+      }
+    ) {
+      returning {
+        id
+      }
+    }
+  }
+`)
+
 export const userDocument = graphql(/* GraphQL */ `
   query user {
     usersMetadata(limit: 1) {

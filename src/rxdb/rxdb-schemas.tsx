@@ -195,3 +195,64 @@ export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
   },
   required: ['id']
 } as const
+
+export type StumpRemovalTaskDocType = {
+  id: string
+  updated_at: string
+  created_at: string
+  comment?: string
+  completed?: boolean
+  images: Images[]
+}
+
+export const stumpRemovalTaskSchema: RxJsonSchema<StumpRemovalTaskDocType> = {
+  title: 'stump removal task schema',
+  version: 0,
+  type: 'object',
+  primaryKey: 'id',
+  properties: {
+    id: {
+      type: 'string',
+      maxLength: 100
+    },
+    comment: {
+      type: 'string'
+    },
+    created_at: {
+      type: 'string'
+    },
+    updated_at: {
+      type: 'string'
+    },
+    completed: {
+      type: 'boolean'
+    },
+    images: {
+      type: 'array',
+      properties: {
+        id: {
+          type: 'string'
+        },
+        created_at: {
+          type: 'string'
+        },
+        latitude: {
+          type: 'string'
+        },
+        longitude: {
+          type: 'string'
+        },
+        ranges: {
+          type: 'string'
+        },
+        taken_at_step: {
+          type: 'string'
+        },
+        base64Preview: {
+          type: 'string'
+        }
+      }
+    }
+  },
+  required: ['id']
+} as const

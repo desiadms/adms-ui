@@ -6,13 +6,16 @@ import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv'
 import { addCollections } from './rxdb/abstraction'
 import {
   projectRead,
-  tasksRead,
-  tasksWrite,
+  stumpRemovalTasksRead,
+  stumpRemovalTasksWrite,
+  treeRemovalTasksRead,
+  treeRemovalTasksWrite,
   userRead,
   userWrite
 } from './rxdb/replication-handlers'
 import {
   projectSchema,
+  stumpRemovalTaskSchema,
   treeRemovalTaskSchema,
   userSchema
 } from './rxdb/rxdb-schemas'
@@ -47,9 +50,15 @@ export async function initialize(accessToken: string | null) {
     {
       name: 'tree-removal-task',
       schema: treeRemovalTaskSchema,
-      localDocuments: true,
-      pullQueryBuilder: tasksRead,
-      pushQueryBuilder: tasksWrite,
+      pullQueryBuilder: treeRemovalTasksRead,
+      pushQueryBuilder: treeRemovalTasksWrite,
+      accessToken
+    },
+    {
+      name: 'stump-removal-task',
+      schema: stumpRemovalTaskSchema,
+      pullQueryBuilder: stumpRemovalTasksRead,
+      pushQueryBuilder: stumpRemovalTasksWrite,
       accessToken
     },
     {
