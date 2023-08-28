@@ -9,6 +9,9 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
+      manifest: {
+        display: 'browser'
+      },
       workbox: {
         runtimeCaching: [
           {
