@@ -129,7 +129,9 @@ function TreeStumpRemovalForm({
           comment: data.comment,
           created_at: nowUTC,
           updated_at: nowUTC,
-          ranges: data?.ranges?.length ? data.ranges : existingDoc?.ranges,
+          ranges: data?.ranges?.length
+            ? data.ranges
+            : (existingDoc as TreeRemovalTaskDocType)?.ranges,
           completed: step === 'after'
         })
       } else {
