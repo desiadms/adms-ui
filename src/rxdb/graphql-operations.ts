@@ -1,4 +1,4 @@
-import { graphql } from '../gql'
+import { graphql } from "../gql";
 
 export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
   query treeRemovalTasks {
@@ -18,7 +18,7 @@ export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
       }
     }
   }
-`)
+`);
 
 export const upsertTreeRemovalTasks = graphql(/* GraphQL */ `
   mutation upsertTreeRemovalTask(
@@ -54,7 +54,7 @@ export const upsertTreeRemovalTasks = graphql(/* GraphQL */ `
       }
     }
   }
-`)
+`);
 
 export const queryStumpRemovalTasks = graphql(/* GraphQL */ `
   query stumpRemovalTasks {
@@ -73,7 +73,7 @@ export const queryStumpRemovalTasks = graphql(/* GraphQL */ `
       }
     }
   }
-`)
+`);
 
 export const upsertStumpRemovalTasks = graphql(/* GraphQL */ `
   mutation upsertStumpRemovalTask(
@@ -109,7 +109,7 @@ export const upsertStumpRemovalTasks = graphql(/* GraphQL */ `
       }
     }
   }
-`)
+`);
 
 export const userDocument = graphql(/* GraphQL */ `
   query user {
@@ -129,7 +129,7 @@ export const userDocument = graphql(/* GraphQL */ `
       }
     }
   }
-`)
+`);
 
 export const updateUserDocument = graphql(/* GraphQL */ `
   mutation updateUser($id: uuid!, $first_name: String!, $last_name: String!) {
@@ -140,7 +140,7 @@ export const updateUserDocument = graphql(/* GraphQL */ `
       id
     }
   }
-`)
+`);
 
 export const projectsDocument = graphql(/* GraphQL */ `
   query projects {
@@ -152,6 +152,12 @@ export const projectsDocument = graphql(/* GraphQL */ `
       sub_contractor
       location
       poc
+      ticketing_names {
+        id
+        name
+        add_photos
+        print_ticket
+      }
     }
   }
-`)
+`);

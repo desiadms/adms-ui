@@ -1,59 +1,63 @@
 module.exports = {
   root: true,
-  env: {
-    browser: true
-  },
+  ignorePatterns: ['.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  parserOptions: {
+    ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
+    sourceType: 'module', // Allows for the use of imports
+    project: './tsconfig.json',
+    ecmaFeatures: {
+      jsx: true
+    }
+  },
+  plugins: ['@typescript-eslint', 'unused-imports', 'react-refresh'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
-    'airbnb',
-    'airbnb-typescript',
-    'airbnb/hooks',
-    'prettier'
+    'prettier',
+    'plugin:react-hooks/recommended'
   ],
-  parserOptions: {
-    project: './tsconfig.json',
-    tsconfigRootDir: __dirname,
-    sourceType: 'module',
-    ecmaFeatures: {
-      impliedStrict: true,
-      jsx: true
-    }
-  },
   rules: {
-    '@typescript-eslint/no-explicit-any': 'error',
-    '@typescript-eslint/no-shadow': 'off',
-    'react/react-in-jsx-scope': 'off',
-    'react/prop-types': 'off',
-    'react/jsx-no-bind': 'off',
-    'import/prefer-default-export': 'off',
-    'react/jsx-props-no-spreading': 'off',
-    'react/function-component-definition': 'off',
-    'import/no-extraneous-dependencies': 'off',
-    'react/destructuring-assignment': 'off',
-    'react/require-default-props': 'off',
-    'react/no-unused-prop-types': 'off',
-    'no-template-curly-in-string': 'off',
-    'no-nested-ternary': 'off',
-    'prefer-spread': 'off',
-    'no-shadow': 'off',
-    'consistent-return': 'off',
-    'no-console': 'off',
-    'jsx-a11y/media-has-caption': 'off',
-    'no-plusplus': 'off',
-    '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/naming-convention': 'off',
-    'jsx-a11y/label-has-associated-control': [
-      2,
+    'no-unused-vars': 'off',
+    'no-restricted-imports': [
+      'error',
       {
-        controlComponents: ['Input']
+        patterns: [
+          {
+            group: ['tinybase/ui-react/*'],
+            message:
+              'Please import from store.ts instead as this file exports the same functions but with schema checking support.'
+          }
+        ]
       }
     ],
-    'no-underscore-dangle': 'off',
-    'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': ['off']
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-explicit-any': 'error',
+    'linebreak-style': ['error', 'unix'],
+    'unused-imports/no-unused-imports': 'error',
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true }
+    ],
+    'unused-imports/no-unused-vars': [
+      'warn',
+      {
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_'
+      }
+    ]
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.mts']
+      }
+    },
+    react: {
+      version: 'detect'
+    }
   }
 }

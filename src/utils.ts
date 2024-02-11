@@ -1,97 +1,97 @@
-import { NhostClient, useAuthenticationStatus } from '@nhost/react'
-import { useCallback, useEffect, useState } from 'preact/hooks'
-import { RxDocument } from 'rxdb'
-import { useRxData } from 'rxdb-hooks'
-import { v4 } from 'uuid'
+import { NhostClient, useAuthenticationStatus } from "@nhost/react";
+import { useCallback, useEffect, useState } from "preact/hooks";
+import { RxDocument } from "rxdb";
+import { useRxData } from "rxdb-hooks";
+import { v4 } from "uuid";
 import {
   Images,
   ProjectDocType,
   Steps,
   StumpRemovalTaskDocType,
   TreeRemovalTaskDocType,
-  UserDocType
-} from './rxdb/rxdb-schemas'
+  UserDocType,
+} from "./rxdb/rxdb-schemas";
 
-export const devMode = import.meta.env.MODE === 'development'
+export const devMode = import.meta.env.MODE === "development";
 
 export const nhost = new NhostClient({
   subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
-  region: import.meta.env.VITE_NHOST_REGION
-})
+  region: import.meta.env.VITE_NHOST_REGION,
+});
 
-export const hasuraURL = import.meta.env.VITE_HASURA_ENDPOINT
+export const hasuraURL = import.meta.env.VITE_HASURA_ENDPOINT;
 
 export function useIsOnline() {
-  const [isOnline, setIsOnline] = useState(navigator.onLine)
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
   useEffect(() => {
     const handleOfflineStatus = () => {
-      setIsOnline(false)
-    }
+      setIsOnline(false);
+    };
 
     const handleOnlineStatus = () => {
-      setIsOnline(true)
-    }
+      setIsOnline(true);
+    };
 
-    window.addEventListener('offline', handleOfflineStatus)
-    window.addEventListener('online', handleOnlineStatus)
+    window.addEventListener("offline", handleOfflineStatus);
+    window.addEventListener("online", handleOnlineStatus);
 
     return () => {
-      window.removeEventListener('offline', handleOfflineStatus)
-      window.removeEventListener('online', handleOnlineStatus)
-    }
-  }, [])
-  return isOnline
+      window.removeEventListener("offline", handleOfflineStatus);
+      window.removeEventListener("online", handleOnlineStatus);
+    };
+  }, []);
+  return isOnline;
 }
 
 export function useAuth() {
-  const isOnline = useIsOnline()
-  const { isAuthenticated, isLoading } = useAuthenticationStatus()
+  const isOnline = useIsOnline();
+  const { isAuthenticated, isLoading } = useAuthenticationStatus();
 
   return !isOnline
     ? { isAuthenticated: true, isLoading: false, isOffline: true }
-    : { isAuthenticated, isLoading, isOffline: false }
+    : { isAuthenticated, isLoading, isOffline: false };
 }
 
 export function useGeoLocation() {
   const [coordinates, setCoordinates] = useState<GeolocationCoordinates | null>(
-    null
-  )
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string | null>(null)
+    null,
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   function getGeoLocation() {
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const pos = position.coords
-        setCoordinates(pos)
-        setIsLoading(false)
+        const pos = position.coords;
+        setCoordinates(pos);
+        setIsLoading(false);
       },
       (error) => {
-        setError(error.message)
-        setIsLoading(false)
-      }
-    )
+        setError(error.message);
+        setIsLoading(false);
+      },
+    );
   }
 
   useEffect(() => {
-    getGeoLocation()
-  }, [])
+    getGeoLocation();
+  }, []);
 
-  return { coordinates, isLoading, error, getGeoLocation }
+  return { coordinates, isLoading, error, getGeoLocation };
 }
 
 export function emailToId(email: string | undefined) {
-  return email && email.split('@')[0]
+  return email && email.split("@")[0];
 }
 
 export function fullName(
   firstName: string | undefined,
-  lastName: string | undefined
+  lastName: string | undefined,
 ) {
-  return `${firstName} ${lastName}`
+  return `${firstName} ${lastName}`;
 }
 
 export function userRoles(user: RxDocument<UserDocType> | undefined) {
@@ -99,89 +99,89 @@ export function userRoles(user: RxDocument<UserDocType> | undefined) {
     user &&
     // eslint-disable-next-line no-underscore-dangle
     Object.entries(user._data)
-      .filter(([k, v]) => k.startsWith('role_') && v)
+      .filter(([k, v]) => k.startsWith("role_") && v)
       .map(([k]) => {
-        const splitted = k.split('role_')[1]
-        return splitted && splitted.replace('_', ' ')
+        const splitted = k.split("role_")[1];
+        return splitted && splitted.replace("_", " ");
       })
-      .join(', ')
-  )
+      .join(", ")
+  );
 }
 
 export async function blobToBase64(
   blob: Blob,
-  removePrefix?: 'removePrefix'
+  removePrefix?: "removePrefix",
 ): Promise<string> {
   return new Promise((resolve, reject) => {
-    const fileReader = new FileReader()
-    fileReader.onerror = () => reject(fileReader.error)
+    const fileReader = new FileReader();
+    fileReader.onerror = () => reject(fileReader.error);
     fileReader.onloadend = () => {
-      const dataUrl = fileReader.result as string
+      const dataUrl = fileReader.result as string;
       // remove "data:mime/type;base64," prefix from data url
-      const base64 = dataUrl.substring(dataUrl.indexOf(',') + 1)
-      resolve(removePrefix ? base64 : dataUrl)
-    }
-    fileReader.readAsDataURL(blob)
-  })
+      const base64 = dataUrl.substring(dataUrl.indexOf(",") + 1);
+      resolve(removePrefix ? base64 : dataUrl);
+    };
+    fileReader.readAsDataURL(blob);
+  });
 }
 
 export function base64toFile(
   base64String: string | undefined,
   fileName: string,
-  mimeType: string
+  mimeType: string,
 ): File {
   if (!base64String) {
-    throw new Error('No base64 string provided')
+    throw new Error("No base64 string provided");
   }
   const base64StringNoMime = base64String.substring(
-    base64String.indexOf(',') + 1
-  )
-  const byteCharacters = atob(base64StringNoMime)
-  const byteArrays: Uint8Array[] = []
+    base64String.indexOf(",") + 1,
+  );
+  const byteCharacters = atob(base64StringNoMime);
+  const byteArrays: Uint8Array[] = [];
 
   for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-    const slice = byteCharacters.slice(offset, offset + 1024)
-    const byteNumbers = new Array(slice.length)
+    const slice = byteCharacters.slice(offset, offset + 1024);
+    const byteNumbers = new Array(slice.length);
 
     for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i)
+      byteNumbers[i] = slice.charCodeAt(i);
     }
 
-    const byteArray = new Uint8Array(byteNumbers)
-    byteArrays.push(byteArray)
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
   }
 
-  const blob = new Blob(byteArrays, { type: mimeType })
-  return new File([blob], fileName, { type: mimeType })
+  const blob = new Blob(byteArrays, { type: mimeType });
+  return new File([blob], fileName, { type: mimeType });
 }
 
 export function keep<T, U>(
   coll: T[],
-  mapperFn: (item: T) => U | null | undefined
+  mapperFn: (item: T) => U | null | undefined,
 ): NonNullable<U>[] {
   return coll.reduce((acc: NonNullable<U>[], item: T) => {
-    const transformed = mapperFn(item)
+    const transformed = mapperFn(item);
     if (transformed !== null && transformed !== undefined) {
-      acc.push(transformed as NonNullable<U>)
+      acc.push(transformed as NonNullable<U>);
     }
-    return acc
-  }, [])
+    return acc;
+  }, []);
 }
 
 export function saveFilesToNhost(files: { id: string; file: File }[]) {
   return Promise.all(
-    files.map(({ id, file }) => nhost.storage.upload({ file, id }))
-  )
+    files.map(({ id, file }) => nhost.storage.upload({ file, id })),
+  );
 }
 
 export function humanizeDate(date?: string | number | Date) {
-  return new Intl.DateTimeFormat('en-US', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    minute: 'numeric',
-    hour: 'numeric'
-  }).format(date ? new Date(date) : new Date())
+  return new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    minute: "numeric",
+    hour: "numeric",
+  }).format(date ? new Date(date) : new Date());
 }
 
 export async function extractFilesAndSaveToNhost(images: Images[]) {
@@ -189,104 +189,104 @@ export async function extractFilesAndSaveToNhost(images: Images[]) {
     .filter((image) => image.base64Preview)
     .map(({ id, base64Preview }) => ({
       id,
-      file: base64toFile(base64Preview, 'task', 'image/png')
-    }))
+      file: base64toFile(base64Preview, "task", "image/png"),
+    }));
 
-  const flattenedTaskImages = blobFiles.flat()
+  const flattenedTaskImages = blobFiles.flat();
   try {
-    return await saveFilesToNhost(flattenedTaskImages)
+    return await saveFilesToNhost(flattenedTaskImages);
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
-export type FileForm = { fileInstance: File | undefined }
+export type FileForm = { fileInstance: File | undefined };
 
 export async function genTaskImagesMetadata({
   filesData,
   coordinates,
-  taken_at_step
+  taken_at_step,
 }: {
-  filesData: FileForm[]
-  coordinates: GeolocationCoordinates
-  taken_at_step?: Steps
-  extraFields?: Record<string, string>
+  filesData: FileForm[];
+  coordinates: GeolocationCoordinates;
+  taken_at_step?: Steps;
+  extraFields?: Record<string, string>;
 }): Promise<Images[]> {
   const images = await Promise.all(
     keep(
       filesData,
-      (file) => file?.fileInstance && (file.fileInstance[0] as File)
+      (file) => file?.fileInstance && (file.fileInstance[0] as File),
     ).map(async (file) => ({
       id: v4(),
       latitude: coordinates.latitude.toString(),
       longitude: coordinates.longitude.toString(),
       created_at: new Date().toISOString(),
       taken_at_step,
-      base64Preview: await blobToBase64(file)
-    }))
-  )
-  return images
+      base64Preview: await blobToBase64(file),
+    })),
+  );
+  return images;
 }
 
 export function useProject() {
-  const query = useCallback((collection) => collection.find(), [])
-  const { result, isFetching } = useRxData<ProjectDocType>('project', query)
-  return { activeProject: result[0], isFetching }
+  const query = useCallback((collection) => collection.find(), []);
+  const { result, isFetching } = useRxData<ProjectDocType>("project", query);
+  return { activeProject: result[0], isFetching };
 }
 
 export function useTreeRemovalTasks(selector?: Record<string, unknown>) {
   const query = useCallback(
     (collection) =>
       collection.find({
-        sort: [{ updated_at: 'desc' }],
-        selector: selector || {}
+        sort: [{ updated_at: "desc" }],
+        selector: selector || {},
       }),
-    [selector]
-  )
+    [selector],
+  );
 
   const { result, isFetching } = useRxData<TreeRemovalTaskDocType>(
-    'tree-removal-task',
-    query
-  )
+    "tree-removal-task",
+    query,
+  );
 
-  return { result, isFetching }
+  return { result, isFetching };
 }
 
 export function useStumpRemovalTasks(selector?: Record<string, unknown>) {
   const query = useCallback(
     (collection) =>
       collection.find({
-        sort: [{ updated_at: 'desc' }],
-        selector: selector || {}
+        sort: [{ updated_at: "desc" }],
+        selector: selector || {},
       }),
-    [selector]
-  )
+    [selector],
+  );
 
   const { result, isFetching } = useRxData<StumpRemovalTaskDocType>(
-    'stump-removal-task',
-    query
-  )
+    "stump-removal-task",
+    query,
+  );
 
-  return { result, isFetching }
+  return { result, isFetching };
 }
 
 export function useTask(taskId: string | undefined) {
   const { result: tree, isFetching: isFetchingTree } = useTreeRemovalTasks({
-    id: taskId
-  })
+    id: taskId,
+  });
   const { result: stump, isFetching: isFetchingStump } = useStumpRemovalTasks({
-    id: taskId
-  })
+    id: taskId,
+  });
 
   const result = () => {
     if (tree.length) {
-      return { result: tree[0], type: 'Tree' }
+      return { result: tree[0], type: "Tree" };
     }
 
-    return { result: stump[0], type: 'Stump' }
-  }
+    return { result: stump[0], type: "Stump" };
+  };
 
-  const isFetching = isFetchingTree || isFetchingStump
+  const isFetching = isFetchingTree || isFetchingStump;
 
-  return { ...result(), isFetching }
+  return { ...result(), isFetching };
 }

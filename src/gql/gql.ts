@@ -19,7 +19,7 @@ const documents = {
     "\n  mutation upsertStumpRemovalTask(\n    $tasks: [tasks_stump_removal_insert_input!]!\n    $images: [images_insert_input!]!\n  ) {\n    insert_tasks_stump_removal(\n      objects: $tasks\n      on_conflict: {\n        update_columns: [comment, completed, updated_at, _deleted]\n        constraint: tasks_stump_removal_pkey\n      }\n    ) {\n      returning {\n        id\n      }\n    }\n    insert_images(\n      objects: $images\n      on_conflict: {\n        constraint: images_pkey\n        update_columns: [\n          latitude\n          longitude\n          taken_at_step\n          updated_at\n          _deleted\n        ]\n      }\n    ) {\n      returning {\n        id\n      }\n    }\n  }\n": types.UpsertStumpRemovalTaskDocument,
     "\n  query user {\n    usersMetadata(limit: 1) {\n      id\n      first_name\n      hire_date\n      last_name\n      role_data_manager\n      role_field_supervisor\n      role_filed_monitor\n      role_operations_manager\n      role_pc_admin\n      role_project_manager\n      usersMetadata_user {\n        email\n      }\n    }\n  }\n": types.UserDocument,
     "\n  mutation updateUser($id: uuid!, $first_name: String!, $last_name: String!) {\n    update_usersMetadata_by_pk(\n      pk_columns: { id: $id }\n      _set: { first_name: $first_name, last_name: $last_name }\n    ) {\n      id\n    }\n  }\n": types.UpdateUserDocument,
-    "\n  query projects {\n    projects {\n      id\n      name\n      comment\n      contractor\n      sub_contractor\n      location\n      poc\n    }\n  }\n": types.ProjectsDocument,
+    "\n  query projects {\n    projects {\n      id\n      name\n      comment\n      contractor\n      sub_contractor\n      location\n      poc\n      ticketing_names {\n        id\n        name\n        add_photos\n        print_ticket\n      }\n    }\n  }\n": types.ProjectsDocument,
 };
 
 /**
@@ -63,7 +63,7 @@ export function graphql(source: "\n  mutation updateUser($id: uuid!, $first_name
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query projects {\n    projects {\n      id\n      name\n      comment\n      contractor\n      sub_contractor\n      location\n      poc\n    }\n  }\n"): (typeof documents)["\n  query projects {\n    projects {\n      id\n      name\n      comment\n      contractor\n      sub_contractor\n      location\n      poc\n    }\n  }\n"];
+export function graphql(source: "\n  query projects {\n    projects {\n      id\n      name\n      comment\n      contractor\n      sub_contractor\n      location\n      poc\n      ticketing_names {\n        id\n        name\n        add_photos\n        print_ticket\n      }\n    }\n  }\n"): (typeof documents)["\n  query projects {\n    projects {\n      id\n      name\n      comment\n      contractor\n      sub_contractor\n      location\n      poc\n      ticketing_names {\n        id\n        name\n        add_photos\n        print_ticket\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

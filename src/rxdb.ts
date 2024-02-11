@@ -1,9 +1,9 @@
-import { addRxPlugin, createRxDatabase } from 'rxdb'
-import { RxDBLocalDocumentsPlugin } from 'rxdb/plugins/local-documents'
-import { RxDBMigrationPlugin } from 'rxdb/plugins/migration'
-import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie'
-import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv'
-import { addCollections } from './rxdb/abstraction'
+import { addRxPlugin, createRxDatabase } from "rxdb";
+import { RxDBLocalDocumentsPlugin } from "rxdb/plugins/local-documents";
+import { RxDBMigrationPlugin } from "rxdb/plugins/migration";
+import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
+import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
+import { addCollections } from "./rxdb/abstraction";
 import {
   projectRead,
   stumpRemovalTasksRead,
@@ -11,70 +11,70 @@ import {
   treeRemovalTasksRead,
   treeRemovalTasksWrite,
   userRead,
-  userWrite
-} from './rxdb/replication-handlers'
+  userWrite,
+} from "./rxdb/replication-handlers";
 import {
   projectSchema,
   stumpRemovalTaskSchema,
   treeRemovalTaskSchema,
-  userSchema
-} from './rxdb/rxdb-schemas'
-import { devMode } from './utils'
+  userSchema,
+} from "./rxdb/rxdb-schemas";
+import { devMode } from "./utils";
 
-addRxPlugin(RxDBMigrationPlugin)
-addRxPlugin(RxDBLocalDocumentsPlugin)
+addRxPlugin(RxDBMigrationPlugin);
+addRxPlugin(RxDBLocalDocumentsPlugin);
 
 if (devMode) {
-  await import('rxdb/plugins/dev-mode').then(({ RxDBDevModePlugin }) =>
-    addRxPlugin(RxDBDevModePlugin)
-  )
+  await import("rxdb/plugins/dev-mode").then(({ RxDBDevModePlugin }) =>
+    addRxPlugin(RxDBDevModePlugin),
+  );
 }
 
 export async function initialize(accessToken: string | null) {
-  const dexie = getRxStorageDexie()
+  const dexie = getRxStorageDexie();
 
   const storage = devMode
     ? wrappedValidateAjvStorage({ storage: dexie })
-    : dexie
+    : dexie;
 
   const db = await createRxDatabase({
-    name: 'adms',
+    name: "adms",
     storage,
     eventReduce: true,
-    cleanupPolicy: {}
-  })
+    cleanupPolicy: {},
+  });
 
-  console.log('creating collections')
+  console.log("creating collections");
 
   await addCollections(db, [
     {
-      name: 'tree-removal-task',
+      name: "tree-removal-task",
       schema: treeRemovalTaskSchema,
       pullQueryBuilder: treeRemovalTasksRead,
       pushQueryBuilder: treeRemovalTasksWrite,
-      accessToken
+      accessToken,
     },
     {
-      name: 'stump-removal-task',
+      name: "stump-removal-task",
       schema: stumpRemovalTaskSchema,
       pullQueryBuilder: stumpRemovalTasksRead,
       pushQueryBuilder: stumpRemovalTasksWrite,
-      accessToken
+      accessToken,
     },
     {
-      name: 'user',
+      name: "user",
       schema: userSchema,
       pullQueryBuilder: userRead,
       pushQueryBuilder: userWrite,
-      accessToken
+      accessToken,
     },
     {
-      name: 'project',
+      name: "project",
       schema: projectSchema,
       pullQueryBuilder: projectRead,
-      accessToken
-    }
-  ])
+      accessToken,
+    },
+  ]);
 
-  return db
+  return db;
 }

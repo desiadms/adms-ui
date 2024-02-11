@@ -1,55 +1,47 @@
-import preact from '@preact/preset-vite'
-import { defineConfig } from 'vite'
-import checker from 'vite-plugin-checker'
-import { VitePWA } from 'vite-plugin-pwa'
-import ViteRestart from 'vite-plugin-restart'
+import preact from "@preact/preset-vite";
+import { defineConfig } from "vite";
+import checker from "vite-plugin-checker";
+import { VitePWA } from "vite-plugin-pwa";
+import ViteRestart from "vite-plugin-restart";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: "autoUpdate",
       manifest: {
-        display: 'browser'
+        display: "browser",
       },
       workbox: {
         runtimeCaching: [
           {
             urlPattern:
-              'https://cgjgnshvokexivmuttxh.storage.eu-central-1.nhost.run/*',
-            handler: 'NetworkFirst'
-          }
-        ]
-      }
+              "https://cgjgnshvokexivmuttxh.storage.eu-central-1.nhost.run/*",
+            handler: "NetworkFirst",
+          },
+        ],
+      },
     }),
     preact(),
     ViteRestart({
-      restart: ['.eslintrc*', '.prettierrc*', 'tsconfig.json']
+      restart: [".eslintrc*", ".prettierrc*", "tsconfig.json"],
     }),
     checker({
       eslint: {
         // for example, lint .ts and .tsx
-        lintCommand: 'eslint "./src/**/*.{ts,tsx}"'
+        lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
       },
-      overlay: false,
-
-      enableBuild: false
-    })
+      typescript: true,
+    }),
   ],
   optimizeDeps: {
-    include: ['preact/hooks', 'preact/compat', 'preact']
-  },
-  server: {
-    host: true,
-    proxy: {
-      '/api': { target: 'http://localhost:5050', secure: false }
-    }
+    include: ["preact/hooks", "preact/compat", "preact"],
   },
   resolve: {
     alias: [
-      { find: 'react', replacement: 'preact/compat' },
-      { find: 'react-dom', replacement: 'preact/compat' },
-      { find: 'react/jsx-runtime', replacement: 'preact/jsx-runtime' }
-    ]
-  }
-})
+      { find: "react", replacement: "preact/compat" },
+      { find: "react-dom", replacement: "preact/compat" },
+      { find: "react/jsx-runtime", replacement: "preact/jsx-runtime" },
+    ],
+  },
+});

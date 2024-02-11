@@ -1,10 +1,10 @@
-import { useGeoLocation } from '../utils'
+import { useGeoLocation } from "../utils";
 
 export function GeoLocationView() {
-  const { coordinates, isLoading, error } = useGeoLocation()
+  const { coordinates, isLoading, error } = useGeoLocation();
 
   return (
-    <div className='w-fit'>
+    <div className="w-fit">
       {isLoading && <span>Finding Coordinates...</span>}
       {error && <div>Error: {error}</div>}
       {coordinates && (
@@ -14,5 +14,5 @@ export function GeoLocationView() {
         </div>
       )}
     </div>
-  )
+  );
 }

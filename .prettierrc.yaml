@@ -1,0 +1,5 @@
+semi: true
+singleQuote: false
+tabWidth: 2
+jsxSingleQuote: false
+trailingComma: 'all'

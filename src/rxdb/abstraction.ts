@@ -1,52 +1,52 @@
-import { RxGraphQLReplicationQueryBuilderResponse } from 'node_modules/rxdb/dist/types/types'
+import { RxGraphQLReplicationQueryBuilderResponse } from "node_modules/rxdb/dist/types/types";
 import {
   RxCollection,
   RxCollectionCreator,
   RxDatabase,
-  RxJsonSchema
-} from 'rxdb'
-import { replicateGraphQL } from 'rxdb/plugins/replication-graphql'
-import { hasuraURL } from '../utils'
+  RxJsonSchema,
+} from "rxdb";
+import { replicateGraphQL } from "rxdb/plugins/replication-graphql";
+import { hasuraURL } from "../utils";
 
 type DB = RxDatabase<{
-  [key: string]: RxCollection
-}>
+  [key: string]: RxCollection;
+}>;
 
-type ExtractRxJsonSchemaType<T> = T extends RxJsonSchema<infer U> ? U : never
+type ExtractRxJsonSchemaType<T> = T extends RxJsonSchema<infer U> ? U : never;
 
 type PushQueryBuilder = (
   db: DB,
-  rows
-) => RxGraphQLReplicationQueryBuilderResponse
+  rows,
+) => RxGraphQLReplicationQueryBuilderResponse;
 type PullQueryBuilder = (
   db: DB,
   checkpoint: null,
-  limit: number
-) => RxGraphQLReplicationQueryBuilderResponse
+  limit: number,
+) => RxGraphQLReplicationQueryBuilderResponse;
 
 type ReplicationBase = {
-  accessToken: string | null
-  pullQueryBuilder: PullQueryBuilder
-  pushQueryBuilder?: PushQueryBuilder
-}
+  accessToken: string | null;
+  pullQueryBuilder: PullQueryBuilder;
+  pushQueryBuilder?: PushQueryBuilder;
+};
 
 type ReplicationType = ReplicationBase & {
-  collection: RxCollection
-  db: DB
-}
+  collection: RxCollection;
+  db: DB;
+};
 
 export function replication<TDocType>({
   accessToken,
   collection,
   db,
   pullQueryBuilder,
-  pushQueryBuilder
+  pushQueryBuilder,
 }: ReplicationType) {
   const replicationState = replicateGraphQL<TDocType, null>({
     collection,
 
     url: {
-      http: hasuraURL
+      http: hasuraURL,
     },
     pull: {
       queryBuilder: (checkpoint, limit) =>
@@ -54,48 +54,48 @@ export function replication<TDocType>({
 
       responseModifier: (response) => ({
         checkpoint: null,
-        documents: response
-      })
+        documents: response,
+      }),
     },
     ...(pushQueryBuilder && {
       push: {
         queryBuilder: (rows) => pushQueryBuilder(db, rows),
         responseModifier: () => [],
-        batchSize: 10
-      }
+        batchSize: 10,
+      },
     }),
     // headers which will be used in http requests against the server.
     headers: {
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`,
     },
     live: true,
     retryTime: 1000 * 5,
-    autoStart: true
-  })
+    autoStart: true,
+  });
 
   replicationState.error$.subscribe((err) => {
-    console.error('replication error for:', collection.name)
-    console.log(err)
-  })
+    console.error("replication error for:", collection.name);
+    console.log(err);
+  });
 
   replicationState.awaitInitialReplication().then(() => {
-    console.log('Initial replication done for', collection.name)
-  })
+    console.log("Initial replication done for", collection.name);
+  });
 }
 
 export async function addCollections(
   db: DB,
-  collections: ({ name: string } & RxCollectionCreator & ReplicationBase)[]
+  collections: ({ name: string } & RxCollectionCreator & ReplicationBase)[],
 ) {
   const collectionCreators = collections.reduce((acc, collection) => {
     acc[collection.name] = {
       schema: collection.schema,
-      localDocuments: true
-    }
-    return acc
-  }, {})
+      localDocuments: true,
+    };
+    return acc;
+  }, {});
 
-  await db.addCollections(collectionCreators)
+  await db.addCollections(collectionCreators);
 
   collections.forEach((collection) => {
     replication<ExtractRxJsonSchemaType<typeof collection.schema>>({
@@ -103,7 +103,7 @@ export async function addCollections(
       collection: db[collection.name] as RxCollection,
       db,
       pullQueryBuilder: collection.pullQueryBuilder,
-      pushQueryBuilder: collection.pushQueryBuilder
-    })
-  })
+      pushQueryBuilder: collection.pushQueryBuilder,
+    });
+  });
 }

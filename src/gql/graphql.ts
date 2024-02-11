@@ -7732,18 +7732,19 @@ export type Tasks_Stump_Removal_Updates = {
 /** columns and relationships of "tasks_ticketing" */
 export type Tasks_Ticketing = {
   __typename?: 'tasks_ticketing';
-  add_photos: Scalars['Boolean']['output'];
+  _deleted?: Maybe<Scalars['Boolean']['output']>;
   comment?: Maybe<Scalars['String']['output']>;
+  completed?: Maybe<Scalars['Boolean']['output']>;
   created_at: Scalars['timestamptz']['output'];
   id: Scalars['uuid']['output'];
-  latitude: Scalars['String']['output'];
-  longitude: Scalars['String']['output'];
-  print_ticket: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
   /** An object relationship */
   project: Projects;
   project_id: Scalars['uuid']['output'];
-  title: Scalars['String']['output'];
+  /** An object relationship */
+  tasks_ticketing_user: Users;
   updated_at: Scalars['timestamptz']['output'];
+  user_id: Scalars['uuid']['output'];
 };
 
 /** aggregated selection of "tasks_ticketing" */
@@ -7812,19 +7813,19 @@ export type Tasks_Ticketing_Arr_Rel_Insert_Input = {
 /** Boolean expression to filter rows from the table "tasks_ticketing". All fields are combined with a logical 'AND'. */
 export type Tasks_Ticketing_Bool_Exp = {
   _and?: InputMaybe<Array<Tasks_Ticketing_Bool_Exp>>;
+  _deleted?: InputMaybe<Boolean_Comparison_Exp>;
   _not?: InputMaybe<Tasks_Ticketing_Bool_Exp>;
   _or?: InputMaybe<Array<Tasks_Ticketing_Bool_Exp>>;
-  add_photos?: InputMaybe<Boolean_Comparison_Exp>;
   comment?: InputMaybe<String_Comparison_Exp>;
+  completed?: InputMaybe<Boolean_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
-  latitude?: InputMaybe<String_Comparison_Exp>;
-  longitude?: InputMaybe<String_Comparison_Exp>;
-  print_ticket?: InputMaybe<Boolean_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
   project?: InputMaybe<Projects_Bool_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
-  title?: InputMaybe<String_Comparison_Exp>;
+  tasks_ticketing_user?: InputMaybe<Users_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "tasks_ticketing" */
@@ -7835,17 +7836,17 @@ export enum Tasks_Ticketing_Constraint {
 
 /** input type for inserting data into table "tasks_ticketing" */
 export type Tasks_Ticketing_Insert_Input = {
-  add_photos?: InputMaybe<Scalars['Boolean']['input']>;
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   comment?: InputMaybe<Scalars['String']['input']>;
+  completed?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  latitude?: InputMaybe<Scalars['String']['input']>;
-  longitude?: InputMaybe<Scalars['String']['input']>;
-  print_ticket?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  tasks_ticketing_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** aggregate max on columns */
@@ -7854,11 +7855,10 @@ export type Tasks_Ticketing_Max_Fields = {
   comment?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  latitude?: Maybe<Scalars['String']['output']>;
-  longitude?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by max() on columns of table "tasks_ticketing" */
@@ -7866,11 +7866,10 @@ export type Tasks_Ticketing_Max_Order_By = {
   comment?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  latitude?: InputMaybe<Order_By>;
-  longitude?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
-  title?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -7879,11 +7878,10 @@ export type Tasks_Ticketing_Min_Fields = {
   comment?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-  latitude?: Maybe<Scalars['String']['output']>;
-  longitude?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
   project_id?: Maybe<Scalars['uuid']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by min() on columns of table "tasks_ticketing" */
@@ -7891,11 +7889,10 @@ export type Tasks_Ticketing_Min_Order_By = {
   comment?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  latitude?: InputMaybe<Order_By>;
-  longitude?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
   project_id?: InputMaybe<Order_By>;
-  title?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "tasks_ticketing" */
@@ -7916,17 +7913,17 @@ export type Tasks_Ticketing_On_Conflict = {
 
 /** Ordering options when selecting data from "tasks_ticketing". */
 export type Tasks_Ticketing_Order_By = {
-  add_photos?: InputMaybe<Order_By>;
+  _deleted?: InputMaybe<Order_By>;
   comment?: InputMaybe<Order_By>;
+  completed?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  latitude?: InputMaybe<Order_By>;
-  longitude?: InputMaybe<Order_By>;
-  print_ticket?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
   project?: InputMaybe<Projects_Order_By>;
   project_id?: InputMaybe<Order_By>;
-  title?: InputMaybe<Order_By>;
+  tasks_ticketing_user?: InputMaybe<Users_Order_By>;
   updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: tasks_ticketing */
@@ -7937,55 +7934,52 @@ export type Tasks_Ticketing_Pk_Columns_Input = {
 /** select columns of table "tasks_ticketing" */
 export enum Tasks_Ticketing_Select_Column {
   /** column name */
-  AddPhotos = 'add_photos',
+  Deleted = '_deleted',
   /** column name */
   Comment = 'comment',
+  /** column name */
+  Completed = 'completed',
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
   Id = 'id',
   /** column name */
-  Latitude = 'latitude',
-  /** column name */
-  Longitude = 'longitude',
-  /** column name */
-  PrintTicket = 'print_ticket',
+  Name = 'name',
   /** column name */
   ProjectId = 'project_id',
   /** column name */
-  Title = 'title',
+  UpdatedAt = 'updated_at',
   /** column name */
-  UpdatedAt = 'updated_at'
+  UserId = 'user_id'
 }
 
 /** select "tasks_ticketing_aggregate_bool_exp_bool_and_arguments_columns" columns of table "tasks_ticketing" */
 export enum Tasks_Ticketing_Select_Column_Tasks_Ticketing_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
   /** column name */
-  AddPhotos = 'add_photos',
+  Deleted = '_deleted',
   /** column name */
-  PrintTicket = 'print_ticket'
+  Completed = 'completed'
 }
 
 /** select "tasks_ticketing_aggregate_bool_exp_bool_or_arguments_columns" columns of table "tasks_ticketing" */
 export enum Tasks_Ticketing_Select_Column_Tasks_Ticketing_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
   /** column name */
-  AddPhotos = 'add_photos',
+  Deleted = '_deleted',
   /** column name */
-  PrintTicket = 'print_ticket'
+  Completed = 'completed'
 }
 
 /** input type for updating data in table "tasks_ticketing" */
 export type Tasks_Ticketing_Set_Input = {
-  add_photos?: InputMaybe<Scalars['Boolean']['input']>;
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   comment?: InputMaybe<Scalars['String']['input']>;
+  completed?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  latitude?: InputMaybe<Scalars['String']['input']>;
-  longitude?: InputMaybe<Scalars['String']['input']>;
-  print_ticket?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** Streaming cursor of the table "tasks_ticketing" */
@@ -7998,40 +7992,37 @@ export type Tasks_Ticketing_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Tasks_Ticketing_Stream_Cursor_Value_Input = {
-  add_photos?: InputMaybe<Scalars['Boolean']['input']>;
+  _deleted?: InputMaybe<Scalars['Boolean']['input']>;
   comment?: InputMaybe<Scalars['String']['input']>;
+  completed?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  latitude?: InputMaybe<Scalars['String']['input']>;
-  longitude?: InputMaybe<Scalars['String']['input']>;
-  print_ticket?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** update columns of table "tasks_ticketing" */
 export enum Tasks_Ticketing_Update_Column {
   /** column name */
-  AddPhotos = 'add_photos',
+  Deleted = '_deleted',
   /** column name */
   Comment = 'comment',
+  /** column name */
+  Completed = 'completed',
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
   Id = 'id',
   /** column name */
-  Latitude = 'latitude',
-  /** column name */
-  Longitude = 'longitude',
-  /** column name */
-  PrintTicket = 'print_ticket',
+  Name = 'name',
   /** column name */
   ProjectId = 'project_id',
   /** column name */
-  Title = 'title',
+  UpdatedAt = 'updated_at',
   /** column name */
-  UpdatedAt = 'updated_at'
+  UserId = 'user_id'
 }
 
 export type Tasks_Ticketing_Updates = {
@@ -8453,8 +8444,10 @@ export type Tasks_Updates = {
 /** this table is for the backend to be populated so the UI knows about the names of the ticketing tasks when they're submitted */
 export type Ticketing_Names = {
   __typename?: 'ticketing_names';
+  add_photos?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['uuid']['output'];
   name: Scalars['String']['output'];
+  print_ticket?: Maybe<Scalars['Boolean']['output']>;
   /** An object relationship */
   project: Projects;
   project_id: Scalars['uuid']['output'];
@@ -8468,7 +8461,23 @@ export type Ticketing_Names_Aggregate = {
 };
 
 export type Ticketing_Names_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Ticketing_Names_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Ticketing_Names_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<Ticketing_Names_Aggregate_Bool_Exp_Count>;
+};
+
+export type Ticketing_Names_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Ticketing_Names_Select_Column_Ticketing_Names_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Ticketing_Names_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Ticketing_Names_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Ticketing_Names_Select_Column_Ticketing_Names_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Ticketing_Names_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
 };
 
 export type Ticketing_Names_Aggregate_Bool_Exp_Count = {
@@ -8512,8 +8521,10 @@ export type Ticketing_Names_Bool_Exp = {
   _and?: InputMaybe<Array<Ticketing_Names_Bool_Exp>>;
   _not?: InputMaybe<Ticketing_Names_Bool_Exp>;
   _or?: InputMaybe<Array<Ticketing_Names_Bool_Exp>>;
+  add_photos?: InputMaybe<Boolean_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
+  print_ticket?: InputMaybe<Boolean_Comparison_Exp>;
   project?: InputMaybe<Projects_Bool_Exp>;
   project_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
@@ -8526,8 +8537,10 @@ export enum Ticketing_Names_Constraint {
 
 /** input type for inserting data into table "ticketing_names" */
 export type Ticketing_Names_Insert_Input = {
+  add_photos?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  print_ticket?: InputMaybe<Scalars['Boolean']['input']>;
   project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -8580,8 +8593,10 @@ export type Ticketing_Names_On_Conflict = {
 
 /** Ordering options when selecting data from "ticketing_names". */
 export type Ticketing_Names_Order_By = {
+  add_photos?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  print_ticket?: InputMaybe<Order_By>;
   project?: InputMaybe<Projects_Order_By>;
   project_id?: InputMaybe<Order_By>;
 };
@@ -8594,17 +8609,39 @@ export type Ticketing_Names_Pk_Columns_Input = {
 /** select columns of table "ticketing_names" */
 export enum Ticketing_Names_Select_Column {
   /** column name */
+  AddPhotos = 'add_photos',
+  /** column name */
   Id = 'id',
   /** column name */
   Name = 'name',
   /** column name */
+  PrintTicket = 'print_ticket',
+  /** column name */
   ProjectId = 'project_id'
+}
+
+/** select "ticketing_names_aggregate_bool_exp_bool_and_arguments_columns" columns of table "ticketing_names" */
+export enum Ticketing_Names_Select_Column_Ticketing_Names_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  AddPhotos = 'add_photos',
+  /** column name */
+  PrintTicket = 'print_ticket'
+}
+
+/** select "ticketing_names_aggregate_bool_exp_bool_or_arguments_columns" columns of table "ticketing_names" */
+export enum Ticketing_Names_Select_Column_Ticketing_Names_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  AddPhotos = 'add_photos',
+  /** column name */
+  PrintTicket = 'print_ticket'
 }
 
 /** input type for updating data in table "ticketing_names" */
 export type Ticketing_Names_Set_Input = {
+  add_photos?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  print_ticket?: InputMaybe<Scalars['Boolean']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -8618,17 +8655,23 @@ export type Ticketing_Names_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Ticketing_Names_Stream_Cursor_Value_Input = {
+  add_photos?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  print_ticket?: InputMaybe<Scalars['Boolean']['input']>;
   project_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** update columns of table "ticketing_names" */
 export enum Ticketing_Names_Update_Column {
   /** column name */
+  AddPhotos = 'add_photos',
+  /** column name */
   Id = 'id',
   /** column name */
   Name = 'name',
+  /** column name */
+  PrintTicket = 'print_ticket',
   /** column name */
   ProjectId = 'project_id'
 }
@@ -8837,6 +8880,7 @@ export type UsersMetadata = {
   role_operations_manager: Scalars['Boolean']['output'];
   role_pc_admin: Scalars['Boolean']['output'];
   role_project_manager: Scalars['Boolean']['output'];
+  status?: Maybe<Scalars['Boolean']['output']>;
   /** An object relationship */
   usersMetadata_user: Users;
 };
@@ -8919,6 +8963,7 @@ export type UsersMetadata_Bool_Exp = {
   role_operations_manager?: InputMaybe<Boolean_Comparison_Exp>;
   role_pc_admin?: InputMaybe<Boolean_Comparison_Exp>;
   role_project_manager?: InputMaybe<Boolean_Comparison_Exp>;
+  status?: InputMaybe<Boolean_Comparison_Exp>;
   usersMetadata_user?: InputMaybe<Users_Bool_Exp>;
 };
 
@@ -8940,6 +8985,7 @@ export type UsersMetadata_Insert_Input = {
   role_operations_manager?: InputMaybe<Scalars['Boolean']['input']>;
   role_pc_admin?: InputMaybe<Scalars['Boolean']['input']>;
   role_project_manager?: InputMaybe<Scalars['Boolean']['input']>;
+  status?: InputMaybe<Scalars['Boolean']['input']>;
   usersMetadata_user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
 };
 
@@ -9005,6 +9051,7 @@ export type UsersMetadata_Order_By = {
   role_operations_manager?: InputMaybe<Order_By>;
   role_pc_admin?: InputMaybe<Order_By>;
   role_project_manager?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
   usersMetadata_user?: InputMaybe<Users_Order_By>;
 };
 
@@ -9034,7 +9081,9 @@ export enum UsersMetadata_Select_Column {
   /** column name */
   RolePcAdmin = 'role_pc_admin',
   /** column name */
-  RoleProjectManager = 'role_project_manager'
+  RoleProjectManager = 'role_project_manager',
+  /** column name */
+  Status = 'status'
 }
 
 /** select "usersMetadata_aggregate_bool_exp_bool_and_arguments_columns" columns of table "usersMetadata" */
@@ -9050,7 +9099,9 @@ export enum UsersMetadata_Select_Column_UsersMetadata_Aggregate_Bool_Exp_Bool_An
   /** column name */
   RolePcAdmin = 'role_pc_admin',
   /** column name */
-  RoleProjectManager = 'role_project_manager'
+  RoleProjectManager = 'role_project_manager',
+  /** column name */
+  Status = 'status'
 }
 
 /** select "usersMetadata_aggregate_bool_exp_bool_or_arguments_columns" columns of table "usersMetadata" */
@@ -9066,7 +9117,9 @@ export enum UsersMetadata_Select_Column_UsersMetadata_Aggregate_Bool_Exp_Bool_Or
   /** column name */
   RolePcAdmin = 'role_pc_admin',
   /** column name */
-  RoleProjectManager = 'role_project_manager'
+  RoleProjectManager = 'role_project_manager',
+  /** column name */
+  Status = 'status'
 }
 
 /** input type for updating data in table "usersMetadata" */
@@ -9081,6 +9134,7 @@ export type UsersMetadata_Set_Input = {
   role_operations_manager?: InputMaybe<Scalars['Boolean']['input']>;
   role_pc_admin?: InputMaybe<Scalars['Boolean']['input']>;
   role_project_manager?: InputMaybe<Scalars['Boolean']['input']>;
+  status?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Streaming cursor of the table "usersMetadata" */
@@ -9103,6 +9157,7 @@ export type UsersMetadata_Stream_Cursor_Value_Input = {
   role_operations_manager?: InputMaybe<Scalars['Boolean']['input']>;
   role_pc_admin?: InputMaybe<Scalars['Boolean']['input']>;
   role_project_manager?: InputMaybe<Scalars['Boolean']['input']>;
+  status?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** update columns of table "usersMetadata" */
@@ -9126,7 +9181,9 @@ export enum UsersMetadata_Update_Column {
   /** column name */
   RolePcAdmin = 'role_pc_admin',
   /** column name */
-  RoleProjectManager = 'role_project_manager'
+  RoleProjectManager = 'role_project_manager',
+  /** column name */
+  Status = 'status'
 }
 
 export type UsersMetadata_Updates = {
@@ -9744,7 +9801,7 @@ export type UpdateUserMutation = { __typename?: 'mutation_root', update_usersMet
 export type ProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProjectsQuery = { __typename?: 'query_root', projects: Array<{ __typename?: 'projects', id: any, name: string, comment?: string | null, contractor?: string | null, sub_contractor?: string | null, location?: string | null, poc?: string | null }> };
+export type ProjectsQuery = { __typename?: 'query_root', projects: Array<{ __typename?: 'projects', id: any, name: string, comment?: string | null, contractor?: string | null, sub_contractor?: string | null, location?: string | null, poc?: string | null, ticketing_names: Array<{ __typename?: 'ticketing_names', id: any, name: string, add_photos?: boolean | null, print_ticket?: boolean | null }> }> };
 
 
 export const TreeRemovalTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"treeRemovalTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tasks_tree_removal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"completed"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_neq"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"completed"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"ranges"}},{"kind":"Field","alias":{"kind":"Name","value":"images"},"name":{"kind":"Name","value":"tasks_tree_removal_images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"taken_at_step"}}]}}]}}]}}]} as unknown as DocumentNode<TreeRemovalTasksQuery, TreeRemovalTasksQueryVariables>;
@@ -9753,4 +9810,4 @@ export const StumpRemovalTasksDocument = {"kind":"Document","definitions":[{"kin
 export const UpsertStumpRemovalTaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"upsertStumpRemovalTask"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"tasks_stump_removal_insert_input"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"images"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"images_insert_input"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tasks_stump_removal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tasks"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"comment"},{"kind":"EnumValue","value":"completed"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"tasks_stump_removal_pkey"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"Variable","name":{"kind":"Name","value":"images"}}},{"kind":"Argument","name":{"kind":"Name","value":"on_conflict"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"constraint"},"value":{"kind":"EnumValue","value":"images_pkey"}},{"kind":"ObjectField","name":{"kind":"Name","value":"update_columns"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"latitude"},{"kind":"EnumValue","value":"longitude"},{"kind":"EnumValue","value":"taken_at_step"},{"kind":"EnumValue","value":"updated_at"},{"kind":"EnumValue","value":"_deleted"}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpsertStumpRemovalTaskMutation, UpsertStumpRemovalTaskMutationVariables>;
 export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usersMetadata"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"hire_date"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"role_data_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_field_supervisor"}},{"kind":"Field","name":{"kind":"Name","value":"role_filed_monitor"}},{"kind":"Field","name":{"kind":"Name","value":"role_operations_manager"}},{"kind":"Field","name":{"kind":"Name","value":"role_pc_admin"}},{"kind":"Field","name":{"kind":"Name","value":"role_project_manager"}},{"kind":"Field","name":{"kind":"Name","value":"usersMetadata_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
 export const UpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_usersMetadata_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"first_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first_name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"last_name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"last_name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
-export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"sub_contractor"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"poc"}}]}}]}}]} as unknown as DocumentNode<ProjectsQuery, ProjectsQueryVariables>;
+export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"contractor"}},{"kind":"Field","name":{"kind":"Name","value":"sub_contractor"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"poc"}},{"kind":"Field","name":{"kind":"Name","value":"ticketing_names"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"add_photos"}},{"kind":"Field","name":{"kind":"Name","value":"print_ticket"}}]}}]}}]}}]} as unknown as DocumentNode<ProjectsQuery, ProjectsQueryVariables>;
