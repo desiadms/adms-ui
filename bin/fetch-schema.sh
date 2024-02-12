@@ -20,4 +20,3 @@ fi
 
 # Otherwise, introspect the GraphQL endpoint
 bun run gq "$VITE_HASURA_ENDPOINT" --header "X-Hasura-Admin-Secret: $HASURA_ADMIN_SECRET" --introspect > schema.graphql
-bun run codegen

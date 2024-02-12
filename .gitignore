@@ -29,3 +29,8 @@ dist-ssr
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# Local Netlify folder
+.netlify
+
+**/__generated__/

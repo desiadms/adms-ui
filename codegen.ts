@@ -2,9 +2,8 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema:
-    "https://cgjgnshvokexivmuttxh.hasura.eu-central-1.nhost.run/v1/graphql",
-  documents: ["src/**/*.ts", "!src/__generated__/**/*", "api/**/*.mts"],
+  schema: "schema.graphql",
+  documents: ["src/**/*.ts", "!src/__generated__/**/*"],
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
     "./src/__generated__/gql-validation/schemas.ts": {
@@ -20,12 +19,12 @@ const config: CodegenConfig = {
       config: {
         strictScalars: true,
         schema: "zod",
-
         enumsAsTypes: true,
         scalars: {
           date: "string",
           inet: "string",
           timestamptz: "string",
+          timestamp: "string",
           oid: "string",
           uuid: "string",
           numeric: "number",
@@ -33,11 +32,13 @@ const config: CodegenConfig = {
           citext: "string",
           json: "JSONValue",
           jsonb: "JSONValue",
+          bytea: "JSONValue",
         },
         scalarSchemas: {
           date: "z.string()",
           inet: "z.string()",
           timestamptz: "z.string()",
+          timestamp: "z.string()",
           oid: "z.string()",
           uuid: "z.string()",
           numeric: "z.number()",
@@ -45,6 +46,7 @@ const config: CodegenConfig = {
           citext: "z.string()",
           json: "z.string()",
           jsonb: "z.string()",
+          bytea: "z.string()",
         },
       },
     },
@@ -59,6 +61,7 @@ const config: CodegenConfig = {
           date: "string",
           inet: "string",
           timestamptz: "string",
+          timestamp: "string",
           oid: "string",
           uuid: "string",
           numeric: "number",
@@ -66,6 +69,7 @@ const config: CodegenConfig = {
           citext: "string",
           json: "JSONValue",
           jsonb: "JSONValue",
+          bytea: "JSONValue",
         },
       },
       preset: "client",

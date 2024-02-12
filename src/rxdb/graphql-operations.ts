@@ -1,4 +1,4 @@
-import { graphql } from "../gql";
+import { graphql } from "../graphql";
 
 export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
   query treeRemovalTasks {
@@ -149,6 +149,7 @@ export const projectsDocument = graphql(/* GraphQL */ `
       name
       comment
       contractor
+      status
       sub_contractor
       location
       poc

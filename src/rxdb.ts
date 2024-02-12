@@ -1,6 +1,6 @@
 import { addRxPlugin, createRxDatabase } from "rxdb";
 import { RxDBLocalDocumentsPlugin } from "rxdb/plugins/local-documents";
-import { RxDBMigrationPlugin } from "rxdb/plugins/migration";
+import { RxDBMigrationPlugin } from "rxdb/plugins/migration-schema";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
 import { addCollections } from "./rxdb/abstraction";

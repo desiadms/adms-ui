@@ -13,10 +13,10 @@ import {
 } from "./rxdb/rxdb-schemas";
 
 export const devMode = import.meta.env.MODE === "development";
-
+console.log(import.meta.env);
 export const nhost = new NhostClient({
-  subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
-  region: import.meta.env.VITE_NHOST_REGION,
+  subdomain: process.env.VITE_NHOST_SUBDOMAIN,
+  region: process.env.VITE_NHOST_REGION,
 });
 
 export const hasuraURL = import.meta.env.VITE_HASURA_ENDPOINT;

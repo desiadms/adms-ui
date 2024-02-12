@@ -4,3 +4,6 @@
 /build
 /src/gql
 !.eslint.cjs
+**/__generated__/
+
+

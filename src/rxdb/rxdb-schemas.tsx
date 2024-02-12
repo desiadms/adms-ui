@@ -1,20 +1,18 @@
 import { RxJsonSchema } from "rxdb";
+import {
+  ProjectsQuery,
+  StumpRemovalTasksQuery,
+  TreeRemovalTasksQuery,
+  UserQuery,
+} from "src/__generated__/gql/graphql";
 
-export type UserDocType = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  role_data_manager: boolean;
-  role_field_supervisor: boolean;
-  role_filed_monitor: boolean;
-  role_operations_manager: boolean;
-  role_pc_admin: boolean;
-  role_project_manager: boolean;
-  hire_date: string;
-  usersMetadata_user: {
-    email: string;
-  };
+type OmitTypename<T> = Omit<T, "__typename">;
+type ExcludeTypename<T> = Exclude<keyof T, "__typename">;
+type SatisfiesSchemaKeys<T> = {
+  [K in ExcludeTypename<T>]: RxJsonSchema<unknown>["properties"];
 };
+
+export type UserDocType = OmitTypename<UserQuery["usersMetadata"][0]>;
 
 export const userSchema: RxJsonSchema<UserDocType> = {
   title: "user schema",
@@ -65,24 +63,9 @@ export const userSchema: RxJsonSchema<UserDocType> = {
   },
 } as const;
 
-export type TicketingName = {
-  id: string;
-  name: string;
-  print_ticket: boolean | null;
-  add_photos: boolean | null;
-};
-
-export type ProjectDocType = {
-  id: string;
-  name: string;
-  location: string;
-  poc: string;
-  contractor: string;
-  sub_contractor: string;
-  status: boolean;
-  comment: string;
-  ticketing_names: TicketingName[];
-};
+export type ProjectDocType = OmitTypename<ProjectsQuery["projects"][0]>;
+export type TicketingName = OmitTypename<ProjectDocType["ticketing_names"][0]>;
+export type TicketingNameKeys = SatisfiesSchemaKeys<TicketingName>;
 
 export const projectSchema: RxJsonSchema<ProjectDocType> = {
   title: "project schema",
@@ -130,33 +113,27 @@ export const projectSchema: RxJsonSchema<ProjectDocType> = {
         print_ticket: {
           type: ["boolean", "null"],
         },
-      },
+      } satisfies TicketingNameKeys,
     },
   },
   required: ["id"],
 } as const;
 
 export type Steps = "before" | "during" | "after";
+export type Images = TreeRemovalTaskDocType["images"][0] &
+  Pick<TreeRemovalTaskDocType, "ranges"> & {
+    base64Preview: string;
+    _deleted?: boolean;
+  };
 
-export type Images = {
-  id: string;
-  base64Preview?: string;
-  created_at: string;
-  latitude: string;
-  longitude: string;
-  taken_at_step: Steps | undefined;
-  _deleted?: boolean;
-};
+export type TreeRemovalTaskDocType = OmitTypename<
+  TreeRemovalTasksQuery["tasks_tree_removal"][0]
+>;
 
-export type TreeRemovalTaskDocType = {
-  id: string;
-  updated_at: string;
-  created_at: string;
-  comment?: string;
-  completed?: boolean;
-  ranges?: string;
-  images: Images[];
-};
+type ImagesKeys = SatisfiesSchemaKeys<
+  TreeRemovalTaskDocType["images"][0] &
+    Pick<TreeRemovalTaskDocType, "ranges"> & { base64Preview: string }
+>;
 
 export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
   title: "tree removal task schema",
@@ -207,20 +184,15 @@ export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
         base64Preview: {
           type: "string",
         },
-      },
+      } satisfies ImagesKeys,
     },
   },
   required: ["id"],
 } as const;
 
-export type StumpRemovalTaskDocType = {
-  id: string;
-  updated_at: string;
-  created_at: string;
-  comment?: string;
-  completed?: boolean;
-  images: Images[];
-};
+export type StumpRemovalTaskDocType = OmitTypename<
+  StumpRemovalTasksQuery["tasks_stump_removal"][0]
+>;
 
 export const stumpRemovalTaskSchema: RxJsonSchema<StumpRemovalTaskDocType> = {
   title: "stump removal task schema",
@@ -268,7 +240,7 @@ export const stumpRemovalTaskSchema: RxJsonSchema<StumpRemovalTaskDocType> = {
         base64Preview: {
           type: "string",
         },
-      },
+      } satisfies ImagesKeys,
     },
   },
   required: ["id"],

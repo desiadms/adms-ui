@@ -44,7 +44,7 @@ export function replication<TDocType>({
 }: ReplicationType) {
   const replicationState = replicateGraphQL<TDocType, null>({
     collection,
-
+    replicationIdentifier: collection.name,
     url: {
       http: hasuraURL,
     },
