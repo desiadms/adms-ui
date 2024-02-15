@@ -1,5 +1,5 @@
 import { useAccessToken, useSignInEmailPassword } from "@nhost/react";
-import { RouterProvider } from "@tanstack/router";
+import { RouterProvider } from "@tanstack/react-router";
 import { useEffect, useState } from "preact/hooks";
 import { useForm } from "react-hook-form";
 import { RxDatabase } from "rxdb";

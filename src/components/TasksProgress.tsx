@@ -1,6 +1,6 @@
 import { CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { ClockIcon } from "@heroicons/react/24/outline";
-import { Link, useNavigate } from "@tanstack/router";
+import { Link, LinkOptions, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import { QRCodeCanvas } from "qrcode.react";
@@ -159,13 +159,18 @@ function TaskPreview({
 }) {
   const [fetchedImages, setFetchedImages] = useState<Images[]>([]);
 
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: "/tasks" });
+
+  const to = (
+    type === "tree"
+      ? "/tasks/field-monitor/tree-removal/$id"
+      : "/tasks/field-monitor/stump-removal/$id"
+  ) satisfies LinkOptions["to"];
 
   const edit = () =>
     navigate({
-      to: `/tasks/field-monitor/${
-        type === "tree" ? "tree-removal" : "stump-removal"
-      }/${task.id}`,
+      to,
+      params: { id: task.id },
       search: { step: taken_at_step, edit: true },
     });
 

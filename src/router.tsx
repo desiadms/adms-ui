@@ -1,4 +1,9 @@
-import { Outlet, RootRoute, Route, Router } from "@tanstack/router";
+import {
+  Outlet,
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from "@tanstack/react-router";
 import { AccountView } from "./components/AccountView";
 import { Dashboard, Home } from "./components/Dashboard";
 import {
@@ -12,60 +17,60 @@ import { TasksProgress } from "./components/TasksProgress";
 import { TasksView } from "./components/TasksView";
 import { Steps } from "./rxdb/rxdb-schemas";
 
-const rootRoute = new RootRoute({
+const rootRoute = createRootRoute({
   component: () => <Dashboard />,
 });
 
-const homeRoute = new Route({
+const homeRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
   component: () => <Home />,
   errorComponent: () => "Oh crap!",
 });
 
-const accountRoute = new Route({
+const accountRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/account",
   component: () => <AccountView />,
   errorComponent: () => "Oh crap!",
 });
 
-const projectsRoute = new Route({
+const projectsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "projects",
   component: () => <ProjectsView />,
   errorComponent: () => "Oh crap!",
 });
 
-const tasksRoute = new Route({
+const tasksRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "tasks",
   component: () => <Outlet />,
   errorComponent: () => "Oh crap!",
 });
 
-const tasksHome = new Route({
+const tasksHome = createRoute({
   getParentRoute: () => tasksRoute,
   path: "/",
   component: () => <TasksView />,
   errorComponent: () => "Oh crap!",
 });
 
-const tasksProgressRoute = new Route({
+const tasksProgressRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/progress",
   component: () => <TasksProgress />,
   errorComponent: () => "Oh crap!",
 });
 
-const fieldMonitorTask = new Route({
+const fieldMonitorTask = createRoute({
   getParentRoute: () => tasksRoute,
   path: "field-monitor",
   component: () => <Outlet />,
   errorComponent: () => "Oh crap!",
 });
 
-const fieldMonitorHome = new Route({
+const fieldMonitorHome = createRoute({
   getParentRoute: () => fieldMonitorTask,
   path: "/",
   component: () => <FieldMonitorTasks />,
@@ -74,10 +79,10 @@ const fieldMonitorHome = new Route({
 
 type FieldMonitorSearch = {
   step: Steps;
-  edit: boolean;
+  edit?: boolean;
 };
 
-const fieldMonitorTree = new Route({
+const fieldMonitorTree = createRoute({
   getParentRoute: () => fieldMonitorTask,
   path: "tree-removal/$id",
   component: () => <TreeRemovalFormWrapper />,
@@ -93,7 +98,7 @@ const fieldMonitorTree = new Route({
   }),
 });
 
-const fieldMonitorStump = new Route({
+const fieldMonitorStump = createRoute({
   getParentRoute: () => fieldMonitorTask,
   path: "stump-removal/$id",
   component: () => <StumpRemovalFormWrapper />,
@@ -109,14 +114,26 @@ const fieldMonitorStump = new Route({
   }),
 });
 
-const printRoute = new Route({
+const fieldMonitorTicketing = createRoute({
+  getParentRoute: () => fieldMonitorTask,
+  path: "ticketing/$name/$id",
+  component: () => <div> will come </div>,
+  errorComponent: () => "Oh crap!",
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): Pick<FieldMonitorSearch, "edit"> => ({
+    edit: Boolean(search?.edit),
+  }),
+});
+
+const printRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "print/$id",
   component: () => <Print />,
   errorComponent: () => "Oh crap!",
 });
 
-declare module "@tanstack/router" {
+declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }
@@ -134,11 +151,13 @@ const routeTree = rootRoute.addChildren([
       fieldMonitorHome,
       fieldMonitorTree,
       fieldMonitorStump,
+      fieldMonitorTicketing,
     ]),
   ]),
 ]);
 
-export const router = new Router({
+export const router = createRouter({
   routeTree,
-  defaultPreload: "intent",
+  defaultPendingComponent: () => <div>router pending...</div>,
+  defaultErrorComponent: () => <div>router error...</div>,
 });

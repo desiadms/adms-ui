@@ -52,7 +52,7 @@ export const Modal = ({
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as="div"
-          // @ts-ignore
+          // @ts-expect-error - headlessui types are not up-to-date
           className="fixed inset-0 z-50 overflow-y-auto"
           onClose={closeModal}
         >

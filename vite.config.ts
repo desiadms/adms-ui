@@ -6,6 +6,9 @@ import ViteRestart from "vite-plugin-restart";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    port: 7412,
+  },
   plugins: [
     VitePWA({
       registerType: "autoUpdate",

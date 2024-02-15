@@ -15,8 +15,8 @@ import {
 export const devMode = import.meta.env.MODE === "development";
 console.log(import.meta.env);
 export const nhost = new NhostClient({
-  subdomain: process.env.VITE_NHOST_SUBDOMAIN,
-  region: process.env.VITE_NHOST_REGION,
+  subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
+  region: import.meta.env.VITE_NHOST_REGION,
 });
 
 export const hasuraURL = import.meta.env.VITE_HASURA_ENDPOINT;
@@ -83,7 +83,7 @@ export function useGeoLocation() {
   return { coordinates, isLoading, error, getGeoLocation };
 }
 
-export function emailToId(email: string | undefined) {
+export function emailToId(email: string | undefined | null) {
   return email && email.split("@")[0];
 }
 
@@ -94,7 +94,7 @@ export function fullName(
   return `${firstName} ${lastName}`;
 }
 
-export function userRoles(user: RxDocument<UserDocType> | undefined) {
+export function userRoles(user: RxDocument<UserDocType> | undefined | null) {
   return (
     user &&
     // eslint-disable-next-line no-underscore-dangle

@@ -1,0 +1,26 @@
+[build]
+  command = "bun run build"
+  publish = "dist"
+
+[dev]
+  framework = "#custom"
+  command = "bun run vite"
+  targetPort = 7412
+  port = 5173
+  publish = "dist"
+
+[context.development.environment]
+  VITE_NHOST_REGION = "eu-central-1"
+  VITE_NHOST_SUBDOMAIN = "cgjgnshvokexivmuttxh"
+  VITE_HASURA_ENDPOINT = "https://cgjgnshvokexivmuttxh.hasura.eu-central-1.nhost.run/v1/graphql"
+
+[context.development.production]
+  VITE_NHOST_REGION = "eu-central-1"
+  VITE_NHOST_SUBDOMAIN = "cgjgnshvokexivmuttxh"
+  VITE_HASURA_ENDPOINT = "https://cgjgnshvokexivmuttxh.hasura.eu-central-1.nhost.run/v1/graphql"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+

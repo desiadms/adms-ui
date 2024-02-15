@@ -3,12 +3,11 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/20/solid";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { SignalIcon, SignalSlashIcon } from "@heroicons/react/24/solid";
 import { useSignOut } from "@nhost/react";
-import { Link, Navigate, Outlet, useMatchRoute } from "@tanstack/router";
+import { Link, Navigate, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { useCallback } from "preact/hooks";
 import { useRxData } from "rxdb-hooks";
 import { UserDocType } from "../rxdb/rxdb-schemas";
 import { emailToId, fullName, useIsOnline } from "../utils";
-
 const navigation = [
   ["/projects", "Projects"],
   ["/tasks", "New Task"],

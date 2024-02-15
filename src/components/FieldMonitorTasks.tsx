@@ -1,5 +1,5 @@
 import { CameraIcon, XCircleIcon } from "@heroicons/react/20/solid";
-import { useNavigate, useParams, useSearch } from "@tanstack/router";
+import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useMemo } from "preact/hooks";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -36,17 +36,23 @@ export function FieldMonitorTasks() {
     <div className="flex flex-col gap-2">
       <TaskType
         name="hazardous tree removal"
-        href={`/tasks/field-monitor/tree-removal/${v4()}`}
+        to="/tasks/field-monitor/tree-removal/$id"
+        params={{ id: v4() }}
+        search={{ step: "before" }}
       />
       <TaskType
         name="branch/stump tree removal"
-        href={`/tasks/field-monitor/stump-removal/${v4()}`}
+        to="/tasks/field-monitor/stump-removal/$id"
+        params={{ id: v4() }}
+        search={{ step: "before" }}
       />
       {activeProject?.ticketing_names?.map(({ id, name }) => (
         <TaskType
           key={id}
           name={name}
-          href={`/tasks/field-monitor/ticketing/${name}/${v4()}`}
+          to="/tasks/field-monitor/ticketing/$name/$id"
+          params={{ name, id: v4() }}
+          search={{}}
         />
       ))}
     </div>
@@ -56,7 +62,7 @@ export function FieldMonitorTasks() {
 type TreeRemovalFormProps = {
   taskId: string;
   step: Steps;
-  edit: boolean;
+  edit: boolean | undefined;
   type: "tree" | "stump";
 };
 
@@ -100,7 +106,9 @@ function TreeStumpRemovalForm({
   const currentDateTime = useMemo(() => humanizeDate(), []);
 
   const { coordinates } = useGeoLocation();
-  const navigate = useNavigate();
+  const navigate = useNavigate({
+    from: "/tasks/field-monitor/tree-removal/$id",
+  });
 
   const treeRemovalColl =
     useRxCollection<TreeRemovalTaskDocType>("tree-removal-task");
@@ -156,7 +164,7 @@ function TreeStumpRemovalForm({
       }
 
       if (step === "after") {
-        navigate({ to: `/print/${taskId}` });
+        navigate({ to: "/print/$id", params: { id: taskId } });
       } else {
         navigate({ to: "/progress" });
       }
@@ -290,33 +298,23 @@ function TreeStumpRemovalForm({
 }
 
 export function TreeRemovalFormWrapper() {
-  const { id } = useParams();
+  const { id } = useParams({ from: "/tasks/field-monitor/tree-removal/$id" });
   const { step, edit } = useSearch({
     from: "/tasks/field-monitor/tree-removal/$id",
   });
 
   return (
-    <TreeStumpRemovalForm
-      taskId={id as string}
-      step={step}
-      edit={edit}
-      type="tree"
-    />
+    <TreeStumpRemovalForm taskId={id} step={step} edit={edit} type="tree" />
   );
 }
 
 export function StumpRemovalFormWrapper() {
-  const { id } = useParams();
+  const { id } = useParams({ from: "/tasks/field-monitor/stump-removal/$id" });
   const { step, edit } = useSearch({
     from: "/tasks/field-monitor/stump-removal/$id",
   });
 
   return (
-    <TreeStumpRemovalForm
-      taskId={id as string}
-      step={step}
-      edit={edit}
-      type="stump"
-    />
+    <TreeStumpRemovalForm taskId={id} step={step} edit={edit} type="stump" />
   );
 }

@@ -1,9 +1,8 @@
-import { useParams } from "@tanstack/router";
+import { useParams } from "@tanstack/react-router";
 import { QRCodeCanvas } from "qrcode.react";
 import { TreeRemovalTaskDocType } from "src/rxdb/rxdb-schemas";
 import { humanizeDate, useProject, useTask } from "../utils";
 import { Button } from "./Forms";
-
 function LabelValue({ label, value }: { label: unknown; value: unknown }) {
   return (
     <div className="flex">
@@ -16,7 +15,9 @@ function LabelValue({ label, value }: { label: unknown; value: unknown }) {
 }
 
 export function Print() {
-  const { id } = useParams();
+  const { id } = useParams({
+    from: "/print/$id",
+  });
   const { activeProject } = useProject();
   const { result, type } = useTask(id);
 
