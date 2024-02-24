@@ -126,7 +126,7 @@ export async function blobToBase64(
 }
 
 export function base64toFile(
-  base64String: string | undefined,
+  base64String: string | undefined | null,
   fileName: string,
   mimeType: string,
 ): File {
@@ -289,4 +289,55 @@ export function useTask(taskId: string | undefined) {
   const isFetching = isFetchingTree || isFetchingStump;
 
   return { ...result(), isFetching };
+}
+
+export function convertFileSize(fileSize: number): string {
+  return (fileSize / 1000000).toFixed(0);
+}
+
+export function validateFileSize(
+  file: File | undefined,
+  maxSize: number,
+): string | undefined {
+  if (file && file[0]) {
+    const { size } = file[0];
+    if (size > maxSize) {
+      return `File cannot exceed ${convertFileSize(maxSize)}MB`;
+    }
+  }
+}
+
+export function useFilesForm() {
+  const [filePreviews, setFilePreviews] = useState<Record<string, string>>();
+  const [noFiles, setNoFiles] = useState<boolean>();
+
+  useEffect(() => {
+    if (Object.keys(filePreviews || {}).length === 0) setNoFiles(true);
+    else setNoFiles(false);
+  }, [filePreviews]);
+
+  const onChangeSetFilePreviewFn = async (e, id) => {
+    const fileInput = e?.target;
+    const file = fileInput?.files?.[0];
+    const url = await blobToBase64(file);
+    setFilePreviews({ ...filePreviews, [id]: url });
+  };
+
+  const validateFileSizeFn = (file, maxSize) => validateFileSize(file, maxSize);
+
+  return {
+    noFilesUploaded: noFiles,
+    useFilePreviews: [filePreviews, setFilePreviews],
+    onChangeSetFilePreview: onChangeSetFilePreviewFn,
+    validateFileSize: validateFileSizeFn,
+    removePreview: (id) => {
+      setFilePreviews((images) => {
+        if (images && images[id]) {
+          const { [id]: _file, ...rest } = images;
+          return rest;
+        }
+        return images;
+      });
+    },
+  };
 }

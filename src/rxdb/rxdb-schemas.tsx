@@ -93,7 +93,7 @@ export const projectSchema: RxJsonSchema<ProjectDocType> = {
       type: "string",
     },
     status: {
-      type: "string",
+      type: "boolean",
     },
     comment: {
       type: "string",
@@ -121,18 +121,13 @@ export const projectSchema: RxJsonSchema<ProjectDocType> = {
 
 export type Steps = "before" | "during" | "after";
 export type Images = TreeRemovalTaskDocType["images"][0] &
-  Pick<TreeRemovalTaskDocType, "ranges"> & {
-    base64Preview: string;
-    _deleted?: boolean;
-  };
+  Pick<TreeRemovalTaskDocType, "ranges">;
 
 export type TreeRemovalTaskDocType = OmitTypename<
   TreeRemovalTasksQuery["tasks_tree_removal"][0]
 >;
-
 type ImagesKeys = SatisfiesSchemaKeys<
-  TreeRemovalTaskDocType["images"][0] &
-    Pick<TreeRemovalTaskDocType, "ranges"> & { base64Preview: string }
+  TreeRemovalTaskDocType["images"][0] & Pick<TreeRemovalTaskDocType, "ranges">
 >;
 
 export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
@@ -183,6 +178,9 @@ export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
         },
         base64Preview: {
           type: "string",
+        },
+        _deleted: {
+          type: "boolean",
         },
       } satisfies ImagesKeys,
     },
@@ -239,6 +237,9 @@ export const stumpRemovalTaskSchema: RxJsonSchema<StumpRemovalTaskDocType> = {
         },
         base64Preview: {
           type: "string",
+        },
+        _deleted: {
+          type: "boolean",
         },
       } satisfies ImagesKeys,
     },

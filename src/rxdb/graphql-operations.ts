@@ -1,7 +1,7 @@
 import { graphql } from "../graphql";
 
 export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
-  query treeRemovalTasks {
+  query TreeRemovalTasks {
     tasks_tree_removal(where: { completed: { _neq: true } }) {
       comment
       completed
@@ -15,13 +15,15 @@ export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
         latitude
         longitude
         taken_at_step
+        base64Preview
+        _deleted
       }
     }
   }
 `);
 
 export const upsertTreeRemovalTasks = graphql(/* GraphQL */ `
-  mutation upsertTreeRemovalTask(
+  mutation UpsertTreeRemovalTask(
     $tasks: [tasks_tree_removal_insert_input!]!
     $images: [images_insert_input!]!
   ) {
@@ -57,7 +59,7 @@ export const upsertTreeRemovalTasks = graphql(/* GraphQL */ `
 `);
 
 export const queryStumpRemovalTasks = graphql(/* GraphQL */ `
-  query stumpRemovalTasks {
+  query StumpRemovalTasks {
     tasks_stump_removal(where: { completed: { _neq: true } }) {
       comment
       completed
@@ -70,13 +72,15 @@ export const queryStumpRemovalTasks = graphql(/* GraphQL */ `
         latitude
         longitude
         taken_at_step
+        base64Preview
+        _deleted
       }
     }
   }
 `);
 
 export const upsertStumpRemovalTasks = graphql(/* GraphQL */ `
-  mutation upsertStumpRemovalTask(
+  mutation UpsertStumpRemovalTask(
     $tasks: [tasks_stump_removal_insert_input!]!
     $images: [images_insert_input!]!
   ) {
@@ -112,7 +116,7 @@ export const upsertStumpRemovalTasks = graphql(/* GraphQL */ `
 `);
 
 export const userDocument = graphql(/* GraphQL */ `
-  query user {
+  query User {
     usersMetadata(limit: 1) {
       id
       first_name
@@ -132,7 +136,7 @@ export const userDocument = graphql(/* GraphQL */ `
 `);
 
 export const updateUserDocument = graphql(/* GraphQL */ `
-  mutation updateUser($id: uuid!, $first_name: String!, $last_name: String!) {
+  mutation UpdateUser($id: uuid!, $first_name: String!, $last_name: String!) {
     update_usersMetadata_by_pk(
       pk_columns: { id: $id }
       _set: { first_name: $first_name, last_name: $last_name }
@@ -143,7 +147,7 @@ export const updateUserDocument = graphql(/* GraphQL */ `
 `);
 
 export const projectsDocument = graphql(/* GraphQL */ `
-  query projects {
+  query Projects {
     projects {
       id
       name

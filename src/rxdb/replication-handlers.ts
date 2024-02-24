@@ -1,4 +1,5 @@
 import { resolveRequestDocument } from "graphql-request";
+import * as R from "remeda";
 import { RxReplicationWriteToMasterRow } from "rxdb";
 import { extractFilesAndSaveToNhost } from "../utils";
 import {
@@ -34,8 +35,10 @@ export async function treeRemovalTasksWrite(
 
   await extractFilesAndSaveToNhost(images);
 
-  const variableImages = images.map(({ base64Preview, ...rest }) => rest);
-  const variableTasks = extractedData.map(({ images, ...rest }) => rest);
+  const variableImages = images.map((image) =>
+    R.omit(image, ["base64Preview"]),
+  );
+  const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
 
   return {
     query: resolveRequestDocument(upsertTreeRemovalTasks).query,
@@ -61,8 +64,10 @@ export async function stumpRemovalTasksWrite(
 
   await extractFilesAndSaveToNhost(images);
 
-  const variableImages = images.map(({ base64Preview, ...rest }) => rest);
-  const variableTasks = extractedData.map(({ images, ...rest }) => rest);
+  const variableImages = images.map((image) =>
+    R.omit(image, ["base64Preview"]),
+  );
+  const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
 
   return {
     query: resolveRequestDocument(upsertStumpRemovalTasks).query,

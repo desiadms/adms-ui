@@ -14,6 +14,7 @@ import {
   FileForm,
   genTaskImagesMetadata,
   humanizeDate,
+  useFilesForm,
   useGeoLocation,
   useProject,
 } from "../utils";
@@ -24,7 +25,6 @@ import {
   Label,
   LabelledInput,
   LabelledTextArea,
-  useFilesForm,
 } from "./Forms";
 import { TaskType } from "./common";
 import { Spinner } from "./icons";

@@ -30,7 +30,7 @@ const homeRoute = createRoute({
 
 const accountRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/account",
+  path: "account",
   component: () => <AccountView />,
   errorComponent: () => "Oh crap!",
 });

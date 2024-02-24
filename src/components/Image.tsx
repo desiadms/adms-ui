@@ -11,7 +11,7 @@ const placeholder = (
 );
 
 interface ImageProps {
-  src: string | undefined;
+  src: string | undefined | null;
   alt?: string;
 }
 

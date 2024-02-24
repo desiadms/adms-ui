@@ -39,18 +39,6 @@ async function fetchImages(images: Images[] | undefined) {
   );
 }
 
-export async function tasksWithImages(
-  tasks: TreeRemovalTaskDocType[] | undefined,
-) {
-  const tasksWithImageUrls = Promise.all(
-    tasks?.map(async (task) => {
-      const imagesWithUrls = await fetchImages(task.images);
-      return { ...task, images: imagesWithUrls };
-    }) || [],
-  );
-  return tasksWithImageUrls;
-}
-
 function useInProgressTasks() {
   const tree = useTreeRemovalTasks({ completed: false });
   const stump = useStumpRemovalTasks({ completed: false });
@@ -240,13 +228,17 @@ function QRCodeID({ taskId }: { taskId: string }) {
   );
 }
 
-function TreeStumpRemovalSingleTask({
-  task,
-  type,
-}: {
-  task: RxDocument<TreeRemovalTaskDocType | StumpRemovalTaskDocType>;
-  type: "tree" | "stump";
-}) {
+type TreeStumpRemovalProps =
+  | {
+      type: "tree";
+      task: RxDocument<TreeRemovalTaskDocType>;
+    }
+  | {
+      type: "stump";
+      task: RxDocument<StumpRemovalTaskDocType>;
+    };
+
+function TreeStumpRemovalSingleTask({ task, type }: TreeStumpRemovalProps) {
   const { missingSteps, steps } = generateSteps(task.id, task.images, type);
 
   const modalTrigger = useCallback(
