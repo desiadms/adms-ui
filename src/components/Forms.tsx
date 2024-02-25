@@ -1,6 +1,5 @@
 import classNames from "classnames";
-import { forwardRef } from "preact/compat";
-import { JSX } from "preact/jsx-runtime";
+import React, { forwardRef } from "react";
 
 export const labelClasses = "block text-sm font-medium leading-6 text-gray-900";
 
@@ -10,9 +9,9 @@ const inputClasses =
 export const buttonClasses =
   "flex justify-center gap-2 w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700";
 
-export const Input = forwardRef<
+export const Input = React.forwardRef<
   HTMLInputElement,
-  JSX.HTMLAttributes<HTMLInputElement>
+  React.HTMLAttributes<HTMLInputElement>
 >((props, ref) => (
   <input
     className={classNames(inputClasses, props.hidden && "hidden")}
@@ -27,7 +26,7 @@ export function Label({ label }: { label: string }) {
 
 export const TextArea = forwardRef<
   HTMLTextAreaElement,
-  JSX.HTMLAttributes<HTMLTextAreaElement>
+  React.HTMLAttributes<HTMLTextAreaElement>
 >((props, ref) => (
   <textarea className={classNames(inputClasses)} ref={ref} {...props} />
 ));
@@ -42,7 +41,7 @@ export function ErrorMessage({ message }: { message: string | undefined }) {
 
 export const LabelledInput = forwardRef<
   HTMLInputElement,
-  JSX.HTMLAttributes<HTMLInputElement> & { label: string }
+  React.HTMLAttributes<HTMLInputElement> & { label: string }
 >(({ label, ...props }, ref) => (
   <label htmlFor={props.name} className={labelClasses}>
     {label}
@@ -54,7 +53,7 @@ export const LabelledInput = forwardRef<
 
 export const LabelledTextArea = forwardRef<
   HTMLTextAreaElement,
-  JSX.HTMLAttributes<HTMLTextAreaElement> & { label: string }
+  React.HTMLAttributes<HTMLTextAreaElement> & { label: string }
 >(({ label, ...props }, ref) => (
   <label htmlFor={props.name} className={labelClasses}>
     {label}
@@ -69,7 +68,7 @@ export function Button({
   bgColor,
   textColor,
   ...props
-}: JSX.HTMLAttributes<HTMLButtonElement> & {
+}: React.HTMLAttributes<HTMLButtonElement> & {
   bgColor?: string;
   textColor?: string;
 }) {

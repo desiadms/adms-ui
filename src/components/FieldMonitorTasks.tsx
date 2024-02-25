@@ -1,7 +1,7 @@
 import { CameraIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import classNames from "classnames";
-import { useMemo } from "preact/hooks";
+import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useRxCollection } from "rxdb-hooks";
 import { v4 } from "uuid";

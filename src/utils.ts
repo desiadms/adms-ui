@@ -1,5 +1,5 @@
 import { NhostClient, useAuthenticationStatus } from "@nhost/react";
-import { useCallback, useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "react";
 import { RxDocument } from "rxdb";
 import { useRxData } from "rxdb-hooks";
 import { v4 } from "uuid";

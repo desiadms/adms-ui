@@ -1,4 +1,4 @@
-import preact from "@preact/preset-vite";
+import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
 import checker from "vite-plugin-checker";
 import { VitePWA } from "vite-plugin-pwa";
@@ -25,7 +25,7 @@ export default defineConfig({
         ],
       },
     }),
-    preact(),
+    react(),
     ViteRestart({
       restart: [".eslintrc*", ".prettierrc*", "tsconfig.json"],
     }),
@@ -37,14 +37,4 @@ export default defineConfig({
       typescript: true,
     }),
   ],
-  optimizeDeps: {
-    include: ["preact/hooks", "preact/compat", "preact"],
-  },
-  resolve: {
-    alias: [
-      { find: "react", replacement: "preact/compat" },
-      { find: "react-dom", replacement: "preact/compat" },
-      { find: "react/jsx-runtime", replacement: "preact/jsx-runtime" },
-    ],
-  },
 });

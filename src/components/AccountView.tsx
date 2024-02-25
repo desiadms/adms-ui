@@ -4,7 +4,7 @@ import {
   IdentificationIcon,
 } from "@heroicons/react/20/solid";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
-import { useCallback } from "preact/hooks";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useRxCollection, useRxData } from "rxdb-hooks";
 import { UserDocType } from "../rxdb/rxdb-schemas";

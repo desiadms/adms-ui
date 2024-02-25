@@ -2,8 +2,8 @@ import { CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { ClockIcon } from "@heroicons/react/24/outline";
 import { Link, LinkOptions, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
-import { useCallback, useEffect, useState } from "preact/hooks";
 import { QRCodeCanvas } from "qrcode.react";
+import { useCallback, useEffect, useState } from "react";
 import { RxDocument } from "rxdb";
 import {
   Images,

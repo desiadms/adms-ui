@@ -1,8 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import React, { Fragment, createElement } from "preact";
-import { useState } from "preact/hooks";
+import React, { Fragment, createElement, useState } from "react";
 
 export type ModalTriggerProps = {
   openModal: () => void;
@@ -52,7 +51,6 @@ export const Modal = ({
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as="div"
-          // @ts-expect-error - headlessui types are not up-to-date
           className="fixed inset-0 z-50 overflow-y-auto"
           onClose={closeModal}
         >

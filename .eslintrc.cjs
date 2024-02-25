@@ -1,6 +1,11 @@
 module.exports = {
   root: true,
-  ignorePatterns: [".eslintrc.cjs", "vite.config.ts", "codegen.ts"],
+  ignorePatterns: [
+    ".eslintrc.cjs",
+    "vite.config.ts",
+    "codegen.ts",
+    "postcss.config.mjs",
+  ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features

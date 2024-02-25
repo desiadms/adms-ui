@@ -1,5 +1,5 @@
-import { useState } from "preact/hooks";
 import { QRCodeCanvas } from "qrcode.react";
+import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export function QRCodeView() {
