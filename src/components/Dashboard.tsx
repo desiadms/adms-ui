@@ -4,10 +4,12 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { SignalIcon, SignalSlashIcon } from "@heroicons/react/24/solid";
 import { useSignOut } from "@nhost/react";
 import { Link, Navigate, Outlet, useMatchRoute } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { useCallback } from "preact/hooks";
 import { useRxData } from "rxdb-hooks";
 import { UserDocType } from "../rxdb/rxdb-schemas";
 import { emailToId, fullName, useIsOnline } from "../utils";
+
 const navigation = [
   ["/projects", "Projects"],
   ["/tasks", "New Task"],
@@ -175,6 +177,7 @@ export function Dashboard() {
         </div>
         {/* <pre>{JSON.stringify(state, null, 2)}</pre> */}
       </main>
+      <TanStackRouterDevtools position="bottom-right" />
     </div>
   );
 }

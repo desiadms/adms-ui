@@ -5,7 +5,8 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 import { AccountView } from "./components/AccountView";
-import { Dashboard, Home } from "./components/Dashboard";
+import { AuthWrapper } from "./components/AuthWrapper";
+import { Home } from "./components/Dashboard";
 import {
   FieldMonitorTasks,
   StumpRemovalFormWrapper,
@@ -18,7 +19,7 @@ import { TasksView } from "./components/TasksView";
 import { Steps } from "./rxdb/rxdb-schemas";
 
 const rootRoute = createRootRoute({
-  component: () => <Dashboard />,
+  component: () => <AuthWrapper />,
 });
 
 const homeRoute = createRoute({
@@ -58,7 +59,7 @@ const tasksHome = createRoute({
 
 const tasksProgressRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/progress",
+  path: "progress",
   component: () => <TasksProgress />,
   errorComponent: () => "Oh crap!",
 });

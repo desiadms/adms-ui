@@ -1,12 +1,11 @@
 import { useAccessToken, useSignInEmailPassword } from "@nhost/react";
-import { RouterProvider } from "@tanstack/react-router";
 import { useEffect, useState } from "preact/hooks";
 import { useForm } from "react-hook-form";
 import { RxDatabase } from "rxdb";
 import { Provider } from "rxdb-hooks";
-import { router } from "../router";
 import { initialize } from "../rxdb";
 import { nhost, useAuth } from "../utils";
+import { Dashboard } from "./Dashboard";
 import { Button, ErrorMessage, LabelledInput } from "./Forms";
 import { Spinner } from "./icons";
 
@@ -122,7 +121,7 @@ export function AuthWrapper() {
 
   return (
     <Provider db={db}>
-      <RouterProvider router={router} />
+      <Dashboard />
     </Provider>
   );
 }

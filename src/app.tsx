@@ -1,15 +1,16 @@
 import { NhostProvider } from "@nhost/react";
+import { RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "preact/compat";
 import { Toaster } from "react-hot-toast";
 import "./app.css";
-import { AuthWrapper } from "./components/AuthWrapper";
+import { router } from "./router";
 import { nhost } from "./utils";
 
 export function App() {
   return (
     <StrictMode>
       <NhostProvider nhost={nhost}>
-        <AuthWrapper />
+        <RouterProvider router={router} />
         <Toaster />
       </NhostProvider>
     </StrictMode>
