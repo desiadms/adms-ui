@@ -1,5 +1,10 @@
 import classNames from "classnames";
-import React, { forwardRef } from "react";
+import {
+  ButtonHTMLAttributes,
+  InputHTMLAttributes,
+  TextareaHTMLAttributes,
+  forwardRef,
+} from "react";
 
 export const labelClasses = "block text-sm font-medium leading-6 text-gray-900";
 
@@ -9,9 +14,9 @@ const inputClasses =
 export const buttonClasses =
   "flex justify-center gap-2 w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700";
 
-export const Input = React.forwardRef<
+export const Input = forwardRef<
   HTMLInputElement,
-  React.HTMLAttributes<HTMLInputElement>
+  InputHTMLAttributes<HTMLInputElement>
 >((props, ref) => (
   <input
     className={classNames(inputClasses, props.hidden && "hidden")}
@@ -41,7 +46,7 @@ export function ErrorMessage({ message }: { message: string | undefined }) {
 
 export const LabelledInput = forwardRef<
   HTMLInputElement,
-  React.HTMLAttributes<HTMLInputElement> & { label: string }
+  InputHTMLAttributes<HTMLInputElement> & { label: string }
 >(({ label, ...props }, ref) => (
   <label htmlFor={props.name} className={labelClasses}>
     {label}
@@ -53,7 +58,7 @@ export const LabelledInput = forwardRef<
 
 export const LabelledTextArea = forwardRef<
   HTMLTextAreaElement,
-  React.HTMLAttributes<HTMLTextAreaElement> & { label: string }
+  TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string }
 >(({ label, ...props }, ref) => (
   <label htmlFor={props.name} className={labelClasses}>
     {label}
@@ -68,7 +73,7 @@ export function Button({
   bgColor,
   textColor,
   ...props
-}: React.HTMLAttributes<HTMLButtonElement> & {
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
   bgColor?: string;
   textColor?: string;
 }) {
