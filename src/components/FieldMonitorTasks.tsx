@@ -1,5 +1,10 @@
 import { CameraIcon, XCircleIcon } from "@heroicons/react/20/solid";
-import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearch,
+} from "@tanstack/react-router";
 import classNames from "classnames";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -34,26 +39,29 @@ export function FieldMonitorTasks() {
 
   return (
     <div className="flex flex-col gap-2">
-      <TaskType
-        name="hazardous tree removal"
+      <Link
         to="/tasks/field-monitor/tree-removal/$id"
         params={{ id: v4() }}
         search={{ step: "before" }}
-      />
-      <TaskType
-        name="branch/stump tree removal"
+      >
+        <TaskType name="hazardous tree removal" />
+      </Link>
+      <Link
         to="/tasks/field-monitor/stump-removal/$id"
-        params={{ id: v4() }}
         search={{ step: "before" }}
-      />
+        params={{ id: v4() }}
+      >
+        <TaskType name="branch/stump tree removal" />
+      </Link>
+
       {activeProject?.ticketing_names?.map(({ id, name }) => (
-        <TaskType
+        <Link
           key={id}
-          name={name}
           to="/tasks/field-monitor/ticketing/$name/$id"
           params={{ name, id: v4() }}
-          search={{}}
-        />
+        >
+          <TaskType name={name} />
+        </Link>
       ))}
     </div>
   );
