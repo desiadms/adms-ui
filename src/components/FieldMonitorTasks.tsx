@@ -233,7 +233,7 @@ function TreeStumpRemovalForm({
                   <Input
                     type="file"
                     accept="image/*"
-                    capture="camera"
+                    capture="environment"
                     hidden
                     {...register(`files.${index}.fileInstance`, {
                       validate: {

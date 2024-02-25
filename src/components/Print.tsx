@@ -3,7 +3,14 @@ import { QRCodeCanvas } from "qrcode.react";
 import { TreeRemovalTaskDocType } from "src/rxdb/rxdb-schemas";
 import { humanizeDate, useProject, useTask } from "../utils";
 import { Button } from "./Forms";
-function LabelValue({ label, value }: { label: unknown; value: unknown }) {
+
+function LabelValue({
+  label,
+  value,
+}: {
+  label: string | undefined | null;
+  value: string | undefined | null;
+}) {
   return (
     <div className="flex">
       <div className="text-sm flex-shrink-0 font-medium w-24">
@@ -28,6 +35,8 @@ export function Print() {
     ? humanizeDate(beforeStep.created_at)
     : "no date";
   const { latitude, longitude } = beforeStep || {};
+
+  if (!result) return "Loading...";
 
   return (
     <div>
