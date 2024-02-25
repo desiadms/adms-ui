@@ -3,3 +3,4 @@
 /build
 !.eslintrc.cjs
 /src/gql
+**/__generated__/
