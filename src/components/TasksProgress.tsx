@@ -284,8 +284,8 @@ function TreeStumpRemovalSingleTask({ task, type }: TreeStumpRemovalProps) {
         <div className="flex gap-10 items-end">
           {Object.entries(steps).map(([taken_at_step, images]) => (
             <Modal
-              title={`${taken_at_step} measurement`}
               key={taken_at_step}
+              title={`${taken_at_step} measurement`}
               modalTrigger={(props) =>
                 modalTrigger(props, taken_at_step as Steps)
               }
@@ -295,7 +295,7 @@ function TreeStumpRemovalSingleTask({ task, type }: TreeStumpRemovalProps) {
             />
           ))}
           {missingSteps.map(({ disabled, step, href }) => (
-            <div>
+            <div key={step}>
               {disabled ? (
                 <TaskCheck taken_at_step={step} icon="disabled" />
               ) : (
