@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { RxDatabase } from "rxdb";
 import { Provider } from "rxdb-hooks";
 import { initialize } from "../rxdb";
-import { nhost, useAuth } from "../utils";
+import { useAuth } from "../utils";
 import { Dashboard } from "./Dashboard";
 import { Button, ErrorMessage, LabelledInput } from "./Forms";
 import { Spinner } from "./icons";
@@ -34,18 +34,6 @@ function Login() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <button
-        onClick={async () => {
-          console.log("in click");
-          const a = await nhost.auth.signUp({
-            email: "savvvyyysucks@desiadms.com",
-            password: "11111111",
-          });
-          console.log(a);
-        }}
-      >
-        HELLO CREATE
-      </button>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
           className="mx-auto h-10 w-auto"
