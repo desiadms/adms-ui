@@ -19,4 +19,4 @@ if [[ -z "$HASURA_ADMIN_SECRET" || -z "$VITE_HASURA_ENDPOINT" ]]; then
 fi
 
 # Otherwise, introspect the GraphQL endpoint
-bunx graphqurl "$VITE_HASURA_ENDPOINT" --header "X-Hasura-Admin-Secret: $HASURA_ADMIN_SECRET" --introspect > schema.graphql
+bun run graphql-inspector introspect "$VITE_HASURA_ENDPOINT" --header "X-Hasura-Admin-Secret: $HASURA_ADMIN_SECRET"
