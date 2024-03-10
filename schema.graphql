@@ -5272,6 +5272,27 @@ type mutation_root {
   update data of the table: "usersMetadata"
   """
   update_usersMetadata(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: usersMetadata_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: usersMetadata_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: usersMetadata_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: usersMetadata_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: usersMetadata_prepend_input
+
     """sets the columns of the filtered rows to the given values"""
     _set: usersMetadata_set_input
 
@@ -5283,6 +5304,27 @@ type mutation_root {
   update single row of the table: "usersMetadata"
   """
   update_usersMetadata_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: usersMetadata_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: usersMetadata_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: usersMetadata_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: usersMetadata_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: usersMetadata_prepend_input
+
     """sets the columns of the filtered rows to the given values"""
     _set: usersMetadata_set_input
     pk_columns: usersMetadata_pk_columns_input!
@@ -10512,6 +10554,7 @@ type users {
 columns and relationships of "usersMetadata"
 """
 type usersMetadata {
+  active_project: uuid
   first_name: String!
   hire_date: date!
   id: uuid!
@@ -10522,6 +10565,10 @@ type usersMetadata {
   role_operations_manager: Boolean!
   role_pc_admin: Boolean!
   role_project_manager: Boolean!
+  settings(
+    """JSON select path"""
+    path: String
+  ): jsonb
   status: Boolean
 
   """An object relationship"""
@@ -10581,6 +10628,11 @@ input usersMetadata_aggregate_order_by {
   min: usersMetadata_min_order_by
 }
 
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input usersMetadata_append_input {
+  settings: jsonb
+}
+
 """
 input type for inserting array relation for remote table "usersMetadata"
 """
@@ -10598,6 +10650,7 @@ input usersMetadata_bool_exp {
   _and: [usersMetadata_bool_exp!]
   _not: usersMetadata_bool_exp
   _or: [usersMetadata_bool_exp!]
+  active_project: uuid_comparison_exp
   first_name: String_comparison_exp
   hire_date: date_comparison_exp
   id: uuid_comparison_exp
@@ -10608,6 +10661,7 @@ input usersMetadata_bool_exp {
   role_operations_manager: Boolean_comparison_exp
   role_pc_admin: Boolean_comparison_exp
   role_project_manager: Boolean_comparison_exp
+  settings: jsonb_comparison_exp
   status: Boolean_comparison_exp
   usersMetadata_user: users_bool_exp
 }
@@ -10623,9 +10677,31 @@ enum usersMetadata_constraint {
 }
 
 """
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input usersMetadata_delete_at_path_input {
+  settings: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+"""
+input usersMetadata_delete_elem_input {
+  settings: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input usersMetadata_delete_key_input {
+  settings: String
+}
+
+"""
 input type for inserting data into table "usersMetadata"
 """
 input usersMetadata_insert_input {
+  active_project: uuid
   first_name: String
   hire_date: date
   id: uuid
@@ -10636,12 +10712,14 @@ input usersMetadata_insert_input {
   role_operations_manager: Boolean
   role_pc_admin: Boolean
   role_project_manager: Boolean
+  settings: jsonb
   status: Boolean
   usersMetadata_user: users_obj_rel_insert_input
 }
 
 """aggregate max on columns"""
 type usersMetadata_max_fields {
+  active_project: uuid
   first_name: String
   hire_date: date
   id: uuid
@@ -10652,6 +10730,7 @@ type usersMetadata_max_fields {
 order by max() on columns of table "usersMetadata"
 """
 input usersMetadata_max_order_by {
+  active_project: order_by
   first_name: order_by
   hire_date: order_by
   id: order_by
@@ -10660,6 +10739,7 @@ input usersMetadata_max_order_by {
 
 """aggregate min on columns"""
 type usersMetadata_min_fields {
+  active_project: uuid
   first_name: String
   hire_date: date
   id: uuid
@@ -10670,6 +10750,7 @@ type usersMetadata_min_fields {
 order by min() on columns of table "usersMetadata"
 """
 input usersMetadata_min_order_by {
+  active_project: order_by
   first_name: order_by
   hire_date: order_by
   id: order_by
@@ -10698,6 +10779,7 @@ input usersMetadata_on_conflict {
 
 """Ordering options when selecting data from "usersMetadata"."""
 input usersMetadata_order_by {
+  active_project: order_by
   first_name: order_by
   hire_date: order_by
   id: order_by
@@ -10708,6 +10790,7 @@ input usersMetadata_order_by {
   role_operations_manager: order_by
   role_pc_admin: order_by
   role_project_manager: order_by
+  settings: order_by
   status: order_by
   usersMetadata_user: users_order_by
 }
@@ -10717,10 +10800,18 @@ input usersMetadata_pk_columns_input {
   id: uuid!
 }
 
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input usersMetadata_prepend_input {
+  settings: jsonb
+}
+
 """
 select columns of table "usersMetadata"
 """
 enum usersMetadata_select_column {
+  """column name"""
+  active_project
+
   """column name"""
   first_name
 
@@ -10750,6 +10841,9 @@ enum usersMetadata_select_column {
 
   """column name"""
   role_project_manager
+
+  """column name"""
+  settings
 
   """column name"""
   status
@@ -10811,6 +10905,7 @@ enum usersMetadata_select_column_usersMetadata_aggregate_bool_exp_bool_or_argume
 input type for updating data in table "usersMetadata"
 """
 input usersMetadata_set_input {
+  active_project: uuid
   first_name: String
   hire_date: date
   id: uuid
@@ -10821,6 +10916,7 @@ input usersMetadata_set_input {
   role_operations_manager: Boolean
   role_pc_admin: Boolean
   role_project_manager: Boolean
+  settings: jsonb
   status: Boolean
 }
 
@@ -10837,6 +10933,7 @@ input usersMetadata_stream_cursor_input {
 
 """Initial value of the column from where the streaming should start"""
 input usersMetadata_stream_cursor_value_input {
+  active_project: uuid
   first_name: String
   hire_date: date
   id: uuid
@@ -10847,6 +10944,7 @@ input usersMetadata_stream_cursor_value_input {
   role_operations_manager: Boolean
   role_pc_admin: Boolean
   role_project_manager: Boolean
+  settings: jsonb
   status: Boolean
 }
 
@@ -10854,6 +10952,9 @@ input usersMetadata_stream_cursor_value_input {
 update columns of table "usersMetadata"
 """
 enum usersMetadata_update_column {
+  """column name"""
+  active_project
+
   """column name"""
   first_name
 
@@ -10885,10 +10986,34 @@ enum usersMetadata_update_column {
   role_project_manager
 
   """column name"""
+  settings
+
+  """column name"""
   status
 }
 
 input usersMetadata_updates {
+  """append existing jsonb value of filtered columns with new jsonb value"""
+  _append: usersMetadata_append_input
+
+  """
+  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+  """
+  _delete_at_path: usersMetadata_delete_at_path_input
+
+  """
+  delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+  """
+  _delete_elem: usersMetadata_delete_elem_input
+
+  """
+  delete key/value pair or string element. key/value pairs are matched based on their key value
+  """
+  _delete_key: usersMetadata_delete_key_input
+
+  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  _prepend: usersMetadata_prepend_input
+
   """sets the columns of the filtered rows to the given values"""
   _set: usersMetadata_set_input
 
