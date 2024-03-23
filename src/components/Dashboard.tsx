@@ -14,7 +14,7 @@ const navigation = [
   ["/projects", "Projects"],
   ["/tasks", "New Task"],
   ["/progress", "In Progress"],
-];
+] as const
 
 export function Home() {
   return <Navigate to="/projects" />;
