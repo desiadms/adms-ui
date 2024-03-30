@@ -218,8 +218,8 @@ export async function genTaskImagesMetadata({
       (file) => file?.fileInstance && (file.fileInstance[0] as File),
     ).map(async (file) => ({
       id: v4(),
-      latitude: coordinates.latitude.toString(),
-      longitude: coordinates.longitude.toString(),
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
       created_at: new Date().toISOString(),
       taken_at_step,
       base64Preview: await blobToBase64(file),
