@@ -9,7 +9,7 @@ function LabelValue({
   value,
 }: {
   label: string | undefined | null;
-  value: string | undefined | null;
+  value: string | number | undefined | null;
 }) {
   return (
     <div className="flex">
