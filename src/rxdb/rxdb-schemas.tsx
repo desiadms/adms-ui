@@ -2,6 +2,7 @@ import { RxJsonSchema } from "rxdb";
 import {
   ProjectsQuery,
   StumpRemovalTasksQuery,
+  TicketingTasksQuery,
   TreeRemovalTasksQuery,
   UserQuery,
 } from "src/__generated__/gql/graphql";
@@ -93,7 +94,7 @@ export const projectSchema: RxJsonSchema<ProjectDocType> = {
       type: "string",
     },
     status: {
-      type: "boolean",
+      type: ["boolean", "null"],
     },
     comment: {
       type: "string",
@@ -109,6 +110,9 @@ export const projectSchema: RxJsonSchema<ProjectDocType> = {
         },
         add_photos: {
           type: ["boolean", "null"],
+        },
+        comment: {
+          type: ["string", "null"],
         },
         print_ticket: {
           type: ["boolean", "null"],
@@ -242,6 +246,65 @@ export const stumpRemovalTaskSchema: RxJsonSchema<StumpRemovalTaskDocType> = {
           type: "boolean",
         },
       } satisfies ImagesKeys,
+    },
+  },
+  required: ["id"],
+} as const;
+
+export type TicketingTaskDocType = OmitTypename<
+  TicketingTasksQuery["tasks_ticketing"][0]
+>;
+
+export const ticketingTaskSchema: RxJsonSchema<TicketingTaskDocType> = {
+  title: "ticketing task schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    name: {
+      type: "string",
+    },
+    comment: {
+      type: "string",
+    },
+    created_at: {
+      type: "string",
+    },
+    updated_at: {
+      type: "string",
+    },
+    latitude: {
+      type: ["string", "null"],
+    },
+    longitude: {
+      type: ["string", "null"],
+    },
+    images: {
+      type: "array",
+      properties: {
+        id: {
+          type: "string",
+        },
+        created_at: {
+          type: "string",
+        },
+        latitude: {
+          type: "string",
+        },
+        longitude: {
+          type: "string",
+        },
+        base64Preview: {
+          type: "string",
+        },
+        _deleted: {
+          type: "boolean",
+        },
+      } satisfies Omit<ImagesKeys, "taken_at_step" | "ranges">,
     },
   },
   required: ["id"],

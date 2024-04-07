@@ -115,6 +115,28 @@ export const upsertStumpRemovalTasks = graphql(/* GraphQL */ `
   }
 `);
 
+export const queryTicketingTasks = graphql(/* GraphQL */ `
+  query TicketingTasks {
+    tasks_ticketing {
+      comment
+      created_at
+      updated_at
+      id
+      latitude
+      longitude
+      name
+      images {
+        id
+        created_at
+        latitude
+        longitude
+        base64Preview
+        _deleted
+      }
+    }
+  }
+`);
+
 export const userDocument = graphql(/* GraphQL */ `
   query User {
     usersMetadata(limit: 1) {
@@ -161,6 +183,7 @@ export const projectsDocument = graphql(/* GraphQL */ `
         id
         name
         add_photos
+        comment
         print_ticket
       }
     }

@@ -5,6 +5,7 @@ import { extractFilesAndSaveToNhost } from "../utils";
 import {
   projectsDocument,
   queryStumpRemovalTasks,
+  queryTicketingTasks,
   queryTreeRemovalTasks,
   updateUserDocument,
   upsertStumpRemovalTasks,
@@ -13,6 +14,7 @@ import {
 } from "./graphql-operations";
 import {
   StumpRemovalTaskDocType,
+  TicketingTaskDocType,
   TreeRemovalTaskDocType,
   UserDocType,
 } from "./rxdb-schemas";
@@ -65,6 +67,37 @@ export async function stumpRemovalTasksWrite(
   await extractFilesAndSaveToNhost(images);
 
   const variableImages = images.map((image) =>
+    R.omit(image, ["base64Preview"]),
+  );
+  const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
+
+  return {
+    query: resolveRequestDocument(upsertStumpRemovalTasks).query,
+    variables: { tasks: variableTasks, images: variableImages },
+  };
+}
+
+export function ticketingTasksRead() {
+  return {
+    query: resolveRequestDocument(queryTicketingTasks).query,
+    variables: {},
+  };
+}
+
+export async function ticketingTasksWrite(
+  _db,
+  rows: RxReplicationWriteToMasterRow<TicketingTaskDocType>[],
+) {
+  const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
+  const images = extractedData
+    .map(({ images, id }) =>
+      images?.map((image) => ({ ...image, task_id: id })),
+    )
+    .flat();
+
+  if (images.every((image) => image)) await extractFilesAndSaveToNhost(images);
+
+  const variableImages = images?.map((image) =>
     R.omit(image, ["base64Preview"]),
   );
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));

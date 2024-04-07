@@ -8,6 +8,8 @@ import {
   projectRead,
   stumpRemovalTasksRead,
   stumpRemovalTasksWrite,
+  ticketingTasksRead,
+  ticketingTasksWrite,
   treeRemovalTasksRead,
   treeRemovalTasksWrite,
   userRead,
@@ -16,6 +18,7 @@ import {
 import {
   projectSchema,
   stumpRemovalTaskSchema,
+  ticketingTaskSchema,
   treeRemovalTaskSchema,
   userSchema,
 } from "./rxdb/rxdb-schemas";
@@ -59,6 +62,13 @@ export async function initialize(accessToken: string | null) {
       schema: stumpRemovalTaskSchema,
       pullQueryBuilder: stumpRemovalTasksRead,
       pushQueryBuilder: stumpRemovalTasksWrite,
+      accessToken,
+    },
+    {
+      name: "ticketing-task",
+      schema: ticketingTaskSchema,
+      pullQueryBuilder: ticketingTasksRead,
+      pushQueryBuilder: ticketingTasksWrite,
       accessToken,
     },
     {
