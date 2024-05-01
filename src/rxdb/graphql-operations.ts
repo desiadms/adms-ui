@@ -1,5 +1,20 @@
 import { graphql } from "../graphql";
 
+export const queryImages = graphql(/* GraphQL */ `
+  query Images {
+    images {
+      id
+      created_at
+      updated_at
+      latitude
+      longitude
+      taken_at_step
+      base64Preview
+      _deleted
+    }
+  }
+`);
+
 export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
   query TreeRemovalTasks {
     tasks_tree_removal(where: { completed: { _neq: true } }) {
@@ -12,6 +27,7 @@ export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
       images: tasks_tree_removal_images {
         id
         created_at
+        updated_at
         latitude
         longitude
         taken_at_step
@@ -69,6 +85,7 @@ export const queryStumpRemovalTasks = graphql(/* GraphQL */ `
       images: tasks_stump_removal_images {
         id
         created_at
+        updated_at
         latitude
         longitude
         taken_at_step
@@ -128,6 +145,7 @@ export const queryTicketingTasks = graphql(/* GraphQL */ `
       images {
         id
         created_at
+        updated_at
         latitude
         longitude
         base64Preview

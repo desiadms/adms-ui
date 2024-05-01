@@ -17,6 +17,7 @@ import { ProjectsView } from "./components/Projects";
 import { TasksProgress } from "./components/TasksProgress";
 import { TasksView } from "./components/TasksView";
 import { Steps } from "./rxdb/rxdb-schemas";
+import { FieldMonitorGeneralWrapper } from "./components/FieldMonitorCustom";
 
 const rootRoute = createRootRoute({
   component: () => <AuthWrapper />,
@@ -118,13 +119,8 @@ const fieldMonitorStump = createRoute({
 const fieldMonitorTicketing = createRoute({
   getParentRoute: () => fieldMonitorTask,
   path: "ticketing/$name/$id",
-  component: () => <div> will come </div>,
+  component: () => <FieldMonitorGeneralWrapper />,
   errorComponent: () => "Oh crap!",
-  validateSearch: (
-    search: Record<string, unknown>,
-  ): Pick<FieldMonitorSearch, "edit"> => ({
-    edit: Boolean(search?.edit),
-  }),
 });
 
 const printRoute = createRoute({

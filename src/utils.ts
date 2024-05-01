@@ -211,7 +211,7 @@ export async function genTaskImagesMetadata({
   coordinates: GeolocationCoordinates;
   taken_at_step?: Steps;
   extraFields?: Record<string, string>;
-}): Promise<Images[]> {
+}) {
   const images = await Promise.all(
     keep(
       filesData,
@@ -221,6 +221,7 @@ export async function genTaskImagesMetadata({
       latitude: coordinates.latitude,
       longitude: coordinates.longitude,
       created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       taken_at_step,
       base64Preview: await blobToBase64(file),
     })),

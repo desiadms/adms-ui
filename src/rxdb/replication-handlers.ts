@@ -41,7 +41,6 @@ export async function treeRemovalTasksWrite(
     R.omit(image, ["base64Preview"]),
   );
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
-
   return {
     query: resolveRequestDocument(upsertTreeRemovalTasks).query,
     variables: { tasks: variableTasks, images: variableImages },

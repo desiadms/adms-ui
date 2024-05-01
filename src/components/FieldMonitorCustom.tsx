@@ -1,0 +1,205 @@
+import { CameraIcon, XCircleIcon } from "@heroicons/react/20/solid";
+import { useNavigate, useParams } from "@tanstack/react-router";
+import classNames from "classnames";
+import { useMemo } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { useRxCollection } from "rxdb-hooks";
+import { TicketingTaskDocType } from "../rxdb/rxdb-schemas";
+import {
+  FileForm,
+  genTaskImagesMetadata,
+  humanizeDate,
+  useFilesForm,
+  useGeoLocation,
+} from "../utils";
+import { Button, ErrorMessage, Input, Label, LabelledTextArea } from "./Forms";
+import { Spinner } from "./icons";
+
+type TFieldMonitorGeneral = {
+  taskId: string;
+  taskName: string;
+};
+
+type FormProps = {
+  comment?: string;
+  ranges?: string;
+  files: FileForm[];
+};
+
+function FieldMonitorGeneralForm({ taskId, taskName }: TFieldMonitorGeneral) {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, submitCount },
+  } = useForm<FormProps>({
+    defaultValues: {
+      comment: "",
+      files: [{ fileInstance: undefined }, { fileInstance: undefined }],
+    },
+  });
+
+  const { fields, update } = useFieldArray({
+    control,
+    name: "files",
+  });
+
+  const {
+    useFilePreviews: [filePreviews],
+    noFilesUploaded,
+    onChangeSetFilePreview,
+    validateFileSize,
+    removePreview,
+  } = useFilesForm();
+
+  const currentDateTime = useMemo(() => humanizeDate(), []);
+
+  const { coordinates } = useGeoLocation();
+  const navigate = useNavigate({
+    from: "/tasks/field-monitor/ticketing/$name/$id",
+  });
+
+  const ticketingTaskColl =
+    useRxCollection<TicketingTaskDocType>("ticketing-task");
+
+  async function submitForm(data) {
+    if (noFilesUploaded) return;
+
+    if (coordinates) {
+      const images = await genTaskImagesMetadata({
+        filesData: data.files,
+        coordinates,
+      });
+
+      const nowUTC = new Date().toISOString();
+
+      await ticketingTaskColl?.upsert({
+        id: taskId,
+        images,
+        comment: data.comment,
+        created_at: nowUTC,
+        updated_at: nowUTC,
+      });
+      navigate({ to: "/print/$id", params: { id: taskId } });
+    }
+  }
+
+  function handleRemove(index: number, id: string) {
+    removePreview(id);
+    update(index, { fileInstance: undefined });
+  }
+
+  return (
+    <div>
+      <div className="capitalize font-medium pb-4">Ticketing - {taskName}</div>
+      <form
+        onSubmit={handleSubmit(submitForm)}
+        className="flex flex-col gap-2 items-start bg-zinc-200 rounded-md p-4"
+      >
+        <div className="p-2 w-fit rounded-lg">
+          <Label label="Date & Time" />
+
+          <div className="text-sm">{currentDateTime}</div>
+        </div>
+
+        <div className="p-2 w-fit rounded-lg">
+          <Label label="Geo Location" />
+
+          <div className="text-sm">
+            <div>
+              <div className="flex gap-2 items-center">
+                Latitude:{" "}
+                {coordinates?.latitude || <Spinner className="w-3 h-3" />}
+              </div>
+              <div className="flex gap-2 items-center">
+                Longitude:{" "}
+                {coordinates?.longitude || <Spinner className="w-3 h-3" />}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-2">
+          <Label label="Photos" />
+          <div className="flex flex-col gap-1">
+            {fields.map(({ id }, index) => (
+              <div className="flex flex-col gap-1" key={id}>
+                <label
+                  className={classNames(
+                    "flex gap-1 rounded w-fit bg-slate-500 text-white px-2 py-1 text-xs",
+                  )}
+                >
+                  <CameraIcon className="w-4 h-4 text-white" />
+                  <span className="text-xs">Take Picture</span>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    hidden
+                    {...register(`files.${index}.fileInstance`, {
+                      validate: {
+                        lessThan5MB: (file) =>
+                          validateFileSize(file, 5 * 1024 * 1024),
+                      },
+                      onChange: (e) => {
+                        onChangeSetFilePreview(e, id);
+                      },
+                    })}
+                  />
+                </label>
+                {filePreviews && filePreviews[id] && (
+                  <div>
+                    <div className="relative w-1/2">
+                      <img
+                        className="w-full object-cover"
+                        src={filePreviews[id]}
+                        alt=""
+                      />
+                      <button
+                        className="absolute -top-4 -right-4 rounded-full bg-gray-800"
+                        type="button"
+                        onClick={() => handleRemove(index, id)}
+                      >
+                        <XCircleIcon className="w-10 h-10 text-red-400" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {errors.files && errors.files[index] && (
+                  <ErrorMessage
+                    message={errors.files[index]?.fileInstance?.message}
+                  />
+                )}
+              </div>
+            ))}
+            {noFilesUploaded && submitCount > 0 && (
+              <ErrorMessage message="Please upload at least one image" />
+            )}
+          </div>
+        </div>
+
+        {errors.files && <p className="text-red-500">{errors.files.message}</p>}
+
+        <div className="p-2 w-full rounded-lg">
+          <LabelledTextArea
+            label="Comment"
+            {...register("comment", { required: "Task name is required" })}
+          />
+          <ErrorMessage message={errors.comment?.message} />
+        </div>
+
+        <div className="px-2">
+          <Button type="submit">Print Ticket</Button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export function FieldMonitorGeneralWrapper() {
+  const { name, id } = useParams({
+    from: "/tasks/field-monitor/ticketing/$name/$id",
+  });
+
+  return <FieldMonitorGeneralForm taskId={id} taskName={name} />;
+}

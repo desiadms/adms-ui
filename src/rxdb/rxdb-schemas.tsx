@@ -1,5 +1,6 @@
 import { RxJsonSchema } from "rxdb";
 import {
+  ImagesQuery,
   ProjectsQuery,
   StumpRemovalTasksQuery,
   TicketingTasksQuery,
@@ -13,7 +14,7 @@ type SatisfiesSchemaKeys<T> = {
   [K in ExcludeTypename<T>]: RxJsonSchema<unknown>["properties"];
 };
 
-export type UserDocType = OmitTypename<UserQuery["usersMetadata"][0]>;
+export type UserDocType = OmitTypename<UserQuery["usersMetadata"][number]>;
 
 export const userSchema: RxJsonSchema<UserDocType> = {
   title: "user schema",
@@ -64,8 +65,10 @@ export const userSchema: RxJsonSchema<UserDocType> = {
   },
 } as const;
 
-export type ProjectDocType = OmitTypename<ProjectsQuery["projects"][0]>;
-export type TicketingName = OmitTypename<ProjectDocType["ticketing_names"][0]>;
+export type ProjectDocType = OmitTypename<ProjectsQuery["projects"][number]>;
+export type TicketingName = OmitTypename<
+  ProjectDocType["ticketing_names"][number]
+>;
 export type TicketingNameKeys = SatisfiesSchemaKeys<TicketingName>;
 
 export const projectSchema: RxJsonSchema<ProjectDocType> = {
@@ -124,14 +127,15 @@ export const projectSchema: RxJsonSchema<ProjectDocType> = {
 } as const;
 
 export type Steps = "before" | "during" | "after";
-export type Images = TreeRemovalTaskDocType["images"][0] &
+export type Images = ImagesQuery["images"][number] &
   Pick<TreeRemovalTaskDocType, "ranges">;
 
 export type TreeRemovalTaskDocType = OmitTypename<
-  TreeRemovalTasksQuery["tasks_tree_removal"][0]
+  TreeRemovalTasksQuery["tasks_tree_removal"][number]
 >;
 type ImagesKeys = SatisfiesSchemaKeys<
-  TreeRemovalTaskDocType["images"][0] & Pick<TreeRemovalTaskDocType, "ranges">
+  TreeRemovalTaskDocType["images"][number] &
+    Pick<TreeRemovalTaskDocType, "ranges">
 >;
 
 export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
@@ -168,6 +172,9 @@ export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
         created_at: {
           type: "string",
         },
+        updated_at: {
+          type: "string",
+        },
         latitude: {
           type: "string",
         },
@@ -193,7 +200,7 @@ export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
 } as const;
 
 export type StumpRemovalTaskDocType = OmitTypename<
-  StumpRemovalTasksQuery["tasks_stump_removal"][0]
+  StumpRemovalTasksQuery["tasks_stump_removal"][number]
 >;
 
 export const stumpRemovalTaskSchema: RxJsonSchema<StumpRemovalTaskDocType> = {
@@ -227,6 +234,9 @@ export const stumpRemovalTaskSchema: RxJsonSchema<StumpRemovalTaskDocType> = {
         created_at: {
           type: "string",
         },
+        updated_at: {
+          type: "string",
+        },
         latitude: {
           type: "string",
         },
@@ -252,7 +262,7 @@ export const stumpRemovalTaskSchema: RxJsonSchema<StumpRemovalTaskDocType> = {
 } as const;
 
 export type TicketingTaskDocType = OmitTypename<
-  TicketingTasksQuery["tasks_ticketing"][0]
+  TicketingTasksQuery["tasks_ticketing"][number]
 >;
 
 export const ticketingTaskSchema: RxJsonSchema<TicketingTaskDocType> = {
@@ -290,6 +300,9 @@ export const ticketingTaskSchema: RxJsonSchema<TicketingTaskDocType> = {
           type: "string",
         },
         created_at: {
+          type: "string",
+        },
+        updated_at: {
           type: "string",
         },
         latitude: {
