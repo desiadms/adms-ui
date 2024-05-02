@@ -6,7 +6,7 @@ import {
   RxJsonSchema,
 } from "rxdb";
 import { replicateGraphQL } from "rxdb/plugins/replication-graphql";
-import { hasuraURL } from "../utils";
+import { hasuraURL } from "../hooks";
 
 type DB = RxDatabase<{
   [key: string]: RxCollection;

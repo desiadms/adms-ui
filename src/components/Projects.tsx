@@ -1,5 +1,5 @@
 import { GlobeAmericasIcon } from "@heroicons/react/24/solid";
-import { useProject } from "../utils";
+import { useProject } from "../hooks";
 
 export function ProjectsView() {
   const { activeProject } = useProject();

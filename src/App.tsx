@@ -3,7 +3,7 @@ import { RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { Toaster } from "react-hot-toast";
 import { router } from "./router";
-import { nhost } from "./utils";
+import { nhost } from "./hooks";
 
 export function App() {
   return (

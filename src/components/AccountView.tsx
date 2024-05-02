@@ -8,7 +8,7 @@ import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useRxCollection, useRxData } from "rxdb-hooks";
 import { UserDocType } from "../rxdb/rxdb-schemas";
-import { emailToId, fullName, userRoles } from "../utils";
+import { emailToId, fullName, userRoles } from "../hooks";
 import { Button, ErrorMessage, LabelledInput } from "./Forms";
 
 type UserFormData = {

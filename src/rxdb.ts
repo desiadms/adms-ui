@@ -22,7 +22,7 @@ import {
   treeRemovalTaskSchema,
   userSchema,
 } from "./rxdb/rxdb-schemas";
-import { devMode } from "./utils";
+import { devMode } from "./hooks";
 
 addRxPlugin(RxDBMigrationPlugin);
 addRxPlugin(RxDBLocalDocumentsPlugin);

@@ -8,13 +8,13 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { useCallback } from "react";
 import { useRxData } from "rxdb-hooks";
 import { UserDocType } from "../rxdb/rxdb-schemas";
-import { emailToId, fullName, useIsOnline } from "../utils";
+import { emailToId, fullName, useIsOnline } from "../hooks";
 
 const navigation = [
   ["/projects", "Projects"],
   ["/tasks", "New Task"],
   ["/progress", "In Progress"],
-] as const
+] as const;
 
 export function Home() {
   return <Navigate to="/projects" />;

@@ -42,7 +42,13 @@ export const upsertTreeRemovalTasks = graphql(/* GraphQL */ `
   mutation UpsertTreeRemovalTask(
     $tasks: [tasks_tree_removal_insert_input!]!
     $images: [images_insert_input!]!
+    $taskIds: [task_ids_insert_input!]!
   ) {
+    insert_task_ids(objects: $taskIds) {
+      returning {
+        id
+      }
+    }
     insert_tasks_tree_removal(
       objects: $tasks
       on_conflict: {
@@ -100,7 +106,13 @@ export const upsertStumpRemovalTasks = graphql(/* GraphQL */ `
   mutation UpsertStumpRemovalTask(
     $tasks: [tasks_stump_removal_insert_input!]!
     $images: [images_insert_input!]!
+    $taskIds: [task_ids_insert_input!]!
   ) {
+    insert_task_ids(objects: $taskIds) {
+      returning {
+        id
+      }
+    }
     insert_tasks_stump_removal(
       objects: $tasks
       on_conflict: {
@@ -141,7 +153,6 @@ export const queryTicketingTasks = graphql(/* GraphQL */ `
       id
       latitude
       longitude
-      name
       images {
         id
         created_at
@@ -150,6 +161,43 @@ export const queryTicketingTasks = graphql(/* GraphQL */ `
         longitude
         base64Preview
         _deleted
+      }
+    }
+  }
+`);
+
+export const upsertTicketingTasks = graphql(/* GraphQL */ `
+  mutation UpsertTicketingTask(
+    $tasks: [tasks_ticketing_insert_input!]!
+    $images: [images_insert_input!]!
+    $taskIds: [task_ids_insert_input!]!
+  ) {
+    insert_task_ids(objects: $taskIds) {
+      returning {
+        id
+      }
+    }
+
+    insert_tasks_ticketing(
+      objects: $tasks
+      on_conflict: {
+        update_columns: [comment, updated_at, _deleted]
+        constraint: task_admin_pkey
+      }
+    ) {
+      returning {
+        id
+      }
+    }
+    insert_images(
+      objects: $images
+      on_conflict: {
+        constraint: images_pkey
+        update_columns: [latitude, longitude, updated_at, _deleted]
+      }
+    ) {
+      returning {
+        id
       }
     }
   }

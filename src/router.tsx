@@ -118,7 +118,7 @@ const fieldMonitorStump = createRoute({
 
 const fieldMonitorTicketing = createRoute({
   getParentRoute: () => fieldMonitorTask,
-  path: "ticketing/$name/$id",
+  path: "ticketing/$ticketingId/$id",
   component: () => <FieldMonitorGeneralWrapper />,
   errorComponent: () => "Oh crap!",
 });

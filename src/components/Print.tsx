@@ -1,7 +1,7 @@
 import { useParams } from "@tanstack/react-router";
 import { QRCodeCanvas } from "qrcode.react";
 import { TreeRemovalTaskDocType } from "src/rxdb/rxdb-schemas";
-import { humanizeDate, useProject, useTask } from "../utils";
+import { humanizeDate, useProject, useTask } from "../hooks";
 import { Button } from "./Forms";
 
 function LabelValue({

@@ -16,7 +16,7 @@ import {
   nhost,
   useStumpRemovalTasks,
   useTreeRemovalTasks,
-} from "../utils";
+} from "../hooks";
 import { Button } from "./Forms";
 import { Image } from "./Image";
 import { Modal, ModalContentProps, ModalTriggerProps } from "./Modal";
@@ -78,14 +78,17 @@ function generateSteps(
     };
   });
 
-  const groupedSteps = images.reduce((acc, image) => {
-    const { taken_at_step } = image;
-    if (taken_at_step && !acc[taken_at_step]) {
-      acc[taken_at_step] = [];
-    }
-    if (taken_at_step) acc[taken_at_step].push(image);
-    return acc;
-  }, {} as Record<Steps, Images[]>);
+  const groupedSteps = images.reduce(
+    (acc, image) => {
+      const { taken_at_step } = image;
+      if (taken_at_step && !acc[taken_at_step]) {
+        acc[taken_at_step] = [];
+      }
+      if (taken_at_step) acc[taken_at_step].push(image);
+      return acc;
+    },
+    {} as Record<Steps, Images[]>,
+  );
 
   return { missingSteps: missingStepsFinal, steps: groupedSteps };
 }

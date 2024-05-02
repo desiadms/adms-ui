@@ -1,7 +1,7 @@
 import { resolveRequestDocument } from "graphql-request";
 import * as R from "remeda";
 import { RxReplicationWriteToMasterRow } from "rxdb";
-import { extractFilesAndSaveToNhost } from "../utils";
+import { extractFilesAndSaveToNhost } from "../hooks";
 import {
   projectsDocument,
   queryStumpRemovalTasks,
@@ -9,6 +9,7 @@ import {
   queryTreeRemovalTasks,
   updateUserDocument,
   upsertStumpRemovalTasks,
+  upsertTicketingTasks,
   upsertTreeRemovalTasks,
   userDocument,
 } from "./graphql-operations";
@@ -41,9 +42,11 @@ export async function treeRemovalTasksWrite(
     R.omit(image, ["base64Preview"]),
   );
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
+  const taskIds = extractedData.map(({ id }) => ({ id }));
+
   return {
     query: resolveRequestDocument(upsertTreeRemovalTasks).query,
-    variables: { tasks: variableTasks, images: variableImages },
+    variables: { tasks: variableTasks, images: variableImages, taskIds },
   };
 }
 
@@ -69,10 +72,11 @@ export async function stumpRemovalTasksWrite(
     R.omit(image, ["base64Preview"]),
   );
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
+  const taskIds = extractedData.map(({ id }) => ({ id }));
 
   return {
     query: resolveRequestDocument(upsertStumpRemovalTasks).query,
-    variables: { tasks: variableTasks, images: variableImages },
+    variables: { tasks: variableTasks, images: variableImages, taskIds },
   };
 }
 
@@ -100,10 +104,11 @@ export async function ticketingTasksWrite(
     R.omit(image, ["base64Preview"]),
   );
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
+  const taskIds = extractedData.map(({ id }) => ({ id }));
 
   return {
-    query: resolveRequestDocument(upsertStumpRemovalTasks).query,
-    variables: { tasks: variableTasks, images: variableImages },
+    query: resolveRequestDocument(upsertTicketingTasks).query,
+    variables: { tasks: variableTasks, images: variableImages, taskIds },
   };
 }
 

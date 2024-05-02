@@ -138,6 +138,41 @@ type ImagesKeys = SatisfiesSchemaKeys<
     Pick<TreeRemovalTaskDocType, "ranges">
 >;
 
+const imagesSchema = {
+  images: {
+    type: "array",
+    properties: {
+      id: {
+        type: "string",
+      },
+      created_at: {
+        type: "string",
+      },
+      updated_at: {
+        type: "string",
+      },
+      latitude: {
+        type: "number",
+      },
+      longitude: {
+        type: "number",
+      },
+      ranges: {
+        type: "string",
+      },
+      taken_at_step: {
+        type: "string",
+      },
+      base64Preview: {
+        type: "string",
+      },
+      _deleted: {
+        type: "boolean",
+      },
+    } satisfies ImagesKeys,
+  },
+} as const;
+
 export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
   title: "tree removal task schema",
   version: 0,
@@ -163,38 +198,7 @@ export const treeRemovalTaskSchema: RxJsonSchema<TreeRemovalTaskDocType> = {
     completed: {
       type: "boolean",
     },
-    images: {
-      type: "array",
-      properties: {
-        id: {
-          type: "string",
-        },
-        created_at: {
-          type: "string",
-        },
-        updated_at: {
-          type: "string",
-        },
-        latitude: {
-          type: "string",
-        },
-        longitude: {
-          type: "string",
-        },
-        ranges: {
-          type: "string",
-        },
-        taken_at_step: {
-          type: "string",
-        },
-        base64Preview: {
-          type: "string",
-        },
-        _deleted: {
-          type: "boolean",
-        },
-      } satisfies ImagesKeys,
-    },
+    ...imagesSchema,
   },
   required: ["id"],
 } as const;
@@ -225,38 +229,7 @@ export const stumpRemovalTaskSchema: RxJsonSchema<StumpRemovalTaskDocType> = {
     completed: {
       type: "boolean",
     },
-    images: {
-      type: "array",
-      properties: {
-        id: {
-          type: "string",
-        },
-        created_at: {
-          type: "string",
-        },
-        updated_at: {
-          type: "string",
-        },
-        latitude: {
-          type: "string",
-        },
-        longitude: {
-          type: "string",
-        },
-        ranges: {
-          type: "string",
-        },
-        taken_at_step: {
-          type: "string",
-        },
-        base64Preview: {
-          type: "string",
-        },
-        _deleted: {
-          type: "boolean",
-        },
-      } satisfies ImagesKeys,
-    },
+    ...imagesSchema,
   },
   required: ["id"],
 } as const;
@@ -275,9 +248,6 @@ export const ticketingTaskSchema: RxJsonSchema<TicketingTaskDocType> = {
       type: "string",
       maxLength: 100,
     },
-    name: {
-      type: "string",
-    },
     comment: {
       type: "string",
     },
@@ -288,37 +258,12 @@ export const ticketingTaskSchema: RxJsonSchema<TicketingTaskDocType> = {
       type: "string",
     },
     latitude: {
-      type: ["string", "null"],
+      type: ["number", "null"],
     },
     longitude: {
-      type: ["string", "null"],
+      type: ["number", "null"],
     },
-    images: {
-      type: "array",
-      properties: {
-        id: {
-          type: "string",
-        },
-        created_at: {
-          type: "string",
-        },
-        updated_at: {
-          type: "string",
-        },
-        latitude: {
-          type: "string",
-        },
-        longitude: {
-          type: "string",
-        },
-        base64Preview: {
-          type: "string",
-        },
-        _deleted: {
-          type: "boolean",
-        },
-      } satisfies Omit<ImagesKeys, "taken_at_step" | "ranges">,
-    },
+    ...imagesSchema,
   },
   required: ["id"],
 } as const;

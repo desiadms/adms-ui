@@ -22,7 +22,7 @@ import {
   useFilesForm,
   useGeoLocation,
   useProject,
-} from "../utils";
+} from "../hooks";
 import {
   Button,
   ErrorMessage,
@@ -57,8 +57,8 @@ export function FieldMonitorTasks() {
       {activeProject?.ticketing_names?.map(({ id, name }) => (
         <Link
           key={id}
-          to="/tasks/field-monitor/ticketing/$name/$id"
-          params={{ name, id: v4() }}
+          to="/tasks/field-monitor/ticketing/$ticketingId/$id"
+          params={{ ticketingId: id, id: v4() }}
         >
           <TaskType name={name} />
         </Link>

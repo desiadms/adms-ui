@@ -1,5 +1,5 @@
 import { NhostClient, useAuthenticationStatus } from "@nhost/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { RxDocument } from "rxdb";
 import { useRxData } from "rxdb-hooks";
 import { v4 } from "uuid";
@@ -13,7 +13,7 @@ import {
 } from "./rxdb/rxdb-schemas";
 
 export const devMode = import.meta.env.MODE === "development";
-console.log(import.meta.env);
+
 export const nhost = new NhostClient({
   subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
   region: import.meta.env.VITE_NHOST_REGION,
@@ -271,6 +271,35 @@ export function useStumpRemovalTasks(selector?: Record<string, unknown>) {
   return { result, isFetching };
 }
 
+export function useTicketingTasks(selector?: Record<string, unknown>) {
+  const query = useCallback(
+    (collection) =>
+      collection.find({
+        sort: [{ updated_at: "desc" }],
+        selector: selector || {},
+      }),
+    [selector],
+  );
+
+  const { result, isFetching } = useRxData<StumpRemovalTaskDocType>(
+    "ticketing-task",
+    query,
+  );
+
+  return { result, isFetching };
+}
+
+export function useTiketingBlueprint(ticketingId: string) {
+  const { activeProject, isFetching } = useProject();
+
+  return {
+    ticketingBlueprint: activeProject?.ticketing_names.find(
+      (ticketingName) => ticketingName.id === ticketingId,
+    ),
+    isFetching,
+  };
+}
+
 export function useTask(taskId: string | undefined) {
   const { result: tree, isFetching: isFetchingTree } = useTreeRemovalTasks({
     id: taskId,
@@ -279,17 +308,24 @@ export function useTask(taskId: string | undefined) {
     id: taskId,
   });
 
-  const result = () => {
+  const { result: ticketing, isFetching: isFetchingTicketing } =
+    useTicketingTasks({
+      id: taskId,
+    });
+
+  const result = useMemo(() => {
     if (tree.length) {
       return { result: tree[0], type: "Tree" };
+    } else if (stump.length) {
+      return { result: stump[0], type: "Stump" };
     }
 
-    return { result: stump[0], type: "Stump" };
-  };
+    return { result: ticketing[0], type: "Ticketing" };
+  }, [tree, stump, ticketing]);
 
-  const isFetching = isFetchingTree || isFetchingStump;
+  const isFetching = isFetchingTree || isFetchingStump || isFetchingTicketing;
 
-  return { ...result(), isFetching };
+  return { ...result, isFetching };
 }
 
 export function convertFileSize(fileSize: number): string {

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { RxDatabase } from "rxdb";
 import { Provider } from "rxdb-hooks";
 import { initialize } from "../rxdb";
-import { useAuth } from "../utils";
+import { useAuth } from "../hooks";
 import { Dashboard } from "./Dashboard";
 import { Button, ErrorMessage, LabelledInput } from "./Forms";
 import { Spinner } from "./icons";
