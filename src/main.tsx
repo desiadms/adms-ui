@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { App } from "./App2";
+import { App } from "./App";
 import "./app.css";
 
 const rootEl = document.getElementById("app");
