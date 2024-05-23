@@ -228,9 +228,9 @@ function TreeStumpRemovalForm({
 
         <div className="p-2">
           <Label label="Photos" />
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col">
             {fields.map(({ id }, index) => (
-              <div className="flex flex-col gap-1" key={id}>
+              <div className="flex flex-col gap-1 my-2" key={id}>
                 <label
                   className={classNames(
                     "flex gap-1 rounded w-fit bg-slate-500 text-white px-2 py-1 text-xs",

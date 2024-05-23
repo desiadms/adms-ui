@@ -18,6 +18,11 @@ import { TasksProgress } from "./components/TasksProgress";
 import { TasksView } from "./components/TasksView";
 import { Steps } from "./rxdb/rxdb-schemas";
 import { FieldMonitorGeneralWrapper } from "./components/FieldMonitorCustom";
+import {
+  CollectionFormWrapper,
+  DisposalFormWrapper,
+  TruckTasks,
+} from "./components/TruckTasks";
 
 const rootRoute = createRootRoute({
   component: () => <AuthWrapper />,
@@ -123,6 +128,34 @@ const fieldMonitorTicketing = createRoute({
   errorComponent: () => "Oh crap!",
 });
 
+const truckTasks = createRoute({
+  getParentRoute: () => tasksRoute,
+  path: "truck-tasks",
+  component: () => <Outlet />,
+  errorComponent: () => "Oh crap!",
+});
+
+const truckTasksHome = createRoute({
+  getParentRoute: () => truckTasks,
+  path: "/",
+  component: () => <TruckTasks />,
+  errorComponent: () => "Oh crap!",
+});
+
+const truckTasksCollection = createRoute({
+  getParentRoute: () => truckTasks,
+  path: "collection/$id",
+  component: () => <CollectionFormWrapper />,
+  errorComponent: () => "Oh crap!",
+});
+
+const truckTasksDisposal = createRoute({
+  getParentRoute: () => truckTasks,
+  path: "disposal/$id",
+  component: () => <DisposalFormWrapper />,
+  errorComponent: () => "Oh crap!",
+});
+
 const printRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "print/$id",
@@ -149,6 +182,11 @@ const routeTree = rootRoute.addChildren([
       fieldMonitorTree,
       fieldMonitorStump,
       fieldMonitorTicketing,
+    ]),
+    truckTasks.addChildren([
+      truckTasksHome,
+      truckTasksCollection,
+      truckTasksDisposal,
     ]),
   ]),
 ]);
