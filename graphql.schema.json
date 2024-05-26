@@ -45949,7 +45949,7 @@
             "deprecationReason": null
           },
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": null,
             "args": [],
             "type": {
@@ -46995,7 +46995,7 @@
             "deprecationReason": null
           },
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -47241,7 +47241,7 @@
             "deprecationReason": null
           },
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -47420,7 +47420,7 @@
         "specifiedByURL": null,
         "fields": [
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": null,
             "args": [],
             "type": {
@@ -47577,7 +47577,7 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -47732,7 +47732,7 @@
         "specifiedByURL": null,
         "fields": [
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": null,
             "args": [],
             "type": {
@@ -47889,7 +47889,7 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -48213,7 +48213,7 @@
             "deprecationReason": null
           },
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -48429,7 +48429,7 @@
             "deprecationReason": null
           },
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -48559,7 +48559,7 @@
             "deprecationReason": null
           },
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -48983,7 +48983,7 @@
             "deprecationReason": null
           },
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -49219,7 +49219,7 @@
             "deprecationReason": null
           },
           {
-            "name": "capactiy",
+            "name": "capacity",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -58899,6 +58899,18 @@
             "deprecationReason": null
           },
           {
+            "name": "project",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "projects",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "project_id",
             "description": null,
             "args": [],
@@ -59795,6 +59807,18 @@
             "deprecationReason": null
           },
           {
+            "name": "project",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "projects_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "project_id",
             "description": null,
             "type": {
@@ -59974,6 +59998,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "project",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "projects_obj_rel_insert_input",
               "ofType": null
             },
             "defaultValue": null,
@@ -60630,6 +60666,18 @@
             "type": {
               "kind": "ENUM",
               "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "project",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "projects_order_by",
               "ofType": null
             },
             "defaultValue": null,
