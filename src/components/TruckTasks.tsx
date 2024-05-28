@@ -35,7 +35,7 @@ type FormProps = {
   capacity?: number;
   debrisType: string;
   loadCall?: number;
-  weighPoints?: GeolocationCoordinates[]; // TODO: implement weigh points
+  weighPoints?: { latitude: number; longitude: number }[];
   comment?: string;
   ranges?: string;
   files: FileForm[];
@@ -47,6 +47,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   // min + (min + max) / 2
   // see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range#value
   const [sliderValue, setSliderValue] = useState(50);
+
+  const [autofill, setAutofill] = useState<boolean>(false);
 
   const defaultFileValue: FileForm[] =
     type === "collection"
@@ -76,6 +78,15 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   });
 
   const {
+    fields: weighPoints,
+    append: appendWeighPoint,
+    remove: removeWeighPoint,
+  } = useFieldArray({
+    control,
+    name: "weighPoints",
+  });
+
+  const {
     useFilePreviews: [filePreviews],
     noFilesUploaded,
     onChangeSetFilePreview,
@@ -94,6 +105,119 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
     removePreview(id);
     update(index, { fileInstance: undefined });
   }
+
+  const weighPointsDivId = "weigh-points";
+
+  function addWeighPoint() {
+    let coordinates: GeolocationCoordinates;
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        coordinates = position.coords;
+        console.log("appending coordinates" + coordinates);
+        appendWeighPoint({
+          latitude: coordinates.latitude,
+          longitude: coordinates.longitude,
+        });
+      },
+      (error) => {
+        console.log(error.message);
+      },
+    );
+  }
+
+  // TODO: Make sure autofill fields submit with form
+  const autofillFields = (
+    <div>
+      <div className="p-2 w-fit rounded-lg">
+        <Label label="Truck Number" />
+        <div className="text-sm">Truck Number Here</div>
+      </div>
+
+      <div className="p-2 w-fit rounded-lg">
+        <Label label="Disposal Site" />
+        <div className="text-sm">Disposal Site Here</div>
+      </div>
+
+      <div className="p-2 w-fit rounded-lg">
+        <Label label="Contractor" />
+        <div className="text-sm">Contractor Here</div>
+      </div>
+
+      <div className="p-2 w-fit rounded-lg">
+        <Label label="Capacity" />
+        Capacity Here
+      </div>
+
+      <div className="p-2 w-fit rounded-lg">
+        <Label label="Debris Type" />
+        <div className="text-sm">Debris Type Here</div>
+      </div>
+    </div>
+  );
+
+  const manualInputFields = (
+    <div>
+      {/* TODO: Populate Truck Number dropdown with values from database */}
+      <div className="p-2 w-fit rounded-lg">
+        <Label label="Truck Number" />
+        <div className="text-sm">
+          <select {...register("truckNumber", { required: true })}>
+            <option value="Truck 1">Truck 1</option>
+            <option value="Truck 2">Truck 2</option>
+            <option value="Truck 3">Truck 3</option>
+          </select>
+        </div>
+      </div>
+
+      {/* TODO: Populate Disposal site dropdown with values from database */}
+      <div className="p-2 w-fit rounded-lg">
+        <Label label="Disposal Site" />
+        <div className="text-sm">
+          <select {...register("disposalSite", { required: true })}>
+            <option value="Site 1">Site 1</option>
+            <option value="Site 2">Site 2</option>
+            <option value="Site 3">Site 3</option>
+          </select>
+        </div>
+      </div>
+
+      {/* TODO: Populate Contractor dropdown with values from database */}
+      <div className="p-2 w-fit rounded-lg">
+        <Label label="Contractor" />
+        <div className="text-sm">
+          <select {...register("contractor", { required: true })}>
+            <option value="Contractor 1">Contractor 1</option>
+            <option value="Contractor 2">Contractor 2</option>
+            <option value="Contractor 3">Contractor 3</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="p-2 w-fit rounded-lg">
+        <Label label="Capacity" />
+        <Input
+          type="text"
+          {...register("capacity")}
+          placeholder="in cubic yards"
+        />
+      </div>
+
+      {/* TODO: Populate Debris Type dropdown with values from database */}
+      <div className="p-2 w-fit rounded-lg">
+        <Label label="Debris Type" />
+        <div className="text-sm">
+          <select {...register("debrisType", { required: true })}>
+            <option value="C&D">C&D</option>
+            <option value="Veg">Veg</option>
+            <option value="Utility Pole">Utility Pole</option>
+            <option value="Wire/Cable">Wire/Cable</option>
+            <option value="Transformer">Transformer</option>
+            <option value="Misc">Misc</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div>
@@ -130,94 +254,78 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
           </div>
         </div>
 
-        {/* TODO: Implement QR Code autofill (nice to have feature) */}
-        <div className="p-2 w-fit rounded-lg">
-          <div className="text-sm">
-            <Button
-              onClick={() => "bring up qr code scanner here"}
-              name="scan-qr"
-              type="button"
-              bgColor="bg-slate-500 hover:bg-slate-300"
-            >
-              Autofill with QR Code
-            </Button>
+        {type === "disposal" && (
+          <div>
+            <div className="p-2 w-fit rounded-lg">
+              <div className="text-sm">
+                <Button
+                  onClick={() => {
+                    setAutofill(true);
+                  }}
+                  name="scan-qr"
+                  type="button"
+                  bgColor="bg-slate-500 hover:bg-slate-300"
+                >
+                  Autofill with QR Code
+                </Button>
+              </div>
+            </div>
+            <div className="p-2 w-fit rounded-lg">
+              <div className="text-sm">
+                <Button
+                  onClick={() => {
+                    setAutofill(false);
+                  }}
+                  name="manual-input"
+                  type="button"
+                  bgColor="bg-slate-500 hover:bg-slate-300"
+                >
+                  Input Manually
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* TODO: Populate Truck Number dropdown with values from database */}
-        {/* TODO: Truck Number populates the rest of the values in the form */}
-        <div className="p-2 w-fit rounded-lg">
-          <Label label="Truck Number" />
-          <div className="text-sm">
-            <select {...register("truckNumber", { required: true })}>
-              <option value="Truck 1">Truck 1</option>
-              <option value="Truck 2">Truck 2</option>
-              <option value="Truck 3">Truck 3</option>
-            </select>
-          </div>
-        </div>
-
-        {/* TODO: Populate Disposal site dropdown with values from database */}
-        <div className="p-2 w-fit rounded-lg">
-          <Label label="Disposal Site" />
-          <div className="text-sm">
-            <select {...register("disposalSite", { required: true })}>
-              <option value="Site 1">Site 1</option>
-              <option value="Site 2">Site 2</option>
-              <option value="Site 3">Site 3</option>
-            </select>
-          </div>
-        </div>
-
-        {/* TODO: Populate Contractor dropdown with values from database */}
-        <div className="p-2 w-fit rounded-lg">
-          <Label label="Contractor" />
-          <div className="text-sm">
-            <select {...register("contractor", { required: true })}>
-              <option value="Contractor 1">Contractor 1</option>
-              <option value="Contractor 2">Contractor 2</option>
-              <option value="Contractor 3">Contractor 3</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="p-2 w-fit rounded-lg">
-          <Label label="Capacity" />
-          <Input
-            type="text"
-            {...register("capacity")}
-            placeholder="in cubic yards"
-          />
-        </div>
-
-        {/* TODO: Populate Debris Type dropdown with values from database */}
-        <div className="p-2 w-fit rounded-lg">
-          <Label label="Debris Type" />
-          <div className="text-sm">
-            <select {...register("debrisType", { required: true })}>
-              <option value="C&D">C&D</option>
-              <option value="Veg">Veg</option>
-              <option value="Utility Pole">Utility Pole</option>
-              <option value="Wire/Cable">Wire/Cable</option>
-              <option value="Transformer">Transformer</option>
-              <option value="Misc">Misc</option>
-            </select>
-          </div>
-        </div>
+        {autofill ? autofillFields : manualInputFields}
 
         {/* TODO: Implement Weigh Points*/}
         {type === "collection" && (
-          <div className="p-2 w-fit rounded-lg">
+          <div className="p-2 w-full rounded-lg">
             <Label label="Weigh Points" />
             <div className="text-sm">
               <Button
-                onClick={() => "weigh point"}
+                onClick={addWeighPoint}
                 name="add-weigh-point"
                 type="button"
-                bgColor="bg-slate-500 hover:bg-slate-300"
+                bgColor="w-full bg-slate-500 hover:bg-slate-300"
               >
                 Add Weigh Point
               </Button>
+            </div>
+            <div className="mt-2" id={weighPointsDivId}>
+              {weighPoints.map((weighPoint, index) => {
+                return (
+                  <div className="flex w-[100%]">
+                    <input
+                      type="text"
+                      className="p-4 my-2 w-[50%] basis-1/2 text-center relative rounded-xl"
+                      key={weighPoint.id}
+                      {...register(`weighPoints.${index}.latitude`)}
+                      value={weighPoint.latitude}
+                      readOnly
+                    />
+                    <input
+                      type="text"
+                      className="p-4 my-2 w-[50%] basis-1/2 text-center relative rounded-xl"
+                      key={weighPoint.id}
+                      {...register(`weighPoints.${index}.longitude`)}
+                      value={weighPoint.longitude}
+                      readOnly
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
