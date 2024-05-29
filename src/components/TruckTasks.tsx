@@ -3,7 +3,16 @@ import { TaskType } from "./common";
 import { v4 } from "uuid";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMemo, useState } from "react";
-import { FileForm, humanizeDate, useFilesForm, useGeoLocation } from "../hooks";
+import {
+  FileForm,
+  getGeoLocationHandler,
+  humanizeDate,
+  useContractors,
+  useDisposalSites,
+  useFilesForm,
+  useGeoLocation,
+  useTrucks,
+} from "../hooks";
 import { Button, ErrorMessage, Input, Label, LabelledTextArea } from "./Forms";
 import { Spinner } from "./icons";
 import classNames from "classnames";
@@ -48,7 +57,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   // see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range#value
   const [sliderValue, setSliderValue] = useState(50);
 
-  const [autofill, setAutofill] = useState<boolean>(false);
+  const [autofill, setAutofill] = useState(false);
 
   const defaultFileValue: FileForm[] =
     type === "collection"
@@ -106,24 +115,14 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
     update(index, { fileInstance: undefined });
   }
 
-  const weighPointsDivId = "weigh-points";
-
-  function addWeighPoint() {
-    let coordinates: GeolocationCoordinates;
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        coordinates = position.coords;
-        console.log("appending coordinates" + coordinates);
-        appendWeighPoint({
-          latitude: coordinates.latitude,
-          longitude: coordinates.longitude,
-        });
-      },
-      (error) => {
-        console.log(error.message);
-      },
-    );
+  async function addWeighPoint() {
+    const geolocation = await getGeoLocationHandler();
+    appendWeighPoint(geolocation);
   }
+
+  const rxdbContractorsObject = useContractors();
+  const rxdbTrucksObject = useTrucks();
+  const rxdbDisposalSitesObject = useDisposalSites();
 
   // TODO: Make sure autofill fields submit with form
   const autofillFields = (
@@ -157,15 +156,19 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
 
   const manualInputFields = (
     <div>
-      {/* TODO: Populate Truck Number dropdown with values from database */}
       <div className="p-2 w-fit rounded-lg">
         <Label label="Truck Number" />
         <div className="text-sm">
-          <select {...register("truckNumber", { required: true })}>
-            <option value="Truck 1">Truck 1</option>
-            <option value="Truck 2">Truck 2</option>
-            <option value="Truck 3">Truck 3</option>
-          </select>
+          <input
+            type="text"
+            list="truck-numbers"
+            {...register("truckNumber", { required: true })}
+          ></input>
+          <datalist id="truck-numbers">
+            {rxdbTrucksObject.trucks.map((truckNumber) => {
+              return <option value={truckNumber._data.truck_number}></option>;
+            })}
+          </datalist>
         </div>
       </div>
 
@@ -173,11 +176,16 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
       <div className="p-2 w-fit rounded-lg">
         <Label label="Disposal Site" />
         <div className="text-sm">
-          <select {...register("disposalSite", { required: true })}>
-            <option value="Site 1">Site 1</option>
-            <option value="Site 2">Site 2</option>
-            <option value="Site 3">Site 3</option>
-          </select>
+          <input
+            type="text"
+            list="disposal-sites"
+            {...register("disposalSite", { required: true })}
+          ></input>
+          <datalist id="disposal-sites">
+            {rxdbDisposalSitesObject.disposalSites.map((disposalSite) => {
+              return <option value={disposalSite._data.name}></option>;
+            })}
+          </datalist>
         </div>
       </div>
 
@@ -185,11 +193,16 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
       <div className="p-2 w-fit rounded-lg">
         <Label label="Contractor" />
         <div className="text-sm">
-          <select {...register("contractor", { required: true })}>
-            <option value="Contractor 1">Contractor 1</option>
-            <option value="Contractor 2">Contractor 2</option>
-            <option value="Contractor 3">Contractor 3</option>
-          </select>
+          <input
+            type="text"
+            list="contractors"
+            {...register("contractor", { required: true })}
+          ></input>
+          <datalist id="contractors">
+            {rxdbContractorsObject.contractors.map((contractor) => {
+              return <option value={contractor._data.name}></option>;
+            })}
+          </datalist>
         </div>
       </div>
 
@@ -221,7 +234,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
 
   return (
     <div>
-      <div className="capitalize font-medium pb-4">{type}</div>
+      <div className="capitalize font-medium text-xl pb-4">{type}</div>
       <form
         onSubmit={handleSubmit(submitForm)}
         className="flex flex-col gap-2 items-start bg-zinc-200 rounded-md p-4"
@@ -289,7 +302,6 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
 
         {autofill ? autofillFields : manualInputFields}
 
-        {/* TODO: Implement Weigh Points*/}
         {type === "collection" && (
           <div className="p-2 w-full rounded-lg">
             <Label label="Weigh Points" />
@@ -298,31 +310,43 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                 onClick={addWeighPoint}
                 name="add-weigh-point"
                 type="button"
-                bgColor="w-full bg-slate-500 hover:bg-slate-300"
+                bgColor="w-full bg-slate-500"
               >
                 Add Weigh Point
               </Button>
             </div>
-            <div className="mt-2" id={weighPointsDivId}>
+            <div className="mt-2">
               {weighPoints.map((weighPoint, index) => {
                 return (
-                  <div className="flex w-[100%]">
+                  <div className="relative flex w-full">
                     <input
-                      type="text"
-                      className="p-4 my-2 w-[50%] basis-1/2 text-center relative rounded-xl"
-                      key={weighPoint.id}
-                      {...register(`weighPoints.${index}.latitude`)}
+                      type="hidden"
+                      key={weighPoint.id + "lat"}
+                      {...register(`weighPoints.${index}.latitude`, {
+                        valueAsNumber: true,
+                      })}
                       value={weighPoint.latitude}
                       readOnly
                     />
                     <input
-                      type="text"
-                      className="p-4 my-2 w-[50%] basis-1/2 text-center relative rounded-xl"
-                      key={weighPoint.id}
-                      {...register(`weighPoints.${index}.longitude`)}
+                      type="hidden"
+                      key={weighPoint.id + "long"}
+                      {...register(`weighPoints.${index}.longitude`, {
+                        valueAsNumber: true,
+                      })}
                       value={weighPoint.longitude}
                       readOnly
                     />
+                    <div className="p-4 my-2 w-full bg-white text-center rounded-2xl relative">
+                      <span>{`(${weighPoint.latitude}, ${weighPoint.longitude})`}</span>
+                    </div>
+                    <button
+                      className="absolute -top-4 -right-4 rounded-full bg-gray-800"
+                      type="button"
+                      onClick={() => removeWeighPoint(index)}
+                    >
+                      <XCircleIcon className="w-10 h-10 text-red-400" />
+                    </button>
                   </div>
                 );
               })}

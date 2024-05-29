@@ -255,3 +255,30 @@ export const projectsDocument = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const queryContractors = graphql(/* GraphQL */ `
+  query Contractors {
+    contractors {
+      id
+      name
+    }
+  }
+`);
+
+export const queryTrucks = graphql(/* GraphQL */ `
+  query Trucks {
+    trucks {
+      truck_number
+      id
+    }
+  }
+`);
+
+export const queryDisposalSites = graphql(/* GraphQL */ `
+  query DisposalSites {
+    disposal_sites {
+      id
+      name
+    }
+  }
+`);

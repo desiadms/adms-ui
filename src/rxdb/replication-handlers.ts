@@ -4,9 +4,12 @@ import { RxReplicationWriteToMasterRow } from "rxdb";
 import { extractFilesAndSaveToNhost } from "../hooks";
 import {
   projectsDocument,
+  queryContractors,
+  queryDisposalSites,
   queryStumpRemovalTasks,
   queryTicketingTasks,
   queryTreeRemovalTasks,
+  queryTrucks,
   updateUserDocument,
   upsertStumpRemovalTasks,
   upsertTicketingTasks,
@@ -139,6 +142,27 @@ export function userWrite(
 export function projectRead() {
   return {
     query: resolveRequestDocument(projectsDocument).query,
+    variables: {},
+  };
+}
+
+export function contractorsRead() {
+  return {
+    query: resolveRequestDocument(queryContractors).query,
+    variables: {},
+  };
+}
+
+export function trucksRead() {
+  return {
+    query: resolveRequestDocument(queryTrucks).query,
+    variables: {},
+  };
+}
+
+export function disposalSitesRead() {
+  return {
+    query: resolveRequestDocument(queryDisposalSites).query,
     variables: {},
   };
 }

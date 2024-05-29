@@ -4,11 +4,14 @@ import { RxDocument } from "rxdb";
 import { useRxData } from "rxdb-hooks";
 import { v4 } from "uuid";
 import {
+  ContractorDocType,
+  DisposalSiteDocType,
   Images,
   ProjectDocType,
   Steps,
   StumpRemovalTaskDocType,
   TreeRemovalTaskDocType,
+  TruckDocType,
   UserDocType,
 } from "./rxdb/rxdb-schemas";
 
@@ -50,6 +53,23 @@ export function useAuth() {
   return !isOnline
     ? { isAuthenticated: true, isLoading: false, isOffline: true }
     : { isAuthenticated, isLoading, isOffline: false };
+}
+
+export async function getGeoLocationHandler() {
+  return new Promise<{ latitude: number; longitude: number }>((res, rej) =>
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        res({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.log(error.message);
+        rej(error.message);
+      },
+    ),
+  );
 }
 
 export function useGeoLocation() {
@@ -233,6 +253,30 @@ export function useProject() {
   const query = useCallback((collection) => collection.find(), []);
   const { result, isFetching } = useRxData<ProjectDocType>("project", query);
   return { activeProject: result[0], isFetching };
+}
+
+export function useContractors() {
+  const query = useCallback((collection) => collection.find(), []);
+  const { result, isFetching } = useRxData<ContractorDocType>(
+    "contractor",
+    query,
+  );
+  return { contractors: result, isFetching };
+}
+
+export function useTrucks() {
+  const query = useCallback((collection) => collection.find(), []);
+  const { result, isFetching } = useRxData<TruckDocType>("truck", query);
+  return { trucks: result, isFetching };
+}
+
+export function useDisposalSites() {
+  const query = useCallback((collection) => collection.find(), []);
+  const { result, isFetching } = useRxData<DisposalSiteDocType>(
+    "disposal-site",
+    query,
+  );
+  return { disposalSites: result, isFetching };
 }
 
 export function useTreeRemovalTasks(selector?: Record<string, unknown>) {

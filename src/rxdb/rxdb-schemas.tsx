@@ -1,10 +1,13 @@
 import { RxJsonSchema } from "rxdb";
 import {
+  ContractorsQuery,
+  DisposalSitesQuery,
   ImagesQuery,
   ProjectsQuery,
   StumpRemovalTasksQuery,
   TicketingTasksQuery,
   TreeRemovalTasksQuery,
+  TrucksQuery,
   UserQuery,
 } from "src/__generated__/gql/graphql";
 
@@ -264,6 +267,67 @@ export const ticketingTaskSchema: RxJsonSchema<TicketingTaskDocType> = {
       type: ["number", "null"],
     },
     ...imagesSchema,
+  },
+  required: ["id"],
+} as const;
+
+export type ContractorDocType = OmitTypename<
+  ContractorsQuery["contractors"][number]
+>;
+
+export const contractorSchema: RxJsonSchema<ContractorDocType> = {
+  title: "contractor schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    name: {
+      type: "string",
+    },
+  },
+  required: ["id"],
+} as const;
+
+export type TruckDocType = OmitTypename<TrucksQuery["trucks"][number]>;
+
+export const truckSchema: RxJsonSchema<TruckDocType> = {
+  title: "truck schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    truck_number: {
+      type: "string",
+    },
+  },
+  required: ["id"],
+} as const;
+
+export type DisposalSiteDocType = OmitTypename<
+  DisposalSitesQuery["disposal_sites"][number]
+>;
+
+export const disposalSiteSchema: RxJsonSchema<DisposalSiteDocType> = {
+  title: "disposal site schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    name: {
+      type: "string",
+    },
   },
   required: ["id"],
 } as const;

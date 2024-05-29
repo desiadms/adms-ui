@@ -5,6 +5,8 @@ import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
 import { addCollections } from "./rxdb/abstraction";
 import {
+  contractorsRead,
+  disposalSitesRead,
   projectRead,
   stumpRemovalTasksRead,
   stumpRemovalTasksWrite,
@@ -12,14 +14,18 @@ import {
   ticketingTasksWrite,
   treeRemovalTasksRead,
   treeRemovalTasksWrite,
+  trucksRead,
   userRead,
   userWrite,
 } from "./rxdb/replication-handlers";
 import {
+  contractorSchema,
+  disposalSiteSchema,
   projectSchema,
   stumpRemovalTaskSchema,
   ticketingTaskSchema,
   treeRemovalTaskSchema,
+  truckSchema,
   userSchema,
 } from "./rxdb/rxdb-schemas";
 import { devMode } from "./hooks";
@@ -82,6 +88,24 @@ export async function initialize(accessToken: string | null) {
       name: "project",
       schema: projectSchema,
       pullQueryBuilder: projectRead,
+      accessToken,
+    },
+    {
+      name: "contractor",
+      schema: contractorSchema,
+      pullQueryBuilder: contractorsRead,
+      accessToken,
+    },
+    {
+      name: "truck",
+      schema: truckSchema,
+      pullQueryBuilder: trucksRead,
+      accessToken,
+    },
+    {
+      name: "disposal-site",
+      schema: disposalSiteSchema,
+      pullQueryBuilder: disposalSitesRead,
       accessToken,
     },
   ]);
