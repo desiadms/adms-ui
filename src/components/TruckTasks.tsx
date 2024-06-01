@@ -8,6 +8,7 @@ import {
   getGeoLocationHandler,
   humanizeDate,
   useContractors,
+  useDebrisTypes,
   useDisposalSites,
   useFilesForm,
   useGeoLocation,
@@ -59,6 +60,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
 
   const [autofill, setAutofill] = useState(false);
 
+  const [loadCallTouched, setLoadCallTouched] = useState(false);
+
   const defaultFileValue: FileForm[] =
     type === "collection"
       ? [
@@ -87,15 +90,6 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   });
 
   const {
-    fields: weighPoints,
-    append: appendWeighPoint,
-    remove: removeWeighPoint,
-  } = useFieldArray({
-    control,
-    name: "weighPoints",
-  });
-
-  const {
     useFilePreviews: [filePreviews],
     noFilesUploaded,
     onChangeSetFilePreview,
@@ -115,16 +109,27 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
     update(index, { fileInstance: undefined });
   }
 
+  const {
+    fields: weighPoints,
+    append: appendWeighPoint,
+    remove: removeWeighPoint,
+  } = useFieldArray({
+    control,
+    name: "weighPoints",
+  });
+
   async function addWeighPoint() {
     const geolocation = await getGeoLocationHandler();
     appendWeighPoint(geolocation);
   }
 
+  // Data from RxDB to populate the input options
   const rxdbContractorsObject = useContractors();
   const rxdbTrucksObject = useTrucks();
   const rxdbDisposalSitesObject = useDisposalSites();
+  const rxdbDebrisTypesObject = useDebrisTypes();
 
-  // TODO: Make sure autofill fields submit with form
+  // TODO: Implement Autofill
   const autofillFields = (
     <div>
       <div className="p-2 w-fit rounded-lg">
@@ -154,80 +159,113 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
     </div>
   );
 
+  const defaultOptionString = "Please Select";
+  function validateInputIsNotDefault(value) {
+    return value !== defaultOptionString || "Make a selection";
+  }
+
   const manualInputFields = (
     <div>
       <div className="p-2 w-fit rounded-lg">
         <Label label="Truck Number" />
         <div className="text-sm">
-          <input
-            type="text"
-            list="truck-numbers"
-            {...register("truckNumber", { required: true })}
-          ></input>
-          <datalist id="truck-numbers">
-            {rxdbTrucksObject.trucks.map((truckNumber) => {
-              return <option value={truckNumber._data.truck_number}></option>;
+          <select
+            {...register("truckNumber", {
+              required: "Truck Number is required",
+              validate: validateInputIsNotDefault,
             })}
-          </datalist>
+          >
+            <option>{defaultOptionString}</option>
+            {rxdbTrucksObject.trucks.map((truckNumber) => {
+              return (
+                <option key={truckNumber._data.id} value={truckNumber._data.id}>
+                  {truckNumber._data.truck_number}
+                </option>
+              );
+            })}
+          </select>
         </div>
+        <ErrorMessage message={errors.truckNumber?.message} />
       </div>
 
-      {/* TODO: Populate Disposal site dropdown with values from database */}
       <div className="p-2 w-fit rounded-lg">
         <Label label="Disposal Site" />
         <div className="text-sm">
-          <input
-            type="text"
-            list="disposal-sites"
-            {...register("disposalSite", { required: true })}
-          ></input>
-          <datalist id="disposal-sites">
-            {rxdbDisposalSitesObject.disposalSites.map((disposalSite) => {
-              return <option value={disposalSite._data.name}></option>;
+          <select
+            {...register("disposalSite", {
+              required: "Disposal site is required",
+              validate: validateInputIsNotDefault,
             })}
-          </datalist>
+          >
+            <option>{defaultOptionString}</option>
+            {rxdbDisposalSitesObject.disposalSites.map((disposalSite) => {
+              return (
+                <option
+                  key={disposalSite._data.id}
+                  value={disposalSite._data.id}
+                >
+                  {disposalSite._data.name}
+                </option>
+              );
+            })}
+          </select>
         </div>
+        <ErrorMessage message={errors.disposalSite?.message} />
       </div>
 
-      {/* TODO: Populate Contractor dropdown with values from database */}
       <div className="p-2 w-fit rounded-lg">
         <Label label="Contractor" />
         <div className="text-sm">
-          <input
-            type="text"
-            list="contractors"
-            {...register("contractor", { required: true })}
-          ></input>
-          <datalist id="contractors">
-            {rxdbContractorsObject.contractors.map((contractor) => {
-              return <option value={contractor._data.name}></option>;
+          <select
+            {...register("contractor", {
+              required: "Contractor is required",
+              validate: validateInputIsNotDefault,
             })}
-          </datalist>
+          >
+            <option>{defaultOptionString}</option>
+            {rxdbContractorsObject.contractors.map((contractor) => {
+              return (
+                <option key={contractor._data.id} value={contractor._data.id}>
+                  {contractor._data.name}
+                </option>
+              );
+            })}
+          </select>
         </div>
+        <ErrorMessage message={errors.contractor?.message} />
       </div>
 
       <div className="p-2 w-fit rounded-lg">
         <Label label="Capacity" />
         <Input
-          type="text"
+          type="number"
+          min="0"
+          max="1000000"
           {...register("capacity")}
-          placeholder="in cubic yards"
+          placeholder="in yards&sup3;"
         />
       </div>
 
-      {/* TODO: Populate Debris Type dropdown with values from database */}
       <div className="p-2 w-fit rounded-lg">
         <Label label="Debris Type" />
         <div className="text-sm">
-          <select {...register("debrisType", { required: true })}>
-            <option value="C&D">C&D</option>
-            <option value="Veg">Veg</option>
-            <option value="Utility Pole">Utility Pole</option>
-            <option value="Wire/Cable">Wire/Cable</option>
-            <option value="Transformer">Transformer</option>
-            <option value="Misc">Misc</option>
+          <select
+            {...register("debrisType", {
+              required: "Debris Type is required",
+              validate: validateInputIsNotDefault,
+            })}
+          >
+            <option>{defaultOptionString}</option>
+            {rxdbDebrisTypesObject.debrisTypes.map((debrisType) => {
+              return (
+                <option key={debrisType._data.id} value={debrisType._data.id}>
+                  {debrisType._data.name}
+                </option>
+              );
+            })}
           </select>
         </div>
+        <ErrorMessage message={errors.debrisType?.message} />
       </div>
     </div>
   );
@@ -305,12 +343,12 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         {type === "collection" && (
           <div className="p-2 w-full rounded-lg">
             <Label label="Weigh Points" />
-            <div className="text-sm">
+            <div className="text-sm w-fit">
               <Button
                 onClick={addWeighPoint}
                 name="add-weigh-point"
                 type="button"
-                bgColor="w-full bg-slate-500"
+                bgColor="bg-slate-500"
               >
                 Add Weigh Point
               </Button>
@@ -318,7 +356,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
             <div className="mt-2">
               {weighPoints.map((weighPoint, index) => {
                 return (
-                  <div className="relative flex w-full">
+                  <div className="relative flex w-fit">
                     <input
                       type="hidden"
                       key={weighPoint.id + "lat"}
@@ -341,11 +379,11 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                       <span>{`(${weighPoint.latitude}, ${weighPoint.longitude})`}</span>
                     </div>
                     <button
-                      className="absolute -top-4 -right-4 rounded-full bg-gray-800"
+                      className="absolute -top-0 -right-2 rounded-full bg-gray-800"
                       type="button"
                       onClick={() => removeWeighPoint(index)}
                     >
-                      <XCircleIcon className="w-10 h-10 text-red-400" />
+                      <XCircleIcon className="w-5 h-5 text-red-400" />
                     </button>
                   </div>
                 );
@@ -364,16 +402,20 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                 min="5"
                 max="95"
                 step="5"
-                {...register("loadCall", { required: true })}
+                {...register("loadCall", { required: "Load Call is required" })}
                 onInput={(e) => {
                   const value = e.currentTarget.value;
                   setSliderValue(parseInt(value));
+                  setLoadCallTouched(true);
                 }}
               />
               <output className="mx-4" id="sliderValue">
                 {sliderValue} %
               </output>
             </div>
+            {!loadCallTouched && submitCount > 0 && (
+              <ErrorMessage message="Please set a load call" />
+            )}
           </div>
         )}
 
@@ -384,11 +426,11 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
               <div className="flex flex-col gap-1 my-2" key={id}>
                 <label
                   className={classNames(
-                    "flex gap-1 rounded w-fit bg-slate-500 text-white px-2 py-1 text-xs",
+                    "flex gap-1 rounded w-fit bg-slate-500 text-white px-2 py-1 text-sm font-medium justify-center items-center",
                   )}
                 >
                   <CameraIcon className="w-4 h-4 text-white" />
-                  <span className="text-xs">Take Picture</span>
+                  <span className="text-sm">Take Picture</span>
                   <Input
                     type="file"
                     accept="image/*"

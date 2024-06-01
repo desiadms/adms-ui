@@ -5,6 +5,7 @@ import { extractFilesAndSaveToNhost } from "../hooks";
 import {
   projectsDocument,
   queryContractors,
+  queryDebrisTypes,
   queryDisposalSites,
   queryStumpRemovalTasks,
   queryTicketingTasks,
@@ -163,6 +164,13 @@ export function trucksRead() {
 export function disposalSitesRead() {
   return {
     query: resolveRequestDocument(queryDisposalSites).query,
+    variables: {},
+  };
+}
+
+export function debrisTypesRead() {
+  return {
+    query: resolveRequestDocument(queryDebrisTypes).query,
     variables: {},
   };
 }

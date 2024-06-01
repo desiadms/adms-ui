@@ -6,6 +6,7 @@ import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
 import { addCollections } from "./rxdb/abstraction";
 import {
   contractorsRead,
+  debrisTypesRead,
   disposalSitesRead,
   projectRead,
   stumpRemovalTasksRead,
@@ -20,6 +21,7 @@ import {
 } from "./rxdb/replication-handlers";
 import {
   contractorSchema,
+  debrisTypeSchema,
   disposalSiteSchema,
   projectSchema,
   stumpRemovalTaskSchema,
@@ -106,6 +108,12 @@ export async function initialize(accessToken: string | null) {
       name: "disposal-site",
       schema: disposalSiteSchema,
       pullQueryBuilder: disposalSitesRead,
+      accessToken,
+    },
+    {
+      name: "debris-type",
+      schema: debrisTypeSchema,
+      pullQueryBuilder: debrisTypesRead,
       accessToken,
     },
   ]);

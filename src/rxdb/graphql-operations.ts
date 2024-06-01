@@ -282,3 +282,12 @@ export const queryDisposalSites = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const queryDebrisTypes = graphql(/* GraphQL */ `
+  query DebrisTypes {
+    debris_types {
+      id
+      name
+    }
+  }
+`);

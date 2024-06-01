@@ -5,6 +5,7 @@ import { useRxData } from "rxdb-hooks";
 import { v4 } from "uuid";
 import {
   ContractorDocType,
+  DebrisTypeDocType,
   DisposalSiteDocType,
   Images,
   ProjectDocType,
@@ -279,6 +280,14 @@ export function useDisposalSites() {
   return { disposalSites: result, isFetching };
 }
 
+export function useDebrisTypes() {
+  const query = useCallback((collection) => collection.find(), []);
+  const { result, isFetching } = useRxData<DebrisTypeDocType>(
+    "debris-type",
+    query,
+  );
+  return { debrisTypes: result, isFetching };
+}
 export function useTreeRemovalTasks(selector?: Record<string, unknown>) {
   const query = useCallback(
     (collection) =>

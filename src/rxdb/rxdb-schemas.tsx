@@ -1,6 +1,7 @@
 import { RxJsonSchema } from "rxdb";
 import {
   ContractorsQuery,
+  DebrisTypesQuery,
   DisposalSitesQuery,
   ImagesQuery,
   ProjectsQuery,
@@ -317,6 +318,27 @@ export type DisposalSiteDocType = OmitTypename<
 
 export const disposalSiteSchema: RxJsonSchema<DisposalSiteDocType> = {
   title: "disposal site schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    name: {
+      type: "string",
+    },
+  },
+  required: ["id"],
+} as const;
+
+export type DebrisTypeDocType = OmitTypename<
+  DebrisTypesQuery["debris_types"][number]
+>;
+
+export const debrisTypeSchema: RxJsonSchema<DebrisTypeDocType> = {
+  title: "debris type schema",
   version: 0,
   type: "object",
   primaryKey: "id",
