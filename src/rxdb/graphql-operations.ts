@@ -291,3 +291,74 @@ export const queryDebrisTypes = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const queryCollectionTasks = graphql(/* GraphQL */ `
+  query CollectionTasks {
+    tasks_collection {
+      capacity
+      comment
+      contractor
+      created_at
+      debris_type
+      disposal_site
+      id
+      latitude
+      longitude
+      project_id
+      truck_id
+      updated_at
+      weigh_points
+      images: tasks_collection_images {
+        id
+        created_at
+        updated_at
+        latitude
+        longitude
+        taken_at_step
+        base64Preview
+        _deleted
+      }
+      tasks_disposal {
+        id
+      }
+    }
+  }
+`);
+
+export const upsertCollectionTasks = graphql(/* GraphQL */ `
+  mutation UpsertCollectionTask(
+    $tasks: [tasks_collection_insert_input!]!
+    $images: [images_insert_input!]!
+    $taskIds: [task_ids_insert_input!]!
+  ) {
+    insert_task_ids(objects: $taskIds) {
+      returning {
+        id
+      }
+    }
+
+    insert_tasks_collection(
+      objects: $tasks
+      on_conflict: {
+        update_columns: [comment, updated_at, _deleted]
+        constraint: tasks_collection_pkey
+      }
+    ) {
+      returning {
+        id
+      }
+    }
+
+    insert_images(
+      objects: $images
+      on_conflict: {
+        constraint: images_pkey
+        update_columns: [latitude, longitude, updated_at, _deleted]
+      }
+    ) {
+      returning {
+        id
+      }
+    }
+  }
+`);

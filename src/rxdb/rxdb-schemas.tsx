@@ -1,5 +1,6 @@
 import { RxJsonSchema } from "rxdb";
 import {
+  CollectionTasksQuery,
   ContractorsQuery,
   DebrisTypesQuery,
   DisposalSitesQuery,
@@ -350,6 +351,69 @@ export const debrisTypeSchema: RxJsonSchema<DebrisTypeDocType> = {
     name: {
       type: "string",
     },
+  },
+  required: ["id"],
+} as const;
+
+export type CollectionTaskDocType = OmitTypename<
+  CollectionTasksQuery["tasks_collection"][number]
+>;
+
+export const collectionTaskSchema: RxJsonSchema<CollectionTaskDocType> = {
+  title: "collection task schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    capacity: {
+      type: "string",
+    },
+    contractor: {
+      type: "string",
+    },
+    comment: {
+      type: "string",
+    },
+    created_at: {
+      type: "string",
+    },
+    debris_type: {
+      type: "string",
+    },
+    disposal_site: {
+      type: "string",
+    },
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    latitude: {
+      type: ["number", "null"],
+    },
+    longitude: {
+      type: ["number", "null"],
+    },
+    project_id: {
+      type: "string",
+    },
+    tasks_disposal: {
+      type: ["object", "null"],
+      properties: {
+        id: {
+          type: "string",
+        },
+      },
+    },
+    truck_id: {
+      type: "string",
+    },
+    updated_at: {
+      type: "string",
+    },
+    weigh_points: {
+      type: "string",
+    },
+    ...imagesSchema,
   },
   required: ["id"],
 } as const;

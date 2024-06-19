@@ -5,6 +5,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { useMemo, useState } from "react";
 import {
   FileForm,
+  genTaskImagesMetadata,
   getGeoLocationHandler,
   humanizeDate,
   useContractors,
@@ -19,6 +20,8 @@ import { Spinner } from "./icons";
 import classNames from "classnames";
 import CameraIcon from "@heroicons/react/20/solid/CameraIcon";
 import { XCircleIcon } from "@heroicons/react/20/solid";
+import { CollectionTaskDocType } from "src/rxdb/rxdb-schemas";
+import { useRxCollection } from "rxdb-hooks";
 
 export function TruckTasks() {
   return (
@@ -98,10 +101,56 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   } = useFilesForm();
 
   const currentDateTime = useMemo(() => humanizeDate(), []);
+
   const { coordinates } = useGeoLocation();
+  // const navigate = useNavigate({
+  //   from: "/tasks/truck-tasks/collection/$id",
+  // });
+
+  const truckCollectionCol =
+    useRxCollection<CollectionTaskDocType>("collection-task");
 
   async function submitForm(data) {
-    console.log(data);
+    if (noFilesUploaded) return;
+
+    if (coordinates) {
+      const images = await genTaskImagesMetadata({
+        filesData: data.files,
+        coordinates,
+      });
+
+      const nowUTC = new Date().toISOString();
+
+      const existingCollectionDoc = await truckCollectionCol
+        ?.findOne(taskId)
+        .exec();
+
+      if (type === "collection") {
+        // TODO: weigh points is an array, how to make into string data type
+        // TODO: verify the other data we are putting into the db...
+        await truckCollectionCol?.upsert({
+          capacity: data.capacity,
+          contractor: data.contractor,
+          created_at: nowUTC,
+          debris_type: data.debrisType,
+          disposal_site: data.disposalSite,
+          id: taskId,
+          latitude: coordinates?.latitude,
+          longitude: coordinates?.longitude,
+          truck_id: data.truckNumber,
+          weigh_points: data.weighpoints,
+          comment: data.comment,
+          updated_at: nowUTC,
+          images: existingCollectionDoc?.images.concat(images) || images,
+        });
+      } else {
+        // upsert disposal task
+      }
+
+      // navigate({ to: "/progress" });
+
+      console.log("data submitted: ", data);
+    }
   }
 
   function handleRemove(index: number, id: string) {
@@ -356,10 +405,9 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
             <div className="mt-2">
               {weighPoints.map((weighPoint, index) => {
                 return (
-                  <div className="relative flex w-fit">
+                  <div className="relative flex w-fit" key={weighPoint.id}>
                     <input
                       type="hidden"
-                      key={weighPoint.id + "lat"}
                       {...register(`weighPoints.${index}.latitude`, {
                         valueAsNumber: true,
                       })}
@@ -368,7 +416,6 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                     />
                     <input
                       type="hidden"
-                      key={weighPoint.id + "long"}
                       {...register(`weighPoints.${index}.longitude`, {
                         valueAsNumber: true,
                       })}

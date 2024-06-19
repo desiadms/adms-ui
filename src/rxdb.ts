@@ -5,6 +5,8 @@ import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
 import { addCollections } from "./rxdb/abstraction";
 import {
+  collectionTasksRead,
+  collectionTasksWrite,
   contractorsRead,
   debrisTypesRead,
   disposalSitesRead,
@@ -20,6 +22,7 @@ import {
   userWrite,
 } from "./rxdb/replication-handlers";
 import {
+  collectionTaskSchema,
   contractorSchema,
   debrisTypeSchema,
   disposalSiteSchema,
@@ -116,7 +119,15 @@ export async function initialize(accessToken: string | null) {
       pullQueryBuilder: debrisTypesRead,
       accessToken,
     },
+    {
+      name: "collection-task",
+      schema: collectionTaskSchema,
+      pullQueryBuilder: collectionTasksRead,
+      pushQueryBuilder: collectionTasksWrite,
+      accessToken,
+    },
   ]);
 
+  console.log("collections created");
   return db;
 }

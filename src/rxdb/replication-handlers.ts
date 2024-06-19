@@ -4,6 +4,7 @@ import { RxReplicationWriteToMasterRow } from "rxdb";
 import { extractFilesAndSaveToNhost } from "../hooks";
 import {
   projectsDocument,
+  queryCollectionTasks,
   queryContractors,
   queryDebrisTypes,
   queryDisposalSites,
@@ -12,12 +13,14 @@ import {
   queryTreeRemovalTasks,
   queryTrucks,
   updateUserDocument,
+  upsertCollectionTasks,
   upsertStumpRemovalTasks,
   upsertTicketingTasks,
   upsertTreeRemovalTasks,
   userDocument,
 } from "./graphql-operations";
 import {
+  CollectionTaskDocType,
   StumpRemovalTaskDocType,
   TicketingTaskDocType,
   TreeRemovalTaskDocType,
@@ -172,5 +175,36 @@ export function debrisTypesRead() {
   return {
     query: resolveRequestDocument(queryDebrisTypes).query,
     variables: {},
+  };
+}
+
+export function collectionTasksRead() {
+  return {
+    query: resolveRequestDocument(queryCollectionTasks).query,
+    variables: {},
+  };
+}
+
+export async function collectionTasksWrite(
+  _db,
+  rows: RxReplicationWriteToMasterRow<CollectionTaskDocType>[],
+) {
+  console.log("collection writing replication");
+  const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
+  const images = extractedData
+    .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
+    .flat();
+
+  await extractFilesAndSaveToNhost(images);
+
+  const variableImages = images.map((image) =>
+    R.omit(image, ["base64Preview"]),
+  );
+  const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
+  const taskIds = extractedData.map(({ id }) => ({ id }));
+
+  return {
+    query: resolveRequestDocument(upsertCollectionTasks).query,
+    variables: { tasks: variableTasks, images: variableImages, taskIds },
   };
 }
