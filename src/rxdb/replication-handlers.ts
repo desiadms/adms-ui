@@ -189,7 +189,6 @@ export async function collectionTasksWrite(
   _db,
   rows: RxReplicationWriteToMasterRow<CollectionTaskDocType>[],
 ) {
-  console.log("collection writing replication");
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
   const images = extractedData
     .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
@@ -202,7 +201,6 @@ export async function collectionTasksWrite(
   );
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
-
   return {
     query: resolveRequestDocument(upsertCollectionTasks).query,
     variables: { tasks: variableTasks, images: variableImages, taskIds },

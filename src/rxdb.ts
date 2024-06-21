@@ -128,6 +128,5 @@ export async function initialize(accessToken: string | null) {
     },
   ]);
 
-  console.log("collections created");
   return db;
 }

@@ -295,16 +295,15 @@ export const queryDebrisTypes = graphql(/* GraphQL */ `
 export const queryCollectionTasks = graphql(/* GraphQL */ `
   query CollectionTasks {
     tasks_collection {
-      capacity
-      comment
-      contractor
       created_at
+      comment
+      capacity
+      contractor
       debris_type
       disposal_site
       id
       latitude
       longitude
-      project_id
       truck_id
       updated_at
       weigh_points
@@ -317,9 +316,6 @@ export const queryCollectionTasks = graphql(/* GraphQL */ `
         taken_at_step
         base64Preview
         _deleted
-      }
-      tasks_disposal {
-        id
       }
     }
   }

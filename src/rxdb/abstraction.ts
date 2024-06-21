@@ -18,6 +18,7 @@ type PushQueryBuilder = (
   db: DB,
   rows,
 ) => RxGraphQLReplicationQueryBuilderResponse;
+
 type PullQueryBuilder = (
   db: DB,
   checkpoint: null | undefined,

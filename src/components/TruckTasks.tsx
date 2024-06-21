@@ -1,4 +1,4 @@
-import { Link, useParams } from "@tanstack/react-router";
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { TaskType } from "./common";
 import { v4 } from "uuid";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -103,9 +103,9 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   const currentDateTime = useMemo(() => humanizeDate(), []);
 
   const { coordinates } = useGeoLocation();
-  // const navigate = useNavigate({
-  //   from: "/tasks/truck-tasks/collection/$id",
-  // });
+  const navigate = useNavigate({
+    from: "/tasks/truck-tasks/collection/$id",
+  });
 
   const truckCollectionCol =
     useRxCollection<CollectionTaskDocType>("collection-task");
@@ -126,8 +126,6 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         .exec();
 
       if (type === "collection") {
-        // TODO: weigh points is an array, how to make into string data type
-        // TODO: verify the other data we are putting into the db...
         await truckCollectionCol?.upsert({
           capacity: data.capacity,
           contractor: data.contractor,
@@ -138,7 +136,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
           latitude: coordinates?.latitude,
           longitude: coordinates?.longitude,
           truck_id: data.truckNumber,
-          weigh_points: data.weighpoints,
+          weigh_points: JSON.stringify(data.weighPoints),
           comment: data.comment,
           updated_at: nowUTC,
           images: existingCollectionDoc?.images.concat(images) || images,
@@ -146,10 +144,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
       } else {
         // upsert disposal task
       }
-
-      // navigate({ to: "/progress" });
-
-      console.log("data submitted: ", data);
+      navigate({ to: "/print/$id", params: { id: taskId } });
     }
   }
 

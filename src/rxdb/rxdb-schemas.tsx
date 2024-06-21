@@ -393,17 +393,6 @@ export const collectionTaskSchema: RxJsonSchema<CollectionTaskDocType> = {
     longitude: {
       type: ["number", "null"],
     },
-    project_id: {
-      type: "string",
-    },
-    tasks_disposal: {
-      type: ["object", "null"],
-      properties: {
-        id: {
-          type: "string",
-        },
-      },
-    },
     truck_id: {
       type: "string",
     },
