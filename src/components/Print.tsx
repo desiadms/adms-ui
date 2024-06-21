@@ -31,10 +31,19 @@ export function Print() {
   const beforeStep = result?.images?.find(
     (image) => image.taken_at_step === "before" && !image._deleted,
   );
+
   const date = beforeStep?.created_at
     ? humanizeDate(beforeStep.created_at)
-    : "no date";
-  const { latitude, longitude } = beforeStep || {};
+    : result?.get("created_at")
+      ? humanizeDate(result.get("created_at"))
+      : "no date";
+
+  const { latitude, longitude } =
+    beforeStep || {
+      latitude: result?.get("latitude"),
+      longitude: result?.get("longitude"),
+    } ||
+    {};
 
   if (!result) return "Loading...";
 

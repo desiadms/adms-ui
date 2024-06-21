@@ -4,6 +4,7 @@ import { RxDocument } from "rxdb";
 import { useRxData } from "rxdb-hooks";
 import { v4 } from "uuid";
 import {
+  CollectionTaskDocType,
   ContractorDocType,
   DebrisTypeDocType,
   DisposalSiteDocType,
@@ -324,6 +325,24 @@ export function useStumpRemovalTasks(selector?: Record<string, unknown>) {
   return { result, isFetching };
 }
 
+export function useCollectionTasks(selector?: Record<string, unknown>) {
+  const query = useCallback(
+    (collection) =>
+      collection.find({
+        sort: [{ updated_at: "desc" }],
+        selector: selector || {},
+      }),
+    [selector],
+  );
+
+  const { result, isFetching } = useRxData<CollectionTaskDocType>(
+    "collection-task",
+    query,
+  );
+
+  return { result, isFetching };
+}
+
 export function useTicketingTasks(selector?: Record<string, unknown>) {
   const query = useCallback(
     (collection) =>
@@ -360,6 +379,10 @@ export function useTask(taskId: string | undefined) {
   const { result: stump, isFetching: isFetchingStump } = useStumpRemovalTasks({
     id: taskId,
   });
+  const { result: collectionTask, isFetching: isFetchingCollectionTask } =
+    useCollectionTasks({
+      id: taskId,
+    });
 
   const { result: ticketing, isFetching: isFetchingTicketing } =
     useTicketingTasks({
@@ -371,12 +394,18 @@ export function useTask(taskId: string | undefined) {
       return { result: tree[0], type: "Tree" };
     } else if (stump.length) {
       return { result: stump[0], type: "Stump" };
+    } else if (collectionTask.length) {
+      return { result: collectionTask[0], type: "Collection" };
     }
 
     return { result: ticketing[0], type: "Ticketing" };
-  }, [tree, stump, ticketing]);
+  }, [tree, stump, collectionTask, ticketing]);
 
-  const isFetching = isFetchingTree || isFetchingStump || isFetchingTicketing;
+  const isFetching =
+    isFetchingTree ||
+    isFetchingStump ||
+    isFetchingCollectionTask ||
+    isFetchingTicketing;
 
   return { ...result, isFetching };
 }
