@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { TaskType } from "./common";
-import { v4 } from "uuid";
+import { v4, validate as uuidValidate } from "uuid";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMemo, useState } from "react";
 import {
@@ -22,6 +22,8 @@ import CameraIcon from "@heroicons/react/20/solid/CameraIcon";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import { CollectionTaskDocType } from "src/rxdb/rxdb-schemas";
 import { useRxCollection } from "rxdb-hooks";
+import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
+import { RxDocument } from "rxdb";
 
 export function TruckTasks() {
   return (
@@ -45,7 +47,7 @@ type FormProps = {
   truckNumber: string;
   disposalSite: string;
   contractor: string;
-  capacity?: number;
+  capacity?: number | null;
   debrisType: string;
   loadCall?: number;
   weighPoints?: { latitude: number; longitude: number }[];
@@ -55,15 +57,22 @@ type FormProps = {
 };
 
 export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
+  console.log("rerender");
   // Here we set the default value of the slider to 50
   // it is calculated using the following formula:
   // min + (min + max) / 2
   // see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range#value
-  const [sliderValue, setSliderValue] = useState(50);
+  const [sliderValue, setSliderValue] = useState<number>(50);
 
-  const [autofill, setAutofill] = useState(false);
+  const [autofillOpen, setAutofillOpen] = useState<boolean>(false);
+  const [manualEntryOpen, setManualEntryOpen] = useState<boolean>(true);
+  const [linkedCollectionTask, setLinkedCollectionTask] = useState<
+    CollectionTaskDocType | undefined
+  >();
+  const [linkedCollectionTaskId, setLinkedCollectionTaskId] =
+    useState<string>();
 
-  const [loadCallTouched, setLoadCallTouched] = useState(false);
+  const [loadCallTouched, setLoadCallTouched] = useState<boolean>(false);
 
   const defaultFileValue: FileForm[] =
     type === "collection"
@@ -77,6 +86,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
 
   const {
     register,
+    setValue,
+    getValues,
     handleSubmit,
     control,
     formState: { errors, submitCount },
@@ -110,7 +121,10 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   const truckCollectionCol =
     useRxCollection<CollectionTaskDocType>("collection-task");
 
+  console.log(getValues(), "value in form");
+  console.log(errors, "form errors");
   async function submitForm(data) {
+    console.log("@@@@@@@@@@@@@@@@@@@@@@onsubmit");
     if (noFilesUploaded) return;
 
     if (coordinates) {
@@ -142,10 +156,65 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
           images: existingCollectionDoc?.images.concat(images) || images,
         });
       } else {
+        console.log("disposal", data);
         // upsert disposal task
       }
       navigate({ to: "/print/$id", params: { id: taskId } });
     }
+  }
+
+  async function autoFillFieldsFromQr(result: IDetectedBarcode[]) {
+    setAutofillOpen(false);
+    if (result !== undefined && result !== null) {
+      if (uuidValidate(result[0]?.rawValue)) {
+        setLinkedCollectionTaskId(result[0]?.rawValue);
+
+        const existingCollectionDoc = await truckCollectionCol
+          ?.findOne(result[0]?.rawValue)
+          .exec();
+
+        /* if we can find the Collection Task in the recently pulled TruckCollectionCol
+         * then autofill the matching fields. If the local device hasn't pulled the Collection Task
+         * with the scanned ID yet, then we reset the form values and just link the ID.
+         */
+        if (
+          existingCollectionDoc === null ||
+          existingCollectionDoc === undefined
+        ) {
+          setLinkedCollectionTask(undefined);
+          resetFormValuesToDefault();
+        } else {
+          setLinkedCollectionTask(existingCollectionDoc);
+          autofillFormValuesWithFoundCollectionDoc(existingCollectionDoc);
+        }
+      } else {
+        console.log("QR Scanner: Result is not a valid UUID.");
+        setLinkedCollectionTaskId(undefined);
+        setLinkedCollectionTask(undefined);
+      }
+    } else {
+      console.log("QR Scanner: No scan result.");
+      setLinkedCollectionTaskId(undefined);
+      setLinkedCollectionTask(undefined);
+    }
+  }
+
+  function resetFormValuesToDefault() {
+    setValue("truckNumber", defaultInputOption);
+    setValue("disposalSite", defaultInputOption);
+    setValue("contractor", defaultInputOption);
+    setValue("capacity", null);
+    setValue("debrisType", defaultInputOption);
+  }
+
+  function autofillFormValuesWithFoundCollectionDoc(
+    document: RxDocument<CollectionTaskDocType>,
+  ) {
+    setValue("truckNumber", document.truck_id);
+    setValue("disposalSite", document.disposal_site);
+    setValue("contractor", document.contractor);
+    setValue("capacity", document.capacity);
+    setValue("debrisType", document.debris_type);
   }
 
   function handleRemove(index: number, id: string) {
@@ -173,39 +242,83 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   const rxdbDisposalSitesObject = useDisposalSites();
   const rxdbDebrisTypesObject = useDebrisTypes();
 
-  // TODO: Implement Autofill
-  const autofillFields = (
+  const fieldsToAutofill = linkedCollectionTask ? (
     <div>
       <div className="p-2 w-fit rounded-lg">
-        <Label label="Truck Number" />
-        <div className="text-sm">Truck Number Here</div>
+        <b> Found {linkedCollectionTask.id} </b>
       </div>
-
+      <div className="p-2 w-fit rounded-lg">
+        <Label label="Truck Number" />
+        <div className="text-sm">
+          {
+            rxdbTrucksObject.trucks.find(
+              (element) => element._data.id === linkedCollectionTask?.truck_id,
+            )?._data.truck_number
+          }
+        </div>
+      </div>
       <div className="p-2 w-fit rounded-lg">
         <Label label="Disposal Site" />
-        <div className="text-sm">Disposal Site Here</div>
+        <div className="text-sm">
+          {
+            rxdbDisposalSitesObject.disposalSites.find(
+              (element) =>
+                element._data.id === linkedCollectionTask?.disposal_site,
+            )?._data.name
+          }
+        </div>
       </div>
-
       <div className="p-2 w-fit rounded-lg">
         <Label label="Contractor" />
-        <div className="text-sm">Contractor Here</div>
+        <div className="text-sm">
+          {
+            rxdbContractorsObject.contractors.find(
+              (element) =>
+                element._data.id === linkedCollectionTask?.contractor,
+            )?._data.name
+          }
+        </div>
       </div>
-
       <div className="p-2 w-fit rounded-lg">
         <Label label="Capacity" />
-        Capacity Here
+        <div className="text-sm">
+          {linkedCollectionTask.capacity
+            ? linkedCollectionTask.capacity
+            : "No value"}
+        </div>
       </div>
-
       <div className="p-2 w-fit rounded-lg">
         <Label label="Debris Type" />
-        <div className="text-sm">Debris Type Here</div>
+        <div className="text-sm">
+          {
+            rxdbDebrisTypesObject.debrisTypes.find(
+              (element) =>
+                element._data.id === linkedCollectionTask?.debris_type,
+            )?._data.name
+          }
+        </div>
       </div>
     </div>
+  ) : linkedCollectionTaskId ? (
+    <div className="p-2 w-fit rounded-lg">
+      <b>
+        {"Currently linked to collection task with id: " +
+          linkedCollectionTaskId}
+      </b>
+    </div>
+  ) : (
+    <ErrorMessage message={"No Collection Task linked."} />
   );
 
-  const defaultOptionString = "Please Select";
+  const defaultInputOption = "Please Select";
+  const defaultNotChangedErrorMessage = "Make a selection";
+  /**
+   * Validation check to see if the input has been touched.
+   * @param {any} value the value to check
+   * @return {true | string} returns true if check passed or an error message if failed
+   */
   function validateInputIsNotDefault(value) {
-    return value !== defaultOptionString || "Make a selection";
+    return value !== defaultInputOption || defaultNotChangedErrorMessage;
   }
 
   const manualInputFields = (
@@ -213,25 +326,29 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
       <div className="p-2 w-fit rounded-lg">
         <Label label="Truck Number" />
         <div className="text-sm">
-          <select
-            {...register("truckNumber", {
-              required: "Truck Number is required",
-              validate: validateInputIsNotDefault,
-            })}
-          >
-            <option>{defaultOptionString}</option>
-            {rxdbTrucksObject.trucks.map((truckNumber) => {
-              return (
-                <option key={truckNumber._data.id} value={truckNumber._data.id}>
-                  {truckNumber._data.truck_number}
-                </option>
-              );
-            })}
-          </select>
+          {manualEntryOpen && (
+            <select
+              {...register("truckNumber", {
+                required: "Truck Number is required",
+                validate: validateInputIsNotDefault,
+              })}
+            >
+              <option>{defaultInputOption}</option>
+              {rxdbTrucksObject.trucks.map((truckNumber) => {
+                return (
+                  <option
+                    key={truckNumber._data.id}
+                    value={truckNumber._data.id}
+                  >
+                    {truckNumber._data.truck_number}
+                  </option>
+                );
+              })}
+            </select>
+          )}
         </div>
         <ErrorMessage message={errors.truckNumber?.message} />
       </div>
-
       <div className="p-2 w-fit rounded-lg">
         <Label label="Disposal Site" />
         <div className="text-sm">
@@ -241,7 +358,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
               validate: validateInputIsNotDefault,
             })}
           >
-            <option>{defaultOptionString}</option>
+            <option>{defaultInputOption}</option>
             {rxdbDisposalSitesObject.disposalSites.map((disposalSite) => {
               return (
                 <option
@@ -256,7 +373,6 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         </div>
         <ErrorMessage message={errors.disposalSite?.message} />
       </div>
-
       <div className="p-2 w-fit rounded-lg">
         <Label label="Contractor" />
         <div className="text-sm">
@@ -266,7 +382,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
               validate: validateInputIsNotDefault,
             })}
           >
-            <option>{defaultOptionString}</option>
+            <option>{defaultInputOption}</option>
             {rxdbContractorsObject.contractors.map((contractor) => {
               return (
                 <option key={contractor._data.id} value={contractor._data.id}>
@@ -278,18 +394,16 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         </div>
         <ErrorMessage message={errors.contractor?.message} />
       </div>
-
       <div className="p-2 w-fit rounded-lg">
         <Label label="Capacity" />
-        <Input
+        <input
           type="number"
           min="0"
           max="1000000"
-          {...register("capacity")}
+          {...register("capacity", { valueAsNumber: true })}
           placeholder="in yards&sup3;"
         />
       </div>
-
       <div className="p-2 w-fit rounded-lg">
         <Label label="Debris Type" />
         <div className="text-sm">
@@ -299,7 +413,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
               validate: validateInputIsNotDefault,
             })}
           >
-            <option>{defaultOptionString}</option>
+            <option>{defaultInputOption}</option>
             {rxdbDebrisTypesObject.debrisTypes.map((debrisType) => {
               return (
                 <option key={debrisType._data.id} value={debrisType._data.id}>
@@ -315,7 +429,12 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   );
 
   return (
-    <div>
+    <div className="relative">
+      {autofillOpen && (
+        <div className="relative left-[50%] -translate-x-1/2 w-[50%]">
+          <Scanner onScan={autoFillFieldsFromQr} />
+        </div>
+      )}
       <div className="capitalize font-medium text-xl pb-4">{type}</div>
       <form
         onSubmit={handleSubmit(submitForm)}
@@ -355,7 +474,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
               <div className="text-sm">
                 <Button
                   onClick={() => {
-                    setAutofill(true);
+                    setAutofillOpen(true);
+                    setManualEntryOpen(false);
                   }}
                   name="scan-qr"
                   type="button"
@@ -369,7 +489,12 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
               <div className="text-sm">
                 <Button
                   onClick={() => {
-                    setAutofill(false);
+                    setAutofillOpen(false);
+                    setManualEntryOpen(true);
+                    // reset react hook form field values and linked collection task
+                    resetFormValuesToDefault();
+                    setLinkedCollectionTask(undefined);
+                    setLinkedCollectionTaskId(undefined);
                   }}
                   name="manual-input"
                   type="button"
@@ -381,9 +506,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
             </div>
           </div>
         )}
-
-        {autofill ? autofillFields : manualInputFields}
-
+        {manualEntryOpen ? manualInputFields : fieldsToAutofill}
         {type === "collection" && (
           <div className="p-2 w-full rounded-lg">
             <Label label="Weigh Points" />
@@ -444,7 +567,11 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                 min="5"
                 max="95"
                 step="5"
-                {...register("loadCall", { required: "Load Call is required" })}
+                {...register("loadCall", {
+                  required: "Load Call is required",
+                  validate: (_val) =>
+                    loadCallTouched || defaultNotChangedErrorMessage,
+                })}
                 onInput={(e) => {
                   const value = e.currentTarget.value;
                   setSliderValue(parseInt(value));
@@ -455,9 +582,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                 {sliderValue} %
               </output>
             </div>
-            {!loadCallTouched && submitCount > 0 && (
-              <ErrorMessage message="Please set a load call" />
-            )}
+            <ErrorMessage message={errors.loadCall?.message} />
           </div>
         )}
 

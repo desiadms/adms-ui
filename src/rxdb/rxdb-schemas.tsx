@@ -366,7 +366,7 @@ export const collectionTaskSchema: RxJsonSchema<CollectionTaskDocType> = {
   primaryKey: "id",
   properties: {
     capacity: {
-      type: "string",
+      type: ["number", "null"],
     },
     contractor: {
       type: "string",
