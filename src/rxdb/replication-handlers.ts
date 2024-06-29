@@ -8,12 +8,14 @@ import {
   queryContractors,
   queryDebrisTypes,
   queryDisposalSites,
+  queryDisposalTasks,
   queryStumpRemovalTasks,
   queryTicketingTasks,
   queryTreeRemovalTasks,
   queryTrucks,
   updateUserDocument,
   upsertCollectionTasks,
+  upsertDisposalTasks,
   upsertStumpRemovalTasks,
   upsertTicketingTasks,
   upsertTreeRemovalTasks,
@@ -21,6 +23,7 @@ import {
 } from "./graphql-operations";
 import {
   CollectionTaskDocType,
+  DisposalTaskDocType,
   StumpRemovalTaskDocType,
   TicketingTaskDocType,
   TreeRemovalTaskDocType,
@@ -203,6 +206,35 @@ export async function collectionTasksWrite(
   const taskIds = extractedData.map(({ id }) => ({ id }));
   return {
     query: resolveRequestDocument(upsertCollectionTasks).query,
+    variables: { tasks: variableTasks, images: variableImages, taskIds },
+  };
+}
+
+export function disposalTasksRead() {
+  return {
+    query: resolveRequestDocument(queryDisposalTasks).query,
+    variables: {},
+  };
+}
+
+export async function disposalTasksWrite(
+  _db,
+  rows: RxReplicationWriteToMasterRow<DisposalTaskDocType>[],
+) {
+  const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
+  const images = extractedData
+    .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
+    .flat();
+
+  await extractFilesAndSaveToNhost(images);
+
+  const variableImages = images.map((image) =>
+    R.omit(image, ["base64Preview"]),
+  );
+  const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
+  const taskIds = extractedData.map(({ id }) => ({ id }));
+  return {
+    query: resolveRequestDocument(upsertDisposalTasks).query,
     variables: { tasks: variableTasks, images: variableImages, taskIds },
   };
 }

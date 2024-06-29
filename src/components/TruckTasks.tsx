@@ -20,7 +20,10 @@ import { Spinner } from "./icons";
 import classNames from "classnames";
 import CameraIcon from "@heroicons/react/20/solid/CameraIcon";
 import { XCircleIcon } from "@heroicons/react/20/solid";
-import { CollectionTaskDocType } from "src/rxdb/rxdb-schemas";
+import {
+  CollectionTaskDocType,
+  DisposalTaskDocType,
+} from "src/rxdb/rxdb-schemas";
 import { useRxCollection } from "rxdb-hooks";
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import { RxDocument } from "rxdb";
@@ -49,7 +52,7 @@ type FormProps = {
   contractor: string;
   capacity?: number | null;
   debrisType: string;
-  loadCall?: number;
+  loadCall: number;
   weighPoints?: { latitude: number; longitude: number }[];
   comment?: string;
   ranges?: string;
@@ -121,8 +124,12 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   const truckCollectionCol =
     useRxCollection<CollectionTaskDocType>("collection-task");
 
+  const truckDisposalCol =
+    useRxCollection<DisposalTaskDocType>("disposal-task");
+
   console.log(getValues(), "value in form");
   console.log(errors, "form errors");
+
   async function submitForm(data) {
     console.log("@@@@@@@@@@@@@@@@@@@@@@onsubmit");
     if (noFilesUploaded) return;
@@ -135,11 +142,11 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
 
       const nowUTC = new Date().toISOString();
 
-      const existingCollectionDoc = await truckCollectionCol
-        ?.findOne(taskId)
-        .exec();
-
       if (type === "collection") {
+        const existingCollectionDoc = await truckCollectionCol
+          ?.findOne(taskId)
+          .exec();
+
         await truckCollectionCol?.upsert({
           capacity: data.capacity,
           contractor: data.contractor,
@@ -156,8 +163,28 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
           images: existingCollectionDoc?.images.concat(images) || images,
         });
       } else {
+        const existingDisposalDoc = await truckDisposalCol
+          ?.findOne(taskId)
+          .exec();
+
         console.log("disposal", data);
-        // upsert disposal task
+
+        await truckDisposalCol?.upsert({
+          capacity: data.capacity,
+          contractor: data.contractor,
+          created_at: nowUTC,
+          debris_type: data.debrisType,
+          disposal_site: data.disposalSite,
+          id: taskId,
+          latitude: coordinates?.latitude,
+          longitude: coordinates?.longitude,
+          load_call: data.loadCall,
+          task_collection_id: linkedCollectionTaskId,
+          truck_id: data.truckNumber,
+          comment: data.comment,
+          updated_at: nowUTC,
+          images: existingDisposalDoc?.images.concat(images) || images,
+        });
       }
       navigate({ to: "/print/$id", params: { id: taskId } });
     }
@@ -569,10 +596,12 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                 step="5"
                 {...register("loadCall", {
                   required: "Load Call is required",
+                  valueAsNumber: true,
                   validate: (_val) =>
                     loadCallTouched || defaultNotChangedErrorMessage,
                 })}
                 onInput={(e) => {
+                  console.log("we touched the boat");
                   const value = e.currentTarget.value;
                   setSliderValue(parseInt(value));
                   setLoadCallTouched(true);

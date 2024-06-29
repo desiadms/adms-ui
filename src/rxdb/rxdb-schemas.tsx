@@ -4,6 +4,7 @@ import {
   ContractorsQuery,
   DebrisTypesQuery,
   DisposalSitesQuery,
+  DisposalTasksQuery,
   ImagesQuery,
   ProjectsQuery,
   StumpRemovalTasksQuery,
@@ -372,7 +373,7 @@ export const collectionTaskSchema: RxJsonSchema<CollectionTaskDocType> = {
       type: "string",
     },
     comment: {
-      type: "string",
+      type: ["string", "null"],
     },
     created_at: {
       type: "string",
@@ -400,6 +401,61 @@ export const collectionTaskSchema: RxJsonSchema<CollectionTaskDocType> = {
       type: "string",
     },
     weigh_points: {
+      type: "string",
+    },
+    ...imagesSchema,
+  },
+  required: ["id"],
+} as const;
+
+export type DisposalTaskDocType = OmitTypename<
+  DisposalTasksQuery["tasks_disposal"][number]
+>;
+
+export const disposalTaskSchema: RxJsonSchema<DisposalTaskDocType> = {
+  title: "disposal task schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    capacity: {
+      type: ["number", "null"],
+    },
+    contractor: {
+      type: ["string", "null"],
+    },
+    comment: {
+      type: ["string", "null"],
+    },
+    created_at: {
+      type: "string",
+    },
+    debris_type: {
+      type: "string",
+    },
+    disposal_site: {
+      type: ["string", "null"],
+    },
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    latitude: {
+      type: ["number", "null"],
+    },
+    longitude: {
+      type: ["number", "null"],
+    },
+    load_call: {
+      type: "number",
+    },
+    task_collection_id: {
+      type: ["string", "null"],
+    },
+    truck_id: {
+      type: ["string", "null"],
+    },
+    updated_at: {
       type: "string",
     },
     ...imagesSchema,

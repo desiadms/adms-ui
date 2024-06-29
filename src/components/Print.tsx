@@ -55,7 +55,7 @@ export function Print() {
         <LabelValue label="Project" value={activeProject?.name} />
         <LabelValue label="Contractor" value={activeProject?.contractor} />
         <LabelValue label="Date" value={date} />
-        <LabelValue label="Ticket ID" value={`Tree-${result?.id}`} />
+        <LabelValue label="Ticket ID" value={`${result?.id}`} />
         <LabelValue label="Lat" value={latitude} />
         <LabelValue label="Lon" value={longitude} />
         <LabelValue label="Type" value={type} />
