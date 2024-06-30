@@ -91,7 +91,6 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   const {
     register,
     setValue,
-    getValues,
     handleSubmit,
     control,
     formState: { errors, submitCount },
@@ -140,10 +139,6 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
       const nowUTC = new Date().toISOString();
 
       if (type === "collection") {
-        const existingCollectionDoc = await truckCollectionCol
-          ?.findOne(taskId)
-          .exec();
-
         await truckCollectionCol?.upsert({
           capacity: data.capacity,
           contractor: data.contractor,
@@ -157,13 +152,9 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
           weigh_points: JSON.stringify(data.weighPoints),
           comment: data.comment,
           updated_at: nowUTC,
-          images: existingCollectionDoc?.images.concat(images) || images,
+          images,
         });
       } else {
-        const existingDisposalDoc = await truckDisposalCol
-          ?.findOne(taskId)
-          .exec();
-
         await truckDisposalCol?.upsert({
           capacity: data.capacity,
           contractor: data.contractor,
@@ -178,7 +169,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
           truck_id: data.truckNumber,
           comment: data.comment,
           updated_at: nowUTC,
-          images: existingDisposalDoc?.images.concat(images) || images,
+          images,
         });
       }
       navigate({ to: "/print/$id", params: { id: taskId } });
@@ -700,9 +691,6 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         </div>
         <div className="flex p-2 gap-2">
           <Button type="submit">Save</Button>
-          <Button type="button" bgColor="bg-slate-500 hover:bg-slate-300">
-            Print
-          </Button>
         </div>
       </form>
     </div>

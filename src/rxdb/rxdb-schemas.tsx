@@ -401,7 +401,7 @@ export const collectionTaskSchema: RxJsonSchema<CollectionTaskDocType> = {
       type: "string",
     },
     weigh_points: {
-      type: "string",
+      type: ["string", "null"],
     },
     ...imagesSchema,
   },
@@ -422,7 +422,7 @@ export const disposalTaskSchema: RxJsonSchema<DisposalTaskDocType> = {
       type: ["number", "null"],
     },
     contractor: {
-      type: ["string", "null"],
+      type: "string",
     },
     comment: {
       type: ["string", "null"],
@@ -434,7 +434,7 @@ export const disposalTaskSchema: RxJsonSchema<DisposalTaskDocType> = {
       type: "string",
     },
     disposal_site: {
-      type: ["string", "null"],
+      type: "string",
     },
     id: {
       type: "string",
@@ -453,7 +453,7 @@ export const disposalTaskSchema: RxJsonSchema<DisposalTaskDocType> = {
       type: ["string", "null"],
     },
     truck_id: {
-      type: ["string", "null"],
+      type: "string",
     },
     updated_at: {
       type: "string",
