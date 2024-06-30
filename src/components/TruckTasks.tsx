@@ -128,11 +128,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   const truckDisposalCol =
     useRxCollection<DisposalTaskDocType>("disposal-task");
 
-  console.log(getValues(), "value in form");
-  console.log(errors, "form errors");
-
   async function submitForm(data) {
-    console.log("@@@@@@@@@@@@@@@@@@@@@@onsubmit");
     if (noFilesUploaded) return;
 
     if (coordinates) {
@@ -167,8 +163,6 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         const existingDisposalDoc = await truckDisposalCol
           ?.findOne(taskId)
           .exec();
-
-        console.log("disposal", data);
 
         await truckDisposalCol?.upsert({
           capacity: data.capacity,
@@ -214,7 +208,6 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
            * but it is not found in the local RxDB TruckCollectionCol.
            * Reset the form values, user will manually enter.
            */
-          console.log("should hit this");
           setLinkedCollectionTask(undefined);
           resetFormValuesToDefault();
         } else {
@@ -227,13 +220,11 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         }
       } else {
         // Scanned QR gave a result, but result is not a valid UUID.
-        console.log("QR Scanner: Result is not a valid UUID.");
         setLinkedCollectionTaskId(undefined);
         setLinkedCollectionTask(undefined);
       }
     } else {
       // Scanned QR gave no result.
-      console.log("QR Scanner: No scan result.");
       setLinkedCollectionTaskId(undefined);
       setLinkedCollectionTask(undefined);
     }
@@ -629,7 +620,6 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                     loadCallTouched || defaultNotChangedErrorMessage,
                 })}
                 onInput={(e) => {
-                  console.log("we touched the boat");
                   const value = e.currentTarget.value;
                   setSliderValue(parseInt(value));
                   setLoadCallTouched(true);
