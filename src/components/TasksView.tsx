@@ -7,8 +7,9 @@ export function TasksView() {
       <Link to="/tasks/field-monitor" className="flex-shrink-0">
         <TaskType name="field monitor" />
       </Link>
-      {/* <TaskType name="field collections" to="/tasks/field-collections" />
-      <TaskType name="field disposal" to="/tasks/field-disposal" /> */}
+      <Link to="/tasks/truck-tasks" className="flex-shrink-0">
+        <TaskType name="Truck Tasks" />
+      </Link>
     </div>
   );
 }

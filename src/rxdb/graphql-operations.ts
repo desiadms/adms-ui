@@ -255,3 +255,174 @@ export const projectsDocument = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const queryContractors = graphql(/* GraphQL */ `
+  query Contractors {
+    contractors {
+      id
+      name
+    }
+  }
+`);
+
+export const queryTrucks = graphql(/* GraphQL */ `
+  query Trucks {
+    trucks {
+      truck_number
+      id
+    }
+  }
+`);
+
+export const queryDisposalSites = graphql(/* GraphQL */ `
+  query DisposalSites {
+    disposal_sites {
+      id
+      name
+    }
+  }
+`);
+
+export const queryDebrisTypes = graphql(/* GraphQL */ `
+  query DebrisTypes {
+    debris_types {
+      id
+      name
+    }
+  }
+`);
+
+export const queryCollectionTasks = graphql(/* GraphQL */ `
+  query CollectionTasks {
+    tasks_collection {
+      created_at
+      comment
+      capacity
+      contractor
+      debris_type
+      disposal_site
+      id
+      latitude
+      longitude
+      truck_id
+      updated_at
+      weigh_points
+      images: tasks_collection_images {
+        id
+        created_at
+        updated_at
+        latitude
+        longitude
+        taken_at_step
+        base64Preview
+        _deleted
+      }
+    }
+  }
+`);
+
+export const upsertCollectionTasks = graphql(/* GraphQL */ `
+  mutation UpsertCollectionTask(
+    $tasks: [tasks_collection_insert_input!]!
+    $images: [images_insert_input!]!
+    $taskIds: [task_ids_insert_input!]!
+  ) {
+    insert_task_ids(objects: $taskIds) {
+      returning {
+        id
+      }
+    }
+
+    insert_tasks_collection(
+      objects: $tasks
+      on_conflict: {
+        update_columns: [comment, updated_at, _deleted]
+        constraint: tasks_collection_pkey
+      }
+    ) {
+      returning {
+        id
+      }
+    }
+
+    insert_images(
+      objects: $images
+      on_conflict: {
+        constraint: images_pkey
+        update_columns: [latitude, longitude, updated_at, _deleted]
+      }
+    ) {
+      returning {
+        id
+      }
+    }
+  }
+`);
+
+export const queryDisposalTasks = graphql(/* GraphQL */ `
+  query DisposalTasks {
+    tasks_disposal {
+      created_at
+      comment
+      capacity
+      contractor
+      debris_type
+      disposal_site
+      id
+      latitude
+      longitude
+      truck_id
+      updated_at
+      load_call
+      task_collection_id
+      images: tasks_disposal_images {
+        id
+        created_at
+        updated_at
+        latitude
+        longitude
+        taken_at_step
+        base64Preview
+        _deleted
+      }
+    }
+  }
+`);
+
+export const upsertDisposalTasks = graphql(/* GraphQL */ `
+  mutation UpsertDisposalTask(
+    $tasks: [tasks_disposal_insert_input!]!
+    $images: [images_insert_input!]!
+    $taskIds: [task_ids_insert_input!]!
+  ) {
+    insert_task_ids(objects: $taskIds) {
+      returning {
+        id
+      }
+    }
+
+    insert_tasks_disposal(
+      objects: $tasks
+      on_conflict: {
+        update_columns: [comment, updated_at, _deleted]
+        constraint: tasks_disposal_pkey
+      }
+    ) {
+      returning {
+        id
+      }
+    }
+
+    insert_images(
+      objects: $images
+      on_conflict: {
+        constraint: images_pkey
+        update_columns: [latitude, longitude, updated_at, _deleted]
+      }
+    ) {
+      returning {
+        id
+      }
+    }
+  }
+`);

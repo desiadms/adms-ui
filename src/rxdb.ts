@@ -5,6 +5,13 @@ import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
 import { addCollections } from "./rxdb/abstraction";
 import {
+  collectionTasksRead,
+  collectionTasksWrite,
+  contractorsRead,
+  debrisTypesRead,
+  disposalSitesRead,
+  disposalTasksRead,
+  disposalTasksWrite,
   projectRead,
   stumpRemovalTasksRead,
   stumpRemovalTasksWrite,
@@ -12,14 +19,21 @@ import {
   ticketingTasksWrite,
   treeRemovalTasksRead,
   treeRemovalTasksWrite,
+  trucksRead,
   userRead,
   userWrite,
 } from "./rxdb/replication-handlers";
 import {
+  collectionTaskSchema,
+  contractorSchema,
+  debrisTypeSchema,
+  disposalSiteSchema,
+  disposalTaskSchema,
   projectSchema,
   stumpRemovalTaskSchema,
   ticketingTaskSchema,
   treeRemovalTaskSchema,
+  truckSchema,
   userSchema,
 } from "./rxdb/rxdb-schemas";
 import { devMode } from "./hooks";
@@ -82,6 +96,44 @@ export async function initialize(accessToken: string | null) {
       name: "project",
       schema: projectSchema,
       pullQueryBuilder: projectRead,
+      accessToken,
+    },
+    {
+      name: "contractor",
+      schema: contractorSchema,
+      pullQueryBuilder: contractorsRead,
+      accessToken,
+    },
+    {
+      name: "truck",
+      schema: truckSchema,
+      pullQueryBuilder: trucksRead,
+      accessToken,
+    },
+    {
+      name: "disposal-site",
+      schema: disposalSiteSchema,
+      pullQueryBuilder: disposalSitesRead,
+      accessToken,
+    },
+    {
+      name: "debris-type",
+      schema: debrisTypeSchema,
+      pullQueryBuilder: debrisTypesRead,
+      accessToken,
+    },
+    {
+      name: "collection-task",
+      schema: collectionTaskSchema,
+      pullQueryBuilder: collectionTasksRead,
+      pushQueryBuilder: collectionTasksWrite,
+      accessToken,
+    },
+    {
+      name: "disposal-task",
+      schema: disposalTaskSchema,
+      pullQueryBuilder: disposalTasksRead,
+      pushQueryBuilder: disposalTasksWrite,
       accessToken,
     },
   ]);

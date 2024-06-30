@@ -4,16 +4,26 @@ import { RxReplicationWriteToMasterRow } from "rxdb";
 import { extractFilesAndSaveToNhost } from "../hooks";
 import {
   projectsDocument,
+  queryCollectionTasks,
+  queryContractors,
+  queryDebrisTypes,
+  queryDisposalSites,
+  queryDisposalTasks,
   queryStumpRemovalTasks,
   queryTicketingTasks,
   queryTreeRemovalTasks,
+  queryTrucks,
   updateUserDocument,
+  upsertCollectionTasks,
+  upsertDisposalTasks,
   upsertStumpRemovalTasks,
   upsertTicketingTasks,
   upsertTreeRemovalTasks,
   userDocument,
 } from "./graphql-operations";
 import {
+  CollectionTaskDocType,
+  DisposalTaskDocType,
   StumpRemovalTaskDocType,
   TicketingTaskDocType,
   TreeRemovalTaskDocType,
@@ -140,5 +150,91 @@ export function projectRead() {
   return {
     query: resolveRequestDocument(projectsDocument).query,
     variables: {},
+  };
+}
+
+export function contractorsRead() {
+  return {
+    query: resolveRequestDocument(queryContractors).query,
+    variables: {},
+  };
+}
+
+export function trucksRead() {
+  return {
+    query: resolveRequestDocument(queryTrucks).query,
+    variables: {},
+  };
+}
+
+export function disposalSitesRead() {
+  return {
+    query: resolveRequestDocument(queryDisposalSites).query,
+    variables: {},
+  };
+}
+
+export function debrisTypesRead() {
+  return {
+    query: resolveRequestDocument(queryDebrisTypes).query,
+    variables: {},
+  };
+}
+
+export function collectionTasksRead() {
+  return {
+    query: resolveRequestDocument(queryCollectionTasks).query,
+    variables: {},
+  };
+}
+
+export async function collectionTasksWrite(
+  _db,
+  rows: RxReplicationWriteToMasterRow<CollectionTaskDocType>[],
+) {
+  const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
+  const images = extractedData
+    .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
+    .flat();
+
+  await extractFilesAndSaveToNhost(images);
+
+  const variableImages = images.map((image) =>
+    R.omit(image, ["base64Preview"]),
+  );
+  const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
+  const taskIds = extractedData.map(({ id }) => ({ id }));
+  return {
+    query: resolveRequestDocument(upsertCollectionTasks).query,
+    variables: { tasks: variableTasks, images: variableImages, taskIds },
+  };
+}
+
+export function disposalTasksRead() {
+  return {
+    query: resolveRequestDocument(queryDisposalTasks).query,
+    variables: {},
+  };
+}
+
+export async function disposalTasksWrite(
+  _db,
+  rows: RxReplicationWriteToMasterRow<DisposalTaskDocType>[],
+) {
+  const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
+  const images = extractedData
+    .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
+    .flat();
+
+  await extractFilesAndSaveToNhost(images);
+
+  const variableImages = images.map((image) =>
+    R.omit(image, ["base64Preview"]),
+  );
+  const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
+  const taskIds = extractedData.map(({ id }) => ({ id }));
+  return {
+    query: resolveRequestDocument(upsertDisposalTasks).query,
+    variables: { tasks: variableTasks, images: variableImages, taskIds },
   };
 }

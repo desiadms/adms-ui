@@ -1,10 +1,16 @@
 import { RxJsonSchema } from "rxdb";
 import {
+  CollectionTasksQuery,
+  ContractorsQuery,
+  DebrisTypesQuery,
+  DisposalSitesQuery,
+  DisposalTasksQuery,
   ImagesQuery,
   ProjectsQuery,
   StumpRemovalTasksQuery,
   TicketingTasksQuery,
   TreeRemovalTasksQuery,
+  TrucksQuery,
   UserQuery,
 } from "src/__generated__/gql/graphql";
 
@@ -262,6 +268,195 @@ export const ticketingTaskSchema: RxJsonSchema<TicketingTaskDocType> = {
     },
     longitude: {
       type: ["number", "null"],
+    },
+    ...imagesSchema,
+  },
+  required: ["id"],
+} as const;
+
+export type ContractorDocType = OmitTypename<
+  ContractorsQuery["contractors"][number]
+>;
+
+export const contractorSchema: RxJsonSchema<ContractorDocType> = {
+  title: "contractor schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    name: {
+      type: "string",
+    },
+  },
+  required: ["id"],
+} as const;
+
+export type TruckDocType = OmitTypename<TrucksQuery["trucks"][number]>;
+
+export const truckSchema: RxJsonSchema<TruckDocType> = {
+  title: "truck schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    truck_number: {
+      type: "string",
+    },
+  },
+  required: ["id"],
+} as const;
+
+export type DisposalSiteDocType = OmitTypename<
+  DisposalSitesQuery["disposal_sites"][number]
+>;
+
+export const disposalSiteSchema: RxJsonSchema<DisposalSiteDocType> = {
+  title: "disposal site schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    name: {
+      type: "string",
+    },
+  },
+  required: ["id"],
+} as const;
+
+export type DebrisTypeDocType = OmitTypename<
+  DebrisTypesQuery["debris_types"][number]
+>;
+
+export const debrisTypeSchema: RxJsonSchema<DebrisTypeDocType> = {
+  title: "debris type schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    name: {
+      type: "string",
+    },
+  },
+  required: ["id"],
+} as const;
+
+export type CollectionTaskDocType = OmitTypename<
+  CollectionTasksQuery["tasks_collection"][number]
+>;
+
+export const collectionTaskSchema: RxJsonSchema<CollectionTaskDocType> = {
+  title: "collection task schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    capacity: {
+      type: ["number", "null"],
+    },
+    contractor: {
+      type: "string",
+    },
+    comment: {
+      type: ["string", "null"],
+    },
+    created_at: {
+      type: "string",
+    },
+    debris_type: {
+      type: "string",
+    },
+    disposal_site: {
+      type: "string",
+    },
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    latitude: {
+      type: ["number", "null"],
+    },
+    longitude: {
+      type: ["number", "null"],
+    },
+    truck_id: {
+      type: "string",
+    },
+    updated_at: {
+      type: "string",
+    },
+    weigh_points: {
+      type: "string",
+    },
+    ...imagesSchema,
+  },
+  required: ["id"],
+} as const;
+
+export type DisposalTaskDocType = OmitTypename<
+  DisposalTasksQuery["tasks_disposal"][number]
+>;
+
+export const disposalTaskSchema: RxJsonSchema<DisposalTaskDocType> = {
+  title: "disposal task schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    capacity: {
+      type: ["number", "null"],
+    },
+    contractor: {
+      type: ["string", "null"],
+    },
+    comment: {
+      type: ["string", "null"],
+    },
+    created_at: {
+      type: "string",
+    },
+    debris_type: {
+      type: "string",
+    },
+    disposal_site: {
+      type: ["string", "null"],
+    },
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    latitude: {
+      type: ["number", "null"],
+    },
+    longitude: {
+      type: ["number", "null"],
+    },
+    load_call: {
+      type: "number",
+    },
+    task_collection_id: {
+      type: ["string", "null"],
+    },
+    truck_id: {
+      type: ["string", "null"],
+    },
+    updated_at: {
+      type: "string",
     },
     ...imagesSchema,
   },

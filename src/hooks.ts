@@ -4,11 +4,17 @@ import { RxDocument } from "rxdb";
 import { useRxData } from "rxdb-hooks";
 import { v4 } from "uuid";
 import {
+  CollectionTaskDocType,
+  ContractorDocType,
+  DebrisTypeDocType,
+  DisposalSiteDocType,
+  DisposalTaskDocType,
   Images,
   ProjectDocType,
   Steps,
   StumpRemovalTaskDocType,
   TreeRemovalTaskDocType,
+  TruckDocType,
   UserDocType,
 } from "./rxdb/rxdb-schemas";
 
@@ -50,6 +56,23 @@ export function useAuth() {
   return !isOnline
     ? { isAuthenticated: true, isLoading: false, isOffline: true }
     : { isAuthenticated, isLoading, isOffline: false };
+}
+
+export async function getGeoLocationHandler() {
+  return new Promise<{ latitude: number; longitude: number }>((res, rej) =>
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        res({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.log(error.message);
+        rej(error.message);
+      },
+    ),
+  );
 }
 
 export function useGeoLocation() {
@@ -235,6 +258,38 @@ export function useProject() {
   return { activeProject: result[0], isFetching };
 }
 
+export function useContractors() {
+  const query = useCallback((collection) => collection.find(), []);
+  const { result, isFetching } = useRxData<ContractorDocType>(
+    "contractor",
+    query,
+  );
+  return { contractors: result, isFetching };
+}
+
+export function useTrucks() {
+  const query = useCallback((collection) => collection.find(), []);
+  const { result, isFetching } = useRxData<TruckDocType>("truck", query);
+  return { trucks: result, isFetching };
+}
+
+export function useDisposalSites() {
+  const query = useCallback((collection) => collection.find(), []);
+  const { result, isFetching } = useRxData<DisposalSiteDocType>(
+    "disposal-site",
+    query,
+  );
+  return { disposalSites: result, isFetching };
+}
+
+export function useDebrisTypes() {
+  const query = useCallback((collection) => collection.find(), []);
+  const { result, isFetching } = useRxData<DebrisTypeDocType>(
+    "debris-type",
+    query,
+  );
+  return { debrisTypes: result, isFetching };
+}
 export function useTreeRemovalTasks(selector?: Record<string, unknown>) {
   const query = useCallback(
     (collection) =>
@@ -265,6 +320,42 @@ export function useStumpRemovalTasks(selector?: Record<string, unknown>) {
 
   const { result, isFetching } = useRxData<StumpRemovalTaskDocType>(
     "stump-removal-task",
+    query,
+  );
+
+  return { result, isFetching };
+}
+
+export function useCollectionTasks(selector?: Record<string, unknown>) {
+  const query = useCallback(
+    (collection) =>
+      collection.find({
+        sort: [{ updated_at: "desc" }],
+        selector: selector || {},
+      }),
+    [selector],
+  );
+
+  const { result, isFetching } = useRxData<CollectionTaskDocType>(
+    "collection-task",
+    query,
+  );
+
+  return { result, isFetching };
+}
+
+export function useDisposalTasks(selector?: Record<string, unknown>) {
+  const query = useCallback(
+    (collection) =>
+      collection.find({
+        sort: [{ updated_at: "desc" }],
+        selector: selector || {},
+      }),
+    [selector],
+  );
+
+  const { result, isFetching } = useRxData<DisposalTaskDocType>(
+    "disposal-task",
     query,
   );
 
@@ -307,6 +398,15 @@ export function useTask(taskId: string | undefined) {
   const { result: stump, isFetching: isFetchingStump } = useStumpRemovalTasks({
     id: taskId,
   });
+  const { result: collectionTask, isFetching: isFetchingCollectionTask } =
+    useCollectionTasks({
+      id: taskId,
+    });
+
+  const { result: disposalTask, isFetching: isFetchingDisposalTask } =
+    useDisposalTasks({
+      id: taskId,
+    });
 
   const { result: ticketing, isFetching: isFetchingTicketing } =
     useTicketingTasks({
@@ -318,12 +418,21 @@ export function useTask(taskId: string | undefined) {
       return { result: tree[0], type: "Tree" };
     } else if (stump.length) {
       return { result: stump[0], type: "Stump" };
+    } else if (collectionTask.length) {
+      return { result: collectionTask[0], type: "Collection" };
+    } else if (disposalTask.length) {
+      return { result: disposalTask[0], type: "Disposal" };
     }
 
     return { result: ticketing[0], type: "Ticketing" };
-  }, [tree, stump, ticketing]);
+  }, [tree, stump, collectionTask, disposalTask, ticketing]);
 
-  const isFetching = isFetchingTree || isFetchingStump || isFetchingTicketing;
+  const isFetching =
+    isFetchingTree ||
+    isFetchingStump ||
+    isFetchingCollectionTask ||
+    isFetchingDisposalTask ||
+    isFetchingTicketing;
 
   return { ...result, isFetching };
 }
