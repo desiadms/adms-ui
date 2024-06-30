@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { TaskType } from "./common";
-import { v4, validate as uuidValidate } from "uuid";
+import { v4, validate as uuidValidate, version as uuidVersion } from "uuid";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useMemo, useState } from "react";
 import {
@@ -60,14 +60,15 @@ type FormProps = {
 };
 
 export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
-  console.log("rerender");
-  // Here we set the default value of the slider to 50
-  // it is calculated using the following formula:
-  // min + (min + max) / 2
-  // see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range#value
+  /**
+   * Here we set the default value of the range slider to 50, since
+   * the HTML element's default value is calculated using the following formula:
+   * min + (max - min) / 2 = 5 + (95 - 5) / 2 = 50
+   * see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range#value
+   */
   const [sliderValue, setSliderValue] = useState<number>(50);
 
-  const [autofillOpen, setAutofillOpen] = useState<boolean>(false);
+  const [scannerOpen, setScannerOpen] = useState<boolean>(false);
   const [manualEntryOpen, setManualEntryOpen] = useState<boolean>(true);
   const [linkedCollectionTask, setLinkedCollectionTask] = useState<
     CollectionTaskDocType | undefined
@@ -191,35 +192,47 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   }
 
   async function autoFillFieldsFromQr(result: IDetectedBarcode[]) {
-    setAutofillOpen(false);
+    setScannerOpen(false);
+    const scanResult = result[0]?.rawValue;
+
     if (result !== undefined && result !== null) {
-      if (uuidValidate(result[0]?.rawValue)) {
-        setLinkedCollectionTaskId(result[0]?.rawValue);
+      if (uuidValidate(scanResult) && uuidVersion(scanResult) === 4) {
+        // Scanned QR result is a valid v4 UUID, save the ID
+        setLinkedCollectionTaskId(scanResult);
 
         const existingCollectionDoc = await truckCollectionCol
-          ?.findOne(result[0]?.rawValue)
+          ?.findOne(scanResult)
           .exec();
 
-        /* if we can find the Collection Task in the recently pulled TruckCollectionCol
-         * then autofill the matching fields. If the local device hasn't pulled the Collection Task
-         * with the scanned ID yet, then we reset the form values and just link the ID.
-         */
         if (
           existingCollectionDoc === null ||
           existingCollectionDoc === undefined
         ) {
+          /**
+           * (Offline Scenario)
+           * Scanned QR is a Collection Task ID,
+           * but it is not found in the local RxDB TruckCollectionCol.
+           * Reset the form values, user will manually enter.
+           */
+          console.log("should hit this");
           setLinkedCollectionTask(undefined);
           resetFormValuesToDefault();
         } else {
+          /* Scanned QR is a Collection Task ID,
+           * and it is found in the local RxDB TruckCollectionCol.
+           * Autofill the matching fields from the CollectionTask object.
+           */
           setLinkedCollectionTask(existingCollectionDoc);
           autofillFormValuesWithFoundCollectionDoc(existingCollectionDoc);
         }
       } else {
+        // Scanned QR gave a result, but result is not a valid UUID.
         console.log("QR Scanner: Result is not a valid UUID.");
         setLinkedCollectionTaskId(undefined);
         setLinkedCollectionTask(undefined);
       }
     } else {
+      // Scanned QR gave no result.
       console.log("QR Scanner: No scan result.");
       setLinkedCollectionTaskId(undefined);
       setLinkedCollectionTask(undefined);
@@ -230,7 +243,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
     setValue("truckNumber", defaultInputOption);
     setValue("disposalSite", defaultInputOption);
     setValue("contractor", defaultInputOption);
-    setValue("capacity", null);
+    setValue("capacity", 0);
     setValue("debrisType", defaultInputOption);
   }
 
@@ -269,7 +282,11 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   const rxdbDisposalSitesObject = useDisposalSites();
   const rxdbDebrisTypesObject = useDebrisTypes();
 
-  const fieldsToAutofill = linkedCollectionTask ? (
+  const noCollectionTaskLinkedWarning = (
+    <ErrorMessage message={"No Collection Task linked."} />
+  );
+
+  const autofilledFields = linkedCollectionTask ? (
     <div>
       <div className="p-2 w-fit rounded-lg">
         <b> Found {linkedCollectionTask.id} </b>
@@ -326,15 +343,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         </div>
       </div>
     </div>
-  ) : linkedCollectionTaskId ? (
-    <div className="p-2 w-fit rounded-lg">
-      <b>
-        {"Currently linked to collection task with id: " +
-          linkedCollectionTaskId}
-      </b>
-    </div>
   ) : (
-    <ErrorMessage message={"No Collection Task linked."} />
+    noCollectionTaskLinkedWarning
   );
 
   const defaultInputOption = "Please Select";
@@ -353,7 +363,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
       <div className="p-2 w-fit rounded-lg">
         <Label label="Truck Number" />
         <div className="text-sm">
-          {manualEntryOpen && (
+          {
             <select
               {...register("truckNumber", {
                 required: "Truck Number is required",
@@ -372,7 +382,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                 );
               })}
             </select>
-          )}
+          }
         </div>
         <ErrorMessage message={errors.truckNumber?.message} />
       </div>
@@ -455,9 +465,21 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
     </div>
   );
 
+  const manualInputFieldsWithLinkedId = (
+    <div>
+      <div className="p-2 w-fit rounded-lg">
+        <b>
+          {"Currently linked with collection task id: " +
+            linkedCollectionTaskId}
+        </b>
+      </div>
+      {manualInputFields}
+    </div>
+  );
+
   return (
     <div className="relative">
-      {autofillOpen && (
+      {scannerOpen && (
         <div className="relative left-[50%] -translate-x-1/2 w-[50%]">
           <Scanner onScan={autoFillFieldsFromQr} />
         </div>
@@ -501,7 +523,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
               <div className="text-sm">
                 <Button
                   onClick={() => {
-                    setAutofillOpen(true);
+                    setScannerOpen(true);
                     setManualEntryOpen(false);
                   }}
                   name="scan-qr"
@@ -516,7 +538,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
               <div className="text-sm">
                 <Button
                   onClick={() => {
-                    setAutofillOpen(false);
+                    setScannerOpen(false);
                     setManualEntryOpen(true);
                     // reset react hook form field values and linked collection task
                     resetFormValuesToDefault();
@@ -533,7 +555,13 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
             </div>
           </div>
         )}
-        {manualEntryOpen ? manualInputFields : fieldsToAutofill}
+        {manualEntryOpen
+          ? manualInputFields
+          : linkedCollectionTask
+            ? autofilledFields
+            : linkedCollectionTaskId
+              ? manualInputFieldsWithLinkedId
+              : noCollectionTaskLinkedWarning}
         {type === "collection" && (
           <div className="p-2 w-full rounded-lg">
             <Label label="Weigh Points" />
