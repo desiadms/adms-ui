@@ -263,6 +263,9 @@ export const ticketingTaskSchema: RxJsonSchema<TicketingTaskDocType> = {
     updated_at: {
       type: "string",
     },
+    ticketing_name: {
+      type: "string",
+    },
     latitude: {
       type: ["number", "null"],
     },

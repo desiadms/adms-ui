@@ -89,6 +89,7 @@ function FieldMonitorGeneralForm({
       images,
       latitude: coordinates?.latitude,
       longitude: coordinates?.longitude,
+      ticketing_name: ticketingId,
       comment: data?.comment,
       created_at: nowUTC,
       updated_at: nowUTC,

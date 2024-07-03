@@ -153,6 +153,7 @@ export const queryTicketingTasks = graphql(/* GraphQL */ `
       id
       latitude
       longitude
+      ticketing_name
       images {
         id
         created_at
