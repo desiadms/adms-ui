@@ -1,20 +1,25 @@
 import { CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
-import { ClockIcon } from "@heroicons/react/24/outline";
 import { Link, LinkOptions, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import { QRCodeCanvas } from "qrcode.react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { RxDocument } from "rxdb";
 import {
+  CollectionTaskDocType,
+  DisposalTaskDocType,
   Images,
   Steps,
   StumpRemovalTaskDocType,
+  TicketingTaskDocType,
   TreeRemovalTaskDocType,
 } from "../rxdb/rxdb-schemas";
 import {
   humanizeDate,
   nhost,
+  useCollectionTasks,
+  useDisposalTasks,
   useStumpRemovalTasks,
+  useTicketingTasks,
   useTreeRemovalTasks,
 } from "../hooks";
 import { Button } from "./Forms";
@@ -39,17 +44,67 @@ async function fetchImages(images: Images[] | undefined) {
   );
 }
 
-function useInProgressTasks() {
-  const tree = useTreeRemovalTasks({ completed: false });
-  const stump = useStumpRemovalTasks({ completed: false });
+const currentDate = new Date();
+const currentDateMillis = currentDate.getTime();
 
-  const isFetching = tree.isFetching || stump.isFetching;
+function have24HoursPassed(dateString) {
+  // Parse the given date string to a Date object
+  const givenDate = new Date(dateString);
+
+  // Get the current date and time
+
+  // Calculate the difference in milliseconds
+  const differenceInMs = currentDateMillis - givenDate.getTime();
+
+  // Convert milliseconds to hours
+  const differenceInHours = differenceInMs / (1000 * 60 * 60);
+
+  // Check if 24 hours have passed
+  return differenceInHours >= 24;
+}
+
+function useTasks() {
+  const tree = useTreeRemovalTasks();
+  const stump = useStumpRemovalTasks();
+  const collection = useCollectionTasks();
+  const disposal = useDisposalTasks();
+  const ticketing = useTicketingTasks();
+
+  const isFetching =
+    tree.isFetching ||
+    stump.isFetching ||
+    collection.isFetching ||
+    disposal.isFetching ||
+    ticketing.isFetching;
+
+  const results = useMemo(() => {
+    return {
+      "tree-removal-tasks": tree.result
+        .sort((a, b) => Number(a.completed) - Number(b.completed))
+        .filter((task) => !have24HoursPassed(task.created_at)),
+      "stump-removal-tasks": stump.result
+        .sort((a, b) => Number(a.completed) - Number(b.completed))
+        .filter((task) => !have24HoursPassed(task.created_at)),
+      "collection-tasks": collection.result.filter((task) =>
+        have24HoursPassed(task.created_at),
+      ),
+      "disposal-tasks": disposal.result.filter(
+        (task) => !have24HoursPassed(task.created_at),
+      ),
+      "ticketing-tasks": ticketing.result.filter((task) =>
+        have24HoursPassed(task.created_at),
+      ),
+    };
+  }, [
+    tree.result,
+    stump.result,
+    collection.result,
+    disposal.result,
+    ticketing.result,
+  ]);
 
   return {
-    results: {
-      "tree-removal-tasks": tree.result,
-      "stump-removal-tasks": stump.result,
-    },
+    results,
     isFetching,
   };
 }
@@ -201,7 +256,7 @@ function TaskPreview({
   );
 }
 
-function QRCodeID({ taskId }: { taskId: string }) {
+function _QRCodeID({ taskId }: { taskId: string }) {
   const modalTrigger = useCallback(
     ({ openModal }: ModalTriggerProps) => (
       <Button bgColor="bg-gray-700" onClick={openModal}>
@@ -274,40 +329,88 @@ function TreeStumpRemovalSingleTask({ task, type }: TreeStumpRemovalProps) {
     <div>
       <div key={task.id} className="bg-stone-300 rounded-lg p-4">
         <div className="flex justify-between items-center gap-4">
-          <div className="w-fit">
-            <QRCodeID taskId={task.id} />
-          </div>
-          <div className="flex justify-end items-center gap-1 pb-4">
-            <div className="text-xs">
-              <ClockIcon className="w-4 h-4" />
-            </div>
-            <div className="text-xs">{humanizeDate(task.updated_at)}</div>
+          <div className="text-xs">ID: {task.id}</div>
+
+          <div className="flex justify-end items-center gap-1">
+            <div className="text-xs">Created At:</div>
+            <div className="text-xs">{humanizeDate(task.created_at)}</div>
           </div>
         </div>
-        <div className="flex gap-10 items-end">
-          {Object.entries(steps).map(([taken_at_step, images]) => (
-            <Modal
-              key={taken_at_step}
-              title={`${taken_at_step} measurement`}
-              modalTrigger={(props) =>
-                modalTrigger(props, taken_at_step as Steps)
-              }
-              modalContent={(props) =>
-                modalBody(props, images, task, taken_at_step as Steps)
-              }
-            />
-          ))}
-          {missingSteps.map(({ disabled, step, href }) => (
-            <div key={step}>
-              {disabled ? (
-                <TaskCheck taken_at_step={step} icon="disabled" />
-              ) : (
-                <Link key={href} to={href}>
-                  <TaskCheck taken_at_step={step} icon="add" />
+        <div className="flex justify-between items-center">
+          <div className="flex gap-10 items-end">
+            {Object.entries(steps).map(([taken_at_step, images]) => (
+              <Modal
+                key={taken_at_step}
+                title={`${taken_at_step} measurement`}
+                modalTrigger={(props) =>
+                  modalTrigger(props, taken_at_step as Steps)
+                }
+                modalContent={(props) =>
+                  modalBody(props, images, task, taken_at_step as Steps)
+                }
+              />
+            ))}
+            {missingSteps.map(({ disabled, step, href }) => (
+              <div key={step}>
+                {disabled ? (
+                  <TaskCheck taken_at_step={step} icon="disabled" />
+                ) : (
+                  <Link key={href} to={href}>
+                    <TaskCheck taken_at_step={step} icon="add" />
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+          {task.completed && (
+            <div>
+              <Button bgColor="bg-gray-700">
+                <Link to="/print/$id" params={{ id: task.id }}>
+                  Print
                 </Link>
-              )}
+              </Button>
             </div>
-          ))}
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+type TGeneralTaskCard =
+  | RxDocument<CollectionTaskDocType>
+  | RxDocument<DisposalTaskDocType>
+  | RxDocument<TicketingTaskDocType>;
+
+function GeneralTaskCard({ task }: { task: TGeneralTaskCard }) {
+  console.log(";task", task);
+  return (
+    <div>
+      <div key={task.id} className="bg-stone-300 rounded-lg p-4">
+        <div className="flex justify-between items-center gap-4">
+          <div className="text-xs">ID: {task.id}</div>
+          <div className="flex justify-end items-center gap-1">
+            <div className="text-xs">Created At:</div>
+            <div className="text-xs">{humanizeDate(task.created_at)}</div>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center pt-4">
+          <div>
+            {"task_ticketing_name" in task && (
+              <div className="text-sm">
+                {" "}
+                Name: {task.task_ticketing_name.name}
+              </div>
+            )}
+          </div>
+          <div>
+            <Button bgColor="bg-gray-700">
+              <Link to="/print/$id" params={{ id: task.id }}>
+                Print
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </div>
@@ -315,14 +418,14 @@ function TreeStumpRemovalSingleTask({ task, type }: TreeStumpRemovalProps) {
 }
 
 export function TasksProgress() {
-  const { results, isFetching } = useInProgressTasks();
+  const { results, isFetching } = useTasks();
 
   if (isFetching) return <Spinner />;
 
   if (Object.values(results).every((result) => result.length === 0))
     return (
       <div className="flex flex-col gap-2">
-        <div className="text-lg font-medium">No tasks in progress</div>
+        <div className="text-lg font-medium">No tasks </div>
         <div className="text-sm font-light">
           You can start a new task by clicking on the button below
         </div>
@@ -353,6 +456,30 @@ export function TasksProgress() {
               task={task}
               type="stump"
             />
+          ))}
+        </div>
+      )}
+      {results["collection-tasks"].length > 0 && (
+        <div className="flex flex-col gap-4">
+          <div>Collection Tasks</div>
+          {results["collection-tasks"]?.map((task) => (
+            <GeneralTaskCard key={task.id} task={task} />
+          ))}
+        </div>
+      )}
+      {results["disposal-tasks"].length > 0 && (
+        <div className="flex flex-col gap-4">
+          <div>Disposal Tasks</div>
+          {results["disposal-tasks"]?.map((task) => (
+            <GeneralTaskCard key={task.id} task={task} />
+          ))}
+        </div>
+      )}
+      {results["ticketing-tasks"].length > 0 && (
+        <div className="flex flex-col gap-4">
+          <div>Ticketing Tasks</div>
+          {results["ticketing-tasks"]?.map((task) => (
+            <GeneralTaskCard key={task.id} task={task} />
           ))}
         </div>
       )}

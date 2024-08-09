@@ -29,7 +29,10 @@ export function Print() {
   const { result, type } = useTask(id);
 
   const beforeStep = result?.images?.find(
-    (image) => image.taken_at_step === "before" && !image._deleted,
+    (image) =>
+      "taken_at_step" in image &&
+      image.taken_at_step === "before" &&
+      !image._deleted,
   );
 
   const date = beforeStep?.created_at

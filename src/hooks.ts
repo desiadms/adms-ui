@@ -13,6 +13,7 @@ import {
   ProjectDocType,
   Steps,
   StumpRemovalTaskDocType,
+  TicketingTaskDocType,
   TreeRemovalTaskDocType,
   TruckDocType,
   UserDocType,
@@ -372,7 +373,7 @@ export function useTicketingTasks(selector?: Record<string, unknown>) {
     [selector],
   );
 
-  const { result, isFetching } = useRxData<StumpRemovalTaskDocType>(
+  const { result, isFetching } = useRxData<TicketingTaskDocType>(
     "ticketing-task",
     query,
   );

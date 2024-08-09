@@ -12,7 +12,7 @@ import { emailToId, fullName, useIsOnline } from "../hooks";
 const navigation = [
   ["/projects", "Projects"],
   ["/tasks", "New Task"],
-  ["/progress", "In Progress"],
+  ["/progress", "Progress (last 24h)"],
 ] as const;
 
 export function Home() {
