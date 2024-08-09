@@ -383,7 +383,6 @@ type TGeneralTaskCard =
   | RxDocument<TicketingTaskDocType>;
 
 function GeneralTaskCard({ task }: { task: TGeneralTaskCard }) {
-  console.log(";task", task);
   return (
     <div>
       <div key={task.id} className="bg-stone-300 rounded-lg p-4">
