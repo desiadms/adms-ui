@@ -44,7 +44,10 @@ export const upsertTreeRemovalTasks = graphql(/* GraphQL */ `
     $images: [images_insert_input!]!
     $taskIds: [task_ids_insert_input!]!
   ) {
-    insert_task_ids(objects: $taskIds) {
+    insert_task_ids(
+      objects: $taskIds
+      on_conflict: { constraint: task_ids_pkey, update_columns: id }
+    ) {
       returning {
         id
       }
@@ -108,7 +111,10 @@ export const upsertStumpRemovalTasks = graphql(/* GraphQL */ `
     $images: [images_insert_input!]!
     $taskIds: [task_ids_insert_input!]!
   ) {
-    insert_task_ids(objects: $taskIds) {
+    insert_task_ids(
+      objects: $taskIds
+      on_conflict: { constraint: task_ids_pkey, update_columns: id }
+    ) {
       returning {
         id
       }
@@ -176,12 +182,14 @@ export const upsertTicketingTasks = graphql(/* GraphQL */ `
     $images: [images_insert_input!]!
     $taskIds: [task_ids_insert_input!]!
   ) {
-    insert_task_ids(objects: $taskIds) {
+    insert_task_ids(
+      objects: $taskIds
+      on_conflict: { constraint: task_ids_pkey, update_columns: id }
+    ) {
       returning {
         id
       }
     }
-
     insert_tasks_ticketing(
       objects: $tasks
       on_conflict: {

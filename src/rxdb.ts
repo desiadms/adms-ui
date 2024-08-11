@@ -3,6 +3,7 @@ import { RxDBLocalDocumentsPlugin } from "rxdb/plugins/local-documents";
 import { RxDBMigrationPlugin } from "rxdb/plugins/migration-schema";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
+import { devMode } from "./hooks";
 import { addCollections } from "./rxdb/abstraction";
 import {
   collectionTasksRead,
@@ -36,7 +37,6 @@ import {
   truckSchema,
   userSchema,
 } from "./rxdb/rxdb-schemas";
-import { devMode } from "./hooks";
 
 addRxPlugin(RxDBMigrationPlugin);
 addRxPlugin(RxDBLocalDocumentsPlugin);
