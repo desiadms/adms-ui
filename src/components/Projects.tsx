@@ -7,7 +7,7 @@ export function ProjectsView() {
     <div>
       {(activeProject && (
         <div>
-          <h2 className="font-medium pb-2"> Active Projects </h2>
+          <h2 className="font-medium pb-2"> Active Project </h2>
           <div className="flex flex-col gap-6 from-stone-600 to-emerald-700 text-white rounded-xl p-4 bg-gradient-to-t from-80%">
             <div className="flex gap-4 items-center">
               <div className="p-1 rounded-xl w-fit bg-stone-800">

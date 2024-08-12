@@ -11,7 +11,7 @@ import { emailToId, fullName, useIsOnline } from "../hooks";
 import { removeDB } from "../rxdb";
 
 const navigation = [
-  ["/projects", "Projects"],
+  ["/projects", "Project"],
   ["/tasks", "New Task"],
   ["/progress", "Progress (last 24h)"],
 ] as const;

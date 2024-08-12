@@ -296,9 +296,7 @@ function TreeStumpRemovalForm({
           </div>
         )}
         <div className="px-2">
-          <Button type="submit">
-            {step === "after" ? "Print Ticket" : "Save"}
-          </Button>
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </div>
