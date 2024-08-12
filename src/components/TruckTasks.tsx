@@ -554,7 +554,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                 type="button"
                 bgColor="bg-slate-500"
               >
-                Add Weigh Point
+                Add Waypoint
               </Button>
             </div>
             <div className="mt-2">
