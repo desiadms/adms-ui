@@ -1,4 +1,4 @@
-import { useParams } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { QRCodeCanvas } from "qrcode.react";
 import { TreeRemovalTaskDocType } from "src/rxdb/rxdb-schemas";
 import { humanizeDate, useProject, useTask } from "../hooks";
@@ -74,7 +74,9 @@ export function Print() {
         <QRCodeCanvas value={result?.id} includeMargin />
       </div>
       <div className="pt-10">
-        <Button onClick={() => window.print()}>Print</Button>
+        <Link to="/tasks">
+          <Button>Back to Tasks</Button>
+        </Link>
       </div>
     </div>
   );

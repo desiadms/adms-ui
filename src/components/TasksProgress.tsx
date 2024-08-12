@@ -85,14 +85,14 @@ function useTasks() {
       "stump-removal-tasks": stump.result
         .sort((a, b) => Number(a.completed) - Number(b.completed))
         .filter((task) => !have24HoursPassed(task.created_at)),
-      "collection-tasks": collection.result.filter((task) =>
-        have24HoursPassed(task.created_at),
+      "collection-tasks": collection.result.filter(
+        (task) => !have24HoursPassed(task.created_at),
       ),
       "disposal-tasks": disposal.result.filter(
         (task) => !have24HoursPassed(task.created_at),
       ),
-      "ticketing-tasks": ticketing.result.filter((task) =>
-        have24HoursPassed(task.created_at),
+      "ticketing-tasks": ticketing.result.filter(
+        (task) => !have24HoursPassed(task.created_at),
       ),
     };
   }, [
@@ -418,7 +418,7 @@ function GeneralTaskCard({ task }: { task: TGeneralTaskCard }) {
 
 export function TasksProgress() {
   const { results, isFetching } = useTasks();
-
+  console.log("results", results);
   if (isFetching) return <Spinner />;
 
   if (Object.values(results).every((result) => result.length === 0))
