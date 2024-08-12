@@ -206,16 +206,10 @@ function FieldMonitorGeneralForm({
             )}
           </>
         )}
-
-        {ticketingBlueprint?.comment && (
-          <div className="p-2 w-full rounded-lg">
-            <LabelledTextArea
-              label="Comment"
-              {...register("comment", { required: "Task name is required" })}
-            />
-            <ErrorMessage message={errors.comment?.message} />
-          </div>
-        )}
+        <div className="p-2 w-full rounded-lg">
+          <LabelledTextArea label="Comment" {...register("comment")} />
+          <ErrorMessage message={errors.comment?.message} />
+        </div>
 
         <div className="px-2">
           <Button type="submit">
