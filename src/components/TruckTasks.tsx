@@ -546,7 +546,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
               : noCollectionTaskLinkedWarning}
         {type === "collection" && (
           <div className="p-2 w-full rounded-lg">
-            <Label label="Weigh Points" />
+            <Label label="Waypoints" />
             <div className="text-sm w-fit">
               <Button
                 onClick={addWeighPoint}
