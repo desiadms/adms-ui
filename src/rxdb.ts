@@ -1,4 +1,4 @@
-import { addRxPlugin, createRxDatabase } from "rxdb";
+import { addRxPlugin, createRxDatabase, RxDatabase } from "rxdb";
 import { RxDBLocalDocumentsPlugin } from "rxdb/plugins/local-documents";
 import { RxDBMigrationPlugin } from "rxdb/plugins/migration-schema";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
@@ -47,14 +47,26 @@ if (devMode) {
   );
 }
 
+export let db: RxDatabase | undefined;
+
+export async function removeDB() {
+  if (db) {
+    await db.remove();
+    db = undefined;
+  }
+}
+
 export async function initialize(accessToken: string | null) {
+  if (db) return db;
+
+  console.log("in initialize rxdb");
   const dexie = getRxStorageDexie();
 
   const storage = devMode
     ? wrappedValidateAjvStorage({ storage: dexie })
     : dexie;
 
-  const db = await createRxDatabase({
+  db = await createRxDatabase({
     name: "adms",
     storage,
     eventReduce: true,

@@ -8,6 +8,7 @@ import { useCallback } from "react";
 import { useRxData } from "rxdb-hooks";
 import { UserDocType } from "../rxdb/rxdb-schemas";
 import { emailToId, fullName, useIsOnline } from "../hooks";
+import { removeDB } from "../rxdb";
 
 const navigation = [
   ["/projects", "Projects"],
@@ -132,7 +133,10 @@ export function Dashboard() {
                             inactiveProps={{
                               className: `text-gray-300 hover:bg-gray-700 hover:text-white`,
                             }}
-                            onClick={signOut}
+                            onClick={async () => {
+                              await removeDB();
+                              await signOut();
+                            }}
                             to="/"
                           >
                             Sign out
