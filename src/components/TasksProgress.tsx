@@ -418,7 +418,7 @@ function GeneralTaskCard({ task }: { task: TGeneralTaskCard }) {
 
 export function TasksProgress() {
   const { results, isFetching } = useTasks();
-  console.log("results", results);
+
   if (isFetching) return <Spinner />;
 
   if (Object.values(results).every((result) => result.length === 0))
