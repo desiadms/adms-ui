@@ -1,7 +1,13 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { QRCodeCanvas } from "qrcode.react";
-import { TreeRemovalTaskDocType } from "src/rxdb/rxdb-schemas";
-import { humanizeDate, useProject, useTask } from "../hooks";
+import {
+  humanizeDate,
+  useDebrisTypes,
+  useDisposalSites,
+  useProject,
+  useTask,
+  useTrucks,
+} from "../hooks";
 import { Button } from "./Forms";
 
 function LabelValue({
@@ -48,12 +54,33 @@ export function Print() {
     } ||
     {};
 
+  const parsedType =
+    type === "Ticketing" ? result?.task_ticketing_name.name : type;
+
+  const trucks = useTrucks();
+  const disposalSites = useDisposalSites();
+  const debrisTypes = useDebrisTypes();
+
   if (!result) return "Loading...";
+
+  const truck =
+    "truck_id" in result &&
+    trucks.trucks.find((truck) => truck.id === result?.truck_id);
+
+  const disposalSite =
+    "disposal_site" in result &&
+    disposalSites.disposalSites.find(
+      (site) => site.id === result?.disposal_site,
+    );
+
+  const debrisType =
+    "debris_type" in result &&
+    debrisTypes.debrisTypes.find((type) => type.id === result?.debris_type);
 
   return (
     <div>
       <div className="text-center text-xl font-medium">ADMS</div>
-      <div className="text-center text-lg">{type} Ticket</div>
+      <div className="text-center text-lg">{parsedType} Ticket</div>
       <div className="pl-4 flex flex-col gap-2 pt-4">
         <LabelValue label="Project" value={activeProject?.name} />
         <LabelValue label="Contractor" value={activeProject?.contractor} />
@@ -61,13 +88,12 @@ export function Print() {
         <LabelValue label="Ticket ID" value={`${result?.id}`} />
         <LabelValue label="Lat" value={latitude} />
         <LabelValue label="Lon" value={longitude} />
-        <LabelValue label="Type" value={type} />
-        {type === "tree" && (
-          <LabelValue
-            label="Size"
-            value={(result as TreeRemovalTaskDocType)?.ranges}
-          />
-        )}
+        <LabelValue label="Type" value={parsedType} />
+
+        {truck && <LabelValue label="Truck" value={truck.truck_number} />}
+        {disposalSite && <LabelValue label="Truck" value={disposalSite.name} />}
+        {debrisType && <LabelValue label="Truck" value={debrisType.name} />}
+        {type === "Tree" && <LabelValue label="Size" value={result?.ranges} />}
         <LabelValue label="Comment" value={result?.comment} />
       </div>
       <div className="flex flex-col items-center pt-10">

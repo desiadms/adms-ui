@@ -416,16 +416,16 @@ export function useTask(taskId: string | undefined) {
 
   const result = useMemo(() => {
     if (tree.length) {
-      return { result: tree[0], type: "Tree" };
+      return { result: tree[0], type: "Tree" } as const;
     } else if (stump.length) {
-      return { result: stump[0], type: "Stump" };
+      return { result: stump[0], type: "Stump" } as const;
     } else if (collectionTask.length) {
-      return { result: collectionTask[0], type: "Collection" };
+      return { result: collectionTask[0], type: "Collection" } as const;
     } else if (disposalTask.length) {
-      return { result: disposalTask[0], type: "Disposal" };
+      return { result: disposalTask[0], type: "Disposal" } as const;
     }
 
-    return { result: ticketing[0], type: "Ticketing" };
+    return { result: ticketing[0], type: "Ticketing" } as const;
   }, [tree, stump, collectionTask, disposalTask, ticketing]);
 
   const isFetching =
