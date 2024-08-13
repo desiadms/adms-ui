@@ -91,8 +91,12 @@ export function Print() {
         <LabelValue label="Type" value={parsedType} />
 
         {truck && <LabelValue label="Truck" value={truck.truck_number} />}
-        {disposalSite && <LabelValue label="Truck" value={disposalSite.name} />}
-        {debrisType && <LabelValue label="Truck" value={debrisType.name} />}
+        {disposalSite && (
+          <LabelValue label="Disposal Site" value={disposalSite.name} />
+        )}
+        {debrisType && (
+          <LabelValue label="Debris Type" value={debrisType.name} />
+        )}
         {type === "Tree" && <LabelValue label="Size" value={result?.ranges} />}
         <LabelValue label="Comment" value={result?.comment} />
       </div>

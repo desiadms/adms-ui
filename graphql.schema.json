@@ -16855,6 +16855,46 @@
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "contractors_obj_rel_insert_input",
+        "description": "input type for inserting object relation for remote table \"contractors\"",
+        "specifiedByURL": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "data",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "contractors_insert_input",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "on_conflict",
+            "description": "upsert condition",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "contractors_on_conflict",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "contractors_on_conflict",
         "description": "on_conflict condition type for table \"contractors\"",
         "specifiedByURL": null,
@@ -18203,6 +18243,46 @@
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "debris_types_obj_rel_insert_input",
+        "description": "input type for inserting object relation for remote table \"debris_types\"",
+        "specifiedByURL": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "data",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "debris_types_insert_input",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "on_conflict",
+            "description": "upsert condition",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "debris_types_on_conflict",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "debris_types_on_conflict",
         "description": "on_conflict condition type for table \"debris_types\"",
         "specifiedByURL": null,
@@ -19369,6 +19449,46 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "disposal_sites_obj_rel_insert_input",
+        "description": "input type for inserting object relation for remote table \"disposal_sites\"",
+        "specifiedByURL": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "data",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "disposal_sites_insert_input",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "on_conflict",
+            "description": "upsert condition",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "disposal_sites_on_conflict",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -55986,6 +56106,22 @@
             "deprecationReason": null
           },
           {
+            "name": "contractor_data",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "contractors",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "created_at",
             "description": null,
             "args": [],
@@ -56018,6 +56154,22 @@
             "deprecationReason": null
           },
           {
+            "name": "debris_type_data",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "debris_types",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "disposal_site",
             "description": null,
             "args": [],
@@ -56027,6 +56179,22 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "uuid",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "disposal_site_data",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "disposal_sites",
                 "ofType": null
               }
             },
@@ -56308,6 +56476,18 @@
             "deprecationReason": null
           },
           {
+            "name": "tasks_collection_user",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "users",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "tasks_disposal",
             "description": "An object relationship",
             "args": [],
@@ -56315,6 +56495,22 @@
               "kind": "OBJECT",
               "name": "tasks_disposal",
               "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "truck_data",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "trucks",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -57279,6 +57475,18 @@
             "deprecationReason": null
           },
           {
+            "name": "contractor_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "contractors_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "created_at",
             "description": null,
             "type": {
@@ -57303,11 +57511,35 @@
             "deprecationReason": null
           },
           {
+            "name": "debris_type_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "debris_types_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "disposal_site",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "uuid_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "disposal_site_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "disposal_sites_bool_exp",
               "ofType": null
             },
             "defaultValue": null,
@@ -57399,11 +57631,35 @@
             "deprecationReason": null
           },
           {
+            "name": "tasks_collection_user",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "users_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "tasks_disposal",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "tasks_disposal_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "truck_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "trucks_bool_exp",
               "ofType": null
             },
             "defaultValue": null,
@@ -57585,6 +57841,18 @@
             "deprecationReason": null
           },
           {
+            "name": "contractor_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "contractors_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "created_at",
             "description": null,
             "type": {
@@ -57609,11 +57877,35 @@
             "deprecationReason": null
           },
           {
+            "name": "debris_type_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "debris_types_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "disposal_site",
             "description": null,
             "type": {
               "kind": "SCALAR",
               "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "disposal_site_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "disposal_sites_obj_rel_insert_input",
               "ofType": null
             },
             "defaultValue": null,
@@ -57693,11 +57985,35 @@
             "deprecationReason": null
           },
           {
+            "name": "tasks_collection_user",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "users_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "tasks_disposal",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "tasks_disposal_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "truck_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "trucks_obj_rel_insert_input",
               "ofType": null
             },
             "defaultValue": null,
@@ -58641,6 +58957,18 @@
             "deprecationReason": null
           },
           {
+            "name": "contractor_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "contractors_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "created_at",
             "description": null,
             "type": {
@@ -58665,11 +58993,35 @@
             "deprecationReason": null
           },
           {
+            "name": "debris_type_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "debris_types_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "disposal_site",
             "description": null,
             "type": {
               "kind": "ENUM",
               "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "disposal_site_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "disposal_sites_order_by",
               "ofType": null
             },
             "defaultValue": null,
@@ -58749,11 +59101,35 @@
             "deprecationReason": null
           },
           {
+            "name": "tasks_collection_user",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "users_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "tasks_disposal",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "tasks_disposal_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "truck_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "trucks_order_by",
               "ofType": null
             },
             "defaultValue": null,
@@ -60284,6 +60660,18 @@
             "deprecationReason": null
           },
           {
+            "name": "contractor_data",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "contractors",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "created_at",
             "description": null,
             "args": [],
@@ -60316,12 +60704,40 @@
             "deprecationReason": null
           },
           {
+            "name": "debris_type_data",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "debris_types",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "disposal_site",
             "description": null,
             "args": [],
             "type": {
               "kind": "SCALAR",
               "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "disposal_site_data",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "disposal_sites",
               "ofType": null
             },
             "isDeprecated": false,
@@ -60637,6 +61053,30 @@
                 "name": "images_aggregate",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "tasks_disposal_user",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "users",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "truck_data",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "trucks",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -61596,6 +62036,18 @@
             "deprecationReason": null
           },
           {
+            "name": "contractor_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "contractors_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "created_at",
             "description": null,
             "type": {
@@ -61620,11 +62072,35 @@
             "deprecationReason": null
           },
           {
+            "name": "debris_type_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "debris_types_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "disposal_site",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "uuid_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "disposal_site_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "disposal_sites_bool_exp",
               "ofType": null
             },
             "defaultValue": null,
@@ -61745,6 +62221,30 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "images_aggregate_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "tasks_disposal_user",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "users_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "truck_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "trucks_bool_exp",
               "ofType": null
             },
             "defaultValue": null,
@@ -61926,6 +62426,18 @@
             "deprecationReason": null
           },
           {
+            "name": "contractor_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "contractors_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "created_at",
             "description": null,
             "type": {
@@ -61950,11 +62462,35 @@
             "deprecationReason": null
           },
           {
+            "name": "debris_type_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "debris_types_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "disposal_site",
             "description": null,
             "type": {
               "kind": "SCALAR",
               "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "disposal_site_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "disposal_sites_obj_rel_insert_input",
               "ofType": null
             },
             "defaultValue": null,
@@ -62063,6 +62599,30 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "images_arr_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "tasks_disposal_user",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "users_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "truck_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "trucks_obj_rel_insert_input",
               "ofType": null
             },
             "defaultValue": null,
@@ -63090,6 +63650,18 @@
             "deprecationReason": null
           },
           {
+            "name": "contractor_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "contractors_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "created_at",
             "description": null,
             "type": {
@@ -63114,11 +63686,35 @@
             "deprecationReason": null
           },
           {
+            "name": "debris_type_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "debris_types_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "disposal_site",
             "description": null,
             "type": {
               "kind": "ENUM",
               "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "disposal_site_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "disposal_sites_order_by",
               "ofType": null
             },
             "defaultValue": null,
@@ -63227,6 +63823,30 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "images_aggregate_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "tasks_disposal_user",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "users_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "truck_data",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "trucks_order_by",
               "ofType": null
             },
             "defaultValue": null,
@@ -76235,6 +76855,46 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "trucks_obj_rel_insert_input",
+        "description": "input type for inserting object relation for remote table \"trucks\"",
+        "specifiedByURL": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "data",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "trucks_insert_input",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "on_conflict",
+            "description": "upsert condition",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "trucks_on_conflict",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
