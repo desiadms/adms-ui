@@ -31,7 +31,7 @@ export function ProjectsView() {
                 <p className="text-sm font-bold">{activeProject.contractor}</p>
               </div>
               <div>
-                <p className="text-stone-200 font-extralight">Sub Contractor</p>
+                <p className="text-stone-200 font-extralight">Applicant</p>
                 <p className="text-sm font-bold">
                   {activeProject.sub_contractor}
                 </p>
