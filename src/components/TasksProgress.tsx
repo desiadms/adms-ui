@@ -5,15 +5,6 @@ import { QRCodeCanvas } from "qrcode.react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { RxDocument } from "rxdb";
 import {
-  CollectionTaskDocType,
-  DisposalTaskDocType,
-  Images,
-  Steps,
-  StumpRemovalTaskDocType,
-  TicketingTaskDocType,
-  TreeRemovalTaskDocType,
-} from "../rxdb/rxdb-schemas";
-import {
   humanizeDate,
   nhost,
   useCollectionTasks,
@@ -22,6 +13,15 @@ import {
   useTicketingTasks,
   useTreeRemovalTasks,
 } from "../hooks";
+import {
+  CollectionTaskDocType,
+  DisposalTaskDocType,
+  Images,
+  Steps,
+  StumpRemovalTaskDocType,
+  TicketingTaskDocType,
+  TreeRemovalTaskDocType,
+} from "../rxdb/rxdb-schemas";
 import { Button } from "./Forms";
 import { Image } from "./Image";
 import { Modal, ModalContentProps, ModalTriggerProps } from "./Modal";
@@ -398,8 +398,7 @@ function GeneralTaskCard({ task }: { task: TGeneralTaskCard }) {
           <div>
             {"task_ticketing_name" in task && (
               <div className="text-sm">
-                {" "}
-                Name: {task.task_ticketing_name.name}
+                Name: {task.task_ticketing_name?.name}
               </div>
             )}
           </div>
