@@ -54,9 +54,21 @@ export function useAuth() {
   const isOnline = useIsOnline();
   const { isAuthenticated, isLoading } = useAuthenticationStatus();
 
+  const refreshTokenId = localStorage.getItem("nhostRefreshTokenId");
+
   return !isOnline
-    ? { isAuthenticated: true, isLoading: false, isOffline: true }
-    : { isAuthenticated, isLoading, isOffline: false };
+    ? {
+        isAuthenticated: true,
+        isLoading: false,
+        isOffline: true,
+        isTokenInStorage: !!refreshTokenId,
+      }
+    : {
+        isAuthenticated,
+        isLoading,
+        isOffline: false,
+        isTokenInStorage: !!refreshTokenId,
+      };
 }
 
 export async function getGeoLocationHandler() {

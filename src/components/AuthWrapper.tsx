@@ -90,7 +90,7 @@ function FullPageSpinner() {
 }
 
 export function AuthWrapper() {
-  const { isAuthenticated, isLoading, isOffline } = useAuth();
+  const { isAuthenticated, isLoading, isOffline, isTokenInStorage } = useAuth();
   const accessToken = useAccessToken();
 
   const [db, setDb] = useState<RxDatabase>();
@@ -103,7 +103,7 @@ export function AuthWrapper() {
     return <FullPageSpinner />;
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isTokenInStorage) {
     return <Login />;
   }
 
