@@ -55,7 +55,7 @@ export function Print() {
     {};
 
   const parsedType =
-    type === "Ticketing" ? result?.task_ticketing_name.name : type;
+    type === "Ticketing" ? result?.task_ticketing_name?.name : type;
 
   const trucks = useTrucks();
   const disposalSites = useDisposalSites();
