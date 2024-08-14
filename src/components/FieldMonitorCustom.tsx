@@ -11,7 +11,7 @@ import {
   humanizeDate,
   useFilesForm,
   useGeoLocation,
-  useTiketingBlueprint,
+  useTicketingBlueprint,
 } from "../hooks";
 import { Button, ErrorMessage, Input, Label, LabelledTextArea } from "./Forms";
 import { Spinner } from "./icons";
@@ -66,7 +66,7 @@ function FieldMonitorGeneralForm({
   const ticketingTaskColl =
     useRxCollection<TicketingTaskDocType>("ticketing-task");
 
-  const { ticketingBlueprint } = useTiketingBlueprint(ticketingId);
+  const { ticketingBlueprint } = useTicketingBlueprint(ticketingId);
 
   async function submitForm(data: FormProps) {
     let images: Images[] = [];
@@ -90,6 +90,9 @@ function FieldMonitorGeneralForm({
       latitude: coordinates?.latitude,
       longitude: coordinates?.longitude,
       ticketing_name: ticketingId,
+      task_ticketing_name: {
+        name: ticketingBlueprint?.name || "",
+      },
       comment: data?.comment,
       created_at: nowUTC,
       updated_at: nowUTC,

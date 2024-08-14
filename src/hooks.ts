@@ -393,7 +393,7 @@ export function useTicketingTasks(selector?: Record<string, unknown>) {
   return { result, isFetching };
 }
 
-export function useTiketingBlueprint(ticketingId: string) {
+export function useTicketingBlueprint(ticketingId: string) {
   const { activeProject, isFetching } = useProject();
 
   return {
