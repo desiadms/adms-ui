@@ -36,31 +36,28 @@ type LogPayload = {
 
 export type LogPayloadFn = (payloads: LogPayload[]) => void;
 
-export function logPayloadToRemoteServer(
-  token: string | null,
-  activeProject: string | null,
-) {
-  return (payloads: LogPayload[]) => {
-    const variables = payloads.map(async ({ createdAt, data }) => {
-      return {
-        id: await generateUniqueIdFromJson(data),
-        createdAt,
-        data,
-        projectId: activeProject,
-      };
-    });
-
-    axios.post(
-      hasuraURL,
-      {
-        query: resolveRequestDocument(insertLogs).query,
-        variables,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
+export function logPayloadToRemoteServer(token: string | null) {
+  return async (payloads: LogPayload[]) => {
+    const variables = await Promise.all(
+      payloads.map(async ({ createdAt, data, type }) => {
+        return {
+          id: await generateUniqueIdFromJson(data),
+          created_at: createdAt,
+          data,
+          type,
+        };
+      }),
     );
+
+    const data = {
+      query: resolveRequestDocument(insertLogs).query,
+      variables: { objects: variables },
+    };
+
+    axios.post(hasuraURL, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   };
 }

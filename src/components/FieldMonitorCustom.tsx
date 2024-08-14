@@ -98,7 +98,6 @@ function FieldMonitorGeneralForm({
       updated_at: nowUTC,
     });
 
-    console.log("in here!", ticketingBlueprint?.print_ticket);
     if (ticketingBlueprint?.print_ticket)
       navigate({ to: "/print/$id", params: { id: taskId } });
     else {

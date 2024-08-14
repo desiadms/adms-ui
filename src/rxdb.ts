@@ -57,14 +57,11 @@ export async function removeDB() {
   }
 }
 
-export async function initialize(
-  accessToken: string | null,
-  activeProject: string | null,
-) {
+export async function initialize(accessToken: string | null) {
   if (db) return db;
 
   console.log("in initialize rxdb");
-  const logPayload = logPayloadToRemoteServer(accessToken, activeProject);
+  const logPayload = logPayloadToRemoteServer(accessToken);
   const dexie = getRxStorageDexie();
 
   const storage = devMode
