@@ -438,3 +438,11 @@ export const upsertDisposalTasks = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const insertLogs = graphql(/* GraphQL */ `
+  mutation InsertLogs($objects: [logs_insert_input!]!) {
+    insert_logs(objects: $objects) {
+      affected_rows
+    }
+  }
+`);

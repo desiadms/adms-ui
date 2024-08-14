@@ -1,4 +1,8 @@
-import { useAccessToken, useSignInEmailPassword } from "@nhost/react";
+import {
+  useAccessToken,
+  useSignInEmailPassword,
+  useUserData,
+} from "@nhost/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { RxDatabase } from "rxdb";
@@ -92,12 +96,19 @@ function FullPageSpinner() {
 export function AuthWrapper() {
   const { isAuthenticated, isLoading, isOffline, isTokenInStorage } = useAuth();
   const accessToken = useAccessToken();
+  const userData = useUserData();
 
   const [db, setDb] = useState<RxDatabase>();
 
   useEffect(() => {
-    if (accessToken || isOffline) initialize(accessToken).then(setDb);
-  }, [accessToken, isOffline]);
+    if (accessToken || isOffline) {
+      console.log("user data", userData);
+      initialize(
+        accessToken,
+        (userData?.metadata as { activeProject: string })?.activeProject,
+      ).then(setDb);
+    }
+  }, [accessToken, isOffline, userData]);
 
   if (isLoading || (isAuthenticated && !db)) {
     return <FullPageSpinner />;
