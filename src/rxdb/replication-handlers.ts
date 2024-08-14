@@ -113,7 +113,9 @@ export async function ticketingTasksWrite(
   const variableImages = images?.map((image) =>
     R.omit(image, ["base64Preview"]),
   );
-  const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
+  const variableTasks = extractedData.map((task) =>
+    R.omit(task, ["images", "task_ticketing_name"]),
+  );
   const taskIds = extractedData.map(({ id }) => ({ id }));
 
   return {
