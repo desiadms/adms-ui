@@ -14,6 +14,7 @@ const navigation = [
   ["/projects", "Project"],
   ["/tasks", "New Task"],
   ["/progress", "Progress (last 24h)"],
+  ["/log", "Log"],
 ] as const;
 
 export function Home() {

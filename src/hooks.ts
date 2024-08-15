@@ -500,3 +500,79 @@ export function useFilesForm() {
     },
   };
 }
+
+const currentDate = new Date();
+const currentDateMillis = currentDate.getTime();
+
+function have24HoursPassed(dateString) {
+  // Parse the given date string to a Date object
+  const givenDate = new Date(dateString);
+
+  // Get the current date and time
+
+  // Calculate the difference in milliseconds
+  const differenceInMs = currentDateMillis - givenDate.getTime();
+
+  // Convert milliseconds to hours
+  const differenceInHours = differenceInMs / (1000 * 60 * 60);
+
+  // Check if 24 hours have passed
+  return differenceInHours >= 24;
+}
+
+export function useTasks() {
+  const tree = useTreeRemovalTasks();
+  const stump = useStumpRemovalTasks();
+  const collection = useCollectionTasks();
+  const disposal = useDisposalTasks();
+  const ticketing = useTicketingTasks();
+
+  const isFetching =
+    tree.isFetching ||
+    stump.isFetching ||
+    collection.isFetching ||
+    disposal.isFetching ||
+    ticketing.isFetching;
+
+  const results = useMemo(() => {
+    return {
+      "tree-removal-tasks": tree.result
+        .sort((a, b) => Number(a.completed) - Number(b.completed))
+        .filter((task) => !have24HoursPassed(task.created_at)),
+      "stump-removal-tasks": stump.result
+        .sort((a, b) => Number(a.completed) - Number(b.completed))
+        .filter((task) => !have24HoursPassed(task.created_at)),
+      "collection-tasks": collection.result.filter(
+        (task) => !have24HoursPassed(task.created_at),
+      ),
+      "disposal-tasks": disposal.result.filter(
+        (task) => !have24HoursPassed(task.created_at),
+      ),
+      "ticketing-tasks": ticketing.result.filter(
+        (task) => !have24HoursPassed(task.created_at),
+      ),
+    };
+  }, [
+    tree.result,
+    stump.result,
+    collection.result,
+    disposal.result,
+    ticketing.result,
+  ]);
+
+  return {
+    results,
+    isFetching,
+  };
+}
+
+export function partition<T>(array: T[], size: number) {
+  if (size <= 0) throw new Error("Size must be greater than 0");
+  if (array.length === 0) return [];
+
+  const result: T[][] = [];
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size));
+  }
+  return result;
+}

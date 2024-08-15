@@ -23,6 +23,7 @@ import {
   DisposalFormWrapper,
   TruckTasks,
 } from "./components/TruckTasks";
+import { Log } from "./components/Log";
 
 const rootRoute = createRootRoute({
   component: () => <AuthWrapper />,
@@ -163,6 +164,13 @@ const printRoute = createRoute({
   errorComponent: () => "Oh crap!",
 });
 
+const logRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "log",
+  component: () => <Log />,
+  errorComponent: () => "Oh crap!",
+});
+
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
@@ -175,6 +183,7 @@ const routeTree = rootRoute.addChildren([
   accountRoute,
   tasksProgressRoute,
   printRoute,
+  logRoute,
   tasksRoute.addChildren([
     tasksHome,
     fieldMonitorTask.addChildren([

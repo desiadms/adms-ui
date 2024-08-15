@@ -2,17 +2,9 @@ import { CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { Link, LinkOptions, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import { QRCodeCanvas } from "qrcode.react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { RxDocument } from "rxdb";
-import {
-  humanizeDate,
-  nhost,
-  useCollectionTasks,
-  useDisposalTasks,
-  useStumpRemovalTasks,
-  useTicketingTasks,
-  useTreeRemovalTasks,
-} from "../hooks";
+import { humanizeDate, nhost, useTasks } from "../hooks";
 import {
   CollectionTaskDocType,
   DisposalTaskDocType,
@@ -42,71 +34,6 @@ async function fetchImages(images: Images[] | undefined) {
       return { ...image, base64Preview: presignedUrl?.url };
     }) || [],
   );
-}
-
-const currentDate = new Date();
-const currentDateMillis = currentDate.getTime();
-
-function have24HoursPassed(dateString) {
-  // Parse the given date string to a Date object
-  const givenDate = new Date(dateString);
-
-  // Get the current date and time
-
-  // Calculate the difference in milliseconds
-  const differenceInMs = currentDateMillis - givenDate.getTime();
-
-  // Convert milliseconds to hours
-  const differenceInHours = differenceInMs / (1000 * 60 * 60);
-
-  // Check if 24 hours have passed
-  return differenceInHours >= 24;
-}
-
-function useTasks() {
-  const tree = useTreeRemovalTasks();
-  const stump = useStumpRemovalTasks();
-  const collection = useCollectionTasks();
-  const disposal = useDisposalTasks();
-  const ticketing = useTicketingTasks();
-
-  const isFetching =
-    tree.isFetching ||
-    stump.isFetching ||
-    collection.isFetching ||
-    disposal.isFetching ||
-    ticketing.isFetching;
-
-  const results = useMemo(() => {
-    return {
-      "tree-removal-tasks": tree.result
-        .sort((a, b) => Number(a.completed) - Number(b.completed))
-        .filter((task) => !have24HoursPassed(task.created_at)),
-      "stump-removal-tasks": stump.result
-        .sort((a, b) => Number(a.completed) - Number(b.completed))
-        .filter((task) => !have24HoursPassed(task.created_at)),
-      "collection-tasks": collection.result.filter(
-        (task) => !have24HoursPassed(task.created_at),
-      ),
-      "disposal-tasks": disposal.result.filter(
-        (task) => !have24HoursPassed(task.created_at),
-      ),
-      "ticketing-tasks": ticketing.result.filter(
-        (task) => !have24HoursPassed(task.created_at),
-      ),
-    };
-  }, [
-    tree.result,
-    stump.result,
-    collection.result,
-    disposal.result,
-    ticketing.result,
-  ]);
-
-  return {
-    results,
-    isFetching,
-  };
 }
 
 function generateSteps(

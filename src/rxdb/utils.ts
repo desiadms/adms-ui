@@ -54,7 +54,7 @@ export function logPayloadToRemoteServer(token: string | null) {
       variables: { objects: variables },
     };
 
-    axios.post(hasuraURL, data, {
+    return axios.post(hasuraURL, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
