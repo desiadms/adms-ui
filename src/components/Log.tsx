@@ -1,9 +1,10 @@
 import { useAccessToken } from "@nhost/react";
+import { useState } from "react";
+import * as R from "remeda";
 import { partition, useTasks } from "../hooks";
+import { logPayloadToRemoteServer } from "../rxdb/utils";
 import { Button } from "./Forms";
 import { Spinner } from "./icons";
-import { logPayloadToRemoteServer } from "../rxdb/utils";
-import { useState } from "react";
 
 export function Log() {
   const { results, isFetching } = useTasks();
@@ -17,7 +18,7 @@ export function Log() {
     const ticketingTasks = results["ticketing-tasks"]?.map((task) => {
       return {
         createdAt: task.created_at,
-        data: task,
+        data: R.omit(task, ["images"]),
         type: "ticketing-task",
       };
     });
@@ -25,7 +26,7 @@ export function Log() {
     const collectionTasks = results["collection-tasks"]?.map((task) => {
       return {
         createdAt: task.created_at,
-        data: task,
+        data: R.omit(task, ["images"]),
         type: "collection-task",
       };
     });
@@ -33,7 +34,7 @@ export function Log() {
     const disposalTasks = results["disposal-tasks"]?.map((task) => {
       return {
         createdAt: task.created_at,
-        data: task,
+        data: R.omit(task, ["images"]),
         type: "disposal-task",
       };
     });
@@ -41,7 +42,7 @@ export function Log() {
     const stumpRemovalTasks = results["stump-removal-tasks"]?.map((task) => {
       return {
         createdAt: task.created_at,
-        data: task,
+        data: R.omit(task, ["images"]),
         type: "stump-removal-task",
       };
     });
@@ -49,7 +50,7 @@ export function Log() {
     const treeRemovalTasks = results["tree-removal-tasks"]?.map((task) => {
       return {
         createdAt: task.created_at,
-        data: task,
+        data: R.omit(task, ["images"]),
         type: "tree-removal-task",
       };
     });

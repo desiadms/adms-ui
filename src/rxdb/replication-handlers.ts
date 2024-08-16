@@ -95,7 +95,7 @@ export async function stumpRemovalTasksWrite(
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
 
-  const dataToBeLogged = extractedData.map((task) => ({
+  const dataToBeLogged = variableTasks.map((task) => ({
     createdAt: task.created_at,
     data: task,
     type: "stump-removal-task",
@@ -138,7 +138,11 @@ export async function ticketingTasksWrite(
   );
   const taskIds = extractedData.map(({ id }) => ({ id }));
 
-  const dataToBeLogged = extractedData.map((task) => ({
+  const variableTasksForLogging = extractedData.map((task) =>
+    R.omit(task, ["images"]),
+  );
+
+  const dataToBeLogged = variableTasksForLogging.map((task) => ({
     createdAt: task.created_at,
     data: task,
     type: task.task_ticketing_name.name,
@@ -236,7 +240,7 @@ export async function collectionTasksWrite(
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
 
-  const dataToBeLogged = extractedData.map((task) => ({
+  const dataToBeLogged = variableTasks.map((task) => ({
     createdAt: task.created_at,
     data: task,
     type: "collection-task",
@@ -275,7 +279,7 @@ export async function disposalTasksWrite(
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
 
-  const dataToBeLogged = extractedData.map((task) => ({
+  const dataToBeLogged = variableTasks.map((task) => ({
     createdAt: task.created_at,
     data: task,
     type: "disposal-task",
