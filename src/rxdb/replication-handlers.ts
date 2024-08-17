@@ -1,6 +1,12 @@
 import { resolveRequestDocument } from "graphql-request";
 import * as R from "remeda";
 import { RxReplicationWriteToMasterRow } from "rxdb";
+import {
+  UpsertCollectionTaskMutationVariables,
+  UpsertStumpRemovalTaskMutationVariables,
+  UpsertTicketingTaskMutationVariables,
+  UpsertTreeRemovalTaskMutationVariables,
+} from "../__generated__/gql/graphql";
 import { extractFilesAndSaveToNhost } from "../hooks";
 import {
   projectsDocument,
@@ -44,9 +50,9 @@ export async function treeRemovalTasksWrite(
   logPayloadsFn: LogPayloadFn,
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
-  const images = extractedData
-    .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
-    .flat();
+  const images = extractedData.flatMap(({ images, id }) =>
+    images.map((image) => ({ ...image, task_id: id })),
+  );
 
   await extractFilesAndSaveToNhost(images);
 
@@ -66,7 +72,11 @@ export async function treeRemovalTasksWrite(
 
   return {
     query: resolveRequestDocument(upsertTreeRemovalTasks).query,
-    variables: { tasks: variableTasks, images: variableImages, taskIds },
+    variables: {
+      tasks: variableTasks,
+      images: variableImages,
+      taskIds,
+    } satisfies UpsertTreeRemovalTaskMutationVariables,
   };
 }
 
@@ -105,7 +115,11 @@ export async function stumpRemovalTasksWrite(
 
   return {
     query: resolveRequestDocument(upsertStumpRemovalTasks).query,
-    variables: { tasks: variableTasks, images: variableImages, taskIds },
+    variables: {
+      tasks: variableTasks,
+      images: variableImages,
+      taskIds,
+    } satisfies UpsertStumpRemovalTaskMutationVariables,
   };
 }
 
@@ -152,7 +166,11 @@ export async function ticketingTasksWrite(
 
   return {
     query: resolveRequestDocument(upsertTicketingTasks).query,
-    variables: { tasks: variableTasks, images: variableImages, taskIds },
+    variables: {
+      tasks: variableTasks,
+      images: variableImages,
+      taskIds,
+    } satisfies UpsertTicketingTaskMutationVariables,
   };
 }
 
@@ -250,7 +268,11 @@ export async function collectionTasksWrite(
 
   return {
     query: resolveRequestDocument(upsertCollectionTasks).query,
-    variables: { tasks: variableTasks, images: variableImages, taskIds },
+    variables: {
+      tasks: variableTasks,
+      images: variableImages,
+      taskIds,
+    } satisfies UpsertCollectionTaskMutationVariables,
   };
 }
 
@@ -289,6 +311,10 @@ export async function disposalTasksWrite(
 
   return {
     query: resolveRequestDocument(upsertDisposalTasks).query,
-    variables: { tasks: variableTasks, images: variableImages, taskIds },
+    variables: {
+      tasks: variableTasks,
+      images: variableImages,
+      taskIds,
+    } satisfies UpsertStumpRemovalTaskMutationVariables,
   };
 }
