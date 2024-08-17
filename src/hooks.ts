@@ -463,7 +463,7 @@ export function validateFileSize(
   if (file && file[0]) {
     const { size } = file[0];
     if (size > maxSize) {
-      return `File cannot exceed ${convertFileSize(maxSize)}MB`;
+      return `File size is: ${convertFileSize(size)}MB. File cannot exceed ${convertFileSize(maxSize)}MB`;
     }
   }
 }
