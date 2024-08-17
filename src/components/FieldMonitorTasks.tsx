@@ -11,18 +11,19 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { useRxCollection } from "rxdb-hooks";
 import { v4 } from "uuid";
 import {
-  Steps,
-  StumpRemovalTaskDocType,
-  TreeRemovalTaskDocType,
-} from "../rxdb/rxdb-schemas";
-import {
   FileForm,
   genTaskImagesMetadata,
   humanizeDate,
+  maxFileSize,
   useFilesForm,
   useGeoLocation,
   useProject,
 } from "../hooks";
+import {
+  Steps,
+  StumpRemovalTaskDocType,
+  TreeRemovalTaskDocType,
+} from "../rxdb/rxdb-schemas";
 import {
   Button,
   ErrorMessage,
@@ -246,7 +247,7 @@ function TreeStumpRemovalForm({
                     {...register(`files.${index}.fileInstance`, {
                       validate: {
                         lessThan5MB: (file) =>
-                          validateFileSize(file, 5 * 1024 * 1024),
+                          validateFileSize(file, maxFileSize),
                       },
                       onChange: (e) => {
                         onChangeSetFilePreview(e, id);

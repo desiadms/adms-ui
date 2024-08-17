@@ -3,19 +3,20 @@ import { useNavigate, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useRxCollection } from "rxdb-hooks";
-import { Images, TicketingTaskDocType } from "../rxdb/rxdb-schemas";
 import {
   FileForm,
   genTaskImagesMetadata,
   humanizeDate,
+  maxFileSize,
   useFilesForm,
   useGeoLocation,
   useTicketingBlueprint,
 } from "../hooks";
+import { Images, TicketingTaskDocType } from "../rxdb/rxdb-schemas";
 import { Button, ErrorMessage, Input, Label, LabelledTextArea } from "./Forms";
 import { Spinner } from "./icons";
-import toast from "react-hot-toast";
 
 type TFieldMonitorGeneral = {
   taskId: string;
@@ -165,7 +166,7 @@ function FieldMonitorGeneralForm({
                         {...register(`files.${index}.fileInstance`, {
                           validate: {
                             lessThan5MB: (file) =>
-                              validateFileSize(file, 5 * 1024 * 1024),
+                              validateFileSize(file, maxFileSize),
                           },
                           onChange: (e) => {
                             onChangeSetFilePreview(e, id);

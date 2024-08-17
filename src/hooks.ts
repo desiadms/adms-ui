@@ -21,6 +21,8 @@ import {
 
 export const devMode = import.meta.env.MODE === "development";
 
+export const maxFileSize = 15 * 1024 * 1024;
+
 export const nhost = new NhostClient({
   subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
   region: import.meta.env.VITE_NHOST_REGION,

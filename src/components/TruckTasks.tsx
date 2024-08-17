@@ -1,13 +1,23 @@
+import { XCircleIcon } from "@heroicons/react/20/solid";
+import CameraIcon from "@heroicons/react/20/solid/CameraIcon";
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
-import { TaskType } from "./common";
-import { v4, validate as uuidValidate, version as uuidVersion } from "uuid";
-import { useFieldArray, useForm } from "react-hook-form";
+import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
+import classNames from "classnames";
 import { useMemo, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { RxDocument } from "rxdb";
+import { useRxCollection } from "rxdb-hooks";
+import {
+  CollectionTaskDocType,
+  DisposalTaskDocType,
+} from "src/rxdb/rxdb-schemas";
+import { validate as uuidValidate, version as uuidVersion, v4 } from "uuid";
 import {
   FileForm,
   genTaskImagesMetadata,
   getGeoLocationHandler,
   humanizeDate,
+  maxFileSize,
   useContractors,
   useDebrisTypes,
   useDisposalSites,
@@ -15,18 +25,9 @@ import {
   useGeoLocation,
   useTrucks,
 } from "../hooks";
+import { TaskType } from "./common";
 import { Button, ErrorMessage, Input, Label, LabelledTextArea } from "./Forms";
 import { Spinner } from "./icons";
-import classNames from "classnames";
-import CameraIcon from "@heroicons/react/20/solid/CameraIcon";
-import { XCircleIcon } from "@heroicons/react/20/solid";
-import {
-  CollectionTaskDocType,
-  DisposalTaskDocType,
-} from "src/rxdb/rxdb-schemas";
-import { useRxCollection } from "rxdb-hooks";
-import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
-import { RxDocument } from "rxdb";
 
 export function TruckTasks() {
   return (
@@ -644,7 +645,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                     {...register(`files.${index}.fileInstance`, {
                       validate: {
                         lessThan5MB: (file) =>
-                          validateFileSize(file, 5 * 1024 * 1024),
+                          validateFileSize(file, maxFileSize),
                       },
                       onChange: (e) => {
                         onChangeSetFilePreview(e, id);
