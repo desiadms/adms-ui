@@ -18,6 +18,7 @@ import {
   UserDocType,
 } from "./rxdb/rxdb-schemas";
 import { useRxData } from "./rxdb/useRxData";
+import { ImagesQuery } from "./__generated__/gql/graphql";
 
 export const devMode = import.meta.env.MODE === "development";
 
@@ -607,4 +608,31 @@ export function useIsTaskIdSynchedToServer(taskId: string) {
   const { result, isFetching } = useRxData<TaskIdDocType>("task-ids", query);
 
   return { result: result?.[0], isFetching };
+}
+
+export function genDataToBeLogged(
+  // this type expands to the union of all the task types really
+  tasks: { created_at: string; images?: ImagesQuery["images"] }[],
+  type: string,
+) {
+  const data = tasks.map((task) => {
+    const data = {
+      ...task,
+      images: task?.images?.map((image) => {
+        const removedImageBase46 = image?.base64Preview
+          ? { ...image, base64Preview: "" }
+          : image;
+        return removedImageBase46;
+      }),
+    };
+    return {
+      createdAt: task.created_at,
+      data,
+      type,
+    };
+  });
+
+  console.log("logging data", data);
+
+  return data;
 }

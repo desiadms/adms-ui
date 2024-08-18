@@ -7,7 +7,7 @@ import {
   UpsertTicketingTaskMutationVariables,
   UpsertTreeRemovalTaskMutationVariables,
 } from "../__generated__/gql/graphql";
-import { extractFilesAndSaveToNhost } from "../hooks";
+import { extractFilesAndSaveToNhost, genDataToBeLogged } from "../hooks";
 import {
   projectsDocument,
   queryAllTaskIds,
@@ -63,12 +63,7 @@ export async function treeRemovalTasksWrite(
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
 
-  const dataToBeLogged = extractedData.map((task) => ({
-    createdAt: task.created_at,
-    data: task,
-    type: "tree-removal-task",
-  }));
-
+  const dataToBeLogged = genDataToBeLogged(extractedData, "tree-removal-task");
   logPayloadsFn(dataToBeLogged);
 
   return {
@@ -106,12 +101,7 @@ export async function stumpRemovalTasksWrite(
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
 
-  const dataToBeLogged = variableTasks.map((task) => ({
-    createdAt: task.created_at,
-    data: task,
-    type: "stump-removal-task",
-  }));
-
+  const dataToBeLogged = genDataToBeLogged(extractedData, "stump-removal-task");
   logPayloadsFn(dataToBeLogged);
 
   return {
@@ -153,20 +143,8 @@ export async function ticketingTasksWrite(
   );
   const taskIds = extractedData.map(({ id }) => ({ id }));
 
-  const variableTasksForLogging = extractedData.map((task) =>
-    R.omit(task, ["images"]),
-  );
-
-  const dataToBeLogged = variableTasksForLogging.map((task) => ({
-    createdAt: task.created_at,
-    data: task,
-    type: task.task_ticketing_name.name,
-  }));
-
+  const dataToBeLogged = genDataToBeLogged(extractedData, "ticketing-task");
   logPayloadsFn(dataToBeLogged);
-
-  console.log("variableTasks", variableTasks);
-  console.log("variableImages", variableImages);
 
   return {
     query: resolveRequestDocument(upsertTicketingTasks).query,
@@ -262,12 +240,7 @@ export async function collectionTasksWrite(
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
 
-  const dataToBeLogged = variableTasks.map((task) => ({
-    createdAt: task.created_at,
-    data: task,
-    type: "collection-task",
-  }));
-
+  const dataToBeLogged = genDataToBeLogged(extractedData, "collection-task");
   logPayloadsFn(dataToBeLogged);
 
   return {
@@ -305,12 +278,7 @@ export async function disposalTasksWrite(
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
 
-  const dataToBeLogged = variableTasks.map((task) => ({
-    createdAt: task.created_at,
-    data: task,
-    type: "disposal-task",
-  }));
-
+  const dataToBeLogged = genDataToBeLogged(extractedData, "disposal-task");
   logPayloadsFn(dataToBeLogged);
 
   return {

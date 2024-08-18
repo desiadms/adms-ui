@@ -114,7 +114,15 @@ export function Log() {
 
     const partitioned = partition(allTasks, 4);
 
-    await Promise.all(partitioned.map(logFn));
+    const requests = Promise.all(partitioned.map(logFn));
+    toast.promise(requests, {
+      loading: "Sending tasks to dev team",
+      success: "Tasks sent to dev team",
+      error: "Failed to send tasks to dev team",
+    });
+
+    await requests;
+
     setIsLogging(false);
   }
 
@@ -135,6 +143,8 @@ export function Log() {
     );
   }
 
+  const nothingToSync = !rowData || rowData?.length === 0;
+
   if (isFetching) return <Spinner />;
 
   return (
@@ -151,7 +161,7 @@ export function Log() {
         <div>
           <Button onClick={showRawData}>
             Show unsynched tasks
-            {!rowData || rowData?.length === 0 ? " (All synched)" : ""}
+            {nothingToSync ? " (All synched)" : ""}
           </Button>
           {rowData?.length && rowData.length > 0 ? (
             <>
@@ -177,10 +187,16 @@ export function Log() {
             ""
           )}
         </div>
-        <Button bgColor="bg-amber-700" disabled={isLogging} onClick={forceLog}>
-          Send unsynched tasks to dev team
-          {isLogging && <Spinner />}
-        </Button>
+        {!nothingToSync && (
+          <Button
+            bgColor="bg-amber-700"
+            disabled={isLogging}
+            onClick={forceLog}
+          >
+            Send unsynched tasks to dev team
+            {isLogging && <Spinner />}
+          </Button>
+        )}
       </div>
     </div>
   );
