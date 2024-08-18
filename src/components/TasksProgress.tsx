@@ -1,10 +1,20 @@
-import { CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
+import {
+  CheckCircleIcon,
+  CheckIcon,
+  PlusIcon,
+  XCircleIcon,
+} from "@heroicons/react/20/solid";
 import { Link, LinkOptions, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import { QRCodeCanvas } from "qrcode.react";
 import { useCallback, useEffect, useState } from "react";
-import { RxDocument } from "rxdb";
-import { humanizeDate, nhost, useTasks } from "../hooks";
+import toast, { LoaderIcon } from "react-hot-toast";
+import {
+  humanizeDate,
+  nhost,
+  useDailyTasks,
+  useIsTaskIdSynchedToServer,
+} from "../hooks";
 import {
   CollectionTaskDocType,
   DisposalTaskDocType,
@@ -18,6 +28,55 @@ import { Button } from "./Forms";
 import { Image } from "./Image";
 import { Modal, ModalContentProps, ModalTriggerProps } from "./Modal";
 import { Spinner } from "./icons";
+
+type TGeneralTaskCard =
+  | CollectionTaskDocType
+  | DisposalTaskDocType
+  | TicketingTaskDocType;
+
+type TPrintAndCopy =
+  | TGeneralTaskCard
+  | TreeRemovalTaskDocType
+  | StumpRemovalTaskDocType;
+
+function Synched({ taskId }: { taskId: string }) {
+  const { result, isFetching } = useIsTaskIdSynchedToServer(taskId);
+
+  return (
+    <div className="text-xs flex gap-1 items-center font-bold">
+      {isFetching ? (
+        <LoaderIcon className="w-5 h-5" />
+      ) : result ? (
+        <CheckCircleIcon className="w-6 text-green-800" />
+      ) : (
+        <XCircleIcon className="w-6 text-green-800" />
+      )}
+      Synched
+    </div>
+  );
+}
+
+function PrintAndCopy({ task }: { task: TPrintAndCopy }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <Button bgColor="bg-gray-700">
+        <Link to="/print/$id" params={{ id: task.id }}>
+          Print
+        </Link>
+      </Button>
+      <Button
+        onClick={() => {
+          const content = JSON.stringify(task, null, 4);
+          navigator.clipboard.writeText(content);
+          toast.success("Copied task to clipboard!");
+        }}
+        bgColor="bg-gray-700"
+      >
+        Copy
+      </Button>
+    </div>
+  );
+}
 
 async function fetchImages(images: Images[] | undefined) {
   return Promise.all(
@@ -105,7 +164,7 @@ function TaskCheck({
         {taken_at_step} <br /> measurement
       </p>
       <div
-        className={classNames("rounded-xl border-2 w-20 h-20", {
+        className={classNames("rounded-xl border-2 w-14 h-14", {
           "bg-amber-500": icon === "add",
           "bg-green-500": icon === "done",
           "bg-gray-400": icon === "disabled",
@@ -216,11 +275,11 @@ function _QRCodeID({ taskId }: { taskId: string }) {
 type TreeStumpRemovalProps =
   | {
       type: "tree";
-      task: RxDocument<TreeRemovalTaskDocType>;
+      task: TreeRemovalTaskDocType;
     }
   | {
       type: "stump";
-      task: RxDocument<StumpRemovalTaskDocType>;
+      task: StumpRemovalTaskDocType;
     };
 
 function TreeStumpRemovalSingleTask({ task, type }: TreeStumpRemovalProps) {
@@ -256,7 +315,10 @@ function TreeStumpRemovalSingleTask({ task, type }: TreeStumpRemovalProps) {
     <div>
       <div key={task.id} className="bg-stone-300 rounded-lg p-4">
         <div className="flex justify-between items-center gap-4">
-          <div className="text-xs">ID: {task.id}</div>
+          <div className="flex gap-4 items-center">
+            <Synched taskId={task.id} />
+            <div className="text-xs">ID: {task.id}</div>
+          </div>
 
           <div className="flex justify-end items-center gap-1">
             <div className="text-xs">Created At:</div>
@@ -264,7 +326,7 @@ function TreeStumpRemovalSingleTask({ task, type }: TreeStumpRemovalProps) {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <div className="flex gap-10 items-end">
+          <div className="flex flex-wrap gap-10 items-end">
             {Object.entries(steps).map(([taken_at_step, images]) => (
               <Modal
                 key={taken_at_step}
@@ -289,39 +351,29 @@ function TreeStumpRemovalSingleTask({ task, type }: TreeStumpRemovalProps) {
               </div>
             ))}
           </div>
-          {task.completed && (
-            <div>
-              <Button bgColor="bg-gray-700">
-                <Link to="/print/$id" params={{ id: task.id }}>
-                  Print
-                </Link>
-              </Button>
-            </div>
-          )}
+          {task.completed && <PrintAndCopy task={task} />}
         </div>
       </div>
     </div>
   );
 }
 
-type TGeneralTaskCard =
-  | RxDocument<CollectionTaskDocType>
-  | RxDocument<DisposalTaskDocType>
-  | RxDocument<TicketingTaskDocType>;
-
 function GeneralTaskCard({ task }: { task: TGeneralTaskCard }) {
   return (
     <div>
       <div key={task.id} className="bg-stone-300 rounded-lg p-4">
         <div className="flex justify-between items-center gap-4">
-          <div className="text-xs">ID: {task.id}</div>
+          <div className="flex gap-4 items-center">
+            <Synched taskId={task.id} />
+            <div className="text-xs">ID: {task.id}</div>
+          </div>
           <div className="flex justify-end items-center gap-1">
             <div className="text-xs">Created At:</div>
             <div className="text-xs">{humanizeDate(task.created_at)}</div>
           </div>
         </div>
 
-        <div className="flex justify-between items-center pt-4">
+        <div className="flex justify-between flex-wrap gap-2 items-center pt-4">
           <div>
             {"task_ticketing_name" in task && (
               <div className="text-sm">
@@ -329,13 +381,7 @@ function GeneralTaskCard({ task }: { task: TGeneralTaskCard }) {
               </div>
             )}
           </div>
-          <div>
-            <Button bgColor="bg-gray-700">
-              <Link to="/print/$id" params={{ id: task.id }}>
-                Print
-              </Link>
-            </Button>
-          </div>
+          <PrintAndCopy task={task} />
         </div>
       </div>
     </div>
@@ -343,7 +389,7 @@ function GeneralTaskCard({ task }: { task: TGeneralTaskCard }) {
 }
 
 export function TasksProgress() {
-  const { results, isFetching } = useTasks();
+  const { results, isFetching } = useDailyTasks();
 
   if (isFetching) return <Spinner />;
 

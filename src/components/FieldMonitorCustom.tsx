@@ -72,6 +72,8 @@ function FieldMonitorGeneralForm({
   async function submitForm(data: FormProps) {
     let images: Images[] = [];
 
+    console.log("in submit form ok?");
+
     if (ticketingBlueprint?.add_photos) {
       if (noFilesUploaded) return;
 
@@ -85,7 +87,7 @@ function FieldMonitorGeneralForm({
 
     const nowUTC = new Date().toISOString();
 
-    await ticketingTaskColl?.upsert({
+    const payload = {
       id: taskId,
       images,
       latitude: coordinates?.latitude,
@@ -97,8 +99,11 @@ function FieldMonitorGeneralForm({
       comment: data?.comment,
       created_at: nowUTC,
       updated_at: nowUTC,
-    });
+    };
 
+    console.log("payload", payload);
+    await ticketingTaskColl?.upsert(payload);
+    console.log("after upsert!");
     if (ticketingBlueprint?.print_ticket)
       navigate({ to: "/print/$id", params: { id: taskId } });
     else {

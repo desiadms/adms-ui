@@ -6,6 +6,7 @@ import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
 import { devMode } from "./hooks";
 import { addCollections } from "./rxdb/abstraction";
 import {
+  allTaskIdsRead,
   collectionTasksRead,
   collectionTasksWrite,
   contractorsRead,
@@ -25,6 +26,7 @@ import {
   userWrite,
 } from "./rxdb/replication-handlers";
 import {
+  allTaskIdsSchema,
   collectionTaskSchema,
   contractorSchema,
   debrisTypeSchema,
@@ -78,6 +80,13 @@ export async function initialize(accessToken: string | null) {
   console.log("creating collections");
 
   await addCollections(db, [
+    {
+      name: "task-ids",
+      schema: allTaskIdsSchema,
+      pullQueryBuilder: allTaskIdsRead,
+      accessToken,
+    },
+
     {
       name: "tree-removal-task",
       schema: treeRemovalTaskSchema,

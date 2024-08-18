@@ -1,5 +1,6 @@
 import { RxJsonSchema } from "rxdb";
 import {
+  AllTaskIdsQuery,
   CollectionTasksQuery,
   ContractorsQuery,
   DebrisTypesQuery,
@@ -470,6 +471,25 @@ export const disposalTaskSchema: RxJsonSchema<DisposalTaskDocType> = {
       type: "string",
     },
     ...imagesSchema,
+  },
+  required: ["id"],
+} as const;
+
+export type TaskIdDocType = OmitTypename<AllTaskIdsQuery["task_ids"][number]>;
+
+export const allTaskIdsSchema: RxJsonSchema<TaskIdDocType> = {
+  title: "all task ids schema",
+  version: 0,
+  type: "object",
+  primaryKey: "id",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    comment: {
+      type: ["string", "null"],
+    },
   },
   required: ["id"],
 } as const;

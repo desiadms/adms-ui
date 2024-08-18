@@ -34,7 +34,13 @@ export function Print() {
   const { activeProject } = useProject();
   const { result, type } = useTask(id);
 
-  const beforeStep = result?.images?.find(
+  const trucks = useTrucks();
+  const disposalSites = useDisposalSites();
+  const debrisTypes = useDebrisTypes();
+
+  if (!result) return `No result for task ID ${id}`;
+
+  const beforeStep = result.images?.find(
     (image) =>
       "taken_at_step" in image &&
       image.taken_at_step === "before" &&
@@ -43,25 +49,19 @@ export function Print() {
 
   const date = beforeStep?.created_at
     ? humanizeDate(beforeStep.created_at)
-    : result?.get("created_at")
-      ? humanizeDate(result.get("created_at"))
+    : result?.created_at
+      ? humanizeDate(result?.created_at)
       : "no date";
 
   const { latitude, longitude } =
     beforeStep || {
-      latitude: result?.get("latitude"),
-      longitude: result?.get("longitude"),
+      latitude: "latitude" in result && result.latitude,
+      longitude: "longitude" in result && result.longitude,
     } ||
     {};
 
   const parsedType =
-    type === "Ticketing" ? result?.task_ticketing_name?.name : type;
-
-  const trucks = useTrucks();
-  const disposalSites = useDisposalSites();
-  const debrisTypes = useDebrisTypes();
-
-  if (!result) return "Loading...";
+    type === "Ticketing" ? result.task_ticketing_name?.name : type;
 
   const truck =
     "truck_id" in result &&
@@ -86,8 +86,8 @@ export function Print() {
         <LabelValue label="Contractor" value={activeProject?.contractor} />
         <LabelValue label="Date" value={date} />
         <LabelValue label="Ticket ID" value={`${result?.id}`} />
-        <LabelValue label="Lat" value={latitude} />
-        <LabelValue label="Lon" value={longitude} />
+        <LabelValue label="Lat" value={latitude || ""} />
+        <LabelValue label="Lon" value={longitude || ""} />
         <LabelValue label="Type" value={parsedType} />
 
         {truck && <LabelValue label="Truck" value={truck.truck_number} />}

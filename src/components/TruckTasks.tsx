@@ -5,7 +5,6 @@ import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import classNames from "classnames";
 import { useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { RxDocument } from "rxdb";
 import { useRxCollection } from "rxdb-hooks";
 import {
   CollectionTaskDocType,
@@ -231,7 +230,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   }
 
   function autofillFormValuesWithFoundCollectionDoc(
-    document: RxDocument<CollectionTaskDocType>,
+    document: CollectionTaskDocType,
   ) {
     setValue("truckNumber", document.truck_id);
     setValue("disposalSite", document.disposal_site);
@@ -279,8 +278,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         <div className="text-sm">
           {
             rxdbTrucksObject.trucks.find(
-              (element) => element._data.id === linkedCollectionTask?.truck_id,
-            )?._data.truck_number
+              (element) => element.id === linkedCollectionTask?.truck_id,
+            )?.truck_number
           }
         </div>
       </div>
@@ -289,9 +288,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         <div className="text-sm">
           {
             rxdbDisposalSitesObject.disposalSites.find(
-              (element) =>
-                element._data.id === linkedCollectionTask?.disposal_site,
-            )?._data.name
+              (element) => element.id === linkedCollectionTask?.disposal_site,
+            )?.name
           }
         </div>
       </div>
@@ -300,9 +298,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         <div className="text-sm">
           {
             rxdbContractorsObject.contractors.find(
-              (element) =>
-                element._data.id === linkedCollectionTask?.contractor,
-            )?._data.name
+              (element) => element.id === linkedCollectionTask?.contractor,
+            )?.name
           }
         </div>
       </div>
@@ -319,9 +316,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
         <div className="text-sm">
           {
             rxdbDebrisTypesObject.debrisTypes.find(
-              (element) =>
-                element._data.id === linkedCollectionTask?.debris_type,
-            )?._data.name
+              (element) => element.id === linkedCollectionTask?.debris_type,
+            )?.name
           }
         </div>
       </div>
@@ -356,11 +352,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
               <option>{defaultInputOption}</option>
               {rxdbTrucksObject.trucks.map((truckNumber) => {
                 return (
-                  <option
-                    key={truckNumber._data.id}
-                    value={truckNumber._data.id}
-                  >
-                    {truckNumber._data.truck_number}
+                  <option key={truckNumber.id} value={truckNumber.id}>
+                    {truckNumber.truck_number}
                   </option>
                 );
               })}
@@ -381,11 +374,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
             <option>{defaultInputOption}</option>
             {rxdbDisposalSitesObject.disposalSites.map((disposalSite) => {
               return (
-                <option
-                  key={disposalSite._data.id}
-                  value={disposalSite._data.id}
-                >
-                  {disposalSite._data.name}
+                <option key={disposalSite.id} value={disposalSite.id}>
+                  {disposalSite.name}
                 </option>
               );
             })}
@@ -405,8 +395,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
             <option>{defaultInputOption}</option>
             {rxdbContractorsObject.contractors.map((contractor) => {
               return (
-                <option key={contractor._data.id} value={contractor._data.id}>
-                  {contractor._data.name}
+                <option key={contractor.id} value={contractor.id}>
+                  {contractor.name}
                 </option>
               );
             })}
@@ -436,8 +426,8 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
             <option>{defaultInputOption}</option>
             {rxdbDebrisTypesObject.debrisTypes.map((debrisType) => {
               return (
-                <option key={debrisType._data.id} value={debrisType._data.id}>
-                  {debrisType._data.name}
+                <option key={debrisType.id} value={debrisType.id}>
+                  {debrisType.name}
                 </option>
               );
             })}

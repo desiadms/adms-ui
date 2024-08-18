@@ -6,9 +6,10 @@ import {
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { useRxCollection, useRxData } from "rxdb-hooks";
-import { UserDocType } from "../rxdb/rxdb-schemas";
+import { useRxCollection } from "rxdb-hooks";
 import { emailToId, fullName, userRoles } from "../hooks";
+import { UserDocType } from "../rxdb/rxdb-schemas";
+import { useRxData } from "../rxdb/useRxData";
 import { Button, ErrorMessage, LabelledInput } from "./Forms";
 
 type UserFormData = {
@@ -100,15 +101,13 @@ export function AccountView() {
   const user = result[0];
   const { first_name, last_name, usersMetadata_user, hire_date } = user || {};
 
-  console.log(isFetching, user);
-
   return (
     <div>
       {user && (
         <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-12 rounded-xl bg-white">
             <div className="relative h-28 rounded-xl from-green-400 to-emerald-200 bg-gradient-to-r">
-              <div className="absolute rounded-full bg-white h-20 w-20 left-10 -bottom-10">
+              <div className="absolute rounded-full bg-white h-14 w-14 left-10 -bottom-10">
                 <UserCircleIcon className="text-emerald-400" />
               </div>
             </div>

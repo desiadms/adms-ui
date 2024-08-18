@@ -1,21 +1,20 @@
-import { useAccessToken } from "@nhost/react";
-import { useState } from "react";
+import {
+  useAccessToken,
+  useAuthenticationStatus,
+  useUserData,
+} from "@nhost/react";
+import { useCallback, useState } from "react";
+import toast from "react-hot-toast";
 import * as R from "remeda";
 import { partition, useTasks } from "../hooks";
 import { logPayloadToRemoteServer } from "../rxdb/utils";
 import { Button } from "./Forms";
 import { Spinner } from "./icons";
 
-export function Log() {
+function useFetchAllTasks() {
   const { results, isFetching } = useTasks();
-  const accesToken = useAccessToken();
-  const [isLogging, setIsLogging] = useState(false);
-
-  async function forceLog() {
-    setIsLogging(true);
-    const logFn = logPayloadToRemoteServer(accesToken);
-
-    const ticketingTasks = results["ticketing-tasks"]?.map((task) => {
+  const parseTasksFn = useCallback(() => {
+    const ticketingTasks = results.ticketing?.map((task) => {
       return {
         createdAt: task.created_at,
         data: R.omit(task, ["images"]),
@@ -23,7 +22,7 @@ export function Log() {
       };
     });
 
-    const collectionTasks = results["collection-tasks"]?.map((task) => {
+    const collectionTasks = results.collection?.map((task) => {
       return {
         createdAt: task.created_at,
         data: R.omit(task, ["images"]),
@@ -31,7 +30,7 @@ export function Log() {
       };
     });
 
-    const disposalTasks = results["disposal-tasks"]?.map((task) => {
+    const disposalTasks = results.disposal?.map((task) => {
       return {
         createdAt: task.created_at,
         data: R.omit(task, ["images"]),
@@ -39,7 +38,7 @@ export function Log() {
       };
     });
 
-    const stumpRemovalTasks = results["stump-removal-tasks"]?.map((task) => {
+    const stumpRemovalTasks = results.stump?.map((task) => {
       return {
         createdAt: task.created_at,
         data: R.omit(task, ["images"]),
@@ -47,7 +46,7 @@ export function Log() {
       };
     });
 
-    const treeRemovalTasks = results["tree-removal-tasks"]?.map((task) => {
+    const treeRemovalTasks = results.tree?.map((task) => {
       return {
         createdAt: task.created_at,
         data: R.omit(task, ["images"]),
@@ -55,13 +54,56 @@ export function Log() {
       };
     });
 
-    const allTasks = [
+    return [
       ...ticketingTasks,
       ...collectionTasks,
       ...disposalTasks,
       ...stumpRemovalTasks,
       ...treeRemovalTasks,
     ];
+  }, [results]);
+
+  return { parseTasksFn, isFetching };
+}
+
+function PreJson({ data }: { data: unknown }) {
+  const content = JSON.stringify(data, null, 4);
+  return (
+    <div className="rounded-sm bg-slate-200 p-1 overflow-hidden whitespace-pre-wrap">
+      <pre
+        className="text-xs"
+        onClick={() => {
+          navigator.clipboard.writeText(content);
+          toast.success("Copied code snippet to clipboard");
+        }}
+      >
+        {content}
+      </pre>
+    </div>
+  );
+}
+
+export function Log() {
+  const { isFetching, parseTasksFn } = useFetchAllTasks();
+  const [isLogging, setIsLogging] = useState(false);
+
+  const userData = useUserData();
+  const accesToken = useAccessToken();
+  const { isAuthenticated, error } = useAuthenticationStatus();
+
+  const [rowData, setRowData] = useState<unknown[] | null>();
+  const [authData, setAuthData] = useState<object | null>();
+
+  async function forceLog() {
+    const confirm = window.confirm(
+      "Are you sure you want to log the current app state?",
+    );
+
+    if (!confirm) return;
+
+    setIsLogging(true);
+    const logFn = logPayloadToRemoteServer(accesToken);
+    const allTasks = parseTasksFn();
 
     const partitioned = partition(allTasks, 4);
 
@@ -69,12 +111,65 @@ export function Log() {
     setIsLogging(false);
   }
 
+  function showRawData() {
+    const allTasks = parseTasksFn();
+    setRowData(rowData ? null : allTasks);
+  }
+
+  function showAuthData() {
+    setAuthData(
+      authData
+        ? null
+        : {
+            isAuthenticated,
+            error,
+            userData,
+          },
+    );
+  }
+
   if (isFetching) return <Spinner />;
 
   return (
-    <Button disabled={isLogging} onClick={forceLog}>
-      Force Log Current App State
-      {isLogging && <Spinner />}
-    </Button>
+    <div>
+      <div className="flex flex-col gap-2">
+        <div>
+          <Button onClick={showAuthData}>Show auth data</Button>
+          {authData && (
+            <div className="mt-2">
+              <PreJson data={authData} />
+            </div>
+          )}
+        </div>
+        <div>
+          <Button onClick={showRawData}>Show tasks data</Button>
+          {rowData && (
+            <>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    JSON.stringify(rowData, null, 2),
+                  );
+                  toast.success("Copied all snippets to clipboard");
+                }}
+                className="my-2 w-full p-1 bg-slate-200 rounded-sm"
+              >
+                Copy All
+              </button>
+
+              <div className="flex flex-col gap-2">
+                {rowData.map((row, index) => (
+                  <PreJson key={index} data={row} />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+        <Button bgColor="bg-amber-700" disabled={isLogging} onClick={forceLog}>
+          Force Log Current App State
+          {isLogging && <Spinner />}
+        </Button>
+      </div>
+    </div>
   );
 }

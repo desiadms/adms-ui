@@ -1,7 +1,5 @@
 import { NhostClient, useAuthenticationStatus } from "@nhost/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { RxDocument } from "rxdb";
-import { useRxData } from "rxdb-hooks";
 import { v4 } from "uuid";
 import {
   CollectionTaskDocType,
@@ -13,11 +11,13 @@ import {
   ProjectDocType,
   Steps,
   StumpRemovalTaskDocType,
+  TaskIdDocType,
   TicketingTaskDocType,
   TreeRemovalTaskDocType,
   TruckDocType,
   UserDocType,
 } from "./rxdb/rxdb-schemas";
+import { useRxData } from "./rxdb/useRxData";
 
 export const devMode = import.meta.env.MODE === "development";
 
@@ -56,20 +56,16 @@ export function useAuth() {
   const isOnline = useIsOnline();
   const { isAuthenticated, isLoading } = useAuthenticationStatus();
 
-  const refreshTokenId = localStorage.getItem("nhostRefreshTokenId");
-
   return !isOnline
     ? {
         isAuthenticated: true,
         isLoading: false,
         isOffline: true,
-        isTokenInStorage: !!refreshTokenId,
       }
     : {
         isAuthenticated,
         isLoading,
         isOffline: false,
-        isTokenInStorage: !!refreshTokenId,
       };
 }
 
@@ -132,11 +128,10 @@ export function fullName(
   return `${firstName} ${lastName}`;
 }
 
-export function userRoles(user: RxDocument<UserDocType> | undefined | null) {
+export function userRoles(user: UserDocType | undefined | null) {
   return (
     user &&
-    // eslint-disable-next-line no-underscore-dangle
-    Object.entries(user._data)
+    Object.entries(user)
       .filter(([k, v]) => k.startsWith("role_") && v)
       .map(([k]) => {
         const splitted = k.split("role_")[1];
@@ -305,6 +300,7 @@ export function useDebrisTypes() {
   );
   return { debrisTypes: result, isFetching };
 }
+
 export function useTreeRemovalTasks(selector?: Record<string, unknown>) {
   const query = useCallback(
     (collection) =>
@@ -538,21 +534,11 @@ export function useTasks() {
 
   const results = useMemo(() => {
     return {
-      "tree-removal-tasks": tree.result
-        .sort((a, b) => Number(a.completed) - Number(b.completed))
-        .filter((task) => !have24HoursPassed(task.created_at)),
-      "stump-removal-tasks": stump.result
-        .sort((a, b) => Number(a.completed) - Number(b.completed))
-        .filter((task) => !have24HoursPassed(task.created_at)),
-      "collection-tasks": collection.result.filter(
-        (task) => !have24HoursPassed(task.created_at),
-      ),
-      "disposal-tasks": disposal.result.filter(
-        (task) => !have24HoursPassed(task.created_at),
-      ),
-      "ticketing-tasks": ticketing.result.filter(
-        (task) => !have24HoursPassed(task.created_at),
-      ),
+      tree: tree.result,
+      stump: stump.result,
+      collection: collection.result,
+      disposal: disposal.result,
+      ticketing: ticketing.result,
     };
   }, [
     tree.result,
@@ -568,6 +554,35 @@ export function useTasks() {
   };
 }
 
+export function useDailyTasks() {
+  const { results, isFetching } = useTasks();
+
+  const dailyResults = useMemo(() => {
+    return {
+      "tree-removal-tasks": results.tree
+        .sort((a, b) => Number(a.completed) - Number(b.completed))
+        .filter((task) => !have24HoursPassed(task.created_at)),
+      "stump-removal-tasks": results.stump
+        .sort((a, b) => Number(a.completed) - Number(b.completed))
+        .filter((task) => !have24HoursPassed(task.created_at)),
+      "collection-tasks": results.collection.filter(
+        (task) => !have24HoursPassed(task.created_at),
+      ),
+      "disposal-tasks": results.disposal.filter(
+        (task) => !have24HoursPassed(task.created_at),
+      ),
+      "ticketing-tasks": results.ticketing.filter(
+        (task) => !have24HoursPassed(task.created_at),
+      ),
+    };
+  }, [results]);
+
+  return {
+    results: dailyResults,
+    isFetching,
+  };
+}
+
 export function partition<T>(array: T[], size: number) {
   if (size <= 0) throw new Error("Size must be greater than 0");
   if (array.length === 0) return [];
@@ -577,4 +592,14 @@ export function partition<T>(array: T[], size: number) {
     result.push(array.slice(i, i + size));
   }
   return result;
+}
+
+export function useIsTaskIdSynchedToServer(taskId: string) {
+  const query = useCallback(
+    (collection) => collection.findOne(taskId),
+    [taskId],
+  );
+  const { result, isFetching } = useRxData<TaskIdDocType>("task-ids", query);
+
+  return { result: result?.[0], isFetching };
 }

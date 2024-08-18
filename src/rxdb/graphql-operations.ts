@@ -446,3 +446,12 @@ export const insertLogs = graphql(/* GraphQL */ `
     }
   }
 `);
+
+export const queryAllTaskIds = graphql(/* GraphQL */ `
+  query AllTaskIds {
+    task_ids {
+      id
+      comment
+    }
+  }
+`);

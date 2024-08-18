@@ -10,6 +10,7 @@ import {
 import { extractFilesAndSaveToNhost } from "../hooks";
 import {
   projectsDocument,
+  queryAllTaskIds,
   queryCollectionTasks,
   queryContractors,
   queryDebrisTypes,
@@ -164,6 +165,9 @@ export async function ticketingTasksWrite(
 
   logPayloadsFn(dataToBeLogged);
 
+  console.log("variableTasks", variableTasks);
+  console.log("variableImages", variableImages);
+
   return {
     query: resolveRequestDocument(upsertTicketingTasks).query,
     variables: {
@@ -316,5 +320,12 @@ export async function disposalTasksWrite(
       images: variableImages,
       taskIds,
     } satisfies UpsertStumpRemovalTaskMutationVariables,
+  };
+}
+
+export function allTaskIdsRead() {
+  return {
+    query: resolveRequestDocument(queryAllTaskIds).query,
+    variables: {},
   };
 }
