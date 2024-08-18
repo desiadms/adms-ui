@@ -594,6 +594,11 @@ export function partition<T>(array: T[], size: number) {
   return result;
 }
 
+export function useAllSynchedTaskIds() {
+  const query = useCallback((collection) => collection.find(), []);
+  return useRxData<TaskIdDocType>("task-ids", query);
+}
+
 export function useIsTaskIdSynchedToServer(taskId: string) {
   const query = useCallback(
     (collection) => collection.findOne(taskId),

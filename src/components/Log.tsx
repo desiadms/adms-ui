@@ -6,16 +6,19 @@ import {
 import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 import * as R from "remeda";
-import { partition, useTasks } from "../hooks";
+import { partition, useAllSynchedTaskIds, useTasks } from "../hooks";
 import { logPayloadToRemoteServer } from "../rxdb/utils";
 import { Button } from "./Forms";
 import { Spinner } from "./icons";
 
 function useFetchAllTasks() {
   const { results, isFetching } = useTasks();
+  const { result: synchedTaskIds } = useAllSynchedTaskIds();
+
   const parseTasksFn = useCallback(() => {
     const ticketingTasks = results.ticketing?.map((task) => {
       return {
+        taskId: task.id,
         createdAt: task.created_at,
         data: R.omit(task, ["images"]),
         type: "ticketing-task",
@@ -24,6 +27,7 @@ function useFetchAllTasks() {
 
     const collectionTasks = results.collection?.map((task) => {
       return {
+        taskId: task.id,
         createdAt: task.created_at,
         data: R.omit(task, ["images"]),
         type: "collection-task",
@@ -32,6 +36,7 @@ function useFetchAllTasks() {
 
     const disposalTasks = results.disposal?.map((task) => {
       return {
+        taskId: task.id,
         createdAt: task.created_at,
         data: R.omit(task, ["images"]),
         type: "disposal-task",
@@ -40,6 +45,7 @@ function useFetchAllTasks() {
 
     const stumpRemovalTasks = results.stump?.map((task) => {
       return {
+        taskId: task.id,
         createdAt: task.created_at,
         data: R.omit(task, ["images"]),
         type: "stump-removal-task",
@@ -48,6 +54,7 @@ function useFetchAllTasks() {
 
     const treeRemovalTasks = results.tree?.map((task) => {
       return {
+        taskId: task.id,
         createdAt: task.created_at,
         data: R.omit(task, ["images"]),
         type: "tree-removal-task",
@@ -60,8 +67,10 @@ function useFetchAllTasks() {
       ...disposalTasks,
       ...stumpRemovalTasks,
       ...treeRemovalTasks,
-    ];
-  }, [results]);
+    ].filter((task) =>
+      synchedTaskIds.every((synched) => synched.id !== task.taskId),
+    );
+  }, [results, synchedTaskIds]);
 
   return { parseTasksFn, isFetching };
 }
@@ -142,8 +151,11 @@ export function Log() {
           )}
         </div>
         <div>
-          <Button onClick={showRawData}>Show tasks data</Button>
-          {rowData && (
+          <Button onClick={showRawData}>
+            Show unsynched tasks
+            {!rowData || rowData?.length === 0 ? " (All synched)" : ""}
+          </Button>
+          {rowData?.length && rowData.length > 0 ? (
             <>
               <button
                 onClick={() => {
@@ -163,6 +175,8 @@ export function Log() {
                 ))}
               </div>
             </>
+          ) : (
+            ""
           )}
         </div>
         <Button bgColor="bg-amber-700" disabled={isLogging} onClick={forceLog}>
