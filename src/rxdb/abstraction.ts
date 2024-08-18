@@ -82,6 +82,8 @@ export function replication<TDocType>({
   replicationState.awaitInitialReplication().then(() => {
     console.log("Initial replication done for", collection.name);
   });
+
+  return replicationState;
 }
 
 export async function addCollections(
@@ -98,13 +100,18 @@ export async function addCollections(
 
   await db.addCollections(collectionCreators);
 
-  collections.forEach((collection) => {
-    replication<ExtractRxJsonSchemaType<typeof collection.schema>>({
-      accessToken: collection.accessToken,
-      collection: db[collection.name] as RxCollection,
-      db,
-      pullQueryBuilder: collection.pullQueryBuilder,
-      pushQueryBuilder: collection.pushQueryBuilder,
-    });
+  return collections.map((collection) => {
+    return {
+      name: collection.name,
+      replicationState: replication<
+        ExtractRxJsonSchemaType<typeof collection.schema>
+      >({
+        accessToken: collection.accessToken,
+        collection: db[collection.name] as RxCollection,
+        db,
+        pullQueryBuilder: collection.pullQueryBuilder,
+        pushQueryBuilder: collection.pushQueryBuilder,
+      }),
+    };
   });
 }

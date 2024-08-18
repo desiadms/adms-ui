@@ -1,6 +1,7 @@
 import { addRxPlugin, createRxDatabase, RxDatabase } from "rxdb";
 import { RxDBLocalDocumentsPlugin } from "rxdb/plugins/local-documents";
 import { RxDBMigrationPlugin } from "rxdb/plugins/migration-schema";
+import { RxGraphQLReplicationState } from "rxdb/plugins/replication-graphql";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
 import { devMode } from "./hooks";
@@ -79,7 +80,7 @@ export async function initialize(accessToken: string | null) {
 
   console.log("creating collections");
 
-  await addCollections(db, [
+  const collections = await addCollections(db, [
     {
       name: "task-ids",
       schema: allTaskIdsSchema,
@@ -164,5 +165,28 @@ export async function initialize(accessToken: string | null) {
     },
   ]);
 
+  const taskIdsCollection = collections.filter(
+    (collection) => collection.name === "task-ids",
+  );
+
+  const replicationState =
+    taskIdsCollection?.length && taskIdsCollection?.[0]?.replicationState;
+
+  if (replicationState) {
+    pollTaskIds(replicationState);
+  }
+
   return db;
+}
+
+function pollTaskIds(
+  replicationState: RxGraphQLReplicationState<unknown, null>,
+) {
+  const checkAndResyncReplicationState = () => {
+    replicationState.reSync();
+    // Reschedule the function to run
+    setTimeout(checkAndResyncReplicationState, 5000);
+  };
+
+  checkAndResyncReplicationState();
 }
