@@ -104,9 +104,7 @@ export function Log() {
   const [authData, setAuthData] = useState<object | null>();
 
   async function forceLog() {
-    const confirm = window.confirm(
-      "Are you sure you want to log the current app state?",
-    );
+    const confirm = window.confirm("Are you sure you want to synch you tasks?");
 
     if (!confirm) return;
 
@@ -180,7 +178,7 @@ export function Log() {
           )}
         </div>
         <Button bgColor="bg-amber-700" disabled={isLogging} onClick={forceLog}>
-          Force Log Current App State
+          Send unsynched tasks to dev team
           {isLogging && <Spinner />}
         </Button>
       </div>
