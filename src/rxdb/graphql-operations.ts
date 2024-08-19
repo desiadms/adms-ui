@@ -20,6 +20,7 @@ export const queryTreeRemovalTasks = graphql(/* GraphQL */ `
     tasks_tree_removal(where: { completed: { _neq: true } }) {
       comment
       completed
+      _deleted
       created_at
       updated_at
       id
@@ -90,6 +91,7 @@ export const queryStumpRemovalTasks = graphql(/* GraphQL */ `
       completed
       created_at
       updated_at
+      _deleted
       id
       images: tasks_stump_removal_images {
         id
@@ -156,6 +158,7 @@ export const queryTicketingTasks = graphql(/* GraphQL */ `
       comment
       created_at
       updated_at
+      _deleted
       id
       latitude
       longitude
@@ -314,6 +317,7 @@ export const queryCollectionTasks = graphql(/* GraphQL */ `
       debris_type
       disposal_site
       id
+      _deleted
       latitude
       longitude
       truck_id
@@ -377,6 +381,7 @@ export const queryDisposalTasks = graphql(/* GraphQL */ `
       created_at
       comment
       capacity
+      _deleted
       contractor
       debris_type
       disposal_site

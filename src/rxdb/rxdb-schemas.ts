@@ -15,7 +15,7 @@ import {
   UserQuery,
 } from "src/__generated__/gql/graphql";
 
-type OmitTypename<T> = Omit<T, "__typename">;
+type OmitTypename<T> = Omit<T, "__typename" | "_deleted">;
 type ExcludeTypename<T> = Exclude<keyof T, "__typename">;
 type SatisfiesSchemaKeys<T> = {
   [K in ExcludeTypename<T>]: RxJsonSchema<unknown>["properties"];
