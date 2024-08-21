@@ -40,7 +40,6 @@ import {
   truckSchema,
   userSchema,
 } from "./rxdb/rxdb-schemas";
-import { logPayloadToRemoteServer } from "./rxdb/utils";
 
 addRxPlugin(RxDBMigrationPlugin);
 addRxPlugin(RxDBLocalDocumentsPlugin);
@@ -64,7 +63,6 @@ export async function initialize(accessToken: string | null) {
   if (db) return db;
 
   console.log("in initialize rxdb");
-  const logPayload = logPayloadToRemoteServer(accessToken);
   const dexie = getRxStorageDexie();
 
   const storage = devMode
@@ -92,23 +90,21 @@ export async function initialize(accessToken: string | null) {
       name: "tree-removal-task",
       schema: treeRemovalTaskSchema,
       pullQueryBuilder: treeRemovalTasksRead,
-      pushQueryBuilder: (db, rows) =>
-        treeRemovalTasksWrite(db, rows, logPayload),
+      pushQueryBuilder: treeRemovalTasksWrite,
       accessToken,
     },
     {
       name: "stump-removal-task",
       schema: stumpRemovalTaskSchema,
       pullQueryBuilder: stumpRemovalTasksRead,
-      pushQueryBuilder: (db, rows) =>
-        stumpRemovalTasksWrite(db, rows, logPayload),
+      pushQueryBuilder: stumpRemovalTasksWrite,
       accessToken,
     },
     {
       name: "ticketing-task",
       schema: ticketingTaskSchema,
       pullQueryBuilder: ticketingTasksRead,
-      pushQueryBuilder: (db, rows) => ticketingTasksWrite(db, rows, logPayload),
+      pushQueryBuilder: ticketingTasksWrite,
       accessToken,
     },
     {
@@ -152,15 +148,14 @@ export async function initialize(accessToken: string | null) {
       name: "collection-task",
       schema: collectionTaskSchema,
       pullQueryBuilder: collectionTasksRead,
-      pushQueryBuilder: (db, rows) =>
-        collectionTasksWrite(db, rows, logPayload),
+      pushQueryBuilder: collectionTasksWrite,
       accessToken,
     },
     {
       name: "disposal-task",
       schema: disposalTaskSchema,
       pullQueryBuilder: disposalTasksRead,
-      pushQueryBuilder: (db, rows) => disposalTasksWrite(db, rows, logPayload),
+      pushQueryBuilder: disposalTasksWrite,
       accessToken,
     },
   ]);

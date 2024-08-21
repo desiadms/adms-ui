@@ -7,7 +7,7 @@ import {
   UpsertTicketingTaskMutationVariables,
   UpsertTreeRemovalTaskMutationVariables,
 } from "../__generated__/gql/graphql";
-import { extractFilesAndSaveToNhost, genDataToBeLogged } from "../hooks";
+import { extractFilesAndSaveToNhost } from "../hooks";
 import {
   projectsDocument,
   queryAllTaskIds,
@@ -36,7 +36,6 @@ import {
   TreeRemovalTaskDocType,
   UserDocType,
 } from "./rxdb-schemas";
-import { LogPayloadFn } from "./utils";
 
 export function treeRemovalTasksRead() {
   return {
@@ -48,7 +47,6 @@ export function treeRemovalTasksRead() {
 export async function treeRemovalTasksWrite(
   _db,
   rows: RxReplicationWriteToMasterRow<TreeRemovalTaskDocType>[],
-  logPayloadsFn: LogPayloadFn,
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
   const images = extractedData.flatMap(({ images, id }) =>
@@ -62,9 +60,6 @@ export async function treeRemovalTasksWrite(
   );
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
-
-  const dataToBeLogged = genDataToBeLogged(extractedData, "tree-removal-task");
-  logPayloadsFn(dataToBeLogged);
 
   return {
     query: resolveRequestDocument(upsertTreeRemovalTasks).query,
@@ -86,7 +81,6 @@ export function stumpRemovalTasksRead() {
 export async function stumpRemovalTasksWrite(
   _db,
   rows: RxReplicationWriteToMasterRow<StumpRemovalTaskDocType>[],
-  logPayloadsFn: LogPayloadFn,
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
   const images = extractedData
@@ -100,9 +94,6 @@ export async function stumpRemovalTasksWrite(
   );
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
-
-  const dataToBeLogged = genDataToBeLogged(extractedData, "stump-removal-task");
-  logPayloadsFn(dataToBeLogged);
 
   return {
     query: resolveRequestDocument(upsertStumpRemovalTasks).query,
@@ -124,7 +115,6 @@ export function ticketingTasksRead() {
 export async function ticketingTasksWrite(
   _db,
   rows: RxReplicationWriteToMasterRow<TicketingTaskDocType>[],
-  logPayloadsFn: LogPayloadFn,
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
   const images = extractedData
@@ -142,9 +132,6 @@ export async function ticketingTasksWrite(
     R.omit(task, ["images", "task_ticketing_name"]),
   );
   const taskIds = extractedData.map(({ id }) => ({ id }));
-
-  const dataToBeLogged = genDataToBeLogged(extractedData, "ticketing-task");
-  logPayloadsFn(dataToBeLogged);
 
   return {
     query: resolveRequestDocument(upsertTicketingTasks).query,
@@ -225,7 +212,6 @@ export function collectionTasksRead() {
 export async function collectionTasksWrite(
   _db,
   rows: RxReplicationWriteToMasterRow<CollectionTaskDocType>[],
-  logPayloadsFn: LogPayloadFn,
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
   const images = extractedData
@@ -239,9 +225,6 @@ export async function collectionTasksWrite(
   );
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
-
-  const dataToBeLogged = genDataToBeLogged(extractedData, "collection-task");
-  logPayloadsFn(dataToBeLogged);
 
   return {
     query: resolveRequestDocument(upsertCollectionTasks).query,
@@ -263,7 +246,6 @@ export function disposalTasksRead() {
 export async function disposalTasksWrite(
   _db,
   rows: RxReplicationWriteToMasterRow<DisposalTaskDocType>[],
-  logPayloadsFn: LogPayloadFn,
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
   const images = extractedData
@@ -277,9 +259,6 @@ export async function disposalTasksWrite(
   );
   const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
   const taskIds = extractedData.map(({ id }) => ({ id }));
-
-  const dataToBeLogged = genDataToBeLogged(extractedData, "disposal-task");
-  logPayloadsFn(dataToBeLogged);
 
   return {
     query: resolveRequestDocument(upsertDisposalTasks).query,

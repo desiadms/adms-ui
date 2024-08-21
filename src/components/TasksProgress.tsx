@@ -49,7 +49,7 @@ function Synched({ taskId }: { taskId: string }) {
       ) : result ? (
         <CheckCircleIcon className="w-6 text-green-800" />
       ) : (
-        <XCircleIcon className="w-6 text-green-800" />
+        <XCircleIcon className="w-6 text-red-500" />
       )}
       Synched
     </div>
