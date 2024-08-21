@@ -117,6 +117,7 @@ export async function ticketingTasksWrite(
   rows: RxReplicationWriteToMasterRow<TicketingTaskDocType>[],
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
+
   const images = extractedData
     .map(({ images, id }) =>
       images?.map((image) => ({ ...image, task_id: id })),

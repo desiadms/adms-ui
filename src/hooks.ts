@@ -503,7 +503,7 @@ export function useFilesForm() {
 const currentDate = new Date();
 const currentDateMillis = currentDate.getTime();
 
-function have24HoursPassed(dateString) {
+function have48HoursPassed(dateString) {
   // Parse the given date string to a Date object
   const givenDate = new Date(dateString);
 
@@ -516,7 +516,7 @@ function have24HoursPassed(dateString) {
   const differenceInHours = differenceInMs / (1000 * 60 * 60);
 
   // Check if 24 hours have passed
-  return differenceInHours >= 24;
+  return differenceInHours >= 48;
 }
 
 export function useTasks() {
@@ -562,18 +562,18 @@ export function useDailyTasks() {
     return {
       "tree-removal-tasks": results.tree
         .sort((a, b) => Number(a.completed) - Number(b.completed))
-        .filter((task) => !have24HoursPassed(task.created_at)),
+        .filter((task) => !have48HoursPassed(task.created_at)),
       "stump-removal-tasks": results.stump
         .sort((a, b) => Number(a.completed) - Number(b.completed))
-        .filter((task) => !have24HoursPassed(task.created_at)),
+        .filter((task) => !have48HoursPassed(task.created_at)),
       "collection-tasks": results.collection.filter(
-        (task) => !have24HoursPassed(task.created_at),
+        (task) => !have48HoursPassed(task.created_at),
       ),
       "disposal-tasks": results.disposal.filter(
-        (task) => !have24HoursPassed(task.created_at),
+        (task) => !have48HoursPassed(task.created_at),
       ),
       "ticketing-tasks": results.ticketing.filter(
-        (task) => !have24HoursPassed(task.created_at),
+        (task) => !have48HoursPassed(task.created_at),
       ),
     };
   }, [results]);

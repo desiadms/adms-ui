@@ -101,9 +101,8 @@ function FieldMonitorGeneralForm({
       updated_at: nowUTC,
     };
 
-    console.log("payload", payload);
     await ticketingTaskColl?.upsert(payload);
-    console.log("after upsert!");
+
     if (ticketingBlueprint?.print_ticket)
       navigate({ to: "/print/$id", params: { id: taskId } });
     else {
