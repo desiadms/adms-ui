@@ -444,9 +444,12 @@ export const upsertDisposalTasks = graphql(/* GraphQL */ `
   }
 `);
 
-export const insertLogs = graphql(/* GraphQL */ `
-  mutation InsertLogs($objects: [logs_insert_input!]!) {
-    insert_logs(objects: $objects) {
+export const upsertLogs = graphql(/* GraphQL */ `
+  mutation UpsertLogs($objects: [logs_insert_input!]!) {
+    insert_logs(
+      objects: $objects
+      on_conflict: { constraint: logs_pkey, update_columns: [data] }
+    ) {
       affected_rows
     }
   }

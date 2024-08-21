@@ -1,5 +1,5 @@
 import { hasuraURL } from "../hooks";
-import { insertLogs } from "./graphql-operations";
+import { upsertLogs } from "./graphql-operations";
 import { resolveRequestDocument } from "graphql-request";
 import axios from "axios";
 
@@ -52,7 +52,7 @@ export function logPayloadToRemoteServer(token: string | null) {
     );
 
     const data = {
-      query: resolveRequestDocument(insertLogs).query,
+      query: resolveRequestDocument(upsertLogs).query,
       variables: { objects: variables },
     };
 
