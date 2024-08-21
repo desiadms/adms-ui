@@ -3,77 +3,16 @@ import {
   useAuthenticationStatus,
   useUserData,
 } from "@nhost/react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import * as R from "remeda";
-import { partition, useAllSynchedTaskIds, useTasks } from "../hooks";
+import {
+  extractFilesAndSaveToNhost,
+  partition,
+  useFetchAllTasksLog,
+} from "../hooks";
 import { logPayloadToRemoteServer } from "../rxdb/utils";
 import { Button } from "./Forms";
 import { Spinner } from "./icons";
-
-function useFetchAllTasks() {
-  const { results, isFetching } = useTasks();
-  const { result: synchedTaskIds } = useAllSynchedTaskIds();
-
-  const parseTasksFn = useCallback(() => {
-    const ticketingTasks = results.ticketing?.map((task) => {
-      return {
-        taskId: task.id,
-        createdAt: task.created_at,
-        data: R.omit(task, ["images"]),
-        type: "ticketing-task",
-      };
-    });
-
-    const collectionTasks = results.collection?.map((task) => {
-      return {
-        taskId: task.id,
-        createdAt: task.created_at,
-        data: R.omit(task, ["images"]),
-        type: "collection-task",
-      };
-    });
-
-    const disposalTasks = results.disposal?.map((task) => {
-      return {
-        taskId: task.id,
-        createdAt: task.created_at,
-        data: R.omit(task, ["images"]),
-        type: "disposal-task",
-      };
-    });
-
-    const stumpRemovalTasks = results.stump?.map((task) => {
-      return {
-        taskId: task.id,
-        createdAt: task.created_at,
-        data: R.omit(task, ["images"]),
-        type: "stump-removal-task",
-      };
-    });
-
-    const treeRemovalTasks = results.tree?.map((task) => {
-      return {
-        taskId: task.id,
-        createdAt: task.created_at,
-        data: R.omit(task, ["images"]),
-        type: "tree-removal-task",
-      };
-    });
-
-    return [
-      ...ticketingTasks,
-      ...collectionTasks,
-      ...disposalTasks,
-      ...stumpRemovalTasks,
-      ...treeRemovalTasks,
-    ].filter((task) =>
-      synchedTaskIds.every((synched) => synched.id !== task.taskId),
-    );
-  }, [results, synchedTaskIds]);
-
-  return { parseTasksFn, isFetching };
-}
 
 function PreJson({ data }: { data: unknown }) {
   const content = JSON.stringify(data, null, 4);
@@ -93,14 +32,14 @@ function PreJson({ data }: { data: unknown }) {
 }
 
 export function Log() {
-  const { isFetching, parseTasksFn } = useFetchAllTasks();
-  const [isLogging, setIsLogging] = useState(false);
+  const { isFetching, allUnsynchedTasks } = useFetchAllTasksLog();
+  const [isLoggingData, setIsLoggingData] = useState(false);
 
   const userData = useUserData();
   const accesToken = useAccessToken();
   const { isAuthenticated, error } = useAuthenticationStatus();
 
-  const [rowData, setRowData] = useState<unknown[] | null>();
+  const [showRawData, setShowRawData] = useState<boolean>();
   const [authData, setAuthData] = useState<object | null>();
 
   async function forceLog() {
@@ -108,27 +47,40 @@ export function Log() {
 
     if (!confirm) return;
 
-    setIsLogging(true);
+    setIsLoggingData(true);
     const logFn = logPayloadToRemoteServer(accesToken);
-    const allTasks = parseTasksFn();
 
-    const partitioned = partition(allTasks, 4);
+    const partitioned = partition(allUnsynchedTasks, 4);
 
-    const requests = Promise.all(partitioned.map(logFn));
-    toast.promise(requests, {
-      loading: "Sending tasks to dev team",
-      success: "Tasks sent to dev team",
-      error: "Failed to send tasks to dev team",
-    });
+    const requests = Promise.all(
+      partitioned.map(async (tasks) => {
+        const payload = tasks.map((task) => task.task);
+        const images = tasks.flatMap((task) =>
+          task.images.map((image) => ({ ...image, task_id: task.task.taskId })),
+        );
+        await extractFilesAndSaveToNhost(images);
+        return logFn(payload);
+      }),
+    );
 
-    await requests;
-
-    setIsLogging(false);
+    toast
+      .promise(
+        requests,
+        {
+          loading: "Sending tasks to dev team",
+          success: "Tasks sent to dev team",
+          error: (error) => `Failed to synch tasks: ${error.message}`,
+        },
+        {
+          duration: 5000,
+        },
+      )
+      .then(() => setIsLoggingData(false))
+      .catch(() => setIsLoggingData(false));
   }
 
-  function showRawData() {
-    const allTasks = parseTasksFn();
-    setRowData(rowData ? null : allTasks);
+  function showRawDataHandler() {
+    !nothingToSync && setShowRawData((prev) => !prev);
   }
 
   function showAuthData() {
@@ -143,32 +95,34 @@ export function Log() {
     );
   }
 
-  const nothingToSync = !rowData || rowData?.length === 0;
+  const nothingToSync = allUnsynchedTasks.length === 0;
 
   if (isFetching) return <Spinner />;
 
   return (
     <div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-4">
+        {!nothingToSync && (
+          <Button
+            className="uppercase bg-yellow-400"
+            disabled={isLoggingData}
+            onClick={forceLog}
+          >
+            Send unsynched tasks to dev team
+            {isLoggingData && <Spinner />}
+          </Button>
+        )}
         <div>
-          <Button onClick={showAuthData}>Show auth data</Button>
-          {authData && (
-            <div className="mt-2">
-              <PreJson data={authData} />
-            </div>
-          )}
-        </div>
-        <div>
-          <Button onClick={showRawData}>
+          <Button onClick={showRawDataHandler}>
             Show unsynched tasks
             {nothingToSync ? " (All synched)" : ""}
           </Button>
-          {rowData?.length && rowData.length > 0 ? (
+          {showRawData ? (
             <>
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    JSON.stringify(rowData, null, 2),
+                    JSON.stringify(showRawData, null, 2),
                   );
                   toast.success("Copied all snippets to clipboard");
                 }}
@@ -178,7 +132,7 @@ export function Log() {
               </button>
 
               <div className="flex flex-col gap-2">
-                {rowData.map((row, index) => (
+                {allUnsynchedTasks.map((row, index) => (
                   <PreJson key={index} data={row} />
                 ))}
               </div>
@@ -187,16 +141,14 @@ export function Log() {
             ""
           )}
         </div>
-        {!nothingToSync && (
-          <Button
-            bgColor="bg-amber-700"
-            disabled={isLogging}
-            onClick={forceLog}
-          >
-            Send unsynched tasks to dev team
-            {isLogging && <Spinner />}
-          </Button>
-        )}
+        <div>
+          <Button onClick={showAuthData}>Show auth data</Button>
+          {authData && (
+            <div className="mt-2">
+              <PreJson data={authData} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -32,6 +32,7 @@ type LogPayload = {
   createdAt: string;
   data: object;
   type: string;
+  taskId: string;
 };
 
 export type LogPayloadFn = (payloads: LogPayload[]) => void;
@@ -39,12 +40,13 @@ export type LogPayloadFn = (payloads: LogPayload[]) => void;
 export function logPayloadToRemoteServer(token: string | null) {
   return async (payloads: LogPayload[]) => {
     const variables = await Promise.all(
-      payloads.map(async ({ createdAt, data, type }) => {
+      payloads.map(async ({ createdAt, data, type, taskId }) => {
         return {
           id: await generateUniqueIdFromJson(data),
           created_at: createdAt,
           data,
           type,
+          task_id: taskId,
         };
       }),
     );
@@ -54,10 +56,40 @@ export function logPayloadToRemoteServer(token: string | null) {
       variables: { objects: variables },
     };
 
-    return axios.post(hasuraURL, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    return axios
+      .post(hasuraURL, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        const errors = res.data?.errors;
+        if (errors) throw new Error(errors[0].message);
+      });
   };
+}
+
+export function manuallySynchTask({
+  token,
+  query,
+  variables,
+}: {
+  token: string | null;
+  query: string;
+  variables: object;
+}) {
+  return axios
+    .post(
+      hasuraURL,
+      { query, variables },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    .then((res) => {
+      const errors = res.data?.errors;
+      if (errors) throw new Error(errors[0].message);
+    });
 }

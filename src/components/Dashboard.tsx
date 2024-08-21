@@ -5,11 +5,11 @@ import { SignalIcon, SignalSlashIcon } from "@heroicons/react/24/solid";
 import { useSignOut } from "@nhost/react";
 import { Link, Navigate, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { useCallback } from "react";
-import useRxData from "rxdb-hooks/dist/useRxData";
 import { emailToId, fullName, useIsOnline } from "../hooks";
 import { removeDB } from "../rxdb";
 import { UserDocType } from "../rxdb/rxdb-schemas";
 import { appVersion } from "../globals";
+import { useRxData } from "../rxdb/useRxData";
 
 const navigation = [
   ["/projects", "Project"],

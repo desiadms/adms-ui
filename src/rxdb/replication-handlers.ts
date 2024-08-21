@@ -37,6 +37,39 @@ import {
   UserDocType,
 } from "./rxdb-schemas";
 
+type TTask =
+  | TicketingTaskDocType
+  | TreeRemovalTaskDocType
+  | StumpRemovalTaskDocType
+  | CollectionTaskDocType
+  | DisposalTaskDocType;
+
+type TTaskImages = TTask["images"];
+
+export function prepareTaskWriteData(tasks: TTask[]) {
+  const nhostImages = tasks.flatMap(
+    ({ images, id }: { images: TTaskImages; id: string }) =>
+      images?.map((image: TTaskImages[number]) => ({ ...image, task_id: id })),
+  );
+
+  const variableImages = nhostImages?.map((image) =>
+    R.omit(image, ["base64Preview"]),
+  );
+  const variableTasks = tasks.map((task: TTask) => {
+    return "task_ticketing_name" in task
+      ? R.omit(task, ["images", "task_ticketing_name"])
+      : R.omit(task, ["images"]);
+  });
+  const taskIds = tasks.map(({ id }) => ({ id }));
+
+  return {
+    nhostImages,
+    variableImages,
+    variableTasks,
+    taskIds,
+  };
+}
+
 export function treeRemovalTasksRead() {
   return {
     query: resolveRequestDocument(queryTreeRemovalTasks).query,
@@ -49,17 +82,11 @@ export async function treeRemovalTasksWrite(
   rows: RxReplicationWriteToMasterRow<TreeRemovalTaskDocType>[],
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
-  const images = extractedData.flatMap(({ images, id }) =>
-    images.map((image) => ({ ...image, task_id: id })),
-  );
 
-  await extractFilesAndSaveToNhost(images);
+  const { nhostImages, taskIds, variableImages, variableTasks } =
+    prepareTaskWriteData(extractedData);
 
-  const variableImages = images.map((image) =>
-    R.omit(image, ["base64Preview"]),
-  );
-  const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
-  const taskIds = extractedData.map(({ id }) => ({ id }));
+  await extractFilesAndSaveToNhost(nhostImages);
 
   return {
     query: resolveRequestDocument(upsertTreeRemovalTasks).query,
@@ -83,17 +110,10 @@ export async function stumpRemovalTasksWrite(
   rows: RxReplicationWriteToMasterRow<StumpRemovalTaskDocType>[],
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
-  const images = extractedData
-    .map(({ images, id }) => images.map((image) => ({ ...image, task_id: id })))
-    .flat();
+  const { nhostImages, taskIds, variableImages, variableTasks } =
+    prepareTaskWriteData(extractedData);
 
-  await extractFilesAndSaveToNhost(images);
-
-  const variableImages = images.map((image) =>
-    R.omit(image, ["base64Preview"]),
-  );
-  const variableTasks = extractedData.map((task) => R.omit(task, ["images"]));
-  const taskIds = extractedData.map(({ id }) => ({ id }));
+  await extractFilesAndSaveToNhost(nhostImages);
 
   return {
     query: resolveRequestDocument(upsertStumpRemovalTasks).query,
@@ -118,21 +138,10 @@ export async function ticketingTasksWrite(
 ) {
   const extractedData = rows.map(({ newDocumentState }) => newDocumentState);
 
-  const images = extractedData
-    .map(({ images, id }) =>
-      images?.map((image) => ({ ...image, task_id: id })),
-    )
-    .flat();
+  const { nhostImages, taskIds, variableImages, variableTasks } =
+    prepareTaskWriteData(extractedData);
 
-  if (images.every((image) => image)) await extractFilesAndSaveToNhost(images);
-
-  const variableImages = images?.map((image) =>
-    R.omit(image, ["base64Preview"]),
-  );
-  const variableTasks = extractedData.map((task) =>
-    R.omit(task, ["images", "task_ticketing_name"]),
-  );
-  const taskIds = extractedData.map(({ id }) => ({ id }));
+  await extractFilesAndSaveToNhost(nhostImages);
 
   return {
     query: resolveRequestDocument(upsertTicketingTasks).query,

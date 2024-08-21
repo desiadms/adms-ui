@@ -18,7 +18,6 @@ import {
   UserDocType,
 } from "./rxdb/rxdb-schemas";
 import { useRxData } from "./rxdb/useRxData";
-import { ImagesQuery } from "./__generated__/gql/graphql";
 
 export const devMode = import.meta.env.MODE === "development";
 
@@ -202,9 +201,17 @@ export function keep<T, U>(
   }, []);
 }
 
-export function saveFilesToNhost(files: { id: string; file: File }[]) {
+export function saveFilesToNhost(
+  files: { id: string; file: File; task_id: string }[],
+) {
   return Promise.all(
-    files.map(({ id, file }) => nhost.storage.upload({ file, id })),
+    files.map(({ id, file, task_id }) =>
+      nhost.storage.upload({ file, id, name: task_id }).then((res) => {
+        if (res.error?.status === 500) {
+          throw new Error(res.error.message);
+        }
+      }),
+    ),
   );
 }
 
@@ -218,20 +225,20 @@ export function humanizeDate(date?: string | number | Date) {
   }).format(date ? new Date(date) : new Date());
 }
 
-export async function extractFilesAndSaveToNhost(images: Images[]) {
+export async function extractFilesAndSaveToNhost(
+  images: (Images & { task_id: string })[],
+) {
   const blobFiles = images
-    .filter((image) => image.base64Preview)
-    .map(({ id, base64Preview }) => ({
+    .filter((image) => image?.base64Preview)
+    .map(({ id, base64Preview, task_id }) => ({
       id,
       file: base64toFile(base64Preview, "task", "image/png"),
+      task_id,
     }));
 
   const flattenedTaskImages = blobFiles.flat();
-  try {
-    return await saveFilesToNhost(flattenedTaskImages);
-  } catch (error) {
-    console.error(error);
-  }
+
+  return saveFilesToNhost(flattenedTaskImages);
 }
 
 export type FileForm = { fileInstance: File | undefined };
@@ -312,12 +319,7 @@ export function useTreeRemovalTasks(selector?: Record<string, unknown>) {
     [selector],
   );
 
-  const { result, isFetching } = useRxData<TreeRemovalTaskDocType>(
-    "tree-removal-task",
-    query,
-  );
-
-  return { result, isFetching };
+  return useRxData<TreeRemovalTaskDocType>("tree-removal-task", query);
 }
 
 export function useStumpRemovalTasks(selector?: Record<string, unknown>) {
@@ -330,12 +332,7 @@ export function useStumpRemovalTasks(selector?: Record<string, unknown>) {
     [selector],
   );
 
-  const { result, isFetching } = useRxData<StumpRemovalTaskDocType>(
-    "stump-removal-task",
-    query,
-  );
-
-  return { result, isFetching };
+  return useRxData<StumpRemovalTaskDocType>("stump-removal-task", query);
 }
 
 export function useCollectionTasks(selector?: Record<string, unknown>) {
@@ -348,12 +345,7 @@ export function useCollectionTasks(selector?: Record<string, unknown>) {
     [selector],
   );
 
-  const { result, isFetching } = useRxData<CollectionTaskDocType>(
-    "collection-task",
-    query,
-  );
-
-  return { result, isFetching };
+  return useRxData<CollectionTaskDocType>("collection-task", query);
 }
 
 export function useDisposalTasks(selector?: Record<string, unknown>) {
@@ -366,12 +358,7 @@ export function useDisposalTasks(selector?: Record<string, unknown>) {
     [selector],
   );
 
-  const { result, isFetching } = useRxData<DisposalTaskDocType>(
-    "disposal-task",
-    query,
-  );
-
-  return { result, isFetching };
+  return useRxData<DisposalTaskDocType>("disposal-task", query);
 }
 
 export function useTicketingTasks(selector?: Record<string, unknown>) {
@@ -384,12 +371,7 @@ export function useTicketingTasks(selector?: Record<string, unknown>) {
     [selector],
   );
 
-  const { result, isFetching } = useRxData<TicketingTaskDocType>(
-    "ticketing-task",
-    query,
-  );
-
-  return { result, isFetching };
+  return useRxData<TicketingTaskDocType>("ticketing-task", query);
 }
 
 export function useTicketingBlueprint(ticketingId: string) {
@@ -515,7 +497,7 @@ function have48HoursPassed(dateString) {
   // Convert milliseconds to hours
   const differenceInHours = differenceInMs / (1000 * 60 * 60);
 
-  // Check if 24 hours have passed
+  // Check if 48 hours have passed
   return differenceInHours >= 48;
 }
 
@@ -535,11 +517,11 @@ export function useTasks() {
 
   const results = useMemo(() => {
     return {
-      tree: tree.result,
-      stump: stump.result,
-      collection: collection.result,
-      disposal: disposal.result,
-      ticketing: ticketing.result,
+      tree: tree.result.length ? tree.result : undefined,
+      stump: stump.result.length ? stump.result : undefined,
+      collection: collection.result.length ? collection.result : undefined,
+      disposal: disposal.result.length ? disposal.result : undefined,
+      ticketing: ticketing.result.length ? ticketing.result : undefined,
     };
   }, [
     tree.result,
@@ -561,18 +543,18 @@ export function useDailyTasks() {
   const dailyResults = useMemo(() => {
     return {
       "tree-removal-tasks": results.tree
-        .sort((a, b) => Number(a.completed) - Number(b.completed))
+        ?.sort((a, b) => Number(a.completed) - Number(b.completed))
         .filter((task) => !have48HoursPassed(task.created_at)),
       "stump-removal-tasks": results.stump
-        .sort((a, b) => Number(a.completed) - Number(b.completed))
+        ?.sort((a, b) => Number(a.completed) - Number(b.completed))
         .filter((task) => !have48HoursPassed(task.created_at)),
-      "collection-tasks": results.collection.filter(
+      "collection-tasks": results.collection?.filter(
         (task) => !have48HoursPassed(task.created_at),
       ),
-      "disposal-tasks": results.disposal.filter(
+      "disposal-tasks": results.disposal?.filter(
         (task) => !have48HoursPassed(task.created_at),
       ),
-      "ticketing-tasks": results.ticketing.filter(
+      "ticketing-tasks": results.ticketing?.filter(
         (task) => !have48HoursPassed(task.created_at),
       ),
     };
@@ -610,15 +592,17 @@ export function useIsTaskIdSynchedToServer(taskId: string) {
   return { result: result?.[0], isFetching };
 }
 
-export function genDataToBeLogged(
-  // this type expands to the union of all the task types really
-  tasks: { created_at: string; images?: ImagesQuery["images"] }[],
-  type: string,
-) {
-  const data = tasks.map((task) => {
+type TAllTasksObject = ReturnType<typeof useTasks>["results"];
+type TAllTasksKeys = keyof TAllTasksObject;
+type TAllTasksValues = TAllTasksObject[TAllTasksKeys];
+
+export function genDataToBeLogged(tasks: TAllTasksValues, type: string) {
+  if (!tasks) return undefined;
+
+  const data = tasks.map((task: NonNullable<TAllTasksValues>[number]) => {
     const data = {
       ...task,
-      images: task?.images?.map((image) => {
+      images: task?.images?.map((image: Images) => {
         const removedImageBase46 = image?.base64Preview
           ? { ...image, base64Preview: "" }
           : image;
@@ -626,13 +610,47 @@ export function genDataToBeLogged(
       }),
     };
     return {
-      createdAt: task.created_at,
-      data,
-      type,
+      images: task?.images,
+      task: {
+        taskId: task.id,
+        createdAt: task.created_at,
+        data,
+        type,
+      },
     };
   });
 
-  console.log("logging data", data);
-
   return data;
+}
+
+export function useFetchAllTasksLog() {
+  const {
+    results: { ticketing, collection, disposal, stump, tree },
+    isFetching,
+  } = useTasks();
+  const { result: synchedTaskIds } = useAllSynchedTaskIds();
+
+  const allUnsynchedTasks = useMemo(() => {
+    const ticketingTasks = genDataToBeLogged(ticketing, "ticketing-task");
+
+    const collectionTasks = genDataToBeLogged(collection, "collection-task");
+
+    const disposalTasks = genDataToBeLogged(disposal, "disposal-task");
+
+    const stumpRemovalTasks = genDataToBeLogged(stump, "stump-removal-task");
+
+    const treeRemovalTasks = genDataToBeLogged(tree, "tree-removal-task");
+
+    return [
+      ...(ticketingTasks || []),
+      ...(collectionTasks || []),
+      ...(disposalTasks || []),
+      ...(stumpRemovalTasks || []),
+      ...(treeRemovalTasks || []),
+    ].filter((task) =>
+      synchedTaskIds.every((synched) => synched.id !== task.task.taskId),
+    );
+  }, [ticketing, disposal, tree, stump, collection, synchedTaskIds]);
+
+  return { allUnsynchedTasks, isFetching };
 }

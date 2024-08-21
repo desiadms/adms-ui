@@ -10,6 +10,7 @@ import { QRCodeCanvas } from "qrcode.react";
 import { useCallback, useEffect, useState } from "react";
 import toast, { LoaderIcon } from "react-hot-toast";
 import {
+  extractFilesAndSaveToNhost,
   humanizeDate,
   nhost,
   useDailyTasks,
@@ -28,14 +29,19 @@ import { Button } from "./Forms";
 import { Image } from "./Image";
 import { Modal, ModalContentProps, ModalTriggerProps } from "./Modal";
 import { Spinner } from "./icons";
+import { useAccessToken } from "@nhost/react";
+import { manuallySynchTask } from "../rxdb/utils";
+import { prepareTaskWriteData } from "../rxdb/replication-handlers";
+import { resolveRequestDocument } from "graphql-request";
+import { upsertTicketingTasks } from "../rxdb/graphql-operations";
 
 type TGeneralTaskCard =
-  | CollectionTaskDocType
-  | DisposalTaskDocType
-  | TicketingTaskDocType;
+  | ({ task: CollectionTaskDocType } & { type: "collection" })
+  | ({ task: DisposalTaskDocType } & { type: "disposal" })
+  | ({ task: TicketingTaskDocType } & { type: "ticketing" });
 
 type TPrintAndCopy =
-  | TGeneralTaskCard
+  | TGeneralTaskCard["task"]
   | TreeRemovalTaskDocType
   | StumpRemovalTaskDocType;
 
@@ -57,6 +63,7 @@ function Synched({ taskId }: { taskId: string }) {
 }
 
 function PrintAndCopy({ task }: { task: TPrintAndCopy }) {
+  console.log("task", task);
   return (
     <div className="flex flex-col gap-1">
       <Button bgColor="bg-gray-700">
@@ -358,7 +365,54 @@ function TreeStumpRemovalSingleTask({ task, type }: TreeStumpRemovalProps) {
   );
 }
 
-function GeneralTaskCard({ task }: { task: TGeneralTaskCard }) {
+function SynchTicketingButton({ task }: { task: TicketingTaskDocType }) {
+  const { result: isSynched } = useIsTaskIdSynchedToServer(task.id);
+  const [isSendingData, setIsSendingData] = useState<boolean>();
+  const token = useAccessToken();
+
+  async function synchTicketingTask() {
+    setIsSendingData(true);
+    const { nhostImages, taskIds, variableImages, variableTasks } =
+      prepareTaskWriteData([task]);
+
+    await extractFilesAndSaveToNhost(nhostImages);
+
+    const query = resolveRequestDocument(upsertTicketingTasks).query;
+    const variables = {
+      taskIds,
+      images: variableImages,
+      tasks: variableTasks,
+    };
+
+    toast
+      .promise(
+        manuallySynchTask({ token, query, variables }),
+        {
+          loading: "Synching task to server",
+          success: "Tasks synched",
+          error: (error) => `Failed to synch task: ${error.message}`,
+        },
+        {
+          duration: 5000,
+        },
+      )
+      .then(() => setIsSendingData(false))
+      .catch(() => setIsSendingData(false));
+  }
+
+  return (
+    <>
+      {!isSynched && (
+        <Button onClick={synchTicketingTask} disabled={isSendingData}>
+          Synch
+        </Button>
+      )}
+    </>
+  );
+}
+
+function GeneralTaskCard({ data }: { data: TGeneralTaskCard }) {
+  const { task, type } = data;
   return (
     <div>
       <div key={task.id} className="bg-stone-300 rounded-lg p-4">
@@ -381,7 +435,10 @@ function GeneralTaskCard({ task }: { task: TGeneralTaskCard }) {
               </div>
             )}
           </div>
-          <PrintAndCopy task={task} />
+          <div className="flex flex-col gap-2 items-end">
+            <PrintAndCopy task={task} />
+            {type === "ticketing" && <SynchTicketingButton task={task} />}
+          </div>
         </div>
       </div>
     </div>
@@ -393,7 +450,7 @@ export function TasksProgress() {
 
   if (isFetching) return <Spinner />;
 
-  if (Object.values(results).every((result) => result.length === 0))
+  if (Object.values(results).every((result) => result?.length === 0))
     return (
       <div className="flex flex-col gap-2">
         <div className="text-lg font-medium">No tasks </div>
@@ -408,20 +465,26 @@ export function TasksProgress() {
       </div>
     );
 
+  const treeRemovalTasks = results["tree-removal-tasks"];
+  const stumpRemovalTasks = results["stump-removal-tasks"];
+  const collectionTasks = results["collection-tasks"];
+  const disposalTasks = results["disposal-tasks"];
+  const ticketingTasks = results["ticketing-tasks"];
+
   return (
     <div className="flex flex-col gap-4">
-      {results["tree-removal-tasks"].length > 0 && (
+      {treeRemovalTasks && treeRemovalTasks.length > 0 && (
         <div className="flex flex-col gap-4">
           <div>Tree Removal Tasks</div>
-          {results["tree-removal-tasks"]?.map((task) => (
+          {treeRemovalTasks.map((task) => (
             <TreeStumpRemovalSingleTask key={task.id} task={task} type="tree" />
           ))}
         </div>
       )}
-      {results["stump-removal-tasks"].length > 0 && (
+      {stumpRemovalTasks && stumpRemovalTasks.length > 0 && (
         <div className="flex flex-col gap-4">
           <div>Stump Removal Tasks</div>
-          {results["stump-removal-tasks"]?.map((task) => (
+          {stumpRemovalTasks.map((task) => (
             <TreeStumpRemovalSingleTask
               key={task.id}
               task={task}
@@ -430,27 +493,30 @@ export function TasksProgress() {
           ))}
         </div>
       )}
-      {results["collection-tasks"].length > 0 && (
+      {collectionTasks && collectionTasks.length > 0 && (
         <div className="flex flex-col gap-4">
           <div>Collection Tasks</div>
-          {results["collection-tasks"]?.map((task) => (
-            <GeneralTaskCard key={task.id} task={task} />
+          {collectionTasks.map((task) => (
+            <GeneralTaskCard
+              key={task.id}
+              data={{ task, type: "collection" }}
+            />
           ))}
         </div>
       )}
-      {results["disposal-tasks"].length > 0 && (
+      {disposalTasks && disposalTasks.length > 0 && (
         <div className="flex flex-col gap-4">
           <div>Disposal Tasks</div>
-          {results["disposal-tasks"]?.map((task) => (
-            <GeneralTaskCard key={task.id} task={task} />
+          {disposalTasks.map((task) => (
+            <GeneralTaskCard key={task.id} data={{ task, type: "disposal" }} />
           ))}
         </div>
       )}
-      {results["ticketing-tasks"].length > 0 && (
+      {ticketingTasks && ticketingTasks.length > 0 && (
         <div className="flex flex-col gap-4">
           <div>Ticketing Tasks</div>
-          {results["ticketing-tasks"]?.map((task) => (
-            <GeneralTaskCard key={task.id} task={task} />
+          {ticketingTasks.map((task) => (
+            <GeneralTaskCard key={task.id} data={{ task, type: "ticketing" }} />
           ))}
         </div>
       )}

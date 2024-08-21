@@ -72,6 +72,7 @@ export function Button({
   children,
   bgColor,
   textColor,
+  className,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   bgColor?: string;
@@ -83,8 +84,10 @@ export function Button({
       {...props}
       className={classNames(
         buttonClasses,
-        bgColor || "bg-green-700 hover:bg-green-500",
-        textColor || "text-white",
+        className ?? [
+          bgColor || "bg-green-700 hover:bg-green-500",
+          textColor || "text-white",
+        ],
       )}
     >
       {children}
