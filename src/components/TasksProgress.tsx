@@ -64,7 +64,7 @@ function Synched({ taskId }: { taskId: string }) {
 
 function PrintAndCopy({ task }: { task: TPrintAndCopy }) {
   return (
-    <div className="flex flex-col gap-1">
+    <>
       <Button bgColor="bg-gray-700">
         <Link to="/print/$id" params={{ id: task.id }}>
           Print
@@ -80,7 +80,7 @@ function PrintAndCopy({ task }: { task: TPrintAndCopy }) {
       >
         Copy
       </Button>
-    </div>
+    </>
   );
 }
 
@@ -429,7 +429,11 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
       extractFilesAndSaveToNhost([image]),
       {
         loading: "Synching image to server",
-        success: (res) => `${res}`,
+        success: (res) => {
+          const parsedRes = JSON.stringify(res);
+
+          return `Result: ${parsedRes}`;
+        },
         error: (error) => `Failed to synch image: ${error.message}`,
       },
       {
@@ -506,32 +510,41 @@ function GeneralTaskCard({ data }: { data: TGeneralTaskCard }) {
   }));
 
   return (
-    <div>
-      <div key={task.id} className="bg-stone-300 rounded-lg p-4">
-        <div className="flex justify-between items-center gap-4">
-          <div className="flex gap-4 items-center">
-            <Synched taskId={task.id} />
-            <div className="text-xs">ID: {task.id}</div>
-          </div>
-          <div className="flex justify-end items-center gap-1">
-            <div className="text-xs">Created At:</div>
-            <div className="text-xs">{humanizeDate(task.created_at)}</div>
+    <div className="bg-stone-300 rounded-lg p-2 flex flex-col gap-4">
+      <div className="flex justify-between gap-4">
+        <div className="flex gap-4 items-center">
+          <Synched taskId={task.id} />
+        </div>
+        <div className="flex justify-end items-center gap-1">
+          <div className="text-xs font-bold">Created At:</div>
+          <div className="text-xs">{humanizeDate(task.created_at)}</div>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <div>
+          <div className="text-sm flex flex-col gap-2">
+            {"task_ticketing_name" in task && (
+              <div>
+                {" "}
+                <span className="font-bold">Name:</span>{" "}
+                {task.task_ticketing_name?.name}
+              </div>
+            )}
+            <div>
+              <span className="font-bold">Comment:</span> {task?.comment || "-"}{" "}
+              sueor eksh rekshb s khsd fdkshf skdhf skhf skfh skhfd kh{" "}
+            </div>
           </div>
         </div>
 
-        <div className="flex justify-between flex-wrap gap-2 items-center pt-4">
-          <div className="flex gap-10 items-center">
-            {"task_ticketing_name" in task && (
-              <div className="text-sm">
-                Name: {task.task_ticketing_name?.name}
-              </div>
-            )}
+        <div className="flex flex-col  gap-2">
+          <div className="grid grid-cols-3 gap-2">
             <PicturesPreviewModal images={imagesEnhanched} />
-          </div>
-          <div className="flex flex-col gap-2 items-end">
             <PrintAndCopy task={task} />
-            {type === "ticketing" && <SynchTicketingButton task={task} />}
           </div>
+
+          {type === "ticketing" && <SynchTicketingButton task={task} />}
         </div>
       </div>
     </div>
