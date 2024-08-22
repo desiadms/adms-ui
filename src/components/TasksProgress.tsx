@@ -533,7 +533,6 @@ function GeneralTaskCard({ data }: { data: TGeneralTaskCard }) {
             )}
             <div>
               <span className="font-bold">Comment:</span> {task?.comment || "-"}{" "}
-              sueor eksh rekshb s khsd fdkshf skdhf skhf skfh skhfd kh{" "}
             </div>
           </div>
         </div>
