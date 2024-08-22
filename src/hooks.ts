@@ -18,6 +18,7 @@ import {
   UserDocType,
 } from "./rxdb/rxdb-schemas";
 import { useRxData } from "./rxdb/useRxData";
+import imageCompression, { Options } from "browser-image-compression";
 
 export const devMode = import.meta.env.MODE === "development";
 
@@ -158,6 +159,13 @@ export async function blobToBase64(
   });
 }
 
+const compressionOptions = {
+  maxSizeMB: 0.5,
+  maxWidthOrHeight: 1280,
+  useWebWorker: true,
+  fileType: "image/webp",
+} satisfies Options;
+
 export function base64toFile(
   base64String: string | undefined | null,
   fileName: string,
@@ -233,7 +241,7 @@ export async function extractFilesAndSaveToNhost(
     .filter((image) => image?.base64Preview)
     .map(({ id, base64Preview, task_id }) => ({
       id,
-      file: base64toFile(base64Preview, "task", "image/png"),
+      file: base64toFile(base64Preview, "task", compressionOptions.fileType),
       task_id,
     }));
 
@@ -256,15 +264,18 @@ export async function genTaskImagesMetadata({
     keep(
       filesData,
       (file) => file?.fileInstance && (file.fileInstance[0] as File),
-    ).map(async (file) => ({
-      id: v4(),
-      latitude: coordinates.latitude,
-      longitude: coordinates.longitude,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      taken_at_step,
-      base64Preview: await blobToBase64(file),
-    })),
+    ).map(async (file) => {
+      const compressedFile = await imageCompression(file, compressionOptions);
+      return {
+        id: v4(),
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        taken_at_step,
+        base64Preview: await blobToBase64(compressedFile),
+      };
+    }),
   );
   return images;
 }

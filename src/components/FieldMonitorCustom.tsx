@@ -1,7 +1,7 @@
 import { CameraIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useRxCollection } from "rxdb-hooks";
@@ -57,6 +57,8 @@ function FieldMonitorGeneralForm({
     removePreview,
   } = useFilesForm();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const currentDateTime = useMemo(() => humanizeDate(), []);
 
   const { coordinates } = useGeoLocation();
@@ -70,10 +72,12 @@ function FieldMonitorGeneralForm({
   const { ticketingBlueprint } = useTicketingBlueprint(ticketingId);
 
   async function submitForm(data: FormProps) {
+    setIsLoading(true);
     let images: Images[] = [];
 
     if (!coordinates || !coordinates.latitude || !coordinates.longitude) {
       toast.error("Coordinates not found");
+      setIsLoading(false);
       return;
     }
 
@@ -105,6 +109,7 @@ function FieldMonitorGeneralForm({
     };
 
     await ticketingTaskColl?.upsert(payload);
+    setIsLoading(false);
 
     if (ticketingBlueprint?.print_ticket)
       navigate({ to: "/print/$id", params: { id: taskId } });
@@ -222,8 +227,9 @@ function FieldMonitorGeneralForm({
         </div>
 
         <div className="px-2">
-          <Button type="submit">
+          <Button type="submit" disabled={isLoading}>
             {ticketingBlueprint?.print_ticket ? "Print Ticket" : "Save"}
+            {isLoading && <Spinner className="h-4 w-4" aria-hidden="true" />}
           </Button>
         </div>
       </form>
