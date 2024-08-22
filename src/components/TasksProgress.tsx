@@ -520,13 +520,11 @@ function GeneralTaskCard({ data }: { data: TGeneralTaskCard }) {
 
         <div className="flex justify-between flex-wrap gap-2 items-center pt-4">
           <div className="flex gap-10 items-center">
-            <div>
-              {"task_ticketing_name" in task && (
-                <div className="text-sm">
-                  Name: {task.task_ticketing_name?.name}
-                </div>
-              )}
-            </div>
+            {"task_ticketing_name" in task && (
+              <div className="text-sm">
+                Name: {task.task_ticketing_name?.name}
+              </div>
+            )}
             <PicturesPreviewModal images={imagesEnhanched} />
           </div>
           <div className="flex flex-col gap-2 items-end">
