@@ -210,6 +210,7 @@ export function saveFilesToNhost(
         if (res.error?.status === 500) {
           throw new Error(res.error.message);
         }
+        return res;
       }),
     ),
   );

@@ -63,7 +63,6 @@ function Synched({ taskId }: { taskId: string }) {
 }
 
 function PrintAndCopy({ task }: { task: TPrintAndCopy }) {
-  console.log("task", task);
   return (
     <div className="flex flex-col gap-1">
       <Button bgColor="bg-gray-700">
@@ -85,7 +84,9 @@ function PrintAndCopy({ task }: { task: TPrintAndCopy }) {
   );
 }
 
-async function fetchImages(images: Images[] | undefined) {
+async function fetchImages<T extends Images>(
+  images: T[] | undefined,
+): Promise<T[]> {
   return Promise.all(
     images?.map(async (image) => {
       // when not synched with the server, the image will already have
@@ -183,6 +184,17 @@ function TaskCheck({
   );
 }
 
+function useImagePreviews<T extends Images>(images: T[]) {
+  const [fetchedImages, setFetchedImages] = useState<T[]>([]);
+
+  useEffect(() => {
+    const filteredImages = images.filter((image) => !image._deleted);
+    fetchImages(filteredImages).then((v) => setFetchedImages(v));
+  }, [images]);
+
+  return fetchedImages;
+}
+
 function TaskPreview({
   modalProps,
   images,
@@ -196,7 +208,7 @@ function TaskPreview({
   taken_at_step: Steps;
   type: "tree" | "stump";
 }) {
-  const [fetchedImages, setFetchedImages] = useState<Images[]>([]);
+  const fetchedImages = useImagePreviews(images);
 
   const navigate = useNavigate({ from: "/tasks" });
 
@@ -212,11 +224,6 @@ function TaskPreview({
       params: { id: task.id },
       search: { step: taken_at_step, edit: true },
     });
-
-  useEffect(() => {
-    const filteredImages = images.filter((image) => !image._deleted);
-    fetchImages(filteredImages).then(setFetchedImages);
-  }, [images]);
 
   return (
     <div className="relative flex flex-col gap-4">
@@ -411,8 +418,92 @@ function SynchTicketingButton({ task }: { task: TicketingTaskDocType }) {
   );
 }
 
+type ImagesEnhanched = Images & { task_id: string };
+
+function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
+  const imageIsLink = image.base64Preview?.startsWith("http");
+
+  async function synchCallback() {
+    toast.promise(
+      extractFilesAndSaveToNhost([image]),
+      {
+        loading: "Synching image to server",
+        success: (res) => `${res}`,
+        error: (error) => `Failed to synch image: ${error.message}`,
+      },
+      {
+        duration: 5000,
+      },
+    );
+  }
+
+  return (
+    <div className="flex gap-4 p-3 items-center">
+      <div className="w-2/3 flex-shrink-0">
+        <Image src={image.base64Preview} alt="" />
+      </div>
+      {!imageIsLink ? (
+        <Button onClick={synchCallback}> Synch </Button>
+      ) : (
+        "Image synched"
+      )}
+    </div>
+  );
+}
+
+function PicturesPreviewModalContent({
+  images,
+}: {
+  images: ImagesEnhanched[];
+}) {
+  const fetchedImages = useImagePreviews(images);
+
+  return (
+    <div className="flex flex-wrap gap-4">
+      {fetchedImages.map((image) => (
+        <PicturePreviewSyncButton key={image.id} image={image} />
+      ))}
+    </div>
+  );
+}
+
+function PicturesPreviewModal({ images }: { images: ImagesEnhanched[] }) {
+  const modalTrigger = useCallback(
+    ({ openModal }: ModalTriggerProps) => (
+      <Button bgColor="bg-gray-700" onClick={openModal}>
+        Show Media
+      </Button>
+    ),
+    [],
+  );
+
+  const modalBody = useCallback(
+    (_modalProps: ModalContentProps, images: ImagesEnhanched[]) => (
+      <div className="w-full">
+        <PicturesPreviewModalContent images={images} />
+      </div>
+    ),
+    [],
+  );
+
+  return (
+    <div>
+      <Modal
+        title="Images"
+        modalTrigger={modalTrigger}
+        modalContent={(props) => modalBody(props, images)}
+      />
+    </div>
+  );
+}
+
 function GeneralTaskCard({ data }: { data: TGeneralTaskCard }) {
   const { task, type } = data;
+  const imagesEnhanched = task?.images?.map((images) => ({
+    ...images,
+    task_id: task.id,
+  }));
+
   return (
     <div>
       <div key={task.id} className="bg-stone-300 rounded-lg p-4">
@@ -428,12 +519,15 @@ function GeneralTaskCard({ data }: { data: TGeneralTaskCard }) {
         </div>
 
         <div className="flex justify-between flex-wrap gap-2 items-center pt-4">
-          <div>
-            {"task_ticketing_name" in task && (
-              <div className="text-sm">
-                Name: {task.task_ticketing_name?.name}
-              </div>
-            )}
+          <div className="flex gap-10 items-center">
+            <div>
+              {"task_ticketing_name" in task && (
+                <div className="text-sm">
+                  Name: {task.task_ticketing_name?.name}
+                </div>
+              )}
+            </div>
+            <PicturesPreviewModal images={imagesEnhanched} />
           </div>
           <div className="flex flex-col gap-2 items-end">
             <PrintAndCopy task={task} />
