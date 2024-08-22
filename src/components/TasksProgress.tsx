@@ -96,6 +96,7 @@ async function fetchImages<T extends Images>(
       }
       const { presignedUrl } = await nhost.storage.getPresignedUrl({
         fileId: image.id,
+        width: 500,
       });
       // using the same base64Preview field to store the presignedUrl
       return { ...image, base64Preview: presignedUrl?.url };
