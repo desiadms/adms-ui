@@ -476,7 +476,7 @@ function PicturesPreviewModal({ images }: { images: ImagesEnhanched[] }) {
   const modalTrigger = useCallback(
     ({ openModal }: ModalTriggerProps) => (
       <Button bgColor="bg-gray-700" onClick={openModal}>
-        Show Media
+        Pictures
       </Button>
     ),
     [],
@@ -552,6 +552,8 @@ function GeneralTaskCard({ data }: { data: TGeneralTaskCard }) {
 
 export function TasksProgress() {
   const { results, isFetching } = useDailyTasks();
+
+  console.log("results", results);
 
   if (isFetching) return <Spinner />;
 
