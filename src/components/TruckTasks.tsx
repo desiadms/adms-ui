@@ -27,6 +27,7 @@ import {
 import { TaskType } from "./common";
 import { Button, ErrorMessage, Input, Label, LabelledTextArea } from "./Forms";
 import { Spinner } from "./icons";
+import toast from "react-hot-toast";
 
 export function TruckTasks() {
   return (
@@ -130,50 +131,53 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
   async function submitForm(data) {
     if (noFilesUploaded) return;
 
-    if (coordinates) {
-      const images = await genTaskImagesMetadata({
-        filesData: data.files,
-        coordinates,
-      });
-
-      const nowUTC = new Date().toISOString();
-
-      if (type === "collection") {
-        await truckCollectionCol?.upsert({
-          capacity: data.capacity,
-          contractor: data.contractor,
-          created_at: nowUTC,
-          debris_type: data.debrisType,
-          disposal_site: data.disposalSite,
-          id: taskId,
-          latitude: coordinates?.latitude,
-          longitude: coordinates?.longitude,
-          truck_id: data.truckNumber,
-          weigh_points: JSON.stringify(data.weighPoints),
-          comment: data.comment,
-          updated_at: nowUTC,
-          images,
-        });
-      } else {
-        await truckDisposalCol?.upsert({
-          capacity: data.capacity,
-          contractor: data.contractor,
-          created_at: nowUTC,
-          debris_type: data.debrisType,
-          disposal_site: data.disposalSite,
-          id: taskId,
-          latitude: coordinates?.latitude,
-          longitude: coordinates?.longitude,
-          load_call: data.loadCall,
-          task_collection_id: linkedCollectionTaskId,
-          truck_id: data.truckNumber,
-          comment: data.comment,
-          updated_at: nowUTC,
-          images,
-        });
-      }
-      navigate({ to: "/print/$id", params: { id: taskId } });
+    if (!coordinates || !coordinates.latitude || !coordinates.longitude) {
+      toast.error("Coordinates not found");
+      return;
     }
+
+    const images = await genTaskImagesMetadata({
+      filesData: data.files,
+      coordinates,
+    });
+
+    const nowUTC = new Date().toISOString();
+
+    if (type === "collection") {
+      await truckCollectionCol?.upsert({
+        capacity: data.capacity,
+        contractor: data.contractor,
+        created_at: nowUTC,
+        debris_type: data.debrisType,
+        disposal_site: data.disposalSite,
+        id: taskId,
+        latitude: coordinates?.latitude,
+        longitude: coordinates?.longitude,
+        truck_id: data.truckNumber,
+        weigh_points: JSON.stringify(data.weighPoints),
+        comment: data.comment,
+        updated_at: nowUTC,
+        images,
+      });
+    } else {
+      await truckDisposalCol?.upsert({
+        capacity: data.capacity,
+        contractor: data.contractor,
+        created_at: nowUTC,
+        debris_type: data.debrisType,
+        disposal_site: data.disposalSite,
+        id: taskId,
+        latitude: coordinates?.latitude,
+        longitude: coordinates?.longitude,
+        load_call: data.loadCall,
+        task_collection_id: linkedCollectionTaskId,
+        truck_id: data.truckNumber,
+        comment: data.comment,
+        updated_at: nowUTC,
+        images,
+      });
+    }
+    navigate({ to: "/print/$id", params: { id: taskId } });
   }
 
   async function autoFillFieldsFromQr(result: IDetectedBarcode[]) {

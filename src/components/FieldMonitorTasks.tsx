@@ -34,6 +34,7 @@ import {
 } from "./Forms";
 import { TaskType } from "./common";
 import { Spinner } from "./icons";
+import toast from "react-hot-toast";
 
 export function FieldMonitorTasks() {
   const { activeProject } = useProject();
@@ -127,56 +128,58 @@ function TreeStumpRemovalForm({
   async function submitForm(data) {
     if (noFilesUploaded) return;
 
-    if (coordinates) {
-      const images = await genTaskImagesMetadata({
-        filesData: data.files,
-        coordinates,
-        taken_at_step: step,
+    if (!coordinates || !coordinates.latitude || !coordinates.longitude) {
+      toast.error("Coordinates not found");
+      return;
+    }
+
+    const images = await genTaskImagesMetadata({
+      filesData: data.files,
+      coordinates,
+      taken_at_step: step,
+    });
+
+    const nowUTC = new Date().toISOString();
+
+    const existingTreeDoc = await treeRemovalColl?.findOne(taskId).exec();
+    const existingStumpDoc = await stumpRemovalColl?.findOne(taskId).exec();
+    const existingDoc = type === "tree" ? existingTreeDoc : existingStumpDoc;
+
+    const updatedImages = edit
+      ? existingDoc?.images.map((image) => {
+          if (image.taken_at_step === step) return { ...image, _deleted: true };
+
+          return image;
+        })
+      : existingDoc?.images;
+
+    if (type === "tree") {
+      await treeRemovalColl?.upsert({
+        id: taskId,
+        images: updatedImages?.concat(images) || images,
+        comment: data.comment,
+        created_at: nowUTC,
+        updated_at: nowUTC,
+        ranges: data?.ranges?.length
+          ? data.ranges
+          : (existingDoc as TreeRemovalTaskDocType)?.ranges,
+        completed: step === "after",
       });
+    } else {
+      await stumpRemovalColl?.upsert({
+        id: taskId,
+        images: updatedImages?.concat(images) || images,
+        comment: data.comment,
+        created_at: nowUTC,
+        updated_at: nowUTC,
+        completed: step === "after",
+      });
+    }
 
-      const nowUTC = new Date().toISOString();
-
-      const existingTreeDoc = await treeRemovalColl?.findOne(taskId).exec();
-      const existingStumpDoc = await stumpRemovalColl?.findOne(taskId).exec();
-      const existingDoc = type === "tree" ? existingTreeDoc : existingStumpDoc;
-
-      const updatedImages = edit
-        ? existingDoc?.images.map((image) => {
-            if (image.taken_at_step === step)
-              return { ...image, _deleted: true };
-
-            return image;
-          })
-        : existingDoc?.images;
-
-      if (type === "tree") {
-        await treeRemovalColl?.upsert({
-          id: taskId,
-          images: updatedImages?.concat(images) || images,
-          comment: data.comment,
-          created_at: nowUTC,
-          updated_at: nowUTC,
-          ranges: data?.ranges?.length
-            ? data.ranges
-            : (existingDoc as TreeRemovalTaskDocType)?.ranges,
-          completed: step === "after",
-        });
-      } else {
-        await stumpRemovalColl?.upsert({
-          id: taskId,
-          images: updatedImages?.concat(images) || images,
-          comment: data.comment,
-          created_at: nowUTC,
-          updated_at: nowUTC,
-          completed: step === "after",
-        });
-      }
-
-      if (step === "after") {
-        navigate({ to: "/print/$id", params: { id: taskId } });
-      } else {
-        navigate({ to: "/progress" });
-      }
+    if (step === "after") {
+      navigate({ to: "/print/$id", params: { id: taskId } });
+    } else {
+      navigate({ to: "/progress" });
     }
   }
 

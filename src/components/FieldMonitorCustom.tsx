@@ -72,12 +72,15 @@ function FieldMonitorGeneralForm({
   async function submitForm(data: FormProps) {
     let images: Images[] = [];
 
-    console.log("in submit form ok?");
+    if (!coordinates || !coordinates.latitude || !coordinates.longitude) {
+      toast.error("Coordinates not found");
+      return;
+    }
 
     if (ticketingBlueprint?.add_photos) {
       if (noFilesUploaded) return;
 
-      if (coordinates && data.files) {
+      if (data.files) {
         images = await genTaskImagesMetadata({
           filesData: data.files,
           coordinates,
@@ -90,8 +93,8 @@ function FieldMonitorGeneralForm({
     const payload = {
       id: taskId,
       images,
-      latitude: coordinates?.latitude,
-      longitude: coordinates?.longitude,
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
       ticketing_name: ticketingId,
       task_ticketing_name: {
         name: ticketingBlueprint?.name || "",
