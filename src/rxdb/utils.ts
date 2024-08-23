@@ -69,7 +69,7 @@ export function logPayloadToRemoteServer(token: string | null) {
   };
 }
 
-export function manuallySynchTask({
+export function httpReq({
   token,
   query,
   variables,
@@ -91,5 +91,6 @@ export function manuallySynchTask({
     .then((res) => {
       const errors = res.data?.errors;
       if (errors) throw new Error(errors[0].message);
+      return res.data;
     });
 }

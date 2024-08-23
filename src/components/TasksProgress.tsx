@@ -30,10 +30,13 @@ import { Image } from "./Image";
 import { Modal, ModalContentProps, ModalTriggerProps } from "./Modal";
 import { Spinner } from "./icons";
 import { useAccessToken } from "@nhost/react";
-import { manuallySynchTask } from "../rxdb/utils";
+import { httpReq } from "../rxdb/utils";
 import { prepareTaskWriteData } from "../rxdb/replication-handlers";
 import { resolveRequestDocument } from "graphql-request";
-import { upsertTicketingTasks } from "../rxdb/graphql-operations";
+import {
+  upsertImageUnsynced,
+  upsertTicketingTasks,
+} from "../rxdb/graphql-operations";
 
 type TGeneralTaskCard =
   | ({ task: CollectionTaskDocType } & { type: "collection" })
@@ -387,7 +390,7 @@ function SynchTicketingButton({ task }: { task: TicketingTaskDocType }) {
 
     toast
       .promise(
-        manuallySynchTask({ token, query, variables }),
+        httpReq({ token, query, variables }),
         {
           loading: "Synching task to server",
           success: "Tasks synched",
@@ -416,6 +419,7 @@ type ImagesEnhanched = Images & { task_id: string };
 
 function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
   const imageIsLink = image.base64Preview?.startsWith("http");
+  const token = useAccessToken();
 
   async function synchCallback() {
     toast.promise(
@@ -436,8 +440,29 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
   }
 
   function copyImageCallback() {
-    navigator.clipboard.writeText(image?.base64Preview || "");
-    toast.success("Copied image to clipboard!");
+    const base64 = image?.base64Preview || "";
+
+    toast.promise(
+      httpReq({
+        token,
+        query: resolveRequestDocument(upsertImageUnsynced).query,
+        variables: {
+          object: { id: image.id, base64: { id: image.id, base64 } },
+        },
+      }),
+      {
+        loading: "Synching raw image to server",
+        success: (res) => {
+          const parsedRes = JSON.stringify(res);
+
+          return `Result: ${parsedRes}`;
+        },
+        error: (error) => `Failed to synch raw image: ${error.message}`,
+      },
+      {
+        duration: 5000,
+      },
+    );
   }
 
   return (
@@ -446,9 +471,9 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
         <Image src={image.base64Preview} alt="" />
       </div>
       {!imageIsLink ? (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-4">
           <Button onClick={synchCallback}> Synch </Button>
-          <Button onClick={copyImageCallback}> Copy </Button>
+          <Button onClick={copyImageCallback}> Synch Raw </Button>
         </div>
       ) : (
         "Image synched"
