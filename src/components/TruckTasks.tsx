@@ -16,7 +16,6 @@ import {
   genTaskImagesMetadata,
   getGeoLocationHandler,
   humanizeDate,
-  maxFileSize,
   useContractors,
   useDebrisTypes,
   useDisposalSites,
@@ -28,6 +27,7 @@ import { TaskType } from "./common";
 import { Button, ErrorMessage, Input, Label, LabelledTextArea } from "./Forms";
 import { Spinner } from "./icons";
 import toast from "react-hot-toast";
+import { maxUploadFileSizeAllowed } from "../rxdb/utils";
 
 export function TruckTasks() {
   return (
@@ -639,7 +639,7 @@ export function TruckTaskForm({ taskId, type }: TruckTaskFormProps) {
                     {...register(`files.${index}.fileInstance`, {
                       validate: {
                         lessThan5MB: (file) =>
-                          validateFileSize(file, maxFileSize),
+                          validateFileSize(file, maxUploadFileSizeAllowed),
                       },
                       onChange: (e) => {
                         onChangeSetFilePreview(e, id);

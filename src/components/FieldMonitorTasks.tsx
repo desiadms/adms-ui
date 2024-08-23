@@ -14,7 +14,6 @@ import {
   FileForm,
   genTaskImagesMetadata,
   humanizeDate,
-  maxFileSize,
   useFilesForm,
   useGeoLocation,
   useProject,
@@ -35,6 +34,7 @@ import {
 import { TaskType } from "./common";
 import { Spinner } from "./icons";
 import toast from "react-hot-toast";
+import { maxUploadFileSizeAllowed } from "../rxdb/utils";
 
 export function FieldMonitorTasks() {
   const { activeProject } = useProject();
@@ -250,7 +250,7 @@ function TreeStumpRemovalForm({
                     {...register(`files.${index}.fileInstance`, {
                       validate: {
                         lessThan5MB: (file) =>
-                          validateFileSize(file, maxFileSize),
+                          validateFileSize(file, maxUploadFileSizeAllowed),
                       },
                       onChange: (e) => {
                         onChangeSetFilePreview(e, id);

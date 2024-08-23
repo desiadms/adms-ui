@@ -2,6 +2,20 @@ import { hasuraURL } from "../hooks";
 import { upsertLogs } from "./graphql-operations";
 import { resolveRequestDocument } from "graphql-request";
 import axios from "axios";
+import { Options } from "browser-image-compression";
+
+const maxFileSizeAllowedMB = 0.5;
+
+export const compressionOptions = {
+  maxSizeMB: maxFileSizeAllowedMB,
+  maxWidthOrHeight: 1280,
+  useWebWorker: true,
+  fileType: "image/webp",
+} satisfies Options;
+
+// 15MB
+export const maxUploadFileSizeAllowed = 15 * 1024 * 1024;
+export const maxFileSizeAllowed = maxFileSizeAllowedMB * 1024 * 1024;
 
 export async function generateUniqueIdFromJson(
   jsonPayload: object,

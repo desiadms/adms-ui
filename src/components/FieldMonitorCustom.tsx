@@ -9,7 +9,6 @@ import {
   FileForm,
   genTaskImagesMetadata,
   humanizeDate,
-  maxFileSize,
   useFilesForm,
   useGeoLocation,
   useTicketingBlueprint,
@@ -17,6 +16,7 @@ import {
 import { Images, TicketingTaskDocType } from "../rxdb/rxdb-schemas";
 import { Button, ErrorMessage, Input, Label, LabelledTextArea } from "./Forms";
 import { Spinner } from "./icons";
+import { maxUploadFileSizeAllowed } from "../rxdb/utils";
 
 type TFieldMonitorGeneral = {
   taskId: string;
@@ -178,7 +178,7 @@ function FieldMonitorGeneralForm({
                         {...register(`files.${index}.fileInstance`, {
                           validate: {
                             lessThan5MB: (file) =>
-                              validateFileSize(file, maxFileSize),
+                              validateFileSize(file, maxUploadFileSizeAllowed),
                           },
                           onChange: (e) => {
                             onChangeSetFilePreview(e, id);

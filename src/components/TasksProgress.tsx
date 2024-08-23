@@ -439,7 +439,7 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
     );
   }
 
-  function copyImageCallback() {
+  function synchRawImageCallback() {
     const base64 = image?.base64Preview || "";
 
     toast.promise(
@@ -473,7 +473,7 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
       {!imageIsLink ? (
         <div className="flex flex-col gap-4">
           <Button onClick={synchCallback}> Synch </Button>
-          <Button onClick={copyImageCallback}> Synch Raw </Button>
+          <Button onClick={synchRawImageCallback}> Synch Raw </Button>
         </div>
       ) : (
         "Image synched"

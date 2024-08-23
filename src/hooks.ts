@@ -18,12 +18,10 @@ import {
   UserDocType,
 } from "./rxdb/rxdb-schemas";
 import { useRxData } from "./rxdb/useRxData";
-import imageCompression, { Options } from "browser-image-compression";
+import imageCompression from "browser-image-compression";
+import { compressionOptions, maxFileSizeAllowed } from "./rxdb/utils";
 
 export const devMode = import.meta.env.MODE === "development";
-
-// 15MB
-export const maxFileSize = 15 * 1024 * 1024;
 
 export const nhost = new NhostClient({
   subdomain: import.meta.env.VITE_NHOST_SUBDOMAIN,
@@ -160,13 +158,6 @@ export async function blobToBase64(
   });
 }
 
-const compressionOptions = {
-  maxSizeMB: 0.5,
-  maxWidthOrHeight: 1280,
-  useWebWorker: true,
-  fileType: "image/webp",
-} satisfies Options;
-
 export function base64toFile(
   base64String: string | undefined | null,
   fileName: string,
@@ -249,7 +240,7 @@ export async function extractFilesAndSaveToNhost(
         );
         // if pics where stored before compression was added to the app,
         // compress them before saving to nhost
-        if (file.size > compressionOptions.maxSizeMB * 1024 * 1024) {
+        if (file.size > maxFileSizeAllowed) {
           const compressedFile = await imageCompression(
             file,
             compressionOptions,
