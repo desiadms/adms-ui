@@ -7,7 +7,7 @@ import {
 import { Link, LinkOptions, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import { QRCodeCanvas } from "qrcode.react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import toast, { LoaderIcon } from "react-hot-toast";
 import {
   extractFilesAndSaveToNhost,
@@ -84,23 +84,21 @@ function PrintAndCopy({ task }: { task: TPrintAndCopy }) {
   );
 }
 
-async function fetchImages<T extends Images>(
-  images: T[] | undefined,
-): Promise<T[]> {
-  return Promise.all(
-    images?.map(async (image) => {
+function fetchImages<T extends Images>(images: T[] | undefined) {
+  return (
+    images?.map((image) => {
       // when not synched with the server, the image will already have
       // a base64Preview string
       if (image.base64Preview) {
         return image;
       }
-      const { presignedUrl } = await nhost.storage.getPresignedUrl({
+      const url = nhost.storage.getPublicUrl({
         fileId: image.id,
       });
 
       // using the same base64Preview field to store the presignedUrl
-      return { ...image, base64Preview: presignedUrl?.url };
-    }) || [],
+      return { ...image, base64Preview: url };
+    }) || []
   );
 }
 
@@ -186,13 +184,8 @@ function TaskCheck({
 }
 
 function useImagePreviews<T extends Images>(images: T[]) {
-  const [fetchedImages, setFetchedImages] = useState<T[]>([]);
-
-  useEffect(() => {
-    const filteredImages = images.filter((image) => !image._deleted);
-    fetchImages(filteredImages).then((v) => setFetchedImages(v));
-  }, [images]);
-
+  const filteredImages = images.filter((image) => !image._deleted);
+  const fetchedImages = fetchImages(filteredImages);
   return fetchedImages;
 }
 
@@ -442,13 +435,21 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
     );
   }
 
+  function copyImageCallback() {
+    navigator.clipboard.writeText(image?.base64Preview || "");
+    toast.success("Copied image to clipboard!");
+  }
+
   return (
     <div className="flex gap-4 p-3 items-center">
       <div className="w-2/3 flex-shrink-0">
         <Image src={image.base64Preview} alt="" />
       </div>
       {!imageIsLink ? (
-        <Button onClick={synchCallback}> Synch </Button>
+        <div className="flex flex-col gap-1">
+          <Button onClick={synchCallback}> Synch </Button>
+          <Button onClick={copyImageCallback}> Copy </Button>
+        </div>
       ) : (
         "Image synched"
       )}

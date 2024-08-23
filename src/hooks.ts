@@ -22,6 +22,7 @@ import imageCompression, { Options } from "browser-image-compression";
 
 export const devMode = import.meta.env.MODE === "development";
 
+// 15MB
 export const maxFileSize = 15 * 1024 * 1024;
 
 export const nhost = new NhostClient({
@@ -237,13 +238,32 @@ export function saveFilesToNhost(
 export async function extractFilesAndSaveToNhost(
   images: (Images & { task_id: string })[],
 ) {
-  const blobFiles = images
-    .filter((image) => image?.base64Preview)
-    .map(({ id, base64Preview, task_id }) => ({
-      id,
-      file: base64toFile(base64Preview, "task", compressionOptions.fileType),
-      task_id,
-    }));
+  const blobFiles = await Promise.all(
+    images
+      .filter((image) => image?.base64Preview)
+      .map(async ({ id, base64Preview, task_id }) => {
+        let file = base64toFile(
+          base64Preview,
+          "task",
+          compressionOptions.fileType,
+        );
+        // if pics where stored before compression was added to the app,
+        // compress them before saving to nhost
+        if (file.size > compressionOptions.maxSizeMB * 1024 * 1024) {
+          const compressedFile = await imageCompression(
+            file,
+            compressionOptions,
+          );
+          file = compressedFile;
+        }
+
+        return {
+          id,
+          file,
+          task_id,
+        };
+      }),
+  );
 
   return saveFilesToNhost(blobFiles);
 }
