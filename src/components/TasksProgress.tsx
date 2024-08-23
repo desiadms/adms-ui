@@ -478,7 +478,7 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
       <div className="w-2/3 flex-shrink-0">
         <Image src={image.base64Preview} alt="" />
       </div>
-      {imageIsLink ? (
+      {!imageIsLink ? (
         <div className="flex flex-col gap-4">
           <Button onClick={synchCallback}> Synch </Button>
           <Button onClick={synchRawImageCallback}> Synch Raw </Button>
