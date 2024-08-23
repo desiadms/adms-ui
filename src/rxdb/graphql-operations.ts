@@ -468,7 +468,10 @@ export const upsertImageUnsynced = graphql(/* GraphQL */ `
   mutation UpsertImageUnsynched($object: images_unsynched_insert_input!) {
     insert_images_unsynched_one(
       object: $object
-      on_conflict: { constraint: images_unsynched_pkey, update_columns: base64 }
+      on_conflict: {
+        constraint: images_unsynched_pkey
+        update_columns: [base64, task_id]
+      }
     ) {
       id
     }
