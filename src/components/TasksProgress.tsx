@@ -37,6 +37,10 @@ import {
   upsertImageUnsynced,
   upsertTicketingTasks,
 } from "../rxdb/graphql-operations";
+import {
+  UpsertImageUnsynchedMutationVariables,
+  UpsertTicketingTaskMutationVariables,
+} from "../__generated__/gql/graphql";
 
 type TGeneralTaskCard =
   | ({ task: CollectionTaskDocType } & { type: "collection" })
@@ -386,7 +390,7 @@ function SynchTicketingButton({ task }: { task: TicketingTaskDocType }) {
       taskIds,
       images: variableImages,
       tasks: variableTasks,
-    };
+    } satisfies UpsertTicketingTaskMutationVariables;
 
     toast
       .promise(
@@ -447,8 +451,12 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
         token,
         query: resolveRequestDocument(upsertImageUnsynced).query,
         variables: {
-          object: { id: image.id, base64: { id: image.id, base64 } },
-        },
+          object: {
+            id: image.id,
+            base64: { id: image.id, base64 },
+            task_id: image.task_id,
+          },
+        } satisfies UpsertImageUnsynchedMutationVariables,
       }),
       {
         loading: "Synching raw image to server",
@@ -470,7 +478,7 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
       <div className="w-2/3 flex-shrink-0">
         <Image src={image.base64Preview} alt="" />
       </div>
-      {!imageIsLink ? (
+      {imageIsLink ? (
         <div className="flex flex-col gap-4">
           <Button onClick={synchCallback}> Synch </Button>
           <Button onClick={synchRawImageCallback}> Synch Raw </Button>
