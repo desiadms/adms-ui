@@ -424,6 +424,7 @@ type ImagesEnhanched = Images & { task_id: string };
 function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
   const imageIsLink = image.base64Preview?.startsWith("http");
   const token = useAccessToken();
+  const { result: isSynched } = useIsTaskIdSynchedToServer(image.task_id);
 
   async function synchCallback() {
     toast.promise(
@@ -478,7 +479,7 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
       <div className="w-2/3 flex-shrink-0">
         <Image src={image.base64Preview} alt="" />
       </div>
-      {!imageIsLink ? (
+      {!imageIsLink && !isSynched ? (
         <div className="flex flex-col gap-4">
           <Button onClick={synchCallback}> Synch </Button>
           <Button onClick={synchRawImageCallback}> Synch Raw </Button>
