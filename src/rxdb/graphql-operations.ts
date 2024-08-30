@@ -315,7 +315,6 @@ export const queryCollectionTasks = graphql(/* GraphQL */ `
       capacity
       contractor
       debris_type
-      disposal_site
       id
       _deleted
       latitude
