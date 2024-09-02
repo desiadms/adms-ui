@@ -1,5 +1,6 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { QRCodeCanvas } from "qrcode.react";
+import * as R from "remeda";
 import {
   humanizeDate,
   useDebrisTypes,
@@ -9,7 +10,6 @@ import {
   useTrucks,
 } from "../hooks";
 import { Button } from "./Forms";
-import * as R from "remeda";
 
 function LabelValue({
   label,
@@ -78,7 +78,7 @@ export function Print() {
     "debris_type" in result &&
     debrisTypes.debrisTypes.find((type) => type.id === result?.debris_type);
 
-  const qrCodeValue = JSON.stringify(R.omit(result, ["images"]));
+  const qrCodeValue = JSON.stringify(R.omit(result, ["images", "comment"]));
 
   return (
     <div>
