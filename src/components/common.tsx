@@ -42,7 +42,7 @@ export function DeleteLocalData() {
       }}
       to="/"
     >
-      Delete Local Data
+      Hard Refresh App
     </Link>
   );
 }

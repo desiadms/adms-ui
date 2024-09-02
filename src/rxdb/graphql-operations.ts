@@ -284,6 +284,7 @@ export const queryTrucks = graphql(/* GraphQL */ `
   query Trucks {
     trucks {
       truck_number
+      cubic_yardage
       id
     }
   }
@@ -312,7 +313,6 @@ export const queryCollectionTasks = graphql(/* GraphQL */ `
     tasks_collection {
       created_at
       comment
-      capacity
       contractor
       debris_type
       id
@@ -379,7 +379,6 @@ export const queryDisposalTasks = graphql(/* GraphQL */ `
     tasks_disposal {
       created_at
       comment
-      capacity
       _deleted
       contractor
       debris_type

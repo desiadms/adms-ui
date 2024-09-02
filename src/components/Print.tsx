@@ -80,8 +80,6 @@ export function Print() {
     "debris_type" in result &&
     debrisTypes.debrisTypes.find((type) => type.id === result?.debris_type);
 
-  const capacity = "capacity" in result && result.capacity;
-
   const loadCall = "load_call" in result && result.load_call;
 
   const collDisposalContractor =
@@ -106,6 +104,16 @@ export function Print() {
         <LabelValue label="Type" value={parsedType} />
 
         {truck && <LabelValue label="Truck" value={truck.truck_number} />}
+        {truck && <LabelValue label="Capacity" value={truck.cubic_yardage} />}
+        {loadCall && <LabelValue label="Load Call" value={`${loadCall}%`} />}
+        {loadCall && truck && (
+          <LabelValue
+            label="Net Cubit Yards"
+            value={(parseInt(truck.cubic_yardage) * (loadCall / 100)).toFixed(
+              2,
+            )}
+          />
+        )}
         {disposalSite && (
           <LabelValue label="Disposal Site" value={disposalSite.name} />
         )}
@@ -114,8 +122,6 @@ export function Print() {
         )}
         {type === "Tree" && <LabelValue label="Size" value={result?.ranges} />}
 
-        {loadCall && <LabelValue label="Load Call" value={loadCall} />}
-        {capacity && <LabelValue label="Capacity" value={capacity} />}
         {collDisposalContractor && (
           <LabelValue
             label={`${type} Contractor`}

@@ -322,6 +322,9 @@ export const truckSchema: RxJsonSchema<TruckDocType> = {
     truck_number: {
       type: "string",
     },
+    cubic_yardage: {
+      type: "string",
+    },
   },
   required: ["id"],
 } as const;
@@ -384,9 +387,6 @@ export const collectionTaskSchema: RxJsonSchema<CollectionTaskDocType> = {
   type: "object",
   primaryKey: "id",
   properties: {
-    capacity: {
-      type: ["number", "null"],
-    },
     contractor: {
       type: "string",
     },
@@ -441,9 +441,6 @@ export const disposalTaskSchema: RxJsonSchema<DisposalTaskDocType> = {
   type: "object",
   primaryKey: "id",
   properties: {
-    capacity: {
-      type: ["number", "null"],
-    },
     contractor: {
       type: ["string", "null"],
     },

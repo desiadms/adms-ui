@@ -45,7 +45,6 @@ type TruckTaskFormProps = {
 type SharedProps = {
   truckNumber: string;
   contractor: string;
-  capacity?: number | null;
   debrisType: string;
   comment?: string;
   files: FileForm[];
@@ -65,7 +64,6 @@ const schemaCollectionQRCode = z.object({
   id: z.string(),
   truck_id: z.string(),
   contractor: z.string(),
-  capacity: z.number(),
   debris_type: z.string(),
 });
 
@@ -80,6 +78,7 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
     setValue,
     clearErrors,
     handleSubmit,
+    watch,
     control,
     formState: { errors, submitCount },
   } = useForm<DisposalTaskFormProps>({
@@ -128,7 +127,6 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
     const nowUTC = new Date().toISOString();
 
     await truckDisposalCol?.upsert({
-      capacity: data.capacity,
       contractor: data.contractor,
       created_at: nowUTC,
       debris_type: data.debrisType,
@@ -161,17 +159,15 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
         id: collectionId,
         truck_id,
         contractor,
-        capacity,
         debris_type,
       } = parsedScannedResult;
 
       setValue("collectionId", collectionId);
       setValue("truckNumber", truck_id);
       setValue("contractor", contractor);
-      setValue("capacity", capacity);
       setValue("debrisType", debris_type);
 
-      clearErrors(["truckNumber", "contractor", "capacity", "debrisType"]);
+      clearErrors(["truckNumber", "contractor", "debrisType"]);
 
       setScannerOpen(false);
     } catch (error) {
@@ -191,6 +187,11 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
   const rxdbDebrisTypesObject = useDebrisTypes();
 
   const [scannerOpen, setScannerOpen] = useState(false);
+
+  const truckNumberForm = watch("truckNumber");
+  const capacity = rxdbTrucksObject.trucks.find(
+    (truck) => truck.id === truckNumberForm,
+  )?.cubic_yardage;
 
   return (
     <div className="relative">
@@ -277,6 +278,10 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
             />
             <ErrorMessage message={errors.truckNumber?.message} />
           </div>
+
+          {truckNumberForm && (
+            <div className="p-2 text-sm">Capacity: {capacity}</div>
+          )}
           <div>
             <div className="p-2">
               <LabelledSelect
@@ -308,21 +313,6 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
                 )}
               />
               <ErrorMessage message={errors.debrisType?.message} />
-            </div>
-
-            <div className="p-2 rounded-lg">
-              <LabelledInput
-                label="Capacity"
-                type="number"
-                min="0"
-                max="1000000"
-                {...register("capacity", {
-                  valueAsNumber: true,
-                  required: "Capacity required",
-                })}
-                placeholder="in yards&sup3;"
-              />
-              <ErrorMessage message={errors.capacity?.message} />
             </div>
           </div>
         </div>
@@ -459,6 +449,7 @@ export function TruckTaskCollectionForm({ taskId }: TruckTaskFormProps) {
     handleSubmit,
     control,
     formState: { errors, submitCount },
+    watch,
   } = useForm<CollectionTaskFormProps>({
     defaultValues: {
       comment: "",
@@ -514,7 +505,6 @@ export function TruckTaskCollectionForm({ taskId }: TruckTaskFormProps) {
     const nowUTC = new Date().toISOString();
 
     await truckCollectionCol?.upsert({
-      capacity: data.capacity,
       contractor: data.contractor,
       created_at: nowUTC,
       debris_type: data.debrisType,
@@ -545,6 +535,11 @@ export function TruckTaskCollectionForm({ taskId }: TruckTaskFormProps) {
   const rxdbContractorsObject = useContractors();
   const rxdbTrucksObject = useTrucks();
   const rxdbDebrisTypesObject = useDebrisTypes();
+
+  const truckNumberForm = watch("truckNumber");
+  const capacity = rxdbTrucksObject.trucks.find(
+    (truck) => truck.id === truckNumberForm,
+  )?.cubic_yardage;
 
   return (
     <div className="relative">
@@ -590,6 +585,10 @@ export function TruckTaskCollectionForm({ taskId }: TruckTaskFormProps) {
             <ErrorMessage message={errors.truckNumber?.message} />
           </div>
 
+          {truckNumberForm && (
+            <div className="p-2 text-sm">Capacity: {capacity}</div>
+          )}
+
           <div className="p-2">
             <LabelledSelect
               label="Contractor"
@@ -617,17 +616,6 @@ export function TruckTaskCollectionForm({ taskId }: TruckTaskFormProps) {
             />
             <ErrorMessage message={errors.debrisType?.message} />
           </div>
-          <div className="p-2">
-            <LabelledInput
-              label="Capacity"
-              {...register("capacity", { valueAsNumber: true })}
-              placeholder="in yards&sup3;"
-              type="number"
-              min="0"
-              max="1000000"
-            />
-          </div>
-
           <div className="p-2 flex flex-col gap-2">
             <Label label="Waypoints" />
             <div className="text-sm w-fit">
