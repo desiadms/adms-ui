@@ -72,11 +72,9 @@ function Synched({ taskId }: { taskId: string }) {
 function PrintAndCopy({ task }: { task: TPrintAndCopy }) {
   return (
     <>
-      <Button bgColor="bg-gray-700">
-        <Link to="/print/$id" params={{ id: task.id }}>
-          Print
-        </Link>
-      </Button>
+      <Link to="/print/$id" params={{ id: task.id }}>
+        <Button bgColor="bg-gray-700">Print</Button>
+      </Link>
       <Button
         onClick={() => {
           const content = JSON.stringify(task, null, 4);

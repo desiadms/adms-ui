@@ -2,6 +2,7 @@ import classNames from "classnames";
 import {
   ButtonHTMLAttributes,
   InputHTMLAttributes,
+  SelectHTMLAttributes,
   TextareaHTMLAttributes,
   forwardRef,
 } from "react";
@@ -13,6 +14,9 @@ const inputClasses =
 
 export const buttonClasses =
   "flex justify-center gap-2 w-full items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700";
+
+export const selectClasses =
+  "block w-full rounded-md border-0 py-1.5 px-2 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-700 sm:text-sm sm:leading-6";
 
 export const Input = forwardRef<
   HTMLInputElement,
@@ -94,3 +98,44 @@ export function Button({
     </button>
   );
 }
+
+export function DefaultOption() {
+  return (
+    <option value="" disabled>
+      Select your option
+    </option>
+  );
+}
+
+export type TOption = { value: string; label: string };
+
+export const Select = forwardRef<
+  HTMLSelectElement,
+  SelectHTMLAttributes<HTMLSelectElement> & { options: TOption[] }
+>(({ options, ...props }, ref) => (
+  <div>
+    <select defaultValue="" className={selectClasses} ref={ref} {...props}>
+      <DefaultOption />
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  </div>
+));
+
+export const LabelledSelect = forwardRef<
+  HTMLSelectElement,
+  SelectHTMLAttributes<HTMLSelectElement> & {
+    label: string;
+    options: TOption[];
+  }
+>(({ label, ...props }, ref) => (
+  <label htmlFor={props.name} className={labelClasses}>
+    {label}
+    <div className="mt-2">
+      <Select ref={ref} {...props} />
+    </div>
+  </label>
+));

@@ -315,7 +315,6 @@ export const queryCollectionTasks = graphql(/* GraphQL */ `
       capacity
       contractor
       debris_type
-      disposal_site
       id
       _deleted
       latitude
@@ -459,7 +458,6 @@ export const queryAllTaskIds = graphql(/* GraphQL */ `
   query AllTaskIds {
     task_ids {
       id
-      comment
     }
   }
 `);

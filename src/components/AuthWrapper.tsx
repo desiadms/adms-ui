@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { RxDatabase } from "rxdb";
 import { Provider } from "rxdb-hooks";
-import { initialize } from "../rxdb";
 import { useAuth } from "../hooks";
+import { initialize } from "../rxdb";
+import { DeleteLocalData } from "./common";
 import { Dashboard } from "./Dashboard";
 import { Button, ErrorMessage, LabelledInput } from "./Forms";
 import { Spinner } from "./icons";
@@ -102,7 +103,14 @@ export function AuthWrapper() {
   }, [accessToken, isOffline]);
 
   if (isLoading || (isAuthenticated && !db)) {
-    return <FullPageSpinner />;
+    return (
+      <div className="h-full w-full">
+        <div className="absolute px-2 z-50 bottom-1 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <DeleteLocalData />
+        </div>
+        <FullPageSpinner />
+      </div>
+    );
   }
 
   if (!isAuthenticated) {

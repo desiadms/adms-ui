@@ -368,9 +368,15 @@ export const debrisTypeSchema: RxJsonSchema<DebrisTypeDocType> = {
   required: ["id"],
 } as const;
 
-export type CollectionTaskDocType = OmitTypename<
-  CollectionTasksQuery["tasks_collection"][number]
->;
+export type CollectionTaskDocType = Omit<
+  OmitTypename<CollectionTasksQuery["tasks_collection"][number]>,
+  "weigh_points"
+> & {
+  weigh_points: {
+    latitude: number;
+    longitude: number;
+  }[];
+};
 
 export const collectionTaskSchema: RxJsonSchema<CollectionTaskDocType> = {
   title: "collection task schema",
@@ -393,9 +399,6 @@ export const collectionTaskSchema: RxJsonSchema<CollectionTaskDocType> = {
     debris_type: {
       type: "string",
     },
-    disposal_site: {
-      type: "string",
-    },
     id: {
       type: "string",
       maxLength: 100,
@@ -413,7 +416,15 @@ export const collectionTaskSchema: RxJsonSchema<CollectionTaskDocType> = {
       type: "string",
     },
     weigh_points: {
-      type: "string",
+      type: "array",
+      properties: {
+        latitude: {
+          type: "number",
+        },
+        longitude: {
+          type: "number",
+        },
+      },
     },
     ...imagesSchema,
   },
@@ -486,9 +497,6 @@ export const allTaskIdsSchema: RxJsonSchema<TaskIdDocType> = {
     id: {
       type: "string",
       maxLength: 100,
-    },
-    comment: {
-      type: ["string", "null"],
     },
   },
   required: ["id"],

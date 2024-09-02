@@ -1,5 +1,6 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { QRCodeCanvas } from "qrcode.react";
+import * as R from "remeda";
 import {
   humanizeDate,
   useDebrisTypes,
@@ -77,6 +78,8 @@ export function Print() {
     "debris_type" in result &&
     debrisTypes.debrisTypes.find((type) => type.id === result?.debris_type);
 
+  const qrCodeValue = JSON.stringify(R.omit(result, ["images", "comment"]));
+
   return (
     <div>
       <div className="text-center text-xl font-medium">ADMS</div>
@@ -100,8 +103,12 @@ export function Print() {
         {type === "Tree" && <LabelValue label="Size" value={result?.ranges} />}
         <LabelValue label="Comment" value={result?.comment} />
       </div>
-      <div className="flex flex-col items-center pt-10">
-        <QRCodeCanvas value={result?.id} includeMargin />
+      <div className="pt-10">
+        <QRCodeCanvas
+          value={qrCodeValue}
+          includeMargin
+          style={{ width: "100%", height: "auto", padding: 10, maxWidth: 350 }}
+        />
       </div>
       <div className="pt-10">
         <Link to="/tasks">
