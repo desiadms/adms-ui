@@ -498,9 +498,6 @@ export const allTaskIdsSchema: RxJsonSchema<TaskIdDocType> = {
       type: "string",
       maxLength: 100,
     },
-    comment: {
-      type: ["string", "null"],
-    },
   },
   required: ["id"],
 } as const;

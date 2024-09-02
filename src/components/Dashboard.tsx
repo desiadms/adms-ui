@@ -5,11 +5,11 @@ import { SignalIcon, SignalSlashIcon } from "@heroicons/react/24/solid";
 import { useSignOut } from "@nhost/react";
 import { Link, Navigate, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { emailToId, fullName, useIsOnline } from "../hooks";
-import { removeDB } from "../rxdb";
-import { UserDocType } from "../rxdb/rxdb-schemas";
 import { appVersion } from "../globals";
+import { emailToId, fullName, useIsOnline } from "../hooks";
+import { UserDocType } from "../rxdb/rxdb-schemas";
 import { useRxData } from "../rxdb/useRxData";
+import { DeleteLocalData } from "./common";
 
 const navigation = [
   ["/projects", "Project"],
@@ -162,28 +162,7 @@ export function Dashboard() {
                           >
                             Sign Out
                           </Link>
-                          <Link
-                            className="block rounded-md px-3 py-2 text-base"
-                            activeProps={{
-                              className: `bg-gray-900 text-white`,
-                            }}
-                            inactiveProps={{
-                              className: `text-red-300 hover:bg-red-700 hover:text-white`,
-                            }}
-                            onClick={async () => {
-                              //add an alert to confirm
-                              const userConfirmed = window.confirm(
-                                "Your unsynched data will be lost. Are you sure?",
-                              );
-                              if (userConfirmed) {
-                                await removeDB();
-                                await signOut();
-                              }
-                            }}
-                            to="/"
-                          >
-                            Delete Local Data
-                          </Link>
+                          <DeleteLocalData />
                         </div>
                       </div>
                     </>

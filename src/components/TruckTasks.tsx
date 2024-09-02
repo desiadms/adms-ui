@@ -5,12 +5,14 @@ import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import classNames from "classnames";
 import { useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useRxCollection } from "rxdb-hooks";
 import {
   CollectionTaskDocType,
   DisposalTaskDocType,
 } from "src/rxdb/rxdb-schemas";
 import { v4 } from "uuid";
+import { z } from "zod";
 import {
   FileForm,
   genTaskImagesMetadata,
@@ -23,6 +25,7 @@ import {
   useGeoLocation,
   useTrucks,
 } from "../hooks";
+import { maxUploadFileSizeAllowed } from "../rxdb/utils";
 import { TaskType } from "./common";
 import {
   Button,
@@ -34,22 +37,6 @@ import {
   LabelledTextArea,
 } from "./Forms";
 import { Spinner } from "./icons";
-import toast from "react-hot-toast";
-import { maxUploadFileSizeAllowed } from "../rxdb/utils";
-import { z } from "zod";
-
-export function TruckTasks() {
-  return (
-    <div className="flex flex-col gap-2">
-      <Link to="/tasks/truck-tasks/collection/$id" params={{ id: v4() }}>
-        <TaskType name="Collection" />
-      </Link>
-      <Link to="/tasks/truck-tasks/disposal/$id" params={{ id: v4() }}>
-        <TaskType name="Disposal" />
-      </Link>
-    </div>
-  );
-}
 
 type TruckTaskFormProps = {
   taskId: string;
@@ -198,7 +185,6 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
     update(index, { fileInstance: undefined });
   }
 
-  // Data from RxDB to populate the input options
   const rxdbContractorsObject = useContractors();
   const rxdbTrucksObject = useTrucks();
   const rxdbDisposalSitesObject = useDisposalSites();
@@ -749,4 +735,17 @@ export function DisposalFormWrapper() {
   const { id } = useParams({ from: "/tasks/truck-tasks/disposal/$id" });
 
   return <TruckTaskDisposalForm taskId={id} />;
+}
+
+export function TruckTasks() {
+  return (
+    <div className="flex flex-col gap-2">
+      <Link to="/tasks/truck-tasks/collection/$id" params={{ id: v4() }}>
+        <TaskType name="Collection" />
+      </Link>
+      <Link to="/tasks/truck-tasks/disposal/$id" params={{ id: v4() }}>
+        <TaskType name="Disposal" />
+      </Link>
+    </div>
+  );
 }

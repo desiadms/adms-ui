@@ -103,8 +103,12 @@ export function Print() {
         {type === "Tree" && <LabelValue label="Size" value={result?.ranges} />}
         <LabelValue label="Comment" value={result?.comment} />
       </div>
-      <div className="flex flex-col items-center pt-10">
-        <QRCodeCanvas value={qrCodeValue} includeMargin />
+      <div className="pt-10">
+        <QRCodeCanvas
+          value={qrCodeValue}
+          includeMargin
+          style={{ width: "100%", height: "auto", padding: 10, maxWidth: 350 }}
+        />
       </div>
       <div className="pt-10">
         <Link to="/tasks">
