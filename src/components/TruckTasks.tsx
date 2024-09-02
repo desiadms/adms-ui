@@ -26,7 +26,6 @@ import {
 import { TaskType } from "./common";
 import {
   Button,
-  DefaultOption,
   ErrorMessage,
   Input,
   Label,
@@ -37,6 +36,7 @@ import {
 import { Spinner } from "./icons";
 import toast from "react-hot-toast";
 import { maxUploadFileSizeAllowed } from "../rxdb/utils";
+import { z } from "zod";
 
 export function TruckTasks() {
   return (
@@ -71,7 +71,16 @@ type CollectionTaskFormProps = SharedProps & {
 type DisposalTaskFormProps = SharedProps & {
   loadCall: number;
   disposalSite: string;
+  collectionId: string;
 };
+
+const schemaCollectionQRCode = z.object({
+  id: z.string(),
+  truck_id: z.string(),
+  contractor: z.string(),
+  capacity: z.number(),
+  debris_type: z.string(),
+});
 
 export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
   const defaultFileValue: FileForm[] = [
@@ -82,6 +91,7 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
   const {
     register,
     setValue,
+    clearErrors,
     handleSubmit,
     control,
     formState: { errors, submitCount },
@@ -115,7 +125,7 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
   const truckDisposalCol =
     useRxCollection<DisposalTaskDocType>("disposal-task");
 
-  async function submitForm(data) {
+  async function submitForm(data: DisposalTaskFormProps) {
     if (noFilesUploaded) return;
 
     if (!coordinates || !coordinates.latitude || !coordinates.longitude) {
@@ -140,7 +150,7 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
       latitude: coordinates?.latitude,
       longitude: coordinates?.longitude,
       load_call: data.loadCall,
-      task_collection_id: "",
+      task_collection_id: data.collectionId,
       truck_id: data.truckNumber,
       comment: data.comment,
       updated_at: nowUTC,
@@ -150,14 +160,36 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
     navigate({ to: "/print/$id", params: { id: taskId } });
   }
 
-  async function autoFillFieldsFromQr(result: IDetectedBarcode[]) {
-    const scanResult = result[0]?.rawValue;
+  function autoFillFieldsFromQr(result: IDetectedBarcode[]) {
+    try {
+      const rawValue = result[0]?.rawValue;
 
-    if (result !== undefined && result !== null) {
-      // setValue("truckNumber", defaultInputOption);
-      // setValue("disposalSite", defaultInputOption);
-      // setValue("contractor", defaultInputOption);
-      // setValue("debrisType", defaultInputOption);
+      const parsedScannedResult = schemaCollectionQRCode.parse(
+        JSON.parse(rawValue || ""),
+      );
+
+      console.log("parsedScannedResult", parsedScannedResult);
+
+      const {
+        id: collectionId,
+        truck_id,
+        contractor,
+        capacity,
+        debris_type,
+      } = parsedScannedResult;
+
+      setValue("collectionId", collectionId);
+      setValue("truckNumber", truck_id);
+      setValue("contractor", contractor);
+      setValue("capacity", capacity);
+      setValue("debrisType", debris_type);
+
+      clearErrors(["truckNumber", "contractor", "capacity", "debrisType"]);
+
+      setScannerOpen(false);
+    } catch (error) {
+      console.error(error);
+      toast.error("Invalid QR Code");
     }
   }
 
@@ -177,11 +209,16 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
   return (
     <div className="relative">
       {scannerOpen && (
-        <div className="relative left-[50%] -translate-x-1/2 w-[50%]">
-          <Scanner onScan={autoFillFieldsFromQr} />
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-90 z-50 overflow-hidden">
+          <div className="absolute p-4 flex flex-col gap-4 max-w-3xl left-[50%] -translate-x-1/2 w-full">
+            <Scanner allowMultiple onScan={autoFillFieldsFromQr} />
+            <Button type="button" onClick={() => setScannerOpen(false)}>
+              Fill Manually
+            </Button>
+          </div>
         </div>
       )}
-      <div className="capitalize font-medium text-xl pb-4">{type}</div>
+      <div className="capitalize font-medium text-xl pb-4">disposal</div>
       <form
         onSubmit={handleSubmit(submitForm)}
         className="flex flex-col gap-2 items-start bg-zinc-200 rounded-md p-4"
@@ -231,83 +268,87 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
           </div>
         </div>
 
-        <div>
-          <div className="p-2 w-fit rounded-lg">
-            <Label label="Truck Number" />
-            <div className="text-sm">
-              {
-                <select
-                  defaultValue=""
-                  {...register("truckNumber", {
-                    required: "Truck Number is required",
-                  })}
-                >
-                  <DefaultOption />
-                  {rxdbTrucksObject.trucks.map((truckNumber) => {
-                    return (
-                      <option key={truckNumber.id} value={truckNumber.id}>
-                        {truckNumber.truck_number}
-                      </option>
-                    );
-                  })}
-                </select>
-              }
-            </div>
-            <ErrorMessage message={errors.truckNumber?.message} />
-          </div>
-          <div className="p-2 w-fit rounded-lg">
-            <Label label="Contractor" />
-            <div className="text-sm">
-              <select
-                defaultValue=""
-                {...register("contractor", {
-                  required: "Contractor is required",
-                })}
-              >
-                <DefaultOption />
+        <div className="p-2">
+          <LabelledInput
+            label="Collection ID"
+            {...register("collectionId", {
+              required: "Collection ID required",
+            })}
+          />
+          <ErrorMessage message={errors.collectionId?.message} />
+        </div>
 
-                {rxdbContractorsObject.contractors.map((contractor) => {
-                  return (
-                    <option key={contractor.id} value={contractor.id}>
-                      {contractor.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
+        <div className="p-2">
+          <LabelledSelect
+            label="Truck Number"
+            {...register("truckNumber", {
+              required: "Truck Number is required",
+            })}
+            options={rxdbTrucksObject.trucks.map((truck) => ({
+              label: truck.truck_number,
+              value: truck.id,
+            }))}
+          />
+          <ErrorMessage message={errors.truckNumber?.message} />
+        </div>
+        <div>
+          <div className="p-2">
+            <LabelledSelect
+              label="Contractor"
+              {...register("contractor", {
+                required: "Contractor is required",
+              })}
+              options={rxdbContractorsObject.contractors.map((contractor) => ({
+                label: contractor.name,
+                value: contractor.id,
+              }))}
+            />
             <ErrorMessage message={errors.contractor?.message} />
           </div>
-          <div className="p-2 w-fit rounded-lg">
-            <Label label="Debris Type" />
-            <div className="text-sm">
-              <select
-                defaultValue=""
-                {...register("debrisType", {
-                  required: "Debris Type is required",
-                })}
-              >
-                <DefaultOption />
 
-                {rxdbDebrisTypesObject.debrisTypes.map((debrisType) => {
-                  return (
-                    <option key={debrisType.id} value={debrisType.id}>
-                      {debrisType.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
+          <div className="p-2">
+            <LabelledSelect
+              label="Debris Type"
+              {...register("debrisType", {
+                required: "Debris Type is required",
+              })}
+              options={rxdbDebrisTypesObject.debrisTypes.map((debrisType) => ({
+                label: debrisType.name,
+                value: debrisType.id,
+              }))}
+            />
             <ErrorMessage message={errors.debrisType?.message} />
           </div>
+
           <div className="p-2 w-fit rounded-lg">
-            <Label label="Capacity" />
-            <input
+            <LabelledInput
+              label="Capacity"
               type="number"
               min="0"
               max="1000000"
-              {...register("capacity", { valueAsNumber: true })}
+              {...register("capacity", {
+                valueAsNumber: true,
+                required: "Capacity required",
+              })}
               placeholder="in yards&sup3;"
             />
+            <ErrorMessage message={errors.capacity?.message} />
+          </div>
+
+          <div className="p-2">
+            <LabelledSelect
+              label="Disposal Site"
+              {...register("disposalSite", {
+                required: "Disposal site is required",
+              })}
+              options={rxdbDisposalSitesObject.disposalSites.map(
+                (disposalSite) => ({
+                  label: disposalSite.name,
+                  value: disposalSite.id,
+                }),
+              )}
+            />
+            <ErrorMessage message={errors.disposalSite?.message} />
           </div>
         </div>
         <div className="p-2 w-fit rounded-lg">
@@ -317,15 +358,23 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
               type="range"
               id="load-call-range"
               min="5"
+              defaultValue={50}
               max="95"
               step="5"
               {...register("loadCall", {
                 required: "Load Call is required",
                 valueAsNumber: true,
               })}
+              onInput={(e) => {
+                const sliderValue = document.getElementById("sliderValue");
+                const value = (e.target as HTMLInputElement).value;
+                if (sliderValue && value) {
+                  sliderValue.innerHTML = `${value} %`;
+                }
+              }}
             />
             <output className="mx-4" id="sliderValue">
-              {3} %
+              50 %
             </output>
           </div>
           <ErrorMessage message={errors.loadCall?.message} />
@@ -533,20 +582,18 @@ export function TruckTaskCollectionForm({ taskId }: TruckTaskFormProps) {
           </div>
         </div>
 
-        <div>
-          <div className="p-2">
-            <LabelledSelect
-              label="Truck Number"
-              {...register("truckNumber", {
-                required: "Truck Number is required",
-              })}
-              options={rxdbTrucksObject.trucks.map((truck) => ({
-                label: truck.truck_number,
-                value: truck.id,
-              }))}
-            />
-            <ErrorMessage message={errors.truckNumber?.message} />
-          </div>
+        <div className="p-2">
+          <LabelledSelect
+            label="Truck Number"
+            {...register("truckNumber", {
+              required: "Truck Number is required",
+            })}
+            options={rxdbTrucksObject.trucks.map((truck) => ({
+              label: truck.truck_number,
+              value: truck.id,
+            }))}
+          />
+          <ErrorMessage message={errors.truckNumber?.message} />
         </div>
 
         <div className="p-2">
@@ -701,5 +748,5 @@ export function CollectionFormWrapper() {
 export function DisposalFormWrapper() {
   const { id } = useParams({ from: "/tasks/truck-tasks/disposal/$id" });
 
-  return <TruckTaskCollectionForm taskId={id} />;
+  return <TruckTaskDisposalForm taskId={id} />;
 }
