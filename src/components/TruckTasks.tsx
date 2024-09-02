@@ -238,113 +238,120 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
         </div>
 
         <div>
-          <div className="p-2 w-fit rounded-lg">
-            <div className="text-sm">
-              <Button
-                onClick={() => {
-                  setScannerOpen(true);
-                }}
-                name="scan-qr"
-                type="button"
-                bgColor="bg-slate-500 hover:bg-slate-300"
-              >
-                Autofill with QR Code
-              </Button>
+          <div className="p-2">
+            <Button
+              onClick={() => {
+                setScannerOpen(true);
+              }}
+              name="scan-qr"
+              type="button"
+              bgColor="bg-slate-500 hover:bg-slate-300"
+            >
+              Autofill with QR Code
+            </Button>
+          </div>
+        </div>
+
+        <div className="bg-green-300 w-full rounded">
+          <div className="p-2 text-sm">*fields pre-filled via QR code</div>
+          <div className="p-2">
+            <LabelledInput
+              label="Collection ID"
+              {...register("collectionId", {
+                required: "Collection ID required",
+              })}
+            />
+            <ErrorMessage message={errors.collectionId?.message} />
+          </div>
+
+          <div className="p-2">
+            <LabelledSelect
+              label="Truck Number"
+              {...register("truckNumber", {
+                required: "Truck Number is required",
+              })}
+              options={rxdbTrucksObject.trucks.map((truck) => ({
+                label: truck.truck_number,
+                value: truck.id,
+              }))}
+            />
+            <ErrorMessage message={errors.truckNumber?.message} />
+          </div>
+          <div>
+            <div className="p-2">
+              <LabelledSelect
+                label="Contractor"
+                {...register("contractor", {
+                  required: "Contractor is required",
+                })}
+                options={rxdbContractorsObject.contractors.map(
+                  (contractor) => ({
+                    label: contractor.name,
+                    value: contractor.id,
+                  }),
+                )}
+              />
+              <ErrorMessage message={errors.contractor?.message} />
+            </div>
+
+            <div className="p-2">
+              <LabelledSelect
+                label="Debris Type"
+                {...register("debrisType", {
+                  required: "Debris Type is required",
+                })}
+                options={rxdbDebrisTypesObject.debrisTypes.map(
+                  (debrisType) => ({
+                    label: debrisType.name,
+                    value: debrisType.id,
+                  }),
+                )}
+              />
+              <ErrorMessage message={errors.debrisType?.message} />
+            </div>
+
+            <div className="p-2 rounded-lg">
+              <LabelledInput
+                label="Capacity"
+                type="number"
+                min="0"
+                max="1000000"
+                {...register("capacity", {
+                  valueAsNumber: true,
+                  required: "Capacity required",
+                })}
+                placeholder="in yards&sup3;"
+              />
+              <ErrorMessage message={errors.capacity?.message} />
             </div>
           </div>
         </div>
 
-        <div className="p-2">
-          <LabelledInput
-            label="Collection ID"
-            {...register("collectionId", {
-              required: "Collection ID required",
-            })}
-          />
-          <ErrorMessage message={errors.collectionId?.message} />
-        </div>
-
-        <div className="p-2">
+        <div className="p-2 w-full">
           <LabelledSelect
-            label="Truck Number"
-            {...register("truckNumber", {
-              required: "Truck Number is required",
+            label="Disposal Site"
+            {...register("disposalSite", {
+              required: "Disposal site is required",
             })}
-            options={rxdbTrucksObject.trucks.map((truck) => ({
-              label: truck.truck_number,
-              value: truck.id,
-            }))}
+            options={rxdbDisposalSitesObject.disposalSites.map(
+              (disposalSite) => ({
+                label: disposalSite.name,
+                value: disposalSite.id,
+              }),
+            )}
           />
-          <ErrorMessage message={errors.truckNumber?.message} />
+          <ErrorMessage message={errors.disposalSite?.message} />
         </div>
-        <div>
-          <div className="p-2">
-            <LabelledSelect
-              label="Contractor"
-              {...register("contractor", {
-                required: "Contractor is required",
-              })}
-              options={rxdbContractorsObject.contractors.map((contractor) => ({
-                label: contractor.name,
-                value: contractor.id,
-              }))}
-            />
-            <ErrorMessage message={errors.contractor?.message} />
-          </div>
 
-          <div className="p-2">
-            <LabelledSelect
-              label="Debris Type"
-              {...register("debrisType", {
-                required: "Debris Type is required",
-              })}
-              options={rxdbDebrisTypesObject.debrisTypes.map((debrisType) => ({
-                label: debrisType.name,
-                value: debrisType.id,
-              }))}
-            />
-            <ErrorMessage message={errors.debrisType?.message} />
-          </div>
-
-          <div className="p-2 w-fit rounded-lg">
-            <LabelledInput
-              label="Capacity"
-              type="number"
-              min="0"
-              max="1000000"
-              {...register("capacity", {
-                valueAsNumber: true,
-                required: "Capacity required",
-              })}
-              placeholder="in yards&sup3;"
-            />
-            <ErrorMessage message={errors.capacity?.message} />
-          </div>
-
-          <div className="p-2">
-            <LabelledSelect
-              label="Disposal Site"
-              {...register("disposalSite", {
-                required: "Disposal site is required",
-              })}
-              options={rxdbDisposalSitesObject.disposalSites.map(
-                (disposalSite) => ({
-                  label: disposalSite.name,
-                  value: disposalSite.id,
-                }),
-              )}
-            />
-            <ErrorMessage message={errors.disposalSite?.message} />
-          </div>
-        </div>
-        <div className="p-2 w-fit rounded-lg">
+        <div className="p-2 w-full">
           <Label label="Load Call" />
-          <div className="flex items-center text-sm font-medium">
+          <div className="flex items-center text-sm font-medium gap-4">
             <input
               type="range"
               id="load-call-range"
               min="5"
               defaultValue={50}
+              className="w-10/12"
               max="95"
               step="5"
               {...register("loadCall", {
@@ -359,7 +366,7 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
                 }
               }}
             />
-            <output className="mx-4" id="sliderValue">
+            <output className="w-2/12" id="sliderValue">
               50 %
             </output>
           </div>
@@ -568,87 +575,89 @@ export function TruckTaskCollectionForm({ taskId }: TruckTaskFormProps) {
           </div>
         </div>
 
-        <div className="p-2">
-          <LabelledSelect
-            label="Truck Number"
-            {...register("truckNumber", {
-              required: "Truck Number is required",
-            })}
-            options={rxdbTrucksObject.trucks.map((truck) => ({
-              label: truck.truck_number,
-              value: truck.id,
-            }))}
-          />
-          <ErrorMessage message={errors.truckNumber?.message} />
-        </div>
-
-        <div className="p-2">
-          <LabelledSelect
-            label="Contractor"
-            {...register("contractor", {
-              required: "Contractor is required",
-            })}
-            options={rxdbContractorsObject.contractors.map((contractor) => ({
-              label: contractor.name,
-              value: contractor.id,
-            }))}
-          />
-          <ErrorMessage message={errors.contractor?.message} />
-        </div>
-
-        <div className="p-2">
-          <LabelledSelect
-            label="Debris Type"
-            {...register("debrisType", {
-              required: "Debris Type is required",
-            })}
-            options={rxdbDebrisTypesObject.debrisTypes.map((debrisType) => ({
-              label: debrisType.name,
-              value: debrisType.id,
-            }))}
-          />
-          <ErrorMessage message={errors.debrisType?.message} />
-        </div>
-        <div className="p-2">
-          <LabelledInput
-            label="Capacity"
-            {...register("capacity", { valueAsNumber: true })}
-            placeholder="in yards&sup3;"
-            type="number"
-            min="0"
-            max="1000000"
-          />
-        </div>
-
-        <div className="p-2 flex flex-col gap-2">
-          <Label label="Waypoints" />
-          <div className="text-sm w-fit">
-            <Button
-              onClick={addWeighPoint}
-              name="add-weigh-point"
-              type="button"
-              bgColor="bg-slate-500"
-            >
-              Add Waypoint
-            </Button>
+        <div className="w-full">
+          <div className="p-2">
+            <LabelledSelect
+              label="Truck Number"
+              {...register("truckNumber", {
+                required: "Truck Number is required",
+              })}
+              options={rxdbTrucksObject.trucks.map((truck) => ({
+                label: truck.truck_number,
+                value: truck.id,
+              }))}
+            />
+            <ErrorMessage message={errors.truckNumber?.message} />
           </div>
-          <div>
-            {weighPoints.map((weighPoint, index) => {
-              return (
-                <div className="relative flex w-fit" key={weighPoint.id}>
-                  <div className="p-4 my-2 w-full bg-white text-center rounded-2xl relative">
-                    <span>{`(${weighPoint.latitude}, ${weighPoint.longitude})`}</span>
+
+          <div className="p-2">
+            <LabelledSelect
+              label="Contractor"
+              {...register("contractor", {
+                required: "Contractor is required",
+              })}
+              options={rxdbContractorsObject.contractors.map((contractor) => ({
+                label: contractor.name,
+                value: contractor.id,
+              }))}
+            />
+            <ErrorMessage message={errors.contractor?.message} />
+          </div>
+
+          <div className="p-2">
+            <LabelledSelect
+              label="Debris Type"
+              {...register("debrisType", {
+                required: "Debris Type is required",
+              })}
+              options={rxdbDebrisTypesObject.debrisTypes.map((debrisType) => ({
+                label: debrisType.name,
+                value: debrisType.id,
+              }))}
+            />
+            <ErrorMessage message={errors.debrisType?.message} />
+          </div>
+          <div className="p-2">
+            <LabelledInput
+              label="Capacity"
+              {...register("capacity", { valueAsNumber: true })}
+              placeholder="in yards&sup3;"
+              type="number"
+              min="0"
+              max="1000000"
+            />
+          </div>
+
+          <div className="p-2 flex flex-col gap-2">
+            <Label label="Waypoints" />
+            <div className="text-sm w-fit">
+              <Button
+                onClick={addWeighPoint}
+                name="add-weigh-point"
+                type="button"
+                bgColor="bg-slate-500"
+              >
+                Add Waypoint
+              </Button>
+            </div>
+            <div>
+              {weighPoints.map((weighPoint, index) => {
+                return (
+                  <div className="relative flex w-fit" key={weighPoint.id}>
+                    <div className="p-4 my-2 w-full bg-white text-center rounded-2xl relative">
+                      <span>{`(${weighPoint.latitude}, ${weighPoint.longitude})`}</span>
+                    </div>
+                    <button
+                      className="absolute -top-0 -right-2 rounded-full bg-gray-800"
+                      type="button"
+                      onClick={() => removeWeighPoint(index)}
+                    >
+                      <XCircleIcon className="w-5 h-5 text-red-400" />
+                    </button>
                   </div>
-                  <button
-                    className="absolute -top-0 -right-2 rounded-full bg-gray-800"
-                    type="button"
-                    onClick={() => removeWeighPoint(index)}
-                  >
-                    <XCircleIcon className="w-5 h-5 text-red-400" />
-                  </button>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
 
