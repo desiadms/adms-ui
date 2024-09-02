@@ -3,6 +3,7 @@ import { QRCodeCanvas } from "qrcode.react";
 import * as R from "remeda";
 import {
   humanizeDate,
+  useContractors,
   useDebrisTypes,
   useDisposalSites,
   useProject,
@@ -38,6 +39,7 @@ export function Print() {
   const trucks = useTrucks();
   const disposalSites = useDisposalSites();
   const debrisTypes = useDebrisTypes();
+  const contractors = useContractors();
 
   if (!result) return `No result for task ID ${id}`;
 
@@ -78,6 +80,16 @@ export function Print() {
     "debris_type" in result &&
     debrisTypes.debrisTypes.find((type) => type.id === result?.debris_type);
 
+  const capacity = "capacity" in result && result.capacity;
+
+  const loadCall = "load_call" in result && result.load_call;
+
+  const collDisposalContractor =
+    "contractor" in result &&
+    contractors.contractors.find(
+      (contractor) => contractor.id === result?.contractor,
+    )?.name;
+
   const qrCodeValue = JSON.stringify(R.omit(result, ["images", "comment"]));
 
   return (
@@ -101,6 +113,16 @@ export function Print() {
           <LabelValue label="Debris Type" value={debrisType.name} />
         )}
         {type === "Tree" && <LabelValue label="Size" value={result?.ranges} />}
+
+        {loadCall && <LabelValue label="Load Call" value={loadCall} />}
+        {capacity && <LabelValue label="Capacity" value={capacity} />}
+        {collDisposalContractor && (
+          <LabelValue
+            label={`${type} Contractor`}
+            value={collDisposalContractor}
+          />
+        )}
+
         <LabelValue label="Comment" value={result?.comment} />
       </div>
       <div className="pt-10">
