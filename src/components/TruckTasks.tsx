@@ -338,10 +338,9 @@ export function TruckTaskDisposalForm({ taskId }: TruckTaskFormProps) {
           <div className="flex items-center text-sm font-medium gap-4">
             <input
               type="range"
-              id="load-call-range"
               min="5"
               defaultValue={50}
-              className="w-10/12"
+              className="slider w-10/12"
               max="95"
               step="5"
               {...register("loadCall", {

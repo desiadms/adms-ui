@@ -5,7 +5,7 @@
 [dev]
   framework = "#custom"
   command = "bun run vite"
-  targetPort = 7412
+  targetPort = 7413
   port = 5173
   publish = "dist"
 
