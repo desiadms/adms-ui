@@ -1,5 +1,7 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { QRCodeCanvas } from "qrcode.react";
+import { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 import * as R from "remeda";
 import {
   humanizeDate,
@@ -40,6 +42,8 @@ export function Print() {
   const disposalSites = useDisposalSites();
   const debrisTypes = useDebrisTypes();
   const contractors = useContractors();
+  const printableRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({ content: () => printableRef.current });
 
   if (!result) return `No result for task ID ${id}`;
 
@@ -92,55 +96,66 @@ export function Print() {
 
   return (
     <div>
-      <div className="text-center text-xl font-medium">ADMS</div>
-      <div className="text-center text-lg">{parsedType} Ticket</div>
-      <div className="pl-4 flex flex-col gap-2 pt-4">
-        <LabelValue label="Project" value={activeProject?.name} />
-        <LabelValue label="Contractor" value={activeProject?.contractor} />
-        <LabelValue label="Date" value={date} />
-        <LabelValue label="Ticket ID" value={`${result?.id}`} />
-        <LabelValue label="Lat" value={latitude || ""} />
-        <LabelValue label="Lon" value={longitude || ""} />
-        <LabelValue label="Type" value={parsedType} />
+      <div ref={printableRef}>
+        <div className="text-center text-xl font-medium pt-4">ADMS</div>
+        <div className="text-center text-lg">{parsedType} Ticket</div>
+        <div className="pl-4 flex flex-col gap-2 pt-4">
+          <LabelValue label="Project" value={activeProject?.name} />
+          <LabelValue label="Contractor" value={activeProject?.contractor} />
+          <LabelValue label="Date" value={date} />
+          <LabelValue label="Ticket ID" value={`${result?.id}`} />
+          <LabelValue label="Lat" value={latitude || ""} />
+          <LabelValue label="Lon" value={longitude || ""} />
+          <LabelValue label="Type" value={parsedType} />
 
-        {truck && <LabelValue label="Truck" value={truck.truck_number} />}
-        {truck && <LabelValue label="Capacity" value={truck.cubic_yardage} />}
-        {loadCall && <LabelValue label="Load Call" value={`${loadCall}%`} />}
-        {loadCall && truck && (
-          <LabelValue
-            label="Net Cubit Yards"
-            value={(parseInt(truck.cubic_yardage) * (loadCall / 100)).toFixed(
-              2,
-            )}
+          {truck && <LabelValue label="Truck" value={truck.truck_number} />}
+          {truck && <LabelValue label="Capacity" value={truck.cubic_yardage} />}
+          {loadCall && <LabelValue label="Load Call" value={`${loadCall}%`} />}
+          {loadCall && truck && (
+            <LabelValue
+              label="Net Cubit Yards"
+              value={(parseInt(truck.cubic_yardage) * (loadCall / 100)).toFixed(
+                2,
+              )}
+            />
+          )}
+          {disposalSite && (
+            <LabelValue label="Disposal Site" value={disposalSite.name} />
+          )}
+          {debrisType && (
+            <LabelValue label="Debris Type" value={debrisType.name} />
+          )}
+          {type === "Tree" && (
+            <LabelValue label="Size" value={result?.ranges} />
+          )}
+
+          {collDisposalContractor && (
+            <LabelValue
+              label={`${type} Contractor`}
+              value={collDisposalContractor}
+            />
+          )}
+
+          <LabelValue label="Comment" value={result?.comment} />
+        </div>
+        <div className="pt-10">
+          <QRCodeCanvas
+            value={qrCodeValue}
+            includeMargin
+            style={{
+              width: "100%",
+              height: "auto",
+              padding: 10,
+              maxWidth: 350,
+            }}
           />
-        )}
-        {disposalSite && (
-          <LabelValue label="Disposal Site" value={disposalSite.name} />
-        )}
-        {debrisType && (
-          <LabelValue label="Debris Type" value={debrisType.name} />
-        )}
-        {type === "Tree" && <LabelValue label="Size" value={result?.ranges} />}
-
-        {collDisposalContractor && (
-          <LabelValue
-            label={`${type} Contractor`}
-            value={collDisposalContractor}
-          />
-        )}
-
-        <LabelValue label="Comment" value={result?.comment} />
+        </div>
       </div>
-      <div className="pt-10">
-        <QRCodeCanvas
-          value={qrCodeValue}
-          includeMargin
-          style={{ width: "100%", height: "auto", padding: 10, maxWidth: 350 }}
-        />
-      </div>
-      <div className="pt-10">
+
+      <div className="pt-10 flex flex-col gap-4">
+        <Button onClick={handlePrint}>Print</Button>
         <Link to="/tasks">
-          <Button>Back to Tasks</Button>
+          <Button className="bg-gray-300">Back to Tasks</Button>
         </Link>
       </div>
     </div>

@@ -43,6 +43,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.1",
     "react-hot-toast": "^2.4.1",
+    "react-to-print": "^2.15.1",
     "remeda": "^1.56.0",
     "rxdb": "^15.12.0",
     "rxdb-hooks": "^5.0.2",
