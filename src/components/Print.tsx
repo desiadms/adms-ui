@@ -1,6 +1,6 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { QRCodeCanvas } from "qrcode.react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import * as R from "remeda";
 import {
@@ -13,6 +13,7 @@ import {
   useTrucks,
 } from "../hooks";
 import { Button } from "./Forms";
+import { Spinner } from "./icons";
 
 function LabelValue({
   label,
@@ -37,13 +38,18 @@ export function Print() {
   });
   const { activeProject } = useProject();
   const { result, type } = useTask(id);
+  const [printingLoading, setPrintingLoading] = useState(false);
 
   const trucks = useTrucks();
   const disposalSites = useDisposalSites();
   const debrisTypes = useDebrisTypes();
   const contractors = useContractors();
   const printableRef = useRef<HTMLDivElement>(null);
-  const handlePrint = useReactToPrint({ content: () => printableRef.current });
+  const handlePrint = useReactToPrint({
+    content: () => printableRef.current,
+    onBeforeGetContent: () => setPrintingLoading(true),
+    onAfterPrint: () => setPrintingLoading(false),
+  });
 
   if (!result) return `No result for task ID ${id}`;
 
@@ -153,7 +159,12 @@ export function Print() {
       </div>
 
       <div className="pt-10 flex flex-col gap-4">
-        <Button onClick={handlePrint}>Print</Button>
+        <Button onClick={handlePrint} disabled={printingLoading}>
+          Print
+          {printingLoading && (
+            <Spinner className="h-4 w-4" aria-hidden="true" />
+          )}
+        </Button>
         <Link to="/tasks">
           <Button className="bg-gray-300">Back to Tasks</Button>
         </Link>
