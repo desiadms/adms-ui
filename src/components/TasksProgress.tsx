@@ -408,10 +408,14 @@ function SynchTaskButton({ task, type }: TGeneralTaskCard) {
         {
           loading: "Synching task to server",
           success: "Tasks synched",
-          error: (error) => `Failed to synch task: ${error.message}`,
+          error: (error) => (
+            <div className="break-all">
+              Failed to synch task: {error.message}`
+            </div>
+          ),
         },
         {
-          duration: 5000,
+          duration: 50000,
         },
       )
       .then(() => setIsSendingData(false))
@@ -420,7 +424,7 @@ function SynchTaskButton({ task, type }: TGeneralTaskCard) {
 
   return (
     <>
-      {!isSynched && (
+      {isSynched && (
         <Button onClick={synchTicketingTask} disabled={isSendingData}>
           Synch
         </Button>
@@ -446,7 +450,11 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
 
           return `Result: ${parsedRes}`;
         },
-        error: (error) => `Failed to synch image: ${error.message}`,
+        error: (error) => (
+          <div className="break-all">
+            Failed to synch image: {error.message}`
+          </div>
+        ),
       },
       {
         duration: 5000,
@@ -476,7 +484,11 @@ function PicturePreviewSyncButton({ image }: { image: ImagesEnhanched }) {
 
           return `Result: ${parsedRes}`;
         },
-        error: (error) => `Failed to synch raw image: ${error.message}`,
+        error: (error) => (
+          <div className="break-all">
+            Failed to synch raw image: {error.message}`
+          </div>
+        ),
       },
       {
         duration: 5000,
