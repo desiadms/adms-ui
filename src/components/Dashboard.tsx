@@ -14,7 +14,7 @@ import { DeleteLocalData } from "./common";
 const navigation = [
   ["/projects", "Project"],
   ["/tasks", "New Task"],
-  ["/progress", "Progress (last 24h)"],
+  ["/progress", "Progress (last 48h)"],
   ["/log", "Debug"],
 ] as const;
 
