@@ -424,7 +424,7 @@ function SynchTaskButton({ task, type }: TGeneralTaskCard) {
 
   return (
     <>
-      {isSynched && (
+      {!isSynched && (
         <Button onClick={synchTicketingTask} disabled={isSendingData}>
           Synch
         </Button>
