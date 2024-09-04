@@ -34,6 +34,8 @@ import { httpReq } from "../rxdb/utils";
 import { prepareTaskWriteData } from "../rxdb/replication-handlers";
 import { resolveRequestDocument } from "graphql-request";
 import {
+  upsertCollectionTasks,
+  upsertDisposalTasks,
   upsertImageUnsynced,
   upsertTicketingTasks,
 } from "../rxdb/graphql-operations";
@@ -371,7 +373,7 @@ function TreeStumpRemovalSingleTask({ task, type }: TreeStumpRemovalProps) {
   );
 }
 
-function SynchTicketingButton({ task }: { task: TicketingTaskDocType }) {
+function SynchTaskButton({ task, type }: TGeneralTaskCard) {
   const { result: isSynched } = useIsTaskIdSynchedToServer(task.id);
   const [isSendingData, setIsSendingData] = useState<boolean>();
   const token = useAccessToken();
@@ -383,7 +385,17 @@ function SynchTicketingButton({ task }: { task: TicketingTaskDocType }) {
 
     await extractFilesAndSaveToNhost(nhostImages);
 
-    const query = resolveRequestDocument(upsertTicketingTasks).query;
+    const query = () => {
+      switch (type) {
+        case "collection":
+          return resolveRequestDocument(upsertCollectionTasks).query;
+        case "disposal":
+          return resolveRequestDocument(upsertDisposalTasks).query;
+        case "ticketing":
+          return resolveRequestDocument(upsertTicketingTasks).query;
+      }
+    };
+
     const variables = {
       taskIds,
       images: variableImages,
@@ -392,7 +404,7 @@ function SynchTicketingButton({ task }: { task: TicketingTaskDocType }) {
 
     toast
       .promise(
-        httpReq({ token, query, variables }),
+        httpReq({ token, query: query(), variables }),
         {
           loading: "Synching task to server",
           success: "Tasks synched",
@@ -536,7 +548,7 @@ function PicturesPreviewModal({ images }: { images: ImagesEnhanched[] }) {
 }
 
 function GeneralTaskCard({ data }: { data: TGeneralTaskCard }) {
-  const { task, type } = data;
+  const { task } = data;
   const imagesEnhanched = task?.images?.map((images) => ({
     ...images,
     task_id: task.id,
@@ -576,7 +588,7 @@ function GeneralTaskCard({ data }: { data: TGeneralTaskCard }) {
             <PrintAndCopy task={task} />
           </div>
 
-          {type === "ticketing" && <SynchTicketingButton task={task} />}
+          <SynchTaskButton {...data} />
         </div>
       </div>
     </div>
