@@ -13,7 +13,7 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       manifest: {
-        display: "browser",
+        display: "standalone",
       },
       workbox: {
         runtimeCaching: [
