@@ -93,7 +93,7 @@ export function useGeoLocation() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
-	function getGeoLocation() {
+	const getGeoLocation = useCallback(() => {
 		setIsLoading(true);
 		setError(null);
 
@@ -108,11 +108,11 @@ export function useGeoLocation() {
 				setIsLoading(false);
 			},
 		);
-	}
+	}, []);
 
 	useEffect(() => {
 		getGeoLocation();
-	}, []);
+	}, [getGeoLocation]);
 
 	return { coordinates, isLoading, error, getGeoLocation };
 }
