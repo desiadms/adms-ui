@@ -163,7 +163,7 @@ function FieldMonitorGeneralForm({
 							<div className="flex flex-col gap-1">
 								{fields.map(({ id }, index) => (
 									<div className="flex flex-col gap-1" key={id}>
-										<label
+										<div
 											className={classNames(
 												"flex gap-1 rounded w-fit bg-slate-500 text-white px-2 py-1 text-xs",
 											)}
@@ -185,8 +185,8 @@ function FieldMonitorGeneralForm({
 													},
 												})}
 											/>
-										</label>
-										{filePreviews && filePreviews[id] && (
+										</div>
+										{filePreviews?.[id] && (
 											<div>
 												<div className="relative w-1/2">
 													<img
@@ -204,7 +204,7 @@ function FieldMonitorGeneralForm({
 												</div>
 											</div>
 										)}
-										{errors.files && errors.files[index] && (
+										{errors.files?.[index] && (
 											<ErrorMessage
 												message={errors.files[index]?.fileInstance?.message}
 											/>

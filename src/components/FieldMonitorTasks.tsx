@@ -235,7 +235,7 @@ function TreeStumpRemovalForm({
 					<div className="flex flex-col">
 						{fields.map(({ id }, index) => (
 							<div className="flex flex-col gap-1 my-2" key={id}>
-								<label
+								<div
 									className={classNames(
 										"flex gap-1 rounded w-fit bg-slate-500 text-white px-2 py-1 text-xs",
 									)}
@@ -257,8 +257,8 @@ function TreeStumpRemovalForm({
 											},
 										})}
 									/>
-								</label>
-								{filePreviews && filePreviews[id] && (
+								</div>
+								{filePreviews?.[id] && (
 									<div>
 										<div className="relative w-1/2">
 											<img
@@ -276,7 +276,7 @@ function TreeStumpRemovalForm({
 										</div>
 									</div>
 								)}
-								{errors.files && errors.files[index] && (
+								{errors.files?.[index] && (
 									<ErrorMessage
 										message={errors.files[index]?.fileInstance?.message}
 									/>

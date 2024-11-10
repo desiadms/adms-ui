@@ -118,7 +118,7 @@ export function useGeoLocation() {
 }
 
 export function emailToId(email: string | undefined | null) {
-	return email && email.split("@")[0];
+	return email?.split("@")[0];
 }
 
 export function fullName(
@@ -135,7 +135,7 @@ export function userRoles(user: UserDocType | undefined | null) {
 			.filter(([k, v]) => k.startsWith("role_") && v)
 			.map(([k]) => {
 				const splitted = k.split("role_")[1];
-				return splitted && splitted.replace("_", " ");
+				return splitted?.replace("_", " ");
 			})
 			.join(", ")
 	);
@@ -431,11 +431,14 @@ export function useTask(taskId: string | undefined) {
 	const result = useMemo(() => {
 		if (tree.length) {
 			return { result: tree[0], type: "Tree" } as const;
-		} else if (stump.length) {
+		}
+		if (stump.length) {
 			return { result: stump[0], type: "Stump" } as const;
-		} else if (collectionTask.length) {
+		}
+		if (collectionTask.length) {
 			return { result: collectionTask[0], type: "Collection" } as const;
-		} else if (disposalTask.length) {
+		}
+		if (disposalTask.length) {
 			return { result: disposalTask[0], type: "Disposal" } as const;
 		}
 
@@ -460,7 +463,7 @@ export function validateFileSize(
 	file: File | undefined,
 	maxSize: number,
 ): string | undefined {
-	if (file && file[0]) {
+	if (file?.[0]) {
 		const { size } = file[0];
 		if (size > maxSize) {
 			return `File size is: ${convertFileSize(size)}MB. File cannot exceed ${convertFileSize(maxSize)}MB`;
@@ -493,7 +496,7 @@ export function useFilesForm() {
 		validateFileSize: validateFileSizeFn,
 		removePreview: (id) => {
 			setFilePreviews((images) => {
-				if (images && images[id]) {
+				if (images?.[id]) {
 					const { [id]: _file, ...rest } = images;
 					return rest;
 				}
