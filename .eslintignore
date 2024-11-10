@@ -1,9 +1,0 @@
-/dist
-*.css
-/node_modules
-/build
-/src/gql
-!.eslint.cjs
-**/__generated__/
-
-

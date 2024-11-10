@@ -1,6 +1,0 @@
-/node_modules
-/dist
-/build
-!.eslintrc.cjs
-/src/gql
-**/__generated__/

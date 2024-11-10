@@ -7,201 +7,201 @@ import { Link, Navigate, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { appVersion } from "../globals";
 import { emailToId, fullName, useIsOnline } from "../hooks";
-import { UserDocType } from "../rxdb/rxdb-schemas";
+import type { UserDocType } from "../rxdb/rxdb-schemas";
 import { useRxData } from "../rxdb/useRxData";
 import { DeleteLocalData } from "./common";
 
 const navigation = [
-  ["/projects", "Project"],
-  ["/tasks", "New Task"],
-  ["/progress", "Progress (last 48h)"],
-  ["/log", "Debug"],
+	["/projects", "Project"],
+	["/tasks", "New Task"],
+	["/progress", "Progress (last 48h)"],
+	["/log", "Debug"],
 ] as const;
 
 export function Home() {
-  return <Navigate to="/projects" />;
+	return <Navigate to="/projects" />;
 }
 
 export function Dashboard() {
-  const matchRoute = useMatchRoute();
-  const isOnline = useIsOnline();
+	const matchRoute = useMatchRoute();
+	const isOnline = useIsOnline();
 
-  const query = useCallback((collection) => collection.find(), []);
-  const { result } = useRxData<UserDocType>("user", query);
-  const user = result[0];
-  const { first_name, last_name, usersMetadata_user } = user || {};
+	const query = useCallback((collection) => collection.find(), []);
+	const { result } = useRxData<UserDocType>("user", query);
+	const user = result[0];
+	const { first_name, last_name, usersMetadata_user } = user || {};
 
-  const currentRoute = navigation.find(([to]) =>
-    matchRoute({
-      to,
-      search: {},
-      params: {},
-    }),
-  );
+	const currentRoute = navigation.find(([to]) =>
+		matchRoute({
+			to,
+			search: {},
+			params: {},
+		}),
+	);
 
-  const routeLabel = currentRoute?.[1];
+	const routeLabel = currentRoute?.[1];
 
-  const { signOut } = useSignOut();
+	const { signOut } = useSignOut();
 
-  return (
-    <div className="min-h-full">
-      <div className="sticky top-0 z-50">
-        <nav>
-          <Disclosure>
-            {({ open }: { open: boolean }) => (
-              <div className="bg-gray-800">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                  <div className="flex h-16 items-center justify-between">
-                    <Link
-                      className="flex-shrink-0 flex items-center gap-2"
-                      to="/"
-                    >
-                      <img
-                        className="h-8 w-8"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=gray&shade=300"
-                        alt="Your Company"
-                      />
-                      <div className="text-gray-200">v {appVersion}</div>
-                    </Link>
-                    <div className="-mr-2 flex">
-                      <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                        <span className="sr-only">Open main menu</span>
-                        {open ? (
-                          <XMarkIcon
-                            className="block h-6 w-6"
-                            aria-hidden="true"
-                          />
-                        ) : (
-                          <Bars3Icon
-                            className="block h-6 w-6"
-                            aria-hidden="true"
-                          />
-                        )}
-                      </Disclosure.Button>
-                    </div>
-                  </div>
-                </div>
+	return (
+		<div className="min-h-full">
+			<div className="sticky top-0 z-50">
+				<nav>
+					<Disclosure>
+						{({ open }: { open: boolean }) => (
+							<div className="bg-gray-800">
+								<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+									<div className="flex h-16 items-center justify-between">
+										<Link
+											className="flex-shrink-0 flex items-center gap-2"
+											to="/"
+										>
+											<img
+												className="h-12 w-12 p-2"
+												src="/images/logo-white.svg"
+												alt="Your Company"
+											/>
+											<div className="text-gray-200">v {appVersion}</div>
+										</Link>
+										<div className="-mr-2 flex">
+											<Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+												<span className="sr-only">Open main menu</span>
+												{open ? (
+													<XMarkIcon
+														className="block h-6 w-6"
+														aria-hidden="true"
+													/>
+												) : (
+													<Bars3Icon
+														className="block h-6 w-6"
+														aria-hidden="true"
+													/>
+												)}
+											</Disclosure.Button>
+										</div>
+									</div>
+								</div>
 
-                <Disclosure.Panel>
-                  {({ close }: { close: () => void }) => (
-                    <>
-                      <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-                        {navigation.map(([to, label]) => (
-                          <Link
-                            key={to}
-                            to={to}
-                            onClick={close}
-                            activeProps={{
-                              className: `bg-gray-900 text-white`,
-                            }}
-                            inactiveProps={{
-                              className: `text-gray-300 hover:bg-gray-700 hover:text-white`,
-                            }}
-                            className="block rounded-md px-3 py-2 text-base"
-                          >
-                            {label}
-                          </Link>
-                        ))}
-                      </div>
-                      <div className="border-t border-gray-700 pb-3 pt-4">
-                        <div className="flex items-center px-5">
-                          <div className="flex-shrink-0">
-                            <UserCircleIcon className="h-10 w-10 text-gray-400" />
-                          </div>
-                          <div className="ml-3 flex flex-col gap-1">
-                            <div className="text-base capitalize font-medium leading-none text-white">
-                              {fullName(first_name, last_name)}
-                            </div>
-                            <div className="text-sm font-light leading-none text-gray-400">
-                              {emailToId(usersMetadata_user?.email)}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-3 space-y-1 px-2">
-                          <Link
-                            to="/account"
-                            className="block rounded-md px-3 py-2 text-base"
-                            activeProps={{
-                              className: `bg-gray-900 text-white`,
-                            }}
-                            onClick={close}
-                            inactiveProps={{
-                              className: `text-gray-300 hover:bg-gray-700 hover:text-white`,
-                            }}
-                          >
-                            Account
-                          </Link>
-                          <Link
-                            className="block rounded-md px-3 py-2 text-base"
-                            activeProps={{
-                              className: `bg-gray-900 text-white`,
-                            }}
-                            inactiveProps={{
-                              className: `text-gray-300 hover:bg-gray-700 hover:text-white`,
-                            }}
-                            onClick={async () => {
-                              location.reload();
-                            }}
-                            to="/"
-                          >
-                            Refresh
-                          </Link>
-                          <Link
-                            className="block rounded-md px-3 py-2 text-base"
-                            activeProps={{
-                              className: `bg-gray-900 text-white`,
-                            }}
-                            inactiveProps={{
-                              className: `text-gray-300 hover:bg-gray-700 hover:text-white`,
-                            }}
-                            onClick={async () => {
-                              await signOut();
-                              location.reload();
-                            }}
-                            to="/"
-                          >
-                            Sign Out
-                          </Link>
-                          <DeleteLocalData />
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </Disclosure.Panel>
-              </div>
-            )}
-          </Disclosure>
-        </nav>
+								<Disclosure.Panel>
+									{({ close }: { close: () => void }) => (
+										<>
+											<div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+												{navigation.map(([to, label]) => (
+													<Link
+														key={to}
+														to={to}
+														onClick={close}
+														activeProps={{
+															className: `bg-gray-900 text-white`,
+														}}
+														inactiveProps={{
+															className: `text-gray-300 hover:bg-gray-700 hover:text-white`,
+														}}
+														className="block rounded-md px-3 py-2 text-base"
+													>
+														{label}
+													</Link>
+												))}
+											</div>
+											<div className="border-t border-gray-700 pb-3 pt-4">
+												<div className="flex items-center px-5">
+													<div className="flex-shrink-0">
+														<UserCircleIcon className="h-10 w-10 text-gray-400" />
+													</div>
+													<div className="ml-3 flex flex-col gap-1">
+														<div className="text-base capitalize font-medium leading-none text-white">
+															{fullName(first_name, last_name)}
+														</div>
+														<div className="text-sm font-light leading-none text-gray-400">
+															{emailToId(usersMetadata_user?.email)}
+														</div>
+													</div>
+												</div>
+												<div className="mt-3 space-y-1 px-2">
+													<Link
+														to="/account"
+														className="block rounded-md px-3 py-2 text-base"
+														activeProps={{
+															className: `bg-gray-900 text-white`,
+														}}
+														onClick={close}
+														inactiveProps={{
+															className: `text-gray-300 hover:bg-gray-700 hover:text-white`,
+														}}
+													>
+														Account
+													</Link>
+													<Link
+														className="block rounded-md px-3 py-2 text-base"
+														activeProps={{
+															className: `bg-gray-900 text-white`,
+														}}
+														inactiveProps={{
+															className: `text-gray-300 hover:bg-gray-700 hover:text-white`,
+														}}
+														onClick={async () => {
+															location.reload();
+														}}
+														to="/"
+													>
+														Refresh
+													</Link>
+													<Link
+														className="block rounded-md px-3 py-2 text-base"
+														activeProps={{
+															className: `bg-gray-900 text-white`,
+														}}
+														inactiveProps={{
+															className: `text-gray-300 hover:bg-gray-700 hover:text-white`,
+														}}
+														onClick={async () => {
+															await signOut();
+															location.reload();
+														}}
+														to="/"
+													>
+														Sign Out
+													</Link>
+													<DeleteLocalData />
+												</div>
+											</div>
+										</>
+									)}
+								</Disclosure.Panel>
+							</div>
+						)}
+					</Disclosure>
+				</nav>
 
-        {routeLabel && (
-          <header className="bg-white shadow-sm">
-            {/* <button onClick={() => 3}>back button</button> */}
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center">
-              <h1 className="text-lg font-semibold leading-6 text-gray-900">
-                {routeLabel}
-              </h1>
-              {isOnline ? (
-                <SignalIcon
-                  className="h-6 w-6 text-green-600"
-                  aria-hidden="true"
-                />
-              ) : (
-                <SignalSlashIcon
-                  className="h-6 w-6 text-red-600"
-                  aria-hidden="true"
-                />
-              )}
-            </div>
-          </header>
-        )}
-      </div>
+				{routeLabel && (
+					<header className="bg-white shadow-sm">
+						{/* <button onClick={() => 3}>back button</button> */}
+						<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center">
+							<h1 className="text-lg font-semibold leading-6 text-gray-900">
+								{routeLabel}
+							</h1>
+							{isOnline ? (
+								<SignalIcon
+									className="h-6 w-6 text-green-600"
+									aria-hidden="true"
+								/>
+							) : (
+								<SignalSlashIcon
+									className="h-6 w-6 text-red-600"
+									aria-hidden="true"
+								/>
+							)}
+						</div>
+					</header>
+				)}
+			</div>
 
-      <main>
-        <div className="mx-auto max-w-7xl py-6 px-2 sm:px-6 lg:px-8">
-          <Outlet />
-        </div>
-        {/* <pre>{JSON.stringify(state, null, 2)}</pre> */}
-      </main>
-    </div>
-  );
+			<main>
+				<div className="mx-auto max-w-7xl py-6 px-2 sm:px-6 lg:px-8">
+					<Outlet />
+				</div>
+				{/* <pre>{JSON.stringify(state, null, 2)}</pre> */}
+			</main>
+		</div>
+	);
 }

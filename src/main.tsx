@@ -6,11 +6,11 @@ import "./app.css";
 const rootEl = document.getElementById("app");
 
 if (!rootEl) {
-  throw new Error("No root element");
+	throw new Error("No root element");
 }
 
 ReactDOM.createRoot(rootEl).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+	<React.StrictMode>
+		<App />
+	</React.StrictMode>,
 );
